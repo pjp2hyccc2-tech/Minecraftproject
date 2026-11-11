@@ -99,10 +99,16 @@ def build(w, district, terrain):          # called by build.py inside w.district
 | `eternalrealm:water_wheel` | `facing` | `{Radius:3.0f,Width:2.0f}` (Radius 1.5–8, Width 0.5–4) | The axle bearing, set into the mill wall at hub height, `facing` out. The wheel turns about the horizontal axis through the block centre, occupying 0.15 … 0.15+Width blocks in front of the face; water 0–1 blocks below the axle gives splashes and drips. |
 | `eternalrealm:smoke_emitter` | `heavy` true/false | — | Invisible, walk-through: the air block right above a chimney. Soft grey smoke seen from across the town; `heavy=true` for forges. |
 | `eternalrealm:fountain_spray` | `power` 1–3, `facing` up/n/s/e/w | — | Invisible, walk-through: the air block at the nozzle. `up` = vertical column (≈1.5/3/5 blocks) breaking into falling drops; a horizontal facing = a spout arcing out (≈1.5/2.5/4 blocks) for lion heads and statues' jars. Drops splash where they land. |
+| `eternalrealm:bunting` | `facing` n/s/e/w | `{Tx:10,Ty:0,Tz:0,Sag:1.2f,Style:"pennant",Colors:[I;14,4,11,0,13],Wind:1.0f}` — Tx/Ty/Tz −32..32 = the far end's block offset **in world terms**; Sag 0–8 blocks below the chord at mid-span (never more than the horizontal span); Style `pennant`, `flags`, `lanterns`, `laundry`, `garland`; Colors = dye ids 0–15 taken in turn (empty: the style's own mix); Wind 0–3 (0.3 under arcades). `{Tx:0,Ty:0,Tz:0}` = a bare hook. | A small iron eye in the air cell in front of a wall (`facing` = away from the wall), on a post top or under an eave: it finds what it is fixed to by itself. A real catenary cord runs from its centre to the centre of the far block, where a hook is drawn fixed to the wall beyond it, the post below, the eave above, or another anchor (keep that cell free). It carries triangular pennants, small flags, paper lanterns (lit after dusk and under roofs, with a soft halo), laundry (shirts, towels, socks, trousers, dresses on pegs) or a leafy garland with small flowers; the cord swings about its chord and the pieces flutter in waves running along it, downwind (the town wind blows east). **Keep free** every cell the cord crosses and, below it, the style's hang depth (pennant 0.62, flags 0.45, lanterns 0.6, laundry 0.8, garland 0.18 blocks; 0.32 blocks of bare cord at each end); in a gale the middle swings up to ≈0.8 × Sag + hang sideways, so do not run strings along walls. 100–200 strings in town are fine. Helpers: `_gimmick_kit.bunting(t, x, y, z, to=(dx, dy, dz), style, colors, sag=1.2, wind=1.0, facing)` (`to` in local terms, rotated with the frame; `facing=None` points along the string), `bunting_chain(t, points, …)` (zigzags; sag 0.25 + 0.06 × span), `bunting_hook(t, x, y, z)`. |
+| `eternalrealm:secret_door` | `facing` n/s/e/w, `half` lower/upper, `open` false, `look` `bookshelf`/`stone_bricks`/`castle_bricks`/`white_plaster`/`mossy_stone_bricks`/`dark_oak_planks`/`spruce_planks` | — | Two blocks high in a wall of the same `look`: it is drawn with that block's own model (the weathered variants of castle bricks and plaster included, unrotated), so it cannot be told from the wall. `facing` = the side it is found from; the passage lies behind. Using either half makes the panel sink a pixel and slide one block sideways into the wall (to the right as seen from the front, to the left if only there is wall) with a grinding sound and some dust; it is passable while open and slides shut 5 s later once nobody stands in the doorway (someone stepping in while it closes opens it again). **Keep** a solid full block beside it on at least one side on both levels (ideally the same look) and the cells in front and behind free. Write `open=false`; `_gimmick_kit.secret_door(t, x, y, z, facing, look)` places both halves. Not obtainable in survival. |
+| `eternalrealm:shop_sign` | `facing` n/s/e/w, `attach` wall/ceiling, `icon` `sword`, `shield`, `potion`, `bread`, `anvil`, `book`, `gem`, `flower`, `shirt`, `key`, `fish`, `mug`, `scroll`, `map`, `hammer`, `ring` | — | A wooden board in an iron frame (1 × 0.75 blocks) with the trade's picture painted on both faces, swinging gently in the wind. `attach=wall`: the block is the air cell in front of a wall, `facing` away from it; a wrought-iron bracket runs along the top of the cell and the board hangs under it **edge-on to the wall**, so people walking along the street see its face; its lower edge reaches 1.5 px into the cell below (keep that cell free of full blocks), so hang it at y + 3 over a street. `attach=ceiling`: the board hangs on two short chains from the block above (a beam, an arcade, a covered bridge), its picture towards `facing`. `_gimmick_kit.shop_sign(t, x, y, z, facing, icon, attach="wall")`. |
+| `eternalrealm:floating_lantern` | — | — | A candle lantern on a little wooden float, in the **air block right above canal water**: it bobs on the ripples, rocks, turns slowly and drifts within its block; after dusk (always in a covered or underground waterway) the paper glows, a soft halo hangs round it and its light shimmers on the water. Gives light 9 day and night; boats and swimmers pass through. `_gimmick_kit.floating_lantern(t, x, y, z)`, or `canal_lanterns(t, x0, z0, x1, z1, water_y, every=3.5)` to scatter them over a stretch of canal (never two side by side, only on open water). |
 
-Java: `block/forge` (`FlagBlock`, `FacadeMechanismBlock`, `*BlockEntity`, `SmokeEmitterBlock`, `FountainSprayBlock`),
-renderers in `client/block`, the pure maths (cloth waves, wind, clock angles, jet ballistics) in `world/town`
-(unit-tested), art in `tools/art/town_gimmicks.py`.
+Java: `block/forge` (`FlagBlock`, `FacadeMechanismBlock`, `*BlockEntity`, `SmokeEmitterBlock`, `FountainSprayBlock`;
+the canal gimmicks `TownGimmickBlocks`, `BuntingBlock`, `SecretDoorBlock`, `ShopSignBlock`, `FloatingLanternBlock`),
+renderers in `client/block`, the pure maths (cloth waves, wind, clock angles, jet ballistics; bunting catenaries,
+layouts and sway, secret door timing, sign swing, lantern bobbing) in `world/town` (unit-tested), art in
+`tools/art/town_gimmicks.py` and `tools/art/canal_gimmicks.py` (preview `canal_gimmicks_preview.png`).
 
 ## 4. Master plan (`layout.py`)
 
@@ -144,7 +150,8 @@ south-east and farms with windmills south-west outside the walls.
 | `castle` | (−112, −208, 112, −87) + viaduct (−9, −88, 9, −46) | built by `castle/` (ground y 26) |
 
 Shared town helpers (files starting with `_` are not run as districts): `_civic_kit.py` (faces, windows, doors,
-roofs, dormers, lamps, masts, stalls, interiors), `_town_kit.py` (gimmick helpers, paving mixes, the parametric
+roofs, dormers, lamps, masts, stalls, interiors), `_gimmick_kit.py` (bunting strings, secret doors, shop signs; see
+"Moving decorations"), `_town_kit.py` (gimmick helpers, paving mixes, the parametric
 half-timbered `house()` + `row()`, the stone `civic_hall()` shell, market stalls, `crowd()`/`guard()` spot
 helpers), `_inns.py` (tavern and inn with interiors), `_ships.py`, `_farm.py` (fields, windmills, barns),
 `_furnish.py` (room dressing, see below) and `_town_views.py` (town cameras; see §8).
@@ -192,8 +199,12 @@ Animated blocks (custom, block entity SNBT; see `_town_kit.py`): `flag[facing]` 
 west, so free-standing flags stream east), `clock_face[facing]` (guild clock tower, `{Size:2.6f}`),
 `windmill_sails[facing]` (3 mills, `{Radius:7.0f}`, facing south), `water_wheel[facing]` (watermill,
 `{Radius:4.0f,Width:2.0f}`), `smoke_emitter[heavy]` above chimney tops (heavy at the forge),
-`fountain_spray[power,facing]` (plaza, market cross, garden fountains). `_town_views.py --check` verifies that
-every flag/sail/dial/wheel has its keep-free volume clear.
+`fountain_spray[power,facing]` (plaza, market cross, garden fountains); for the canal town `bunting[facing]`,
+`secret_door[facing,half,open,look]`, `shop_sign[facing,attach,icon]` and `floating_lantern` (helpers in
+`_gimmick_kit.py`).
+`_town_views.py --check` verifies that every flag/sail/dial/wheel has its keep-free volume clear, every bunting cord
+its path (and a far hook not buried in a block), every secret door its upper half, a solid wall beside it to slide
+into and a free doorway front and back, every shop sign a wall or ceiling to hang from, and every floating lantern water under it.
 
 Townsfolk and guards (optional, any number; see [npc.md](npc.md)): `crowd.<area>.<n>` puts one townsperson who
 strolls within 6 blocks of the spot (keep water and doors out of that circle where possible; they avoid both), chosen

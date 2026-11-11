@@ -1,0 +1,484 @@
+{
+  "variants": {
+    "attach=ceiling,facing=north,icon=sword": {
+      "model": "eternalrealm:block/shop_sign_ceiling"
+    },
+    "attach=ceiling,facing=north,icon=shield": {
+      "model": "eternalrealm:block/shop_sign_ceiling"
+    },
+    "attach=ceiling,facing=north,icon=potion": {
+      "model": "eternalrealm:block/shop_sign_ceiling"
+    },
+    "attach=ceiling,facing=north,icon=bread": {
+      "model": "eternalrealm:block/shop_sign_ceiling"
+    },
+    "attach=ceiling,facing=north,icon=anvil": {
+      "model": "eternalrealm:block/shop_sign_ceiling"
+    },
+    "attach=ceiling,facing=north,icon=book": {
+      "model": "eternalrealm:block/shop_sign_ceiling"
+    },
+    "attach=ceiling,facing=north,icon=gem": {
+      "model": "eternalrealm:block/shop_sign_ceiling"
+    },
+    "attach=ceiling,facing=north,icon=flower": {
+      "model": "eternalrealm:block/shop_sign_ceiling"
+    },
+    "attach=ceiling,facing=north,icon=shirt": {
+      "model": "eternalrealm:block/shop_sign_ceiling"
+    },
+    "attach=ceiling,facing=north,icon=key": {
+      "model": "eternalrealm:block/shop_sign_ceiling"
+    },
+    "attach=ceiling,facing=north,icon=fish": {
+      "model": "eternalrealm:block/shop_sign_ceiling"
+    },
+    "attach=ceiling,facing=north,icon=mug": {
+      "model": "eternalrealm:block/shop_sign_ceiling"
+    },
+    "attach=ceiling,facing=north,icon=scroll": {
+      "model": "eternalrealm:block/shop_sign_ceiling"
+    },
+    "attach=ceiling,facing=north,icon=map": {
+      "model": "eternalrealm:block/shop_sign_ceiling"
+    },
+    "attach=ceiling,facing=north,icon=hammer": {
+      "model": "eternalrealm:block/shop_sign_ceiling"
+    },
+    "attach=ceiling,facing=north,icon=ring": {
+      "model": "eternalrealm:block/shop_sign_ceiling"
+    },
+    "attach=ceiling,facing=east,icon=sword": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 90
+    },
+    "attach=ceiling,facing=east,icon=shield": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 90
+    },
+    "attach=ceiling,facing=east,icon=potion": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 90
+    },
+    "attach=ceiling,facing=east,icon=bread": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 90
+    },
+    "attach=ceiling,facing=east,icon=anvil": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 90
+    },
+    "attach=ceiling,facing=east,icon=book": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 90
+    },
+    "attach=ceiling,facing=east,icon=gem": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 90
+    },
+    "attach=ceiling,facing=east,icon=flower": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 90
+    },
+    "attach=ceiling,facing=east,icon=shirt": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 90
+    },
+    "attach=ceiling,facing=east,icon=key": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 90
+    },
+    "attach=ceiling,facing=east,icon=fish": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 90
+    },
+    "attach=ceiling,facing=east,icon=mug": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 90
+    },
+    "attach=ceiling,facing=east,icon=scroll": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 90
+    },
+    "attach=ceiling,facing=east,icon=map": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 90
+    },
+    "attach=ceiling,facing=east,icon=hammer": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 90
+    },
+    "attach=ceiling,facing=east,icon=ring": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 90
+    },
+    "attach=ceiling,facing=south,icon=sword": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 180
+    },
+    "attach=ceiling,facing=south,icon=shield": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 180
+    },
+    "attach=ceiling,facing=south,icon=potion": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 180
+    },
+    "attach=ceiling,facing=south,icon=bread": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 180
+    },
+    "attach=ceiling,facing=south,icon=anvil": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 180
+    },
+    "attach=ceiling,facing=south,icon=book": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 180
+    },
+    "attach=ceiling,facing=south,icon=gem": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 180
+    },
+    "attach=ceiling,facing=south,icon=flower": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 180
+    },
+    "attach=ceiling,facing=south,icon=shirt": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 180
+    },
+    "attach=ceiling,facing=south,icon=key": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 180
+    },
+    "attach=ceiling,facing=south,icon=fish": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 180
+    },
+    "attach=ceiling,facing=south,icon=mug": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 180
+    },
+    "attach=ceiling,facing=south,icon=scroll": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 180
+    },
+    "attach=ceiling,facing=south,icon=map": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 180
+    },
+    "attach=ceiling,facing=south,icon=hammer": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 180
+    },
+    "attach=ceiling,facing=south,icon=ring": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 180
+    },
+    "attach=ceiling,facing=west,icon=sword": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 270
+    },
+    "attach=ceiling,facing=west,icon=shield": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 270
+    },
+    "attach=ceiling,facing=west,icon=potion": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 270
+    },
+    "attach=ceiling,facing=west,icon=bread": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 270
+    },
+    "attach=ceiling,facing=west,icon=anvil": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 270
+    },
+    "attach=ceiling,facing=west,icon=book": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 270
+    },
+    "attach=ceiling,facing=west,icon=gem": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 270
+    },
+    "attach=ceiling,facing=west,icon=flower": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 270
+    },
+    "attach=ceiling,facing=west,icon=shirt": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 270
+    },
+    "attach=ceiling,facing=west,icon=key": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 270
+    },
+    "attach=ceiling,facing=west,icon=fish": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 270
+    },
+    "attach=ceiling,facing=west,icon=mug": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 270
+    },
+    "attach=ceiling,facing=west,icon=scroll": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 270
+    },
+    "attach=ceiling,facing=west,icon=map": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 270
+    },
+    "attach=ceiling,facing=west,icon=hammer": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 270
+    },
+    "attach=ceiling,facing=west,icon=ring": {
+      "model": "eternalrealm:block/shop_sign_ceiling",
+      "y": 270
+    },
+    "attach=wall,facing=north,icon=sword": {
+      "model": "eternalrealm:block/shop_sign_wall"
+    },
+    "attach=wall,facing=north,icon=shield": {
+      "model": "eternalrealm:block/shop_sign_wall"
+    },
+    "attach=wall,facing=north,icon=potion": {
+      "model": "eternalrealm:block/shop_sign_wall"
+    },
+    "attach=wall,facing=north,icon=bread": {
+      "model": "eternalrealm:block/shop_sign_wall"
+    },
+    "attach=wall,facing=north,icon=anvil": {
+      "model": "eternalrealm:block/shop_sign_wall"
+    },
+    "attach=wall,facing=north,icon=book": {
+      "model": "eternalrealm:block/shop_sign_wall"
+    },
+    "attach=wall,facing=north,icon=gem": {
+      "model": "eternalrealm:block/shop_sign_wall"
+    },
+    "attach=wall,facing=north,icon=flower": {
+      "model": "eternalrealm:block/shop_sign_wall"
+    },
+    "attach=wall,facing=north,icon=shirt": {
+      "model": "eternalrealm:block/shop_sign_wall"
+    },
+    "attach=wall,facing=north,icon=key": {
+      "model": "eternalrealm:block/shop_sign_wall"
+    },
+    "attach=wall,facing=north,icon=fish": {
+      "model": "eternalrealm:block/shop_sign_wall"
+    },
+    "attach=wall,facing=north,icon=mug": {
+      "model": "eternalrealm:block/shop_sign_wall"
+    },
+    "attach=wall,facing=north,icon=scroll": {
+      "model": "eternalrealm:block/shop_sign_wall"
+    },
+    "attach=wall,facing=north,icon=map": {
+      "model": "eternalrealm:block/shop_sign_wall"
+    },
+    "attach=wall,facing=north,icon=hammer": {
+      "model": "eternalrealm:block/shop_sign_wall"
+    },
+    "attach=wall,facing=north,icon=ring": {
+      "model": "eternalrealm:block/shop_sign_wall"
+    },
+    "attach=wall,facing=east,icon=sword": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 90
+    },
+    "attach=wall,facing=east,icon=shield": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 90
+    },
+    "attach=wall,facing=east,icon=potion": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 90
+    },
+    "attach=wall,facing=east,icon=bread": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 90
+    },
+    "attach=wall,facing=east,icon=anvil": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 90
+    },
+    "attach=wall,facing=east,icon=book": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 90
+    },
+    "attach=wall,facing=east,icon=gem": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 90
+    },
+    "attach=wall,facing=east,icon=flower": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 90
+    },
+    "attach=wall,facing=east,icon=shirt": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 90
+    },
+    "attach=wall,facing=east,icon=key": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 90
+    },
+    "attach=wall,facing=east,icon=fish": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 90
+    },
+    "attach=wall,facing=east,icon=mug": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 90
+    },
+    "attach=wall,facing=east,icon=scroll": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 90
+    },
+    "attach=wall,facing=east,icon=map": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 90
+    },
+    "attach=wall,facing=east,icon=hammer": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 90
+    },
+    "attach=wall,facing=east,icon=ring": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 90
+    },
+    "attach=wall,facing=south,icon=sword": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 180
+    },
+    "attach=wall,facing=south,icon=shield": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 180
+    },
+    "attach=wall,facing=south,icon=potion": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 180
+    },
+    "attach=wall,facing=south,icon=bread": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 180
+    },
+    "attach=wall,facing=south,icon=anvil": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 180
+    },
+    "attach=wall,facing=south,icon=book": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 180
+    },
+    "attach=wall,facing=south,icon=gem": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 180
+    },
+    "attach=wall,facing=south,icon=flower": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 180
+    },
+    "attach=wall,facing=south,icon=shirt": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 180
+    },
+    "attach=wall,facing=south,icon=key": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 180
+    },
+    "attach=wall,facing=south,icon=fish": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 180
+    },
+    "attach=wall,facing=south,icon=mug": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 180
+    },
+    "attach=wall,facing=south,icon=scroll": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 180
+    },
+    "attach=wall,facing=south,icon=map": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 180
+    },
+    "attach=wall,facing=south,icon=hammer": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 180
+    },
+    "attach=wall,facing=south,icon=ring": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 180
+    },
+    "attach=wall,facing=west,icon=sword": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 270
+    },
+    "attach=wall,facing=west,icon=shield": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 270
+    },
+    "attach=wall,facing=west,icon=potion": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 270
+    },
+    "attach=wall,facing=west,icon=bread": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 270
+    },
+    "attach=wall,facing=west,icon=anvil": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 270
+    },
+    "attach=wall,facing=west,icon=book": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 270
+    },
+    "attach=wall,facing=west,icon=gem": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 270
+    },
+    "attach=wall,facing=west,icon=flower": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 270
+    },
+    "attach=wall,facing=west,icon=shirt": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 270
+    },
+    "attach=wall,facing=west,icon=key": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 270
+    },
+    "attach=wall,facing=west,icon=fish": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 270
+    },
+    "attach=wall,facing=west,icon=mug": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 270
+    },
+    "attach=wall,facing=west,icon=scroll": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 270
+    },
+    "attach=wall,facing=west,icon=map": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 270
+    },
+    "attach=wall,facing=west,icon=hammer": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 270
+    },
+    "attach=wall,facing=west,icon=ring": {
+      "model": "eternalrealm:block/shop_sign_wall",
+      "y": 270
+    }
+  }
+}

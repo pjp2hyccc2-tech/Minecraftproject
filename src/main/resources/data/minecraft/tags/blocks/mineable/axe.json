@@ -2,6 +2,8 @@
   "replace": false,
   "values": [
     "eternalrealm:flag",
+    "eternalrealm:floating_lantern",
+    "eternalrealm:shop_sign",
     "eternalrealm:water_wheel",
     "eternalrealm:windmill_sails"
   ]

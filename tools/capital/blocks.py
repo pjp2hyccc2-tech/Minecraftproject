@@ -241,6 +241,7 @@ _reg(["bunting"], "gimmick", CUSTOM_NS)          # pennant / lantern strings (bl
 _reg(["secret_door"], "secret_door", CUSTOM_NS)  # hidden passages: a wall that slides open
 _reg(["shop_sign"], "shop_sign", CUSTOM_NS)      # hanging shop boards with a picture of the trade
 _reg(["room_door"], "door", CUSTOM_NS)           # the inn mansion's room doors (lead into one's own room)
+_reg(["floating_lantern"], "plain", CUSTOM_NS)  # candle lantern bobbing on canal water (the air block above it)
 
 # plain full blocks and simple things
 _reg([

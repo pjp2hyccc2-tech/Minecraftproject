@@ -8,7 +8,7 @@
 
 Builds the whole capital (no export), then renders the town cameras below with ``capital.preview``. By default
 the animated gimmicks the game draws around their blocks (flags, windmill sails, clock dials, water wheels,
-fountain jets) are stood in by temporary blocks on a copy of the world so the previews show roughly what a
+fountain jets, bunting strings, shop signs, secret doors, floating lanterns) are stood in by temporary blocks on a copy of the world so the previews show roughly what a
 player will see; ``--raw`` renders the world as exported.
 """
 from __future__ import annotations
@@ -28,6 +28,7 @@ from capital import blocks as B  # noqa: E402
 from capital import layout as L  # noqa: E402
 from capital import preview as P  # noqa: E402
 from capital.world import DIR_VEC, X0, Y0, Z0, left_of  # noqa: E402
+from capital.districts import _gimmick_kit as GK  # noqa: E402
 
 SUN_AM = (40, -150)
 
@@ -117,7 +118,8 @@ def gimmicks(w):
     """[(kind, (x, y, z), facing, snbt)] for every gimmick block in the world."""
     out = []
     ids = {}
-    kinds = ("flag", "clock_face", "windmill_sails", "water_wheel", "fountain_spray", "smoke_emitter")
+    kinds = ("flag", "clock_face", "windmill_sails", "water_wheel", "fountain_spray", "smoke_emitter", "bunting",
+             "secret_door", "shop_sign", "floating_lantern")
     for i, st in enumerate(w.palette):
         if st.startswith("eternalrealm:") and st.split(":")[1].split("[")[0] in kinds:
             ids[i] = st
@@ -159,7 +161,77 @@ def keep_free(kind, pos, facing, snbt, props):
                 for v in range(-Ri, Ri + 1):
                     if u * u + v * v <= (R + 0.3) ** 2:
                         pts.append((x + fx * d + lx * u, y + v, z + fz * d + lz * u))
+    elif kind == "bunting":
+        cells, _ = GK.bunting_cells(pos, snbt)
+        pts = sorted(cells)
     return pts
+
+
+# blocks a bunting cord may pass (air, vines, other anchors where strings meet)
+_SOFT = ("minecraft:air", "minecraft:cave_air", "eternalrealm:void", "minecraft:light", "minecraft:vine",
+         "minecraft:glow_lichen", "eternalrealm:light_shaft", "eternalrealm:bunting", "eternalrealm:smoke_emitter")
+
+
+def _soft(st):
+    name = st.split("[")[0]
+    return name in _SOFT or name == "minecraft:water"
+
+
+def _solid(st):
+    """A full opaque block (what a secret door slides into, what a sign or hook can be fixed to)."""
+    from capital import colors as C
+    if _soft(st):
+        return False
+    try:
+        m = C.material(st)
+    except Exception:
+        return False
+    return m["kind"] == "solid" and m["box"] is None and not st.startswith("eternalrealm:secret_door")
+
+
+def canal_problems(w, kind, pos, facing, snbt, props):
+    """Placement mistakes of the canal gimmicks that keep-free volumes do not catch: [(pos, what)]."""
+    x, y, z = pos
+    out = []
+    if kind == "bunting":
+        d = GK.parse_bunting(snbt)
+        far = (x + d["Tx"], y + d["Ty"], z + d["Tz"])
+        if far != pos and _solid(w.get(*far)):
+            out.append((far, "far hook inside " + w.get(*far).split(":")[1][:24]))
+    elif kind == "secret_door":
+        look = props.get("look")
+        if props.get("half") == "upper":
+            below = w.get(x, y - 1, z)
+            if "secret_door" not in below or "half=lower" not in below:
+                out.append(((x, y - 1, z), "upper half without a lower half"))
+            return out
+        above = w.get(x, y + 1, z)
+        if "secret_door" not in above or "half=upper" not in above or f"look={look}" not in above \
+                or f"facing={facing}" not in above:
+            out.append(((x, y + 1, z), "no matching upper half"))
+        rx, _, rz = DIR_VEC[left_of(facing)]          # the right side seen from the front
+        sides = [all(_solid(w.get(x + sx * k, y + dy, z + sz * k)) for dy in (0, 1)) for (sx, sz, k) in
+                 ((rx, rz, 1), (-rx, -rz, 1))]
+        if not any(sides):
+            out.append((pos, "no solid wall beside it to slide into"))
+        fx, _, fz = DIR_VEC[facing]
+        ways = [all(not _solid(w.get(x + fx * s, y + dy, z + fz * s)) for dy in (0, 1)) for s in (1, -1)]
+        if not all(ways):
+            out.append((pos, "doorway blocked in " + ("front" if not ways[0] else "the back")))
+    elif kind == "shop_sign":
+        if props.get("attach") == "ceiling":
+            if _soft(w.get(x, y + 1, z)):
+                out.append(((x, y + 1, z), "nothing above to hang from"))
+        else:
+            fx, _, fz = DIR_VEC[facing]
+            if not _solid(w.get(x - fx, y, z - fz)):
+                out.append(((x - fx, y, z - fz), "no wall behind the bracket"))
+        if _solid(w.get(x, y - 1, z)):
+            out.append(((x, y - 1, z), "the board's lower edge pokes into the block below"))
+    elif kind == "floating_lantern":
+        if not w.get(x, y - 1, z).startswith("minecraft:water"):
+            out.append(((x, y - 1, z), "not floating on water: " + w.get(x, y - 1, z).split(":")[1][:20]))
+    return out
 
 
 def check_gimmicks(w, verbose=True):
@@ -176,7 +248,10 @@ def check_gimmicks(w, verbose=True):
                 continue
             if kind == "water_wheel" and "water" in st:
                 continue
+            if kind == "bunting" and _soft(st):
+                continue
             hits.append((p, st))
+        hits += [(p, "minecraft:" + what) for p, what in canal_problems(w, kind, pos, facing, snbt, props)]
         if hits:
             bad.append((kind, pos, facing, hits))
     if verbose:
@@ -205,10 +280,54 @@ def _fix_preview_colors(w):
             w.palette[i] = B.S(rep)
 
 
+def _dress_canal(w, items):
+    """Stand-ins for the canal gimmicks: doors show their wall, signs a thin board, strings a line of coloured
+    carpets (lanterns: hanging lanterns) along the cord."""
+    for i, st in enumerate(list(w.palette)):
+        bid, props = B.parse(st)
+        name = bid.split(":")[1]
+        if bid.startswith("eternalrealm:") and name == "secret_door":
+            w.palette[i] = B.full(props.get("look", "stone_bricks"))
+        elif bid.startswith("eternalrealm:") and name == "shop_sign":
+            f = props.get("facing", "north")
+            across_x = (f in ("north", "south")) == (props.get("attach") == "wall")
+            w.palette[i] = B.wall_sign("spruce", "east" if across_x else "south")
+        elif bid.startswith("eternalrealm:") and name == "bunting":
+            w.palette[i] = B.chain("y")
+        elif bid.startswith("eternalrealm:") and name == "floating_lantern":
+            w.palette[i] = B.lantern()
+    for kind, pos, facing, snbt, props in items:
+        if kind != "bunting":
+            continue
+        d = GK.parse_bunting(snbt)
+        if (d["Tx"], d["Ty"], d["Tz"]) == (0, 0, 0):
+            continue
+        pts, _ = GK.bunting_curve(d["Tx"], d["Ty"], d["Tz"], d["Sag"], 0.25)
+        colors = [B.COLORS[c] for c in (d["Colors"] or [B.DYE[c] for c in GK.BUNTING_COLORS[d["Style"]]])]
+        x0, y0, z0 = pos
+        seen = []
+        for k, (px, py, pz) in enumerate(pts):
+            cell = (math.floor(x0 + 0.5 + px), math.floor(y0 + 0.5 + py - 0.3), math.floor(z0 + 0.5 + pz))
+            if cell in seen or cell == pos:
+                continue
+            seen.append(cell)
+            if not w.is_empty(*cell):
+                continue
+            if d["Style"] == "lanterns":
+                if len(seen) % 2 == 0:
+                    w.set(*cell, B.lantern(hanging=True))
+            elif d["Style"] == "garland":
+                w.set(*cell, B.S("moss_carpet"))
+            else:
+                w.set(*cell, B.carpet(colors[len(seen) % len(colors)]))
+
+
 def dress(w):
     """Draw stand-ins for the animated gimmicks into the world (use on a copy)."""
+    items = gimmicks(w)
+    _dress_canal(w, items)
     _fix_preview_colors(w)
-    for kind, pos, facing, snbt, props in gimmicks(w):
+    for kind, pos, facing, snbt, props in items:
         x, y, z = pos
         if kind == "flag":
             W = _num(snbt, "Width", 3.0)
