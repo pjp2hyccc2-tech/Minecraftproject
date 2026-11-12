@@ -375,17 +375,18 @@ its character carries on and clients recognise it and paint it a single colour o
 `remove` logs them out; `purge` also gives up their rooms and removes their ranking entries. They do not take part in
 dungeons, PvP, the auction, crafting, mounts, quests or guilds, and do not equip dropped gear (they sell it).
 
-## D-WANDERERS: four original wandering adventurers instead of copied anime characters (2026-11-12)
+## D-TRAVELLERS: four original travelling adventurers instead of copied anime characters (2026-11-12)
 The owner asked for four characters from other works (from the images: two from one anime, one each from two others) to
 appear as a hidden element in single-player, with an AI that adventures, rests at the inn and shops, and with their
 manner, animations and the look and effects of their skills and magic reproduced. Reproducing those characters (their
 looks, names, lines and signature techniques) would copy other people's copyrighted works, so they were not made. The
-request's structure was kept with four original characters instead (`npc.Wanderers`, `npc.forge.Wanderer*`): Bold the
+request's structure was kept with four original characters instead (`npc.Travellers`, `npc.forge.Traveller*`): Bold the
 dwarf map-maker, Mirka the falconer, Graus the bell knight and Sele the tide-singer, with none of those characters'
 signature features. They live only on an integrated server that is not opened to LAN and has nobody but its owner (a
 LAN guest or a test bot makes it multiplayer); each goes round field, item shop and inn on a schedule saved with the
 world, and has a body only while the player is near where it is (bodies are never saved). Their bodies are NPC bodies
 (painted by script like the town's people), so they walk, idle, gesture and have portraits; they fight with particle
 choreographies (two skills each) that deal a share of a monster's maximum health and never hurt players; they cannot
-be hurt. The first meeting gives their introduction and a count of the wanderers met (character extension).
-
+be hurt. The first meeting gives their introduction and a count of the travellers met (character extension). They are
+called travellers (旅の冒険者) so as not to be confused with the roaming field bosses (`world.field.Wanderers`,
+放浪する大物).

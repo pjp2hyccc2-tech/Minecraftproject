@@ -1,13 +1,13 @@
-"""The wandering adventurers (docs/modules/wanderers.md): four original travellers who turn up now and then in a
+"""The travelling adventurers (docs/modules/travellers.md): four original travellers who turn up now and then in a
 single-player world, hunting in the fields, shopping in the capital and resting at the inn.
 
-  wanderer_bold   Bold, the map-maker: a dwarf explorer, brass goggles, copper beard, olive coat, a pack of rolled maps
+  traveller_bold   Bold, the map-maker: a dwarf explorer, brass goggles, copper beard, olive coat, a pack of rolled maps
                   and a brass compass staff.
-  wanderer_mirka  Mirka, the falconer: small and quick, forest-green feathered cloak, a hawk on her shoulder, quiver and
+  traveller_mirka  Mirka, the falconer: small and quick, forest-green feathered cloak, a hawk on her shoulder, quiver and
                   longbow.
-  wanderer_graus  Graus, the bell knight: verdigris bronze plate, a cream tabard with a bell, a halberd and a great bronze
+  traveller_graus  Graus, the bell knight: verdigris bronze plate, a cream tabard with a bell, a halberd and a great bronze
                   bell slung on his back.
-  wanderer_sele   Sele, the tide-singer: a coastal bard in sea-foam and coral, long wavy dark-rose hair with a shell pin,
+  traveller_sele   Sele, the tide-singer: a coastal bard in sea-foam and coral, long wavy dark-rose hair with a shell pin,
                   and a pearl-white lute.
 """
 from erpaint import lighten, mix, shade
@@ -82,7 +82,7 @@ def bold():
                   satchel={'base': '#6a4a2a', 'style': 'leather'},
                   staff={'base': '#b88c3c', 'style': 'metal'}, leafy='#d4a84c',
                   bud={'base': '#78d0dc', 'style': 'gem'})
-    return look('wanderer_bold', show={'hair_cap', 'beard', 'goggles', 'coat_tails', 'backpack', 'satchel',
+    return look('traveller_bold', show={'hair_cap', 'beard', 'goggles', 'coat_tails', 'backpack', 'satchel',
                                        'staff_nature'}, broad=True,
                 poses={'right_arm': dict(rot=(-14, 0, 6)), 'right_forearm': dict(rot=(-26, 0, 0)),
                        'left_arm': dict(rot=(-4, 0, -6))},
@@ -156,7 +156,7 @@ def mirka():
                   pigeon='#9a6a38', pigeon_tail='#5c3a20', pigeon_head='#d8c09a', beak='#e8b838',
                   pigeon_wing='#7a4e2a', quiver={'base': '#6a4626', 'style': 'leather'}, fletch='#ece4d2',
                   longbow={'base': '#7a5030', 'style': 'wood'}, bracer='#6a4626')
-    return look('wanderer_mirka', builds=(SLIM,),
+    return look('traveller_mirka', builds=(SLIM,),
                 show={'hair_cap', 'band', 'cape', 'pigeon', 'quiver', 'longbow', 'bracer_r', 'bracer_l'},
                 poses={'left_arm': dict(rot=(-6, 0, -4))},
                 pal=pal, paint=paint, work='work_pigeon', talk='talk_point', scale=0.8,
@@ -241,7 +241,7 @@ def graus():
                   plume='#e6dcc2', apron={'base': '#e6dcc2', 'style': 'cloth'},
                   shield={'base': '#b07a3a', 'style': 'metal'},
                   pole='#4a3220', blade={'base': '#c8ccd0', 'style': 'metal'})
-    return look('wanderer_graus',
+    return look('traveller_graus',
                 show={'shell', 'helm_crest', 'pauldron_r', 'pauldron_l', 'apron', 'apron_bib', 'shield_back',
                       'halberd'}, broad=True,
                 poses={'right_arm': dict(rot=(-12, 0, 8)), 'right_forearm': dict(rot=(-22, 0, 0))},
@@ -307,7 +307,7 @@ def sele():
     pal = palette(skin=skin, hair=hair_c, tunic=foam, sleeve=foam, sleeve2=foam, belly='#5aa89a',
                   skirt={'base': foam, 'style': 'cloth'}, skirt2={'base': '#2e8a8a', 'style': 'cloth'},
                   scarf='#e8846a', lute='#ece4d6', lute_neck='#7a5a4a', lute_head='#7a5a4a')
-    return look('wanderer_sele', builds=(SLIM,), show={'hair_cap', 'hair_back', 'skirt_long', 'scarf', 'lute'},
+    return look('traveller_sele', builds=(SLIM,), show={'hair_cap', 'hair_back', 'skirt_long', 'scarf', 'lute'},
                 poses={'right_arm': dict(rot=(-30, 20, 10)), 'right_forearm': dict(rot=(-30, 0, 0)),
                        'left_arm': dict(rot=(-40, -20, -20)), 'left_forearm': dict(rot=(-60, 0, 0))},
                 pal=pal, paint=paint, glow=True, work='work_lute', talk='talk_flourish', scale=0.96,

@@ -185,13 +185,13 @@
 5. `/er admin bots chat off` → 話さなくなる。`/er admin bots remove` → 全員ログアウト。`spawn` で続きから
 6. `/er admin bots purge` → 借りた部屋とランキングの記録も片づく
 
-## 8. 放浪の冒険者（[modules/wanderers.md](modules/wanderers.md)）
+## 8. 旅の冒険者（[modules/travellers.md](modules/travellers.md)）
 
 | クラス | 主な検証内容 |
 |---|---|
-| Unit `WanderersTest` | 4人それぞれ体・テクスチャ・肖像・名前・出会い・居場所ごとの台詞・技の掛け声が日英そろう、肖像は話し手のキーで見つかる、戦い方がそれぞれ違う、技は敵を一撃で倒さない、巡り（フィールド→町→フィールド、滞在時間、夜の宿は長い）、狩り場はプレイヤーの近くが多く直前と同じ場所は選ばない、計画の検証、出会った人の記録 |
-| GameTest `wanderersOnlyLiveInASinglePlayerWorld` | テストサーバーはシングルプレイのワールドではないので出ない |
-| GameTest `aWandererFightsAMonsterAndCannotBeHurt` | グラウスが魔物に近づいて攻撃と技で HP を削る。グラウスは傷つかない。体は自分の見た目 |
+| Unit `TravellersTest` | 4人それぞれ体・テクスチャ・肖像・名前・出会い・居場所ごとの台詞・技の掛け声が日英そろう、肖像は話し手のキーで見つかる、戦い方がそれぞれ違う、技は敵を一撃で倒さない、巡り（フィールド→町→フィールド、滞在時間、夜の宿は長い）、狩り場はプレイヤーの近くが多く直前と同じ場所は選ばない、計画の検証、出会った人の記録 |
+| GameTest `travellersOnlyLiveInASinglePlayerWorld` | テストサーバーはシングルプレイのワールドではないので出ない |
+| GameTest `aTravellerFightsAMonsterAndCannotBeHurt` | グラウスが魔物に近づいて攻撃と技で HP を削る。グラウスは傷つかない。体は自分の見た目 |
 
 手動（シングルプレイのワールドで）:
 

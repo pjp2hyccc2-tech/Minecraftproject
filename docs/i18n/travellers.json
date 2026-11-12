@@ -1,233 +1,233 @@
 {
-  "entity.eternalrealm.wanderer": {
-    "ja": "放浪の冒険者",
-    "en": "Wandering Adventurer"
+  "entity.eternalrealm.traveller": {
+    "ja": "旅の冒険者",
+    "en": "Travelling Adventurer"
   },
-  "message.eternalrealm.wanderer.met": {
-    "ja": "放浪の冒険者に出会った: %1$s（%2$s/%3$s）",
-    "en": "You met a wandering adventurer: %1$s (%2$s/%3$s)"
+  "message.eternalrealm.traveller.met": {
+    "ja": "旅の冒険者に出会った: %1$s（%2$s/%3$s）",
+    "en": "You met a travelling adventurer: %1$s (%2$s/%3$s)"
   },
-  "wanderer.eternalrealm.wanderer_bold": {
+  "traveller.eternalrealm.traveller_bold": {
     "ja": "地図描きのボルド",
     "en": "Bold the Map-maker"
   },
-  "wanderer.eternalrealm.wanderer_mirka": {
+  "traveller.eternalrealm.traveller_mirka": {
     "ja": "鷹匠のミルカ",
     "en": "Mirka the Falconer"
   },
-  "wanderer.eternalrealm.wanderer_graus": {
+  "traveller.eternalrealm.traveller_graus": {
     "ja": "鐘の騎士グラウス",
     "en": "Graus the Bell Knight"
   },
-  "wanderer.eternalrealm.wanderer_sele": {
+  "traveller.eternalrealm.traveller_sele": {
     "ja": "潮歌いのセレ",
     "en": "Sele the Tide-singer"
   },
-  "wanderer.eternalrealm.bold.meet.1": {
+  "traveller.eternalrealm.bold.meet.1": {
     "ja": "おっと、驚かせたか。わしはボルド、地図描きじゃ。この辺りの地図はまだ白いところだらけでな。",
     "en": "Oh, did I startle you? I'm Bold, a map-maker. The maps of these parts are still full of blank spaces."
   },
-  "wanderer.eternalrealm.bold.meet.2": {
+  "traveller.eternalrealm.bold.meet.2": {
     "ja": "白いところを見つけたら教えてくれ。代わりに、羅針の灯りで道を照らしてやろう。",
     "en": "Tell me if you find a blank spot. In return, I'll light your way with my compass lamp."
   },
-  "wanderer.eternalrealm.bold.field.1": {
+  "traveller.eternalrealm.bold.field.1": {
     "ja": "この丘の稜線、去年の地図とずれとる。書き直しじゃな。",
     "en": "This ridge doesn't match last year's map. Time to redraw it."
   },
-  "wanderer.eternalrealm.bold.field.2": {
+  "traveller.eternalrealm.bold.field.2": {
     "ja": "魔物の巣も地図に描いておく。旅人が迷い込まんようにな。",
     "en": "I mark the monsters' haunts on the map too, so travellers don't wander into them."
   },
-  "wanderer.eternalrealm.bold.field.3": {
+  "traveller.eternalrealm.bold.field.3": {
     "ja": "羅針が震えておる……近くに何かおるぞ。",
     "en": "The needle's trembling... something's close by."
   },
-  "wanderer.eternalrealm.bold.shop.1": {
+  "traveller.eternalrealm.bold.shop.1": {
     "ja": "インクと羊皮紙を買い足しに来た。地図描きは紙を食うんじゃ。",
     "en": "Came for more ink and parchment. Map-making eats paper."
   },
-  "wanderer.eternalrealm.bold.shop.2": {
+  "traveller.eternalrealm.bold.shop.2": {
     "ja": "回復薬？ わしは描くのに夢中で、よく飲み忘れるんじゃ。",
     "en": "Potions? I get so caught up drawing that I forget to drink them."
   },
-  "wanderer.eternalrealm.bold.shop.3": {
+  "traveller.eternalrealm.bold.shop.3": {
     "ja": "ここの店主はいい目をしとる。値札の字がまっすぐじゃ。",
     "en": "The shopkeeper here has a good eye. Every price tag is written straight."
   },
-  "wanderer.eternalrealm.bold.inn.1": {
+  "traveller.eternalrealm.bold.inn.1": {
     "ja": "今日描いた分を清書しとる。見るか？ ……いや、まだ見せられん。",
     "en": "I'm making a fair copy of today's work. Want to see? ...No, not yet."
   },
-  "wanderer.eternalrealm.bold.inn.2": {
+  "traveller.eternalrealm.bold.inn.2": {
     "ja": "宿の暖炉はいい。冷えた指がやっとまっすぐな線を引けるようになる。",
     "en": "A good fire at the inn. My cold fingers can finally draw a straight line."
   },
-  "wanderer.eternalrealm.bold.inn.3": {
+  "traveller.eternalrealm.bold.inn.3": {
     "ja": "次はどこへ行くか、地図を広げて決めるところじゃ。",
     "en": "I'm spreading out the map to decide where to go next."
   },
-  "wanderer.eternalrealm.bold.skill.star_chart": {
+  "traveller.eternalrealm.bold.skill.star_chart": {
     "ja": "星図よ、結べ！",
     "en": "Stars, join up!"
   },
-  "wanderer.eternalrealm.bold.skill.compass_ray": {
+  "traveller.eternalrealm.bold.skill.compass_ray": {
     "ja": "羅針よ、回れ！",
     "en": "Turn, compass!"
   },
-  "wanderer.eternalrealm.mirka.meet.1": {
+  "traveller.eternalrealm.mirka.meet.1": {
     "ja": "わっ、見つかっちゃった！ わたしはミルカ。この子は相棒の鷹のフィンだよ。",
     "en": "Oh, you found me! I'm Mirka, and this is my partner, Finn the hawk."
   },
-  "wanderer.eternalrealm.mirka.meet.2": {
+  "traveller.eternalrealm.mirka.meet.2": {
     "ja": "フィンは空から全部見てるの。困ったことがあったら、フィンが先に気づくからね！",
     "en": "Finn sees everything from up there. If there's trouble, Finn will spot it first!"
   },
-  "wanderer.eternalrealm.mirka.field.1": {
+  "traveller.eternalrealm.mirka.field.1": {
     "ja": "風が東から来てる。フィンがいちばん速く飛べる日だよ。",
     "en": "The wind's from the east. Finn flies fastest on days like this."
   },
-  "wanderer.eternalrealm.mirka.field.2": {
+  "traveller.eternalrealm.mirka.field.2": {
     "ja": "小さいからって甘く見ないでね。弓の腕は誰にも負けないんだから！",
     "en": "Don't underestimate me because I'm small. Nobody beats me with a bow!"
   },
-  "wanderer.eternalrealm.mirka.field.3": {
+  "traveller.eternalrealm.mirka.field.3": {
     "ja": "しっ……フィンが何か見つけたみたい。",
     "en": "Shh... Finn's spotted something."
   },
-  "wanderer.eternalrealm.mirka.shop.1": {
+  "traveller.eternalrealm.mirka.shop.1": {
     "ja": "矢羽根を選んでるの。まっすぐ飛ぶのは、いい羽根だけ。",
     "en": "I'm picking feathers for my arrows. Only good ones fly straight."
   },
-  "wanderer.eternalrealm.mirka.shop.2": {
+  "traveller.eternalrealm.mirka.shop.2": {
     "ja": "フィンのおやつも売ってたらいいのになあ。",
     "en": "I wish they sold treats for Finn."
   },
-  "wanderer.eternalrealm.mirka.shop.3": {
+  "traveller.eternalrealm.mirka.shop.3": {
     "ja": "お財布、軽くなっちゃった。また狩りに行かなきゃ！",
     "en": "My purse got light. Back to hunting!"
   },
-  "wanderer.eternalrealm.mirka.inn.1": {
+  "traveller.eternalrealm.mirka.inn.1": {
     "ja": "フィンは窓辺で寝てるよ。わたしも少し休もうっと。",
     "en": "Finn's asleep by the window. I'll rest a little too."
   },
-  "wanderer.eternalrealm.mirka.inn.2": {
+  "traveller.eternalrealm.mirka.inn.2": {
     "ja": "宿のスープ、大好き！ 狩りのあとは特においしいの。",
     "en": "I love the inn's soup! It's the best after a hunt."
   },
-  "wanderer.eternalrealm.mirka.inn.3": {
+  "traveller.eternalrealm.mirka.inn.3": {
     "ja": "明日はどの空を飛ぼうか、フィンと相談中。",
     "en": "Finn and I are deciding which sky to fly tomorrow."
   },
-  "wanderer.eternalrealm.mirka.skill.falcon_stoop": {
+  "traveller.eternalrealm.mirka.skill.falcon_stoop": {
     "ja": "フィン、行って！",
     "en": "Go, Finn!"
   },
-  "wanderer.eternalrealm.mirka.skill.feather_gale": {
+  "traveller.eternalrealm.mirka.skill.feather_gale": {
     "ja": "羽根よ、吹き荒れて！",
     "en": "Feathers, fly like a storm!"
   },
-  "wanderer.eternalrealm.graus.meet.1": {
+  "traveller.eternalrealm.graus.meet.1": {
     "ja": "旅の方、ご無事で何より。私はグラウス、鐘を背負って旅する騎士です。",
     "en": "Traveller, I am glad to see you safe. I am Graus, a knight who travels with a bell on his back."
   },
-  "wanderer.eternalrealm.graus.meet.2": {
+  "traveller.eternalrealm.graus.meet.2": {
     "ja": "この鐘は故郷の礼拝堂のもの。鳴らすたびに、道行く人の無事を祈っています。",
     "en": "This bell is from my hometown's chapel. Each time I ring it, I pray for those on the road."
   },
-  "wanderer.eternalrealm.graus.field.1": {
+  "traveller.eternalrealm.graus.field.1": {
     "ja": "下がっていてください。ここは私が引き受けます。",
     "en": "Stay behind me. I will hold this ground."
   },
-  "wanderer.eternalrealm.graus.field.2": {
+  "traveller.eternalrealm.graus.field.2": {
     "ja": "魔物の気配が濃い。鐘が低く鳴っています。",
     "en": "The air is thick with monsters. The bell hums low."
   },
-  "wanderer.eternalrealm.graus.field.3": {
+  "traveller.eternalrealm.graus.field.3": {
     "ja": "あなたの剣筋、なかなかのものです。背中は預けましょう。",
     "en": "Your sword arm is good. I will trust you with my back."
   },
-  "wanderer.eternalrealm.graus.shop.1": {
+  "traveller.eternalrealm.graus.shop.1": {
     "ja": "鐘を磨く油を探しています。錆びた鐘では祈りが届きませんから。",
     "en": "I am looking for oil to polish the bell. A rusted bell carries no prayer."
   },
-  "wanderer.eternalrealm.graus.shop.2": {
+  "traveller.eternalrealm.graus.shop.2": {
     "ja": "回復薬は多めに。守る者が倒れては話になりません。",
     "en": "Plenty of potions. A guardian who falls protects no one."
   },
-  "wanderer.eternalrealm.graus.shop.3": {
+  "traveller.eternalrealm.graus.shop.3": {
     "ja": "この店の秤は正直です。良い店だ。",
     "en": "The scales in this shop are honest. A good shop."
   },
-  "wanderer.eternalrealm.graus.inn.1": {
+  "traveller.eternalrealm.graus.inn.1": {
     "ja": "今夜は鐘を下ろして休みます。……肩が軽すぎて落ち着きませんが。",
     "en": "Tonight I set the bell down and rest... though my shoulders feel oddly light."
   },
-  "wanderer.eternalrealm.graus.inn.2": {
+  "traveller.eternalrealm.graus.inn.2": {
     "ja": "宿の灯りは良いものです。誰かが帰りを待っている証ですから。",
     "en": "An inn's light is a fine thing. It means someone awaits your return."
   },
-  "wanderer.eternalrealm.graus.inn.3": {
+  "traveller.eternalrealm.graus.inn.3": {
     "ja": "旅の話を聞かせてください。鐘に新しい祈りを加えたいのです。",
     "en": "Tell me of your travels. I would add a new prayer to the bell."
   },
-  "wanderer.eternalrealm.graus.skill.bell_toll": {
+  "traveller.eternalrealm.graus.skill.bell_toll": {
     "ja": "鐘よ、響け！",
     "en": "Ring out, bell!"
   },
-  "wanderer.eternalrealm.graus.skill.great_bell": {
+  "traveller.eternalrealm.graus.skill.great_bell": {
     "ja": "大鐘よ、落ちよ！",
     "en": "Great bell, fall!"
   },
-  "wanderer.eternalrealm.sele.meet.1": {
+  "traveller.eternalrealm.sele.meet.1": {
     "ja": "あら、潮の香りに誘われて来たの？ わたしはセレ。海の歌をうたう旅の詩人よ。",
     "en": "Oh, did the scent of the tide lead you here? I'm Sele, a wandering poet who sings the songs of the sea."
   },
-  "wanderer.eternalrealm.sele.meet.2": {
+  "traveller.eternalrealm.sele.meet.2": {
     "ja": "疲れたら、わたしの歌を聴いていって。波はいつでも、傷を洗ってくれるから。",
     "en": "When you're tired, stay and listen to my song. The waves always wash wounds clean."
   },
-  "wanderer.eternalrealm.sele.field.1": {
+  "traveller.eternalrealm.sele.field.1": {
     "ja": "ここは海から遠いけれど、風の中にまだ波の音が残っているわ。",
     "en": "The sea is far from here, but the wind still carries the sound of waves."
   },
-  "wanderer.eternalrealm.sele.field.2": {
+  "traveller.eternalrealm.sele.field.2": {
     "ja": "怪我をしたら言ってね。泡の歌で包んであげる。",
     "en": "Tell me if you're hurt. I'll wrap you in a song of bubbles."
   },
-  "wanderer.eternalrealm.sele.field.3": {
+  "traveller.eternalrealm.sele.field.3": {
     "ja": "戦いの歌は苦手。でも、守るための歌なら、いくらでも。",
     "en": "I'm no good at songs of battle. But songs to protect - as many as you like."
   },
-  "wanderer.eternalrealm.sele.shop.1": {
+  "traveller.eternalrealm.sele.shop.1": {
     "ja": "リュートの弦を探しているの。潮風ですぐ切れてしまうのよ。",
     "en": "I'm looking for lute strings. The sea air wears them through so quickly."
   },
-  "wanderer.eternalrealm.sele.shop.2": {
+  "traveller.eternalrealm.sele.shop.2": {
     "ja": "貝殻のボタンは売っていないかしら……ないのね、残念。",
     "en": "Do they sell shell buttons, I wonder... No? What a pity."
   },
-  "wanderer.eternalrealm.sele.shop.3": {
+  "traveller.eternalrealm.sele.shop.3": {
     "ja": "お店の人に一曲贈ったら、少しおまけしてくれたの。",
     "en": "I sang the shopkeeper a song, and they gave me a little extra."
   },
-  "wanderer.eternalrealm.sele.inn.1": {
+  "traveller.eternalrealm.sele.inn.1": {
     "ja": "宿の夜は、ちいさな港みたい。みんながここに帰ってくる。",
     "en": "A night at the inn is like a little harbour. Everyone comes back here."
   },
-  "wanderer.eternalrealm.sele.inn.2": {
+  "traveller.eternalrealm.sele.inn.2": {
     "ja": "一曲いかが？ 今夜は凪の歌にしましょう。",
     "en": "Shall I play you something? Tonight, a song of calm seas."
   },
-  "wanderer.eternalrealm.sele.inn.3": {
+  "traveller.eternalrealm.sele.inn.3": {
     "ja": "旅の歌を集めているの。あなたの歌も、いつか聞かせてね。",
     "en": "I collect travellers' songs. Someday, let me hear yours."
   },
-  "wanderer.eternalrealm.sele.skill.surf_song": {
+  "traveller.eternalrealm.sele.skill.surf_song": {
     "ja": "寄せては返す、潮の歌――！",
     "en": "Come and go, song of the tide!"
   },
-  "wanderer.eternalrealm.sele.skill.bubble_ward": {
+  "traveller.eternalrealm.sele.skill.bubble_ward": {
     "ja": "泡沫よ、守りを。",
     "en": "Bubbles, keep them safe."
   }

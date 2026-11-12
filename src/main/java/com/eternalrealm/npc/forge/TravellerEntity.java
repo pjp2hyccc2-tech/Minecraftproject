@@ -1,7 +1,7 @@
 package com.eternalrealm.npc.forge;
 
 import com.eternalrealm.monster.forge.MonsterTags;
-import com.eternalrealm.npc.Wanderers;
+import com.eternalrealm.npc.Travellers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,22 +28,23 @@ import java.util.EnumSet;
 import java.util.List;
 
 /**
- * A wandering adventurer (docs/modules/wanderers.md) in the world: the body of one of {@link Wanderers.Wanderer}, an
- * NPC body (so it looks, walks, idles and gestures as the town's people do) that fights. In the field it roams its
+ * A travelling adventurer (docs/modules/travellers.md) in the world: the body of one of
+ * {@link Travellers.Traveller}, an NPC body (so it looks, walks, idles and gestures as the town's people do) that
+ * fights. In the field it roams its
  * hunting ground and fights the monsters there (ordinary attacks in its rhythm, its two signature skills by turns,
- * {@link WandererSkills}); in town it stays near its spot at the item shop (and now and then buys something) or in
+ * {@link TravellerSkills}); in town it stays near its spot at the item shop (and now and then buys something) or in
  * the inn's lobby. It turns to whoever talks to it. Like every NPC it cannot be hurt or pushed.
  *
- * <p>It is never saved ({@link WandererDirector} brings it whenever the player comes near where it is).</p>
+ * <p>It is never saved ({@link TravellerDirector} brings it whenever the player comes near where it is).</p>
  */
-public class WandererEntity extends NpcEntity {
+public class TravellerEntity extends NpcEntity {
     private static final double CHASE_SPEED = 0.65;
     private static final double WALK_SPEED = 0.45;
     /** How far it looks for monsters (blocks). */
     private static final double SIGHT = 16.0;
 
-    private Wanderers.Wanderer who = Wanderers.Wanderer.BOLD;
-    private Wanderers.Place place = Wanderers.Place.FIELD;
+    private Travellers.Traveller who = Travellers.Traveller.BOLD;
+    private Travellers.Place place = Travellers.Place.FIELD;
     private Vec3 anchor = Vec3.ZERO;
     private double roam = 8.0;
     @Nullable
@@ -58,7 +59,7 @@ public class WandererEntity extends NpcEntity {
     private Player listener;
     private int listening;
 
-    public WandererEntity(EntityType<? extends WandererEntity> type, Level level) {
+    public TravellerEntity(EntityType<? extends TravellerEntity> type, Level level) {
         super(type, level);
     }
 
@@ -67,22 +68,22 @@ public class WandererEntity extends NpcEntity {
     }
 
     /** Who it is, where it is and the ground it keeps to (server side). */
-    public void setup(Wanderers.Wanderer wanderer, Wanderers.Place at, Vec3 center, double radius) {
-        this.who = wanderer;
+    public void setup(Travellers.Traveller traveller, Travellers.Place at, Vec3 center, double radius) {
+        this.who = traveller;
         this.place = at;
         this.anchor = center;
         this.roam = radius;
         this.enemy = null;
         this.skillTurn = getRandom().nextInt(2);
-        setAppearance(wanderer.appearance());
-        setCustomName(Component.translatable(wanderer.nameKey()));
+        setAppearance(traveller.appearance());
+        setCustomName(Component.translatable(traveller.nameKey()));
     }
 
-    public Wanderers.Wanderer who() {
+    public Travellers.Traveller who() {
         return this.who;
     }
 
-    public Wanderers.Place place() {
+    public Travellers.Place place() {
         return this.place;
     }
 
@@ -132,18 +133,18 @@ public class WandererEntity extends NpcEntity {
         if (this.enemy != null && !alive(this.enemy)) {
             this.enemy = null;
         }
-        if (this.who == Wanderers.Wanderer.SELE && this.tickCount >= this.nextWard) {
+        if (this.who == Travellers.Traveller.SELE && this.tickCount >= this.nextWard) {
             this.nextWard = this.tickCount + 40;
-            if (WandererSkills.ward(this)) {
-                this.nextWard = this.tickCount + Wanderers.Skill.BUBBLE_WARD.cooldownTicks();
+            if (TravellerSkills.ward(this)) {
+                this.nextWard = this.tickCount + Travellers.Skill.BUBBLE_WARD.cooldownTicks();
             }
         }
-        if (this.place == Wanderers.Place.SHOP && this.tickCount >= this.nextErrand && this.listener == null) {
+        if (this.place == Travellers.Place.SHOP && this.tickCount >= this.nextErrand && this.listener == null) {
             this.nextErrand = this.tickCount + 400 + getRandom().nextInt(300);
             buySomething();
         }
-        if (this.place == Wanderers.Place.INN && this.who == Wanderers.Wanderer.SELE && this.tickCount % 30 == 0) {
-            WandererSkills.notes(this); // she plays at the inn
+        if (this.place == Travellers.Place.INN && this.who == Travellers.Traveller.SELE && this.tickCount % 30 == 0) {
+            TravellerSkills.notes(this); // she plays at the inn
         }
     }
 
@@ -164,13 +165,13 @@ public class WandererEntity extends NpcEntity {
         level().broadcastEntityEvent(shopkeeper, NpcEntity.TALK_EVENT);
         level().playSound(null, getX(), getY(), getZ(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.NEUTRAL, 0.35F,
                 1.4F + getRandom().nextFloat() * 0.3F);
-        WandererSkills.coins(this, shopkeeper);
+        TravellerSkills.coins(this, shopkeeper);
     }
 
     /** The nearest monster on its hunting ground it can see (a monster going for a player close by first). */
     @Nullable
     private LivingEntity lookForEnemy() {
-        if (this.place != Wanderers.Place.FIELD || !(level() instanceof ServerLevel server)) {
+        if (this.place != Travellers.Place.FIELD || !(level() instanceof ServerLevel server)) {
             return null;
         }
         Mob best = null;
@@ -206,7 +207,7 @@ public class WandererEntity extends NpcEntity {
             }
         } else {
             getNavigation().stop();
-            if (this.who.style() != Wanderers.Style.KNIGHT && distance < range * 0.4 && this.tickCount % 20 == 0) {
+            if (this.who.style() != Travellers.Style.KNIGHT && distance < range * 0.4 && this.tickCount % 20 == 0) {
                 Vec3 away = position().subtract(target.position()).normalize().scale(4.0).add(position());
                 getNavigation().moveTo(away.x, away.y, away.z, CHASE_SPEED); // a step back to keep its distance
             }
@@ -215,13 +216,13 @@ public class WandererEntity extends NpcEntity {
             return;
         }
         if (this.tickCount >= this.nextSkill) {
-            List<Wanderers.Skill> skills = this.who.skills().stream().filter(skill -> !skill.heals()).toList();
-            Wanderers.Skill skill = skills.get(this.skillTurn++ % skills.size());
-            WandererSkills.cast(this, skill, target);
+            List<Travellers.Skill> skills = this.who.skills().stream().filter(skill -> !skill.heals()).toList();
+            Travellers.Skill skill = skills.get(this.skillTurn++ % skills.size());
+            TravellerSkills.cast(this, skill, target);
             this.nextSkill = this.tickCount + skill.cooldownTicks() + getRandom().nextInt(60);
             this.nextBasic = this.tickCount + 30;
         } else if (this.tickCount >= this.nextBasic) {
-            WandererSkills.basic(this, target);
+            TravellerSkills.basic(this, target);
             this.nextBasic = this.tickCount + this.who.basicTicks() + getRandom().nextInt(10);
         }
     }
@@ -231,7 +232,7 @@ public class WandererEntity extends NpcEntity {
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         if (hand == InteractionHand.MAIN_HAND && !level().isClientSide && player instanceof ServerPlayer serverPlayer) {
-            WandererDirector.talk(serverPlayer, this);
+            TravellerDirector.talk(serverPlayer, this);
         }
         return InteractionResult.sidedSuccess(level().isClientSide);
     }
@@ -245,69 +246,69 @@ public class WandererEntity extends NpcEntity {
 
     /** Turns to whoever talks to it and stops (not while fighting). */
     private static final class ListenGoal extends Goal {
-        private final WandererEntity wanderer;
+        private final TravellerEntity traveller;
 
-        ListenGoal(WandererEntity wanderer) {
-            this.wanderer = wanderer;
+        ListenGoal(TravellerEntity traveller) {
+            this.traveller = traveller;
             setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
         }
 
         @Override
         public boolean canUse() {
-            return this.wanderer.listener != null && this.wanderer.enemy == null;
+            return this.traveller.listener != null && this.traveller.enemy == null;
         }
 
         @Override
         public void start() {
-            this.wanderer.getNavigation().stop();
+            this.traveller.getNavigation().stop();
         }
 
         @Override
         public void tick() {
-            Player player = this.wanderer.listener;
+            Player player = this.traveller.listener;
             if (player != null) {
-                this.wanderer.getLookControl().setLookAt(player, 30.0F, 30.0F);
+                this.traveller.getLookControl().setLookAt(player, 30.0F, 30.0F);
             }
         }
     }
 
     /** In the field: finds a monster on its ground and fights it until it falls or gets away. */
     private static final class FightGoal extends Goal {
-        private final WandererEntity wanderer;
+        private final TravellerEntity traveller;
 
-        FightGoal(WandererEntity wanderer) {
-            this.wanderer = wanderer;
+        FightGoal(TravellerEntity traveller) {
+            this.traveller = traveller;
             setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
         }
 
         @Override
         public boolean canUse() {
-            if (this.wanderer.enemy != null && alive(this.wanderer.enemy)) {
+            if (this.traveller.enemy != null && alive(this.traveller.enemy)) {
                 return true;
             }
-            if (this.wanderer.tickCount < this.wanderer.nextLook) {
+            if (this.traveller.tickCount < this.traveller.nextLook) {
                 return false;
             }
-            this.wanderer.nextLook = this.wanderer.tickCount + 10;
-            this.wanderer.enemy = this.wanderer.lookForEnemy();
-            return this.wanderer.enemy != null;
+            this.traveller.nextLook = this.traveller.tickCount + 10;
+            this.traveller.enemy = this.traveller.lookForEnemy();
+            return this.traveller.enemy != null;
         }
 
         @Override
         public boolean canContinueToUse() {
-            LivingEntity target = this.wanderer.enemy;
-            return target != null && alive(target) && target.distanceTo(this.wanderer) < SIGHT * 1.5;
+            LivingEntity target = this.traveller.enemy;
+            return target != null && alive(target) && target.distanceTo(this.traveller) < SIGHT * 1.5;
         }
 
         @Override
         public void tick() {
-            this.wanderer.fightTick();
+            this.traveller.fightTick();
         }
 
         @Override
         public void stop() {
-            this.wanderer.enemy = null;
-            this.wanderer.getNavigation().stop();
+            this.traveller.enemy = null;
+            this.traveller.getNavigation().stop();
         }
 
         @Override
@@ -318,20 +319,20 @@ public class WandererEntity extends NpcEntity {
 
     /** Between fights: a stroll about its hunting ground, or a step about its spot in town. */
     private static final class RoamGoal extends Goal {
-        private final WandererEntity wanderer;
+        private final TravellerEntity traveller;
 
-        RoamGoal(WandererEntity wanderer) {
-            this.wanderer = wanderer;
+        RoamGoal(TravellerEntity traveller) {
+            this.traveller = traveller;
             setFlags(EnumSet.of(Goal.Flag.MOVE));
         }
 
         @Override
         public boolean canUse() {
-            WandererEntity w = this.wanderer;
+            TravellerEntity w = this.traveller;
             if (w.enemy != null || w.listener != null || w.isTalking()) {
                 return false;
             }
-            boolean field = w.place == Wanderers.Place.FIELD;
+            boolean field = w.place == Travellers.Place.FIELD;
             double away = w.position().distanceTo(w.anchor);
             if (away > (field ? w.roam : 2.5)) {
                 return true; // back to its ground
@@ -341,8 +342,8 @@ public class WandererEntity extends NpcEntity {
 
         @Override
         public void start() {
-            WandererEntity w = this.wanderer;
-            boolean field = w.place == Wanderers.Place.FIELD;
+            TravellerEntity w = this.traveller;
+            boolean field = w.place == Travellers.Place.FIELD;
             double radius = field ? w.roam * 0.8 : 1.5;
             double angle = w.getRandom().nextDouble() * Math.PI * 2.0;
             double distance = w.getRandom().nextDouble() * radius;
@@ -352,8 +353,8 @@ public class WandererEntity extends NpcEntity {
 
         @Override
         public boolean canContinueToUse() {
-            return !this.wanderer.getNavigation().isDone() && this.wanderer.enemy == null
-                    && this.wanderer.listener == null;
+            return !this.traveller.getNavigation().isDone() && this.traveller.enemy == null
+                    && this.traveller.listener == null;
         }
     }
 }

@@ -3,9 +3,9 @@ every appearance (designed from docs/STORY.md section 2 and the kingdom concept 
 
 Appearance ids: the 22 speakers of the town and story NPCs (ids of com.eternalrealm.story.Speaker; casts in
 npc_cast_town.py and npc_cast_story.py), the townsfolk, guards and clergy of the capital (npc_cast_folk.py), the
-dungeon 'warden', 'citizen' (default for anyone else) and the four wandering adventurers (npc_cast_wanderers.py,
-docs/modules/wanderers.md). Every appearance picks a body build, optional parts, rest
-poses for held props, a palette, a painted face and costume, its idle/walk/work/talk animations and its portrait.
+dungeon 'warden', 'citizen' (default for anyone else) and the four travelling adventurers (npc_cast_travellers.py,
+docs/modules/travellers.md). Every appearance picks a body build, optional parts, rest poses for held props, a palette,
+a painted face and costume, its idle/walk/work/talk animations and its portrait.
 """
 from erpaint import lighten, mix, shade
 from ermodel import Variant
@@ -310,6 +310,6 @@ def appearances():
     import npc_cast_folk
     import npc_cast_story
     import npc_cast_town
-    import npc_cast_wanderers
+    import npc_cast_travellers
     return (npc_cast_folk.base() + npc_cast_town.cast() + npc_cast_story.cast() + npc_cast_folk.cast()
-            + npc_cast_wanderers.cast())
+            + npc_cast_travellers.cast())

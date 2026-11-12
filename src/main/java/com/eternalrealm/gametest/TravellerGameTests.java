@@ -6,10 +6,10 @@ import com.eternalrealm.monster.MonsterTemplate;
 import com.eternalrealm.monster.Monsters;
 import com.eternalrealm.monster.forge.MonsterFactory;
 import com.eternalrealm.npc.NpcBodies;
-import com.eternalrealm.npc.Wanderers;
+import com.eternalrealm.npc.Travellers;
 import com.eternalrealm.npc.forge.NpcEntities;
-import com.eternalrealm.npc.forge.WandererDirector;
-import com.eternalrealm.npc.forge.WandererEntity;
+import com.eternalrealm.npc.forge.TravellerDirector;
+import com.eternalrealm.npc.forge.TravellerEntity;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -20,16 +20,16 @@ import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 
 /**
- * The wandering adventurers (docs/modules/wanderers.md): only in a single-player world; in a fight they wear down a
+ * The travelling adventurers (docs/modules/travellers.md): only in a single-player world; in a fight they wear down a
  * monster with their attacks and skills, and nothing hurts them.
  */
 @GameTestHolder(ModInfo.MOD_ID)
 @PrefixGameTestTemplate(false)
-public final class WandererGameTests {
+public final class TravellerGameTests {
     private static final String ARENA = "arena";
     private static final String EMPTY = "empty";
 
-    private WandererGameTests() {
+    private TravellerGameTests() {
     }
 
     private static void check(boolean condition, String message) {
@@ -38,10 +38,10 @@ public final class WandererGameTests {
         }
     }
 
-    /** A dedicated or test server is no single-player world: the wanderers stay away. */
+    /** A dedicated or test server is no single-player world: the travellers stay away. */
     @GameTest(template = EMPTY)
-    public static void wanderersOnlyLiveInASinglePlayerWorld(GameTestHelper helper) {
-        check(!WandererDirector.allowed(helper.getLevel().getServer()), "not a single-player world");
+    public static void travellersOnlyLiveInASinglePlayerWorld(GameTestHelper helper) {
+        check(!TravellerDirector.allowed(helper.getLevel().getServer()), "not a single-player world");
         helper.succeed();
     }
 
@@ -50,17 +50,18 @@ public final class WandererGameTests {
      * bell; nothing hurts him; his body is the NPC body of his appearance.
      */
     @GameTest(template = ARENA, timeoutTicks = 600)
-    public static void aWandererFightsAMonsterAndCannotBeHurt(GameTestHelper helper) {
+    public static void aTravellerFightsAMonsterAndCannotBeHurt(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
-        WandererEntity graus = NpcEntities.WANDERER.get().create(level);
-        check(graus != null, "a wanderer's body");
+        TravellerEntity graus = NpcEntities.TRAVELLER.get().create(level);
+        check(graus != null, "a traveller's body");
         Vec3 at = helper.absoluteVec(new Vec3(2.5, 2.0, 4.5));
         graus.moveTo(at.x, at.y, at.z, -90.0F, 0.0F);
-        graus.setup(Wanderers.Wanderer.GRAUS, Wanderers.Place.FIELD, helper.absoluteVec(new Vec3(4.5, 2.0, 4.5)), 4.0);
+        Vec3 ground = helper.absoluteVec(new Vec3(4.5, 2.0, 4.5));
+        graus.setup(Travellers.Traveller.GRAUS, Travellers.Place.FIELD, ground, 4.0);
         level.addFreshEntity(graus);
-        check(graus.getAppearance().equals(Wanderers.Wanderer.GRAUS.appearance()), "Graus wears his own body");
+        check(graus.getAppearance().equals(Travellers.Traveller.GRAUS.appearance()), "Graus wears his own body");
         check(NpcBodies.exists(graus.getAppearance()), "a generated body");
-        check(!graus.hurt(level.damageSources().generic(), 5.0F), "nothing hurts a wanderer");
+        check(!graus.hurt(level.damageSources().generic(), 5.0F), "nothing hurts a traveller");
 
         MonsterTemplate template = Monsters.require("wandering_dead");
         Vec3 there = helper.absoluteVec(new Vec3(6.5, 2.0, 4.5));

@@ -1,7 +1,7 @@
 package com.eternalrealm.npc.forge;
 
 import com.eternalrealm.monster.forge.MonsterTags;
-import com.eternalrealm.npc.Wanderers;
+import com.eternalrealm.npc.Travellers;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -25,14 +25,14 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * What the wandering adventurers do in a fight (docs/modules/wanderers.md §3), drawn with particles that every player
- * nearby sees: an ordinary attack each in its own manner, and two signature skills each, choreographed over a second
- * or two (stars lighting up and joining into a figure, a turning compass needle of light, a hawk stooping in a golden
- * streak, a fan of feathered arrows, rings of sound rolling out of a bell, a bell of light falling, waves rolling out
- * of a song, bubbles rising around the hurt). Damage is a share of the enemy's maximum health, so they are useful
- * against any monster without taking the fight from the player; they never hurt players.
+ * What the travelling adventurers do in a fight (docs/modules/travellers.md §1), drawn with particles that every
+ * player nearby sees: an ordinary attack each in its own manner, and two signature skills each, choreographed over a
+ * second or two (stars lighting up and joining into a figure, a turning compass needle of light, a hawk stooping in a
+ * golden streak, a fan of feathered arrows, rings of sound rolling out of a bell, a bell of light falling, waves
+ * rolling out of a song, bubbles rising around the hurt). Damage is a share of the enemy's maximum health, so they are
+ * useful against any monster without taking the fight from the player; they never hurt players.
  */
-public final class WandererSkills {
+public final class TravellerSkills {
     private static final DustParticleOptions GOLD = dust(1.0F, 0.82F, 0.32F, 1.3F);
     private static final DustParticleOptions BRASS = dust(0.86F, 0.64F, 0.26F, 1.0F);
     private static final DustParticleOptions STAR = dust(1.0F, 0.96F, 0.7F, 1.6F);
@@ -47,7 +47,7 @@ public final class WandererSkills {
     private static final List<Show> SHOWS = new ArrayList<>();
     private static final int MAX_SHOWS = 32;
 
-    private WandererSkills() {
+    private TravellerSkills() {
     }
 
     private static DustParticleOptions dust(float r, float g, float b, float size) {
@@ -70,7 +70,7 @@ public final class WandererSkills {
         abstract void frame(int t);
     }
 
-    /** Server tick ({@link WandererDirector}): every running choreography plays its next frame. */
+    /** Server tick ({@link TravellerDirector}): every running choreography plays its next frame. */
     static void tick() {
         Iterator<Show> it = SHOWS.iterator();
         while (it.hasNext()) {
@@ -102,32 +102,32 @@ public final class WandererSkills {
     // --------------------------------------------------------------------------------------------- casting
 
     /** A signature skill on {@code target}: the gesture, the call, the choreography. */
-    static void cast(WandererEntity wanderer, Wanderers.Skill skill, LivingEntity target) {
-        if (!(wanderer.level() instanceof ServerLevel level)) {
+    static void cast(TravellerEntity traveller, Travellers.Skill skill, LivingEntity target) {
+        if (!(traveller.level() instanceof ServerLevel level)) {
             return;
         }
-        level.broadcastEntityEvent(wanderer, NpcEntity.TALK_EVENT);
-        WandererDirector.shout(wanderer, skill);
+        level.broadcastEntityEvent(traveller, NpcEntity.TALK_EVENT);
+        TravellerDirector.shout(traveller, skill);
         switch (skill) {
-            case STAR_CHART -> play(starChart(level, wanderer, target));
-            case COMPASS_RAY -> play(compassRay(level, wanderer));
-            case FALCON_STOOP -> play(falconStoop(level, wanderer, target));
-            case FEATHER_GALE -> play(featherGale(level, wanderer, target));
-            case BELL_TOLL -> play(bellToll(level, wanderer));
-            case GREAT_BELL -> play(greatBell(level, wanderer, target));
-            case SURF_SONG -> play(surfSong(level, wanderer, target));
-            case BUBBLE_WARD -> ward(wanderer);
+            case STAR_CHART -> play(starChart(level, traveller, target));
+            case COMPASS_RAY -> play(compassRay(level, traveller));
+            case FALCON_STOOP -> play(falconStoop(level, traveller, target));
+            case FEATHER_GALE -> play(featherGale(level, traveller, target));
+            case BELL_TOLL -> play(bellToll(level, traveller));
+            case GREAT_BELL -> play(greatBell(level, traveller, target));
+            case SURF_SONG -> play(surfSong(level, traveller, target));
+            case BUBBLE_WARD -> ward(traveller);
         }
     }
 
-    /** An ordinary attack in the wanderer's own manner. */
-    static void basic(WandererEntity wanderer, LivingEntity target) {
-        if (!(wanderer.level() instanceof ServerLevel level)) {
+    /** An ordinary attack in the traveller's own manner. */
+    static void basic(TravellerEntity traveller, LivingEntity target) {
+        if (!(traveller.level() instanceof ServerLevel level)) {
             return;
         }
-        Vec3 from = hand(wanderer);
+        Vec3 from = hand(traveller);
         Vec3 to = middle(target);
-        switch (wanderer.who()) {
+        switch (traveller.who()) {
             case BOLD -> {
                 line(level, BRASS, from, to, 0.3);
                 line(level, ParticleTypes.END_ROD, from, to, 1.2);
@@ -141,10 +141,10 @@ public final class WandererSkills {
                 sound(level, from, SoundEvents.ARROW_SHOOT, 0.8F, 1.3F);
             }
             case GRAUS -> {
-                Vec3 look = flat(target.position().subtract(wanderer.position()));
+                Vec3 look = flat(target.position().subtract(traveller.position()));
                 for (int i = -2; i <= 2; i++) {
                     Vec3 dir = rotate(look, i * 0.4);
-                    Vec3 at = wanderer.position().add(dir.scale(1.8)).add(0.0, 1.0, 0.0);
+                    Vec3 at = traveller.position().add(dir.scale(1.8)).add(0.0, 1.0, 0.0);
                     level.sendParticles(ParticleTypes.SWEEP_ATTACK, at.x, at.y, at.z, 1, 0.0, 0.0, 0.0, 0.0);
                 }
                 burst(level, ParticleTypes.CRIT, to, 10, 0.3, 0.3);
@@ -158,16 +158,16 @@ public final class WandererSkills {
                 sound(level, from, SoundEvents.AMETHYST_BLOCK_CHIME, 0.7F, 1.9F);
             }
         }
-        strike(wanderer, target, wanderer.who().basicDamage(), 0.25);
+        strike(traveller, target, traveller.who().basicDamage(), 0.25);
     }
 
     // ------------------------------------------------------------------------------------------------ Bold
 
     /** Six stars light up around the enemy, lines of light join them into two triangles, and they burst. */
-    private static Show starChart(ServerLevel level, WandererEntity wanderer, LivingEntity target) {
+    private static Show starChart(ServerLevel level, TravellerEntity traveller, LivingEntity target) {
         Vec3 center = target.position();
         double radius = 3.2;
-        double turn = wanderer.getRandom().nextDouble() * Math.PI;
+        double turn = traveller.getRandom().nextDouble() * Math.PI;
         Vec3[] stars = new Vec3[6];
         for (int i = 0; i < stars.length; i++) {
             double a = turn + i * Math.PI / 3.0;
@@ -201,8 +201,8 @@ public final class WandererSkills {
                     burst(level, STAR, center.add(0.0, 1.0, 0.0), 40, radius * 0.5, 0.0);
                     sound(level, center, SoundEvents.FIREWORK_ROCKET_TWINKLE, 1.0F, 1.2F);
                     sound(level, center, SoundEvents.AMETHYST_BLOCK_RESONATE, 1.0F, 1.4F);
-                    for (Mob mob : monsters(level, center, Wanderers.Skill.STAR_CHART.radius())) {
-                        strike(wanderer, mob, Wanderers.Skill.STAR_CHART.power(), 0.0);
+                    for (Mob mob : monsters(level, center, Travellers.Skill.STAR_CHART.radius())) {
+                        strike(traveller, mob, Travellers.Skill.STAR_CHART.power(), 0.0);
                         mob.setDeltaMovement(mob.getDeltaMovement().add(0.0, 0.45, 0.0));
                     }
                 }
@@ -217,10 +217,10 @@ public final class WandererSkills {
     }
 
     /** A needle of light turns once around him like a compass and cuts what it passes. */
-    private static Show compassRay(ServerLevel level, WandererEntity wanderer) {
-        Vec3 center = wanderer.position().add(0.0, 1.0, 0.0);
-        double length = Wanderers.Skill.COMPASS_RAY.radius();
-        double start = Math.toRadians(wanderer.getYRot() + 90.0);
+    private static Show compassRay(ServerLevel level, TravellerEntity traveller) {
+        Vec3 center = traveller.position().add(0.0, 1.0, 0.0);
+        double length = Travellers.Skill.COMPASS_RAY.radius();
+        double start = Math.toRadians(traveller.getYRot() + 90.0);
         Set<Integer> hit = new HashSet<>();
         return new Show(level, 20) {
             @Override
@@ -255,7 +255,7 @@ public final class WandererSkills {
                     double aside = rel.subtract(dir.scale(along)).length();
                     if (along > 0.0 && along <= length + 0.5 && aside <= 1.0 + mob.getBbWidth() * 0.5) {
                         hit.add(mob.getId());
-                        strike(wanderer, mob, Wanderers.Skill.COMPASS_RAY.power(), 0.6);
+                        strike(traveller, mob, Travellers.Skill.COMPASS_RAY.power(), 0.6);
                         burst(level, ParticleTypes.ENCHANTED_HIT, middle(mob), 12, 0.3, 0.3);
                     }
                 }
@@ -266,8 +266,8 @@ public final class WandererSkills {
     // ----------------------------------------------------------------------------------------------- Mirka
 
     /** The hawk climbs out of sight and stoops on the enemy in a golden streak. */
-    private static Show falconStoop(ServerLevel level, WandererEntity wanderer, LivingEntity target) {
-        Vec3 shoulder = wanderer.position().add(0.0, wanderer.getBbHeight() * 0.9, 0.0);
+    private static Show falconStoop(ServerLevel level, TravellerEntity traveller, LivingEntity target) {
+        Vec3 shoulder = traveller.position().add(0.0, traveller.getBbHeight() * 0.9, 0.0);
         return new Show(level, 18) {
             Vec3 last = shoulder;
 
@@ -280,7 +280,7 @@ public final class WandererSkills {
                     sound(level, shoulder, SoundEvents.PARROT_FLY, 0.8F, 1.2F);
                 }
                 if (t >= 4 && t <= 12) {
-                    Vec3 high = aim.add(flat(wanderer.position().subtract(aim)).normalize().scale(4.0))
+                    Vec3 high = aim.add(flat(traveller.position().subtract(aim)).normalize().scale(4.0))
                             .add(0.0, 12.0, 0.0);
                     double k = (t - 4) / 8.0;
                     double ease = k * k;
@@ -306,10 +306,10 @@ public final class WandererSkills {
                     level.sendParticles(ParticleTypes.CLOUD, aim.x, aim.y, aim.z, 8, 0.3, 0.2, 0.3, 0.05);
                     sound(level, aim, SoundEvents.PLAYER_ATTACK_STRONG, 1.0F, 1.1F);
                     sound(level, aim, SoundEvents.PHANTOM_FLAP, 0.9F, 1.6F);
-                    strike(wanderer, target, Wanderers.Skill.FALCON_STOOP.power(), 0.4);
-                    for (Mob mob : monsters(level, target.position(), Wanderers.Skill.FALCON_STOOP.radius())) {
+                    strike(traveller, target, Travellers.Skill.FALCON_STOOP.power(), 0.4);
+                    for (Mob mob : monsters(level, target.position(), Travellers.Skill.FALCON_STOOP.radius())) {
                         if (mob != target) {
-                            strike(wanderer, mob, Wanderers.Skill.FALCON_STOOP.power() * 0.5, 0.4);
+                            strike(traveller, mob, Travellers.Skill.FALCON_STOOP.power() * 0.5, 0.4);
                         }
                     }
                 }
@@ -321,10 +321,10 @@ public final class WandererSkills {
     }
 
     /** A fan of nine feathered arrows. */
-    private static Show featherGale(ServerLevel level, WandererEntity wanderer, LivingEntity target) {
-        Vec3 from = hand(wanderer);
-        Vec3 forward = flat(target.position().subtract(wanderer.position())).normalize();
-        double reach = Wanderers.Skill.FEATHER_GALE.radius();
+    private static Show featherGale(ServerLevel level, TravellerEntity traveller, LivingEntity target) {
+        Vec3 from = hand(traveller);
+        Vec3 forward = flat(target.position().subtract(traveller.position())).normalize();
+        double reach = Travellers.Skill.FEATHER_GALE.radius();
         Set<Integer> hit = new HashSet<>();
         return new Show(level, 10) {
             @Override
@@ -351,11 +351,11 @@ public final class WandererSkills {
                     if (hit.contains(mob.getId())) {
                         continue;
                     }
-                    Vec3 rel = flat(mob.position().subtract(wanderer.position()));
+                    Vec3 rel = flat(mob.position().subtract(traveller.position()));
                     double angle = Math.acos(Math.max(-1.0, Math.min(1.0, rel.normalize().dot(forward))));
                     if (angle <= Math.toRadians(38.0)) {
                         hit.add(mob.getId());
-                        strike(wanderer, mob, Wanderers.Skill.FEATHER_GALE.power(), 0.5);
+                        strike(traveller, mob, Travellers.Skill.FEATHER_GALE.power(), 0.5);
                         burst(level, FEATHER, middle(mob), 10, 0.3, 0.1);
                     }
                 }
@@ -366,9 +366,9 @@ public final class WandererSkills {
     // ----------------------------------------------------------------------------------------------- Graus
 
     /** He strikes the bell on his back: three rings of sound roll out; the first throws enemies back hard. */
-    private static Show bellToll(ServerLevel level, WandererEntity wanderer) {
-        Vec3 center = wanderer.position();
-        double reach = Wanderers.Skill.BELL_TOLL.radius();
+    private static Show bellToll(ServerLevel level, TravellerEntity traveller) {
+        Vec3 center = traveller.position();
+        double reach = Travellers.Skill.BELL_TOLL.radius();
         Set<Integer> hit = new HashSet<>();
         return new Show(level, 26) {
             @Override
@@ -401,7 +401,7 @@ public final class WandererSkills {
                         }
                         hit.add(key);
                         if (wave == 0) {
-                            strike(wanderer, mob, Wanderers.Skill.BELL_TOLL.power(), 1.1);
+                            strike(traveller, mob, Travellers.Skill.BELL_TOLL.power(), 1.1);
                         } else {
                             push(center, mob, 0.5);
                         }
@@ -412,7 +412,7 @@ public final class WandererSkills {
     }
 
     /** A bell of light appears high above the enemy, falls, and rings out as it lands. */
-    private static Show greatBell(ServerLevel level, WandererEntity wanderer, LivingEntity target) {
+    private static Show greatBell(ServerLevel level, TravellerEntity traveller, LivingEntity target) {
         Vec3 ground = target.position();
         double[][] profile = {{3.2, 0.35}, {2.8, 0.85}, {2.2, 1.1}, {1.6, 1.2}, {1.0, 1.35}, {0.4, 1.75}, {0.1, 1.9}};
         return new Show(level, 24) {
@@ -437,8 +437,8 @@ public final class WandererSkills {
                             1.2, 0.1, 1.2, 0.02);
                     sound(level, ground, SoundEvents.BELL_BLOCK, 1.6F, 0.55F);
                     sound(level, ground, SoundEvents.ANVIL_LAND, 0.6F, 0.6F);
-                    for (Mob mob : monsters(level, ground, Wanderers.Skill.GREAT_BELL.radius())) {
-                        strike(wanderer, mob, Wanderers.Skill.GREAT_BELL.power(), 0.8);
+                    for (Mob mob : monsters(level, ground, Travellers.Skill.GREAT_BELL.radius())) {
+                        strike(traveller, mob, Travellers.Skill.GREAT_BELL.power(), 0.8);
                     }
                 }
                 if (t > 12) {
@@ -455,10 +455,10 @@ public final class WandererSkills {
     // ------------------------------------------------------------------------------------------------ Sele
 
     /** Three waves roll out from her song in a wide arc in front of her and wash enemies back. */
-    private static Show surfSong(ServerLevel level, WandererEntity wanderer, LivingEntity target) {
-        Vec3 center = wanderer.position();
+    private static Show surfSong(ServerLevel level, TravellerEntity traveller, LivingEntity target) {
+        Vec3 center = traveller.position();
         Vec3 forward = flat(target.position().subtract(center)).normalize();
-        double reach = Wanderers.Skill.SURF_SONG.radius();
+        double reach = Travellers.Skill.SURF_SONG.radius();
         Set<Integer> hit = new HashSet<>();
         return new Show(level, 22) {
             @Override
@@ -497,7 +497,7 @@ public final class WandererSkills {
                         double angle = Math.acos(Math.max(-1.0, Math.min(1.0, rel.normalize().dot(forward))));
                         if (angle <= Math.toRadians(64.0)) {
                             hit.add(mob.getId());
-                            strike(wanderer, mob, Wanderers.Skill.SURF_SONG.power(), 1.0);
+                            strike(traveller, mob, Travellers.Skill.SURF_SONG.power(), 1.0);
                             burst(level, ParticleTypes.BUBBLE_POP, middle(mob), 16, 0.4, 0.05);
                         }
                     }
@@ -510,25 +510,25 @@ public final class WandererSkills {
      * Bubbles rise around every hurt player near Sele and heal them. @return whether anybody needed it (otherwise
      * nothing happens)
      */
-    static boolean ward(WandererEntity wanderer) {
-        if (!(wanderer.level() instanceof ServerLevel level)) {
+    static boolean ward(TravellerEntity traveller) {
+        if (!(traveller.level() instanceof ServerLevel level)) {
             return false;
         }
-        double radius = Wanderers.Skill.BUBBLE_WARD.radius();
+        double radius = Travellers.Skill.BUBBLE_WARD.radius();
         List<ServerPlayer> hurt = level.getEntitiesOfClass(ServerPlayer.class,
-                wanderer.getBoundingBox().inflate(radius),
+                traveller.getBoundingBox().inflate(radius),
                 player -> player.isAlive() && !player.isSpectator()
                         && player.getHealth() < player.getMaxHealth() * 0.7F);
         if (hurt.isEmpty()) {
             return false;
         }
-        level.broadcastEntityEvent(wanderer, NpcEntity.TALK_EVENT);
-        WandererDirector.shout(wanderer, Wanderers.Skill.BUBBLE_WARD);
-        sound(level, wanderer.position(), SoundEvents.AMETHYST_BLOCK_RESONATE, 1.0F, 1.6F);
+        level.broadcastEntityEvent(traveller, NpcEntity.TALK_EVENT);
+        TravellerDirector.shout(traveller, Travellers.Skill.BUBBLE_WARD);
+        sound(level, traveller.position(), SoundEvents.AMETHYST_BLOCK_RESONATE, 1.0F, 1.6F);
         play(new Show(level, 30) {
             @Override
             void frame(int t) {
-                Vec3 self = wanderer.position();
+                Vec3 self = traveller.position();
                 if (t % 4 == 0) {
                     level.sendParticles(ParticleTypes.NOTE, self.x, self.y + 2.2, self.z, 0, (t % 24) / 24.0, 0.0,
                             0.0, 1.0);
@@ -549,7 +549,7 @@ public final class WandererSkills {
                                 0.05, 0.05, 0.0);
                     }
                     if (t == 10) {
-                        player.heal(player.getMaxHealth() * (float) Wanderers.Skill.BUBBLE_WARD.power());
+                        player.heal(player.getMaxHealth() * (float) Travellers.Skill.BUBBLE_WARD.power());
                         player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 80, 0, false, true));
                         sound(level, feet, SoundEvents.BEACON_POWER_SELECT, 0.7F, 1.8F);
                         burst(level, ParticleTypes.HAPPY_VILLAGER, feet.add(0.0, 1.0, 0.0), 10, 0.4, 0.0);
@@ -561,18 +561,18 @@ public final class WandererSkills {
     }
 
     /** Music notes over Sele while she plays at the inn. */
-    static void notes(WandererEntity wanderer) {
-        if (wanderer.level() instanceof ServerLevel level && level.getRandom().nextInt(2) == 0) {
-            Vec3 at = wanderer.position().add(0.0, wanderer.getBbHeight() + 0.3, 0.0);
+    static void notes(TravellerEntity traveller) {
+        if (traveller.level() instanceof ServerLevel level && level.getRandom().nextInt(2) == 0) {
+            Vec3 at = traveller.position().add(0.0, traveller.getBbHeight() + 0.3, 0.0);
             level.sendParticles(ParticleTypes.NOTE, at.x, at.y, at.z, 0, level.getRandom().nextDouble(), 0.0, 0.0,
                     1.0);
         }
     }
 
-    /** A purchase at the shop: a few coins between the wanderer and the shopkeeper. */
-    static void coins(WandererEntity wanderer, NpcEntity shopkeeper) {
-        if (wanderer.level() instanceof ServerLevel level) {
-            Vec3 from = hand(wanderer);
+    /** A purchase at the shop: a few coins between the traveller and the shopkeeper. */
+    static void coins(TravellerEntity traveller, NpcEntity shopkeeper) {
+        if (traveller.level() instanceof ServerLevel level) {
+            Vec3 from = hand(traveller);
             Vec3 to = middle(shopkeeper);
             line(level, dust(1.0F, 0.84F, 0.3F, 0.8F), from, to, 0.4);
             level.sendParticles(ParticleTypes.WAX_ON, to.x, to.y, to.z, 4, 0.2, 0.2, 0.2, 0.0);
@@ -580,11 +580,11 @@ public final class WandererSkills {
     }
 
     /** Whatever it was doing, it leaves (or arrives): a swirl of light, as a waystone's trip looks. */
-    static void trip(WandererEntity wanderer, boolean arriving) {
-        if (!(wanderer.level() instanceof ServerLevel level)) {
+    static void trip(TravellerEntity traveller, boolean arriving) {
+        if (!(traveller.level() instanceof ServerLevel level)) {
             return;
         }
-        Vec3 feet = wanderer.position();
+        Vec3 feet = traveller.position();
         for (int i = 0; i < 16; i++) {
             double a = i * Math.PI / 8.0;
             double h = (i % 8) * 0.25;
@@ -605,15 +605,15 @@ public final class WandererSkills {
     }
 
     /** A hit worth {@code share} of the target's maximum health (at least a little), and a push away. */
-    private static void strike(WandererEntity wanderer, LivingEntity target, double share, double push) {
+    private static void strike(TravellerEntity traveller, LivingEntity target, double share, double push) {
         if (!target.isAlive() || target instanceof net.minecraft.world.entity.player.Player) {
             return;
         }
         float amount = (float) Math.max(3.0, target.getMaxHealth() * share);
         target.invulnerableTime = 0; // several sources in one fight must all count
-        target.hurt(wanderer.damageSources().mobAttack(wanderer), amount);
+        target.hurt(traveller.damageSources().mobAttack(traveller), amount);
         if (push > 0.0) {
-            push(wanderer.position(), target, push);
+            push(traveller.position(), target, push);
         }
     }
 
@@ -628,9 +628,9 @@ public final class WandererSkills {
 
     // ------------------------------------------------------------------------------------------- drawing
 
-    private static Vec3 hand(WandererEntity wanderer) {
-        Vec3 look = Vec3.directionFromRotation(0.0F, wanderer.getYHeadRot());
-        return wanderer.position().add(0.0, wanderer.getBbHeight() * 0.65, 0.0).add(look.scale(0.5));
+    private static Vec3 hand(TravellerEntity traveller) {
+        Vec3 look = Vec3.directionFromRotation(0.0F, traveller.getYHeadRot());
+        return traveller.position().add(0.0, traveller.getBbHeight() * 0.65, 0.0).add(look.scale(0.5));
     }
 
     private static Vec3 middle(LivingEntity entity) {
