@@ -447,3 +447,31 @@ after about 1.2-1.7 s instead of 4-6 s, and the server caps grow with them (252 
 more than 80 blocks from every player (it would be despawned at once). Without アストリア, the old around-the-player
 spawns reach 56 blocks instead of 40 and hold 74 per player instead of 21. The map draws the wider ring faintly around
 each habitat.
+
+## D-STATPERCENT: primary stats grow by percentages from trinkets and armor; six trinket slots; a smithy catalogue (2026-11-13)
+The owner: 「ステータスの伸びをもっと増やして欲しい、例えばお守りとアクセサリーを増やして、それも生成できるようにする。で、STR+10とか
+じゃなくてSTR+10%とかにして、強化もできるようにする。工夫しだいでSTRを4000位まで伸ばせるようにしてほしい。防具にもその機能つけたり」.
+A level-100 build topped out near STR 614 (×13 physical damage). Decisions:
+- **Percentages after every flat source**: `final = min(9999, floor(flat × (1 + Σ%)))` (`StatPercents`, `ComposedStats`).
+  Percentages add up instead of multiplying, so the reach is predictable and no single piece dominates; they apply to
+  own + job + equipment flat stats alike, so levelling and allocation keep mattering.
+- **Where percentages come from**: six new affix kinds (`STR_PERCENT`..`LUK_PERCENT`, 2-4 % on tier 1, 8-12 % on tier 7)
+  that accessories, charms and armor roll — armor gives STR %, INT % and DEX % the same weight on every piece, plus each
+  piece's own stats; weapons keep their flat stat and damage percentages — and the trinkets' own stats, now percentages
+  (relics converted, ×1.25 of a catalogue trinket of their level).
+- **Enhancement grows percentages faster**: +10 % of themselves per level (×2 at +10), where other affixes do not grow at
+  all and base values grow 6 % per level. Enhancing a percent piece is the deliberate long-term sink.
+- **More trinkets and more slots**: four accessories and two charms (the three new slots appended to the saved list, so
+  older saves keep their places), and a smithy catalogue of 156 trinkets (13 grades from Lv1 to Lv100 × six focuses ×
+  accessory and charm), forged from tier materials, past level 50 from abyss materials, field elites and the end soul;
+  grades 1-8 also drop in the fields (10 %, elites 18 %, the killer's job stats twice as likely).
+- **"工夫" is variety**: the same named trinket still counts once, so four STR accessories mean four different ones (the
+  best grades of the catalogue, relics); a perfect level-100 STR build reaches STR 3,912 (+707 %) — test-pinned to
+  3,600-4,800 — while a level-55 epic +5 build sits near 470.
+- **Old pieces stay valid**: flat primary stat affixes on accessories and charms remain allowed ("legacy" kinds of the
+  pool: they still count, never roll again); affix kinds are never removed (an unknown kind makes a stack unreadable).
+- **Visible**: tooltips show counted percentages and how enhancement raised them, the character screen a gold "+707%"
+  column, the equipment screen totals and comparisons percentage rows; the character snapshot carries the percentages
+  (protocol 11) and is re-sent whenever gear changes the stats.
+- **Not rebalanced (yet)**: monster health and damage are unchanged, so endgame damage rises steeply (STR 4,000 ≈ ×81
+  physical damage). Scaling monsters is a separate decision for the owner.

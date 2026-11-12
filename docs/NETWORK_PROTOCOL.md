@@ -5,7 +5,7 @@
 | 項目 | 値 |
 |---|---|
 | チャンネル | `eternalrealm:main`（Forge SimpleChannel） |
-| プロトコル版 | `"10"`（`ERNetwork.PROTOCOL_VERSION`）。Phase 2 で戦闘パケット追加のため 1→2、以後の追加を経て、スキルツリー（職業スキル枠5・6、職業武器の拒否、スナップショットのスキル枠）で 4→5、HUD 刷新（`UseItemPacket`、戦闘値の回復薬補正）で 5→6、カバンの取得表示（`PickupFeedPacket`）で 6→7、スキルのロックオン（`CombatActionPacket` に targetId）で 7→8、伝説の旅人の技の演出（`HeroFxPacket`）で 8→9、スキルの光（`SkillFxPacket`）で 9→10 |
+| プロトコル版 | `"11"`（`ERNetwork.PROTOCOL_VERSION`）。Phase 2 で戦闘パケット追加のため 1→2、以後の追加を経て、スキルツリー（職業スキル枠5・6、職業武器の拒否、スナップショットのスキル枠）で 4→5、HUD 刷新（`UseItemPacket`、戦闘値の回復薬補正）で 5→6、カバンの取得表示（`PickupFeedPacket`）で 6→7、スキルのロックオン（`CombatActionPacket` に targetId）で 7→8、伝説の旅人の技の演出（`HeroFxPacket`）で 8→9、スキルの光（`SkillFxPacket`）で 9→10、ステータス％（`CharacterSnapshotPacket` の末尾に装備の％）で 10→11 |
 | 互換性 | クライアント・サーバーとも**完全一致のみ受け入れ**。MOD未導入のクライアントは接続時に拒否 |
 | 版上げ条件 | パケットの追加・削除・順序変更・フィールド変更のいずれか |
 
@@ -165,3 +165,14 @@
 - スキルの行動そのものの光は既存の `PlayerActionPacket`（行動ID・時間）から各クライアントが組み立てる（新しいデータなし）。
 - スキルの魔法弾（`MagicProjectile`）と矢（`SkillArrow`）にエンティティ同期データ `THEME`（byte、-1=なし）を追加。クライアントが飛ぶ光の
   テーマに使う。
+
+## 付録: ステータス％（版 11: `CharacterSnapshotPacket` に装備の％）
+
+- `CharacterSnapshotPacket`: スキル枠の後に**装備のステータス％**（STR・VIT・AGI・INT・DEX・LUK の順に VarInt 6つ、千分率 =
+  0.1% 単位。0〜100,000）。直前の「職業と装備の上乗せ」（bonusStats）は固定値と％の上乗せを合わせた値になった。
+- 送るとき: 従来どおりキャラクターが変わったとき（`CharacterSync`）に加えて、装備で能力が変わったとき（`CombatDriver` の能力の
+  再計算。装身具・防具・武器の付け外し、鍛冶屋の強化・再錬成）にも送る。
+- UI データ `trinkets`: `stacks` が6つに（`TrinketSlots.Slot` の保存順: 飾1・飾2・守1・飾3・飾4・守2）。古いクライアントは無い
+  （版が違えばログインできない）。
+- UI 操作: `bag.equip` / `bag.unequip` の `target` に `accessory_3`・`accessory_4`・`charm_2`、`smith.enhance` / `smith.reroll` の
+  `slot` に 41〜46（身に着けた装身具）。
