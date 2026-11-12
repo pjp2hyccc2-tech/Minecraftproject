@@ -13,8 +13,8 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Sums the pieces a character wears. Pass the four armor pieces, the trinkets (two accessories, one charm) plus the
- * main-hand weapon if it is equipment (its affixes count while it is held); the weapon's
+ * Sums the pieces a character wears. Pass the four armor pieces, the trinkets (up to four accessories and two charms)
+ * plus the main-hand weapon if it is equipment (its affixes count while it is held); the weapon's
  * {@link EquipmentStats#bonusAttack()} is not part of the sum because it applies per hit ({@link #weaponBonusAttack}).
  * A trinket counts once: a second copy of the same named trinket adds nothing.
  *

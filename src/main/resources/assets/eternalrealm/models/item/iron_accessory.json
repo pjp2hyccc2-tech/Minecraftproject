@@ -2,5 +2,43 @@
   "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "eternalrealm:item/trinket/base_accessory"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 5200
+      },
+      "model": "eternalrealm:item/trinket/trinket_novice_str_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5202
+      },
+      "model": "eternalrealm:item/trinket/trinket_novice_vit_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5204
+      },
+      "model": "eternalrealm:item/trinket/trinket_novice_agi_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5206
+      },
+      "model": "eternalrealm:item/trinket/trinket_novice_int_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5208
+      },
+      "model": "eternalrealm:item/trinket/trinket_novice_dex_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5210
+      },
+      "model": "eternalrealm:item/trinket/trinket_novice_luk_ring"
+    }
+  ]
 }

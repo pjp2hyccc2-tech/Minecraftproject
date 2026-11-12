@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eternalrealm:item/trinket/trinket_elite_agi_bell"
+  }
+}

@@ -21,8 +21,9 @@ import java.util.Objects;
  * +7 炎竜の両手剣                ← {@link #name}
  * エピック・両手剣              ← RARITY
  * 攻撃力 18.6                   ← BASE_STAT (armor: 防御力 / 最大HP)
- * STR +12                        ← AFFIX (one per affix, sorted by kind)
- * 強化 +7/10（基本性能 +42%）    ← ENHANCEMENT (only when enhanced)
+ * STR +12                        ← AFFIX (one per affix, sorted by kind; STR +8.4% for a stat percent)
+ * 強化 +7/10（基本性能 +42%）    ← ENHANCEMENT (only when enhanced; ENHANCEMENT_PERCENT when the piece has
+ *                                   stat percentages: they grow by +70% at +7)
  * 必要レベル 30                  ← REQUIREMENT
  * 使用できる職業: ナイト・魔剣士  ← USABLE_BY (weapons; red when the viewer's job cannot use it)
  * バインド済み（取引不可）        ← BINDING (only when bound)
@@ -30,8 +31,9 @@ import java.util.Objects;
  *
  * A named design ({@link Armory}) is called by its own name and adds, after the rarity line: where it comes from
  * (DESIGN), its handling, element and fixed bonuses (TRAIT), its perks (PERK), every weapon's art (ART), an armor
- * piece's set with both bonuses (SET), and its flavour text (LORE) before the requirement. A trinket shows its stats
- * instead of defense; a relic (金枠) is named and headed in gold ("金枠の遺宝・指輪") and says whose relic it is.
+ * piece's set with both bonuses (SET), and its flavour text (LORE) before the requirement. A trinket shows its stat
+ * percentages ("STR +12%") instead of defense; a relic (金枠) is named and headed in gold ("金枠の遺宝・指輪") and says
+ * whose relic it is.
  * Every special value is shown as it counts, raised by the rarity ({@link ItemRarity#power()}); the art line adds the
  * rarity's boost to the art's power.
  */
@@ -61,9 +63,13 @@ public final class EquipmentTooltip {
     public static final String RELIC_TYPE = PREFIX + "relic_type";
     /** "武技の威力 +30%（レア度）". */
     public static final String ART_POWER = PREFIX + "art_power";
-    /** "STR +12 · VIT +8": a trinket's stats. */
+    /** "STR +12% · VIT +8%": a trinket's stat percentages. */
     public static final String TRINKET_STATS = PREFIX + "trinket_stats";
     public static final String STAT = PREFIX + "stat";
+    /** "STR +12%": one stat percentage. */
+    public static final String STAT_PERCENT = PREFIX + "stat_percent";
+    /** The enhancement line of a piece with stat percentages: base values and stat percentages grow apart. */
+    public static final String ENHANCEMENT_PERCENT = PREFIX + "enhancement_percent";
     public static final String REACH = PREFIX + "reach";
     public static final String ELEMENT = PREFIX + "element";
     public static final String ART = PREFIX + "art";
@@ -78,10 +84,10 @@ public final class EquipmentTooltip {
 
     /** Every fixed key of this class. */
     public static final List<String> KEYS = List.of(NAME, NAME_ENHANCED, RARITY_TYPE, ATTACK, DEFENSE, MAX_HEALTH,
-            ENHANCEMENT, REQUIRED_LEVEL, BOUND, USABLE_BY, JOB_SEPARATOR, DESIGN_NAME, DESIGN_NAME_ENHANCED,
-            FROM_FIELD, FROM_CRAFT, FROM_DUNGEON, FROM_LORD, FROM_CALAMITY, FROM_BOSS, FROM_RELIC, RELIC_TYPE,
-            ART_POWER, TRINKET_STATS, STAT, REACH, ELEMENT, ART, SET, SET_BONUS, LORE, TRAIT_SEPARATOR, TRAITS,
-            MODIFIER + "attack_speed");
+            ENHANCEMENT, ENHANCEMENT_PERCENT, REQUIRED_LEVEL, BOUND, USABLE_BY, JOB_SEPARATOR, DESIGN_NAME,
+            DESIGN_NAME_ENHANCED, FROM_FIELD, FROM_CRAFT, FROM_DUNGEON, FROM_LORD, FROM_CALAMITY, FROM_BOSS, FROM_RELIC,
+            RELIC_TYPE, ART_POWER, TRINKET_STATS, STAT, STAT_PERCENT, REACH, ELEMENT, ART, SET, SET_BONUS, LORE,
+            TRAIT_SEPARATOR, TRAITS, MODIFIER + "attack_speed");
 
     private EquipmentTooltip() {
     }
@@ -171,14 +177,23 @@ public final class EquipmentTooltip {
         data.armorPiece().ifPresent(piece -> lines.addAll(armorLines(piece, power)));
         for (Affix affix : data.affixes()) {
             lines.add(TooltipLine.of(TooltipLine.Kind.AFFIX, affix.kind().translationKey(), TooltipLine.COLOR_AFFIX,
-                    new TooltipLine.Text(affix.kind().format(EquipmentStats.affixValue(affix, data.rarity())))));
+                    new TooltipLine.Text(affix.kind().format(
+                            EquipmentStats.affixValue(affix, data.rarity(), data.enhancement())))));
         }
         if (data.enhancement() > 0) {
             double percent = EquipmentStats.ENHANCEMENT_BONUS_PER_LEVEL * data.enhancement() * 100.0;
-            lines.add(TooltipLine.of(TooltipLine.Kind.ENHANCEMENT, ENHANCEMENT, TooltipLine.COLOR_ENHANCEMENT,
-                    new TooltipLine.Text(Integer.toString(data.enhancement())),
-                    new TooltipLine.Text(Integer.toString(EquipmentData.MAX_ENHANCEMENT)),
-                    new TooltipLine.Text(number(percent))));
+            if (hasStatPercents(data)) {
+                double statPercent = EquipmentStats.PERCENT_BONUS_PER_LEVEL * data.enhancement() * 100.0;
+                lines.add(TooltipLine.of(TooltipLine.Kind.ENHANCEMENT, ENHANCEMENT_PERCENT,
+                        TooltipLine.COLOR_ENHANCEMENT, new TooltipLine.Text(Integer.toString(data.enhancement())),
+                        new TooltipLine.Text(Integer.toString(EquipmentData.MAX_ENHANCEMENT)),
+                        new TooltipLine.Text(number(percent)), new TooltipLine.Text(number(statPercent))));
+            } else {
+                lines.add(TooltipLine.of(TooltipLine.Kind.ENHANCEMENT, ENHANCEMENT, TooltipLine.COLOR_ENHANCEMENT,
+                        new TooltipLine.Text(Integer.toString(data.enhancement())),
+                        new TooltipLine.Text(Integer.toString(EquipmentData.MAX_ENHANCEMENT)),
+                        new TooltipLine.Text(number(percent))));
+            }
         }
         if (data.design() != null) {
             lines.add(TooltipLine.of(TooltipLine.Kind.LORE, LORE, TooltipLine.COLOR_LORE,
@@ -194,6 +209,16 @@ public final class EquipmentTooltip {
             lines.add(TooltipLine.of(TooltipLine.Kind.BINDING, BOUND, TooltipLine.COLOR_WARNING));
         }
         return Collections.unmodifiableList(lines);
+    }
+
+    /** Whether the piece raises a stat by a percentage (a stat percent affix or a trinket's own percentages). */
+    public static boolean hasStatPercents(EquipmentData data) {
+        for (Affix affix : data.affixes()) {
+            if (affix.kind().isStatPercent()) {
+                return true;
+            }
+        }
+        return data.trinketDesign().map(trinket -> !trinket.percents().isZero()).orElse(false);
     }
 
     /** "ヌシ「街道荒らしのガルム」の得物", "砂塵の神殿の秘宝", "はじまりの草原の名品" ... */
@@ -293,7 +318,9 @@ public final class EquipmentTooltip {
         return lines;
     }
 
-    /** A trinket's stats and bonuses (raised by rarity and enhancement) and its perks (raised by rarity). */
+    /**
+     * A trinket's stat percentages and bonuses (raised by rarity and enhancement) and its perks (raised by rarity).
+     */
     static List<TooltipLine> trinketLines(EquipmentData data) {
         List<TooltipLine> lines = new ArrayList<>();
         TrinketDesign trinket = data.trinketDesign().orElse(null);
@@ -303,10 +330,11 @@ public final class EquipmentTooltip {
         double factor = data.rarity().power() * EquipmentStats.enhancementFactor(data.enhancement());
         List<TooltipLine.Arg> stats = new ArrayList<>();
         for (com.eternalrealm.character.StatType type : com.eternalrealm.character.StatType.values()) {
-            int value = trinket.stats().get(type);
-            if (value > 0) {
-                stats.add(TooltipLine.Nested.of(STAT, new TooltipLine.Text(type.name()),
-                        new TooltipLine.Text(Integer.toString(EquipmentStats.scaledStat(value, factor)))));
+            double value = EquipmentStats.trinketPercent(trinket.percents().get(type), data.rarity(),
+                    data.enhancement());
+            if (value > 0.0) {
+                stats.add(TooltipLine.Nested.of(STAT_PERCENT, new TooltipLine.Text(type.name()),
+                        new TooltipLine.Text(number(value * 100.0))));
             }
         }
         if (!stats.isEmpty()) {

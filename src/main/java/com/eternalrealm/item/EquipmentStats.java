@@ -1,6 +1,7 @@
 package com.eternalrealm.item;
 
 import com.eternalrealm.character.StatBlock;
+import com.eternalrealm.character.StatPercents;
 import com.eternalrealm.character.StatType;
 import com.eternalrealm.combat.CombatModifiers;
 import com.eternalrealm.combat.DamageCalculator;
@@ -27,62 +28,94 @@ import java.util.Objects;
  * modifiers          + the weapon's crit, attack speed and fixed bonuses / the armor piece's bonus
  * </pre>
  *
- * Enhancement scales only these base values (and a trinket's fixed stats), never the affixes, so enhancing (強化) and
- * rerolling (厳選) are independent ways to improve a piece. The rarity's {@link ItemRarity#power()} multiplies the
+ * Enhancement scales these base values and a trinket's fixed bonuses, never the other affixes, so enhancing (強化)
+ * and rerolling (厳選) are independent ways to improve a piece. The rarity's {@link ItemRarity#power()} multiplies the
  * special performance: every affix value (primary stats rounded), a named design's fixed bonuses (a weapon's critical
- * chance, attack speed and bonuses, an armor piece's bonus) and a trinket's stats and bonuses.
+ * chance, attack speed and bonuses, an armor piece's bonus) and a trinket's percentages and bonuses.
+ *
+ * <p><b>Stat percentages</b> (STR +8 %: {@link AffixKind#isStatPercent()} affixes and a trinket's own percentages) grow
+ * faster with enhancement, {@link #PERCENT_BONUS_PER_LEVEL} per level (×2 at +10), so enhancing a percent piece is the
+ * way to push a build's stats far ({@link StatPercents}).</p>
  *
  * <pre>
- * trinket stats      = design stats     × rarity power × enhancement factor (primary stats rounded)
+ * percent factor     = 1 + 0.10 × enhancement
+ * stat percent affix = rolled value     × rarity power × percent factor      (on the 0.1 % grid)
+ * trinket percents   = design percents  × rarity power × percent factor      (on the 0.1 % grid)
  * trinket modifiers  = design modifiers × rarity power × enhancement factor
  * </pre>
  *
- * @param stats       primary stats from affixes
+ * @param stats       primary stats from affixes (flat)
+ * @param percents    primary stat percentages from affixes and the trinket design
  * @param modifiers   armor defense / max health and the secondary affixes
  * @param bonusAttack weapons: attack added to the weapon type's base attack on every hit; 0 for armor
  */
-public record EquipmentStats(StatBlock stats, CombatModifiers modifiers, double bonusAttack) {
+public record EquipmentStats(StatBlock stats, StatPercents percents, CombatModifiers modifiers, double bonusAttack) {
     public static final double ENHANCEMENT_BONUS_PER_LEVEL = 0.06;
+    /** What each enhancement level adds to a piece's stat percentages (+10 % per level, ×2 at +10). */
+    public static final double PERCENT_BONUS_PER_LEVEL = 0.10;
 
     public EquipmentStats {
         Objects.requireNonNull(stats, "stats");
+        Objects.requireNonNull(percents, "percents");
         Objects.requireNonNull(modifiers, "modifiers");
         Checks.range("bonusAttack", bonusAttack, 0.0, DamageCalculator.MAX_BONUS_ATTACK);
+    }
+
+    /** A piece without stat percentages. */
+    public EquipmentStats(StatBlock stats, CombatModifiers modifiers, double bonusAttack) {
+        this(stats, StatPercents.ZERO, modifiers, bonusAttack);
     }
 
     public static EquipmentStats of(EquipmentData data) {
         Objects.requireNonNull(data, "data");
         double power = data.rarity().power();
         Map<StatType, Integer> stats = new EnumMap<>(StatType.class);
+        Map<StatType, Double> percents = new EnumMap<>(StatType.class);
         CombatModifiers.Builder modifiers = CombatModifiers.builder()
                 .defense(baseDefense(data))
                 .healthFlat(baseMaxHealth(data));
         for (Affix affix : data.affixes()) {
             affix.kind().stat().ifPresent(stat -> stats.merge(stat, scaledStat(affix.intValue(), power),
                     Integer::sum));
-            affix.kind().addTo(modifiers, affixValue(affix, data.rarity()));
+            double value = affixValue(affix, data.rarity(), data.enhancement());
+            affix.kind().percentStat().ifPresent(stat -> percents.merge(stat, value, Double::sum));
+            affix.kind().addTo(modifiers, value);
         }
         data.trinketDesign().ifPresent(trinket -> {
-            double factor = power * enhancementFactor(data.enhancement());
             for (StatType type : StatType.values()) {
-                int value = trinket.stats().get(type);
-                if (value > 0) {
-                    stats.merge(type, scaledStat(value, factor), Integer::sum);
+                double value = trinketPercent(trinket.percents().get(type), data.rarity(), data.enhancement());
+                if (value > 0.0) {
+                    percents.merge(type, value, Double::sum);
                 }
             }
         });
         CombatModifiers total = modifiers.build().plus(designModifiers(data));
         double bonus = data.isWeapon() ? Math.max(0.0, baseAttack(data) - weaponTypeAttack(data)) : 0.0;
-        return new EquipmentStats(StatBlock.of(stats), total, Math.min(DamageCalculator.MAX_BONUS_ATTACK, bonus));
+        return new EquipmentStats(StatBlock.of(stats), StatPercents.of(percents), total,
+                Math.min(DamageCalculator.MAX_BONUS_ATTACK, bonus));
     }
 
     public GearBonus gearBonus() {
-        return new GearBonus(stats, modifiers);
+        return new GearBonus(stats, percents, modifiers);
     }
 
     public static double enhancementFactor(int enhancement) {
         return 1.0 + ENHANCEMENT_BONUS_PER_LEVEL
                 * Checks.range("enhancement", enhancement, 0, EquipmentData.MAX_ENHANCEMENT);
+    }
+
+    /** How much enhancement raises a piece's stat percentages: {@code 1 + 0.10 × enhancement}. */
+    public static double percentFactor(int enhancement) {
+        return 1.0 + PERCENT_BONUS_PER_LEVEL
+                * Checks.range("enhancement", enhancement, 0, EquipmentData.MAX_ENHANCEMENT);
+    }
+
+    /** A trinket design's percentage of one stat as it counts on a piece: × rarity power × percent factor. */
+    public static double trinketPercent(double designPercent, ItemRarity rarity, int enhancement) {
+        if (designPercent <= 0.0) {
+            return 0.0;
+        }
+        return snapPercent(designPercent * rarity.power() * percentFactor(enhancement));
     }
 
     /**
@@ -136,12 +169,31 @@ public record EquipmentStats(StatBlock stats, CombatModifiers modifiers, double 
         return CombatModifiers.NONE;
     }
 
-    /** An affix's value as it counts (and is shown): the rolled value × the rarity's power, on the kind's grid. */
+    /**
+     * An affix's value as it counts (and is shown) on an unenhanced piece: the rolled value × the rarity's power, on the
+     * kind's grid.
+     */
     public static double affixValue(Affix affix, ItemRarity rarity) {
+        return affixValue(affix, rarity, 0);
+    }
+
+    /**
+     * An affix's value as it counts (and is shown): the rolled value × the rarity's power, on the kind's grid; a stat
+     * percent also × the {@link #percentFactor} of the enhancement.
+     */
+    public static double affixValue(Affix affix, ItemRarity rarity, int enhancement) {
         if (affix.kind().isPrimaryStat()) {
             return scaledStat(affix.intValue(), rarity.power());
         }
+        if (affix.kind().isStatPercent()) {
+            return affix.kind().snap(affix.value() * rarity.power() * percentFactor(enhancement));
+        }
         return affix.kind().snap(affix.value() * rarity.power());
+    }
+
+    /** A percentage on the 0.1 % grid (0.001 steps). */
+    public static double snapPercent(double value) {
+        return Math.rint(value * 1000.0) / 1000.0;
     }
 
     /** A primary stat × a factor, rounded half up (never below the value itself). */

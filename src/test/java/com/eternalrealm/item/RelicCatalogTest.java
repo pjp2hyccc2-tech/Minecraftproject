@@ -86,7 +86,12 @@ public class RelicCatalogTest {
             assertEquals(EquipmentSlot.CHARM, source.charm().slot());
             assertEquals(EquipmentBase.trinket(EquipmentSlot.ACCESSORY, source.accessory().tier()),
                     source.accessory().base());
-            assertTrue(source.accessory().stats().total() > 0 && source.charm().stats().total() > 0);
+            // relic trinkets raise stats by percentages: ×1.25 of a catalogue trinket of their level
+            assertFalse(source.accessory().percents().isZero() || source.charm().percents().isZero());
+            assertEquals(Math.round(1.25 * Trinkets.charmPercent(source.charm().level()) * 1000.0) / 1000.0,
+                    source.charm().percents().get(com.eternalrealm.character.StatType.VIT), 1.0e-9);
+            assertTrue(source.accessory().percents().asMap().values().stream().mapToDouble(Double::doubleValue)
+                    .max().orElseThrow() >= 1.25 * Trinkets.accessoryPercent(source.accessory().level()) - 1.0e-3);
             types.add(source.weapon().type());
         }
         assertEquals("every weapon type has relics", WeaponType.values().length, types.size());

@@ -12,8 +12,8 @@ import java.util.Locale;
 
 /**
  * The comparison the equipment screen shows: a candidate from the bag against what is equipped in the same slot, row
- * by row (attack or defense and health, the six stats, critical chance and damage, attack and move speed). Rows that
- * are zero on both sides are left out.
+ * by row (attack or defense and health, the six stats flat and as percentages, critical chance and damage, attack and
+ * move speed). Rows that are zero on both sides are left out.
  */
 public final class EquipmentComparison {
     private static final double EPS = 1.0E-9;
@@ -29,6 +29,12 @@ public final class EquipmentComparison {
         INT(false),
         DEX(false),
         LUK(false),
+        STR_PERCENT(true),
+        VIT_PERCENT(true),
+        AGI_PERCENT(true),
+        INT_PERCENT(true),
+        DEX_PERCENT(true),
+        LUK_PERCENT(true),
         CRIT_CHANCE(true),
         CRIT_DAMAGE(true),
         ATTACK_SPEED(true),
@@ -99,6 +105,12 @@ public final class EquipmentComparison {
         out[Stat.INT.ordinal()] = stats.stats().get(StatType.INT);
         out[Stat.DEX.ordinal()] = stats.stats().get(StatType.DEX);
         out[Stat.LUK.ordinal()] = stats.stats().get(StatType.LUK);
+        out[Stat.STR_PERCENT.ordinal()] = stats.percents().get(StatType.STR);
+        out[Stat.VIT_PERCENT.ordinal()] = stats.percents().get(StatType.VIT);
+        out[Stat.AGI_PERCENT.ordinal()] = stats.percents().get(StatType.AGI);
+        out[Stat.INT_PERCENT.ordinal()] = stats.percents().get(StatType.INT);
+        out[Stat.DEX_PERCENT.ordinal()] = stats.percents().get(StatType.DEX);
+        out[Stat.LUK_PERCENT.ordinal()] = stats.percents().get(StatType.LUK);
         out[Stat.CRIT_CHANCE.ordinal()] = modifiers.critChance();
         out[Stat.CRIT_DAMAGE.ordinal()] = modifiers.critDamage();
         out[Stat.ATTACK_SPEED.ordinal()] = modifiers.attackSpeed();

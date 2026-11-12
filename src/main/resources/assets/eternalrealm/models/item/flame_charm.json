@@ -135,6 +135,42 @@
         "custom_model_data": 5127
       },
       "model": "eternalrealm:item/trinket/relic_w_tide_singer_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5249
+      },
+      "model": "eternalrealm:item/trinket/trinket_valiant_str_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5251
+      },
+      "model": "eternalrealm:item/trinket/trinket_valiant_vit_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5253
+      },
+      "model": "eternalrealm:item/trinket/trinket_valiant_agi_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5255
+      },
+      "model": "eternalrealm:item/trinket/trinket_valiant_int_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5257
+      },
+      "model": "eternalrealm:item/trinket/trinket_valiant_dex_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5259
+      },
+      "model": "eternalrealm:item/trinket/trinket_valiant_luk_pouch"
     }
   ]
 }

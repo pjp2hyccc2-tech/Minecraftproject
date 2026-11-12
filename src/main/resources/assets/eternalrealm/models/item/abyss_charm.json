@@ -117,6 +117,258 @@
         "custom_model_data": 5119
       },
       "model": "eternalrealm:item/trinket/relic_w_gravebloom_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5273
+      },
+      "model": "eternalrealm:item/trinket/trinket_heroic_str_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5275
+      },
+      "model": "eternalrealm:item/trinket/trinket_heroic_vit_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5277
+      },
+      "model": "eternalrealm:item/trinket/trinket_heroic_agi_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5279
+      },
+      "model": "eternalrealm:item/trinket/trinket_heroic_int_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5281
+      },
+      "model": "eternalrealm:item/trinket/trinket_heroic_dex_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5283
+      },
+      "model": "eternalrealm:item/trinket/trinket_heroic_luk_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5285
+      },
+      "model": "eternalrealm:item/trinket/trinket_champion_str_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5287
+      },
+      "model": "eternalrealm:item/trinket/trinket_champion_vit_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5289
+      },
+      "model": "eternalrealm:item/trinket/trinket_champion_agi_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5291
+      },
+      "model": "eternalrealm:item/trinket/trinket_champion_int_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5293
+      },
+      "model": "eternalrealm:item/trinket/trinket_champion_dex_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5295
+      },
+      "model": "eternalrealm:item/trinket/trinket_champion_luk_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5297
+      },
+      "model": "eternalrealm:item/trinket/trinket_starlit_str_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5299
+      },
+      "model": "eternalrealm:item/trinket/trinket_starlit_vit_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5301
+      },
+      "model": "eternalrealm:item/trinket/trinket_starlit_agi_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5303
+      },
+      "model": "eternalrealm:item/trinket/trinket_starlit_int_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5305
+      },
+      "model": "eternalrealm:item/trinket/trinket_starlit_dex_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5307
+      },
+      "model": "eternalrealm:item/trinket/trinket_starlit_luk_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5309
+      },
+      "model": "eternalrealm:item/trinket/trinket_celestial_str_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5311
+      },
+      "model": "eternalrealm:item/trinket/trinket_celestial_vit_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5313
+      },
+      "model": "eternalrealm:item/trinket/trinket_celestial_agi_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5315
+      },
+      "model": "eternalrealm:item/trinket/trinket_celestial_int_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5317
+      },
+      "model": "eternalrealm:item/trinket/trinket_celestial_dex_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5319
+      },
+      "model": "eternalrealm:item/trinket/trinket_celestial_luk_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5321
+      },
+      "model": "eternalrealm:item/trinket/trinket_divine_str_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5323
+      },
+      "model": "eternalrealm:item/trinket/trinket_divine_vit_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5325
+      },
+      "model": "eternalrealm:item/trinket/trinket_divine_agi_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5327
+      },
+      "model": "eternalrealm:item/trinket/trinket_divine_int_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5329
+      },
+      "model": "eternalrealm:item/trinket/trinket_divine_dex_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5331
+      },
+      "model": "eternalrealm:item/trinket/trinket_divine_luk_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5333
+      },
+      "model": "eternalrealm:item/trinket/trinket_aeon_str_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5335
+      },
+      "model": "eternalrealm:item/trinket/trinket_aeon_vit_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5337
+      },
+      "model": "eternalrealm:item/trinket/trinket_aeon_agi_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5339
+      },
+      "model": "eternalrealm:item/trinket/trinket_aeon_int_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5341
+      },
+      "model": "eternalrealm:item/trinket/trinket_aeon_dex_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5343
+      },
+      "model": "eternalrealm:item/trinket/trinket_aeon_luk_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5345
+      },
+      "model": "eternalrealm:item/trinket/trinket_eternal_str_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5347
+      },
+      "model": "eternalrealm:item/trinket/trinket_eternal_vit_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5349
+      },
+      "model": "eternalrealm:item/trinket/trinket_eternal_agi_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5351
+      },
+      "model": "eternalrealm:item/trinket/trinket_eternal_int_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5353
+      },
+      "model": "eternalrealm:item/trinket/trinket_eternal_dex_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5355
+      },
+      "model": "eternalrealm:item/trinket/trinket_eternal_luk_pouch"
     }
   ]
 }

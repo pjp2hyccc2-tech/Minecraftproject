@@ -21,6 +21,42 @@
         "custom_model_data": 5111
       },
       "model": "eternalrealm:item/trinket/relic_w_ash_herald_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5261
+      },
+      "model": "eternalrealm:item/trinket/trinket_elite_str_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5263
+      },
+      "model": "eternalrealm:item/trinket/trinket_elite_vit_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5265
+      },
+      "model": "eternalrealm:item/trinket/trinket_elite_agi_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5267
+      },
+      "model": "eternalrealm:item/trinket/trinket_elite_int_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5269
+      },
+      "model": "eternalrealm:item/trinket/trinket_elite_dex_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5271
+      },
+      "model": "eternalrealm:item/trinket/trinket_elite_luk_pouch"
     }
   ]
 }

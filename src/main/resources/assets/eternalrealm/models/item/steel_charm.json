@@ -9,6 +9,42 @@
         "custom_model_data": 5001
       },
       "model": "eternalrealm:item/trinket/relic_b1_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5213
+      },
+      "model": "eternalrealm:item/trinket/trinket_wayfarer_str_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5215
+      },
+      "model": "eternalrealm:item/trinket/trinket_wayfarer_vit_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5217
+      },
+      "model": "eternalrealm:item/trinket/trinket_wayfarer_agi_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5219
+      },
+      "model": "eternalrealm:item/trinket/trinket_wayfarer_int_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5221
+      },
+      "model": "eternalrealm:item/trinket/trinket_wayfarer_dex_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5223
+      },
+      "model": "eternalrealm:item/trinket/trinket_wayfarer_luk_pouch"
     }
   ]
 }

@@ -1,6 +1,7 @@
 package com.eternalrealm.item;
 
-import com.eternalrealm.character.StatBlock;
+import com.eternalrealm.character.StatPercents;
+import com.eternalrealm.character.StatType;
 import com.eternalrealm.combat.CombatModifiers;
 import com.eternalrealm.job.PassiveEffect;
 
@@ -12,22 +13,23 @@ import java.util.Set;
 
 /**
  * A named trinket (装身具): an accessory (ring, amulet, earring, bracelet) or a charm (talisman, bell, ward stone,
- * pouch). Trinkets have no defense; they raise the primary stats a lot and add secondary bonuses and perks, all
- * multiplied by the piece's rarity ({@link ItemRarity#power()}) and enhancement like the base values of other pieces.
- * Today every trinket is a relic ({@link Relics}).
+ * pouch). Trinkets have no defense; they raise the primary stats by percentages (STR +12 %, applied after every flat
+ * source, see {@link StatPercents}) and add secondary bonuses and perks, all multiplied by the piece's rarity
+ * ({@link ItemRarity#power()}) and enhancement. The relics ({@link Relics}) and the smithy's catalogue
+ * ({@link Trinkets}) are trinkets.
  *
  * <pre>
- * primary stats   = {@link #stats}     × rarity power × enhancement factor (rounded)
- * modifiers       = {@link #modifiers} × rarity power × enhancement factor
+ * stat percents   = {@link #percents}  × rarity power × percent factor (1 + 0.10 × enhancement)
+ * modifiers       = {@link #modifiers} × rarity power × enhancement factor (1 + 0.06 × enhancement)
  * perks           = {@link #perks}     × rarity power (resolved by the server when hits land)
  * </pre>
  *
- * @param stats     the primary stats it adds
+ * @param percents  the primary stat percentages it adds
  * @param modifiers the secondary bonuses it adds
  * @param perks     passive effects while worn (never cooldowns or stamina)
  */
 public record TrinketDesign(String id, int model, TrinketKind kind, int field, int level, Set<DesignSource> sources,
-                            String origin, StatBlock stats, CombatModifiers modifiers, List<PassiveEffect> perks,
+                            String origin, StatPercents percents, CombatModifiers modifiers, List<PassiveEffect> perks,
                             Map<AffixKind, Integer> bias) implements Design {
     public TrinketDesign {
         Checks.id("id", id);
@@ -43,7 +45,7 @@ public record TrinketDesign(String id, int model, TrinketKind kind, int field, i
         if (!origin.isEmpty()) {
             Checks.id("origin", origin);
         }
-        Objects.requireNonNull(stats, "stats");
+        Objects.requireNonNull(percents, "percents");
         Objects.requireNonNull(modifiers, "modifiers");
         perks = List.copyOf(perks);
         for (PassiveEffect perk : perks) {
@@ -68,13 +70,15 @@ public record TrinketDesign(String id, int model, TrinketKind kind, int field, i
         return EquipmentBase.trinket(kind.slot(), tier());
     }
 
-    /** The affix tendencies of a trinket: its own primary stats. */
-    static Map<AffixKind, Integer> statBias(StatBlock stats, EquipmentSlot slot) {
+    /** The affix tendencies of a trinket: the percentages of its own primary stats. */
+    static Map<AffixKind, Integer> statBias(StatPercents percents, EquipmentSlot slot) {
         AffixPool pool = AffixPool.of(slot, null);
         Map<AffixKind, Integer> bias = new EnumMap<>(AffixKind.class);
-        for (AffixKind kind : AffixKind.values()) {
-            kind.stat().filter(stat -> stats.get(stat) > 0 && pool.allows(kind))
-                    .ifPresent(stat -> bias.put(kind, 2));
+        for (StatType stat : StatType.values()) {
+            AffixKind kind = AffixKind.percentOf(stat);
+            if (percents.get(stat) > 0.0 && pool.rolls(kind)) {
+                bias.put(kind, 2);
+            }
         }
         return Map.copyOf(bias);
     }

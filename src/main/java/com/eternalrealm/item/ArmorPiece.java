@@ -65,12 +65,15 @@ public record ArmorPiece(ArmorSet set, EquipmentSlot armorSlot) implements Desig
         AffixPool pool = AffixPool.of(armorSlot, null);
         Map<AffixKind, Integer> bias = new EnumMap<>(AffixKind.class);
         List<AffixKind> wanted = switch (set.style()) {
-            case HEAVY -> List.of(AffixKind.VIT, AffixKind.DEFENSE, AffixKind.MAX_HEALTH, AffixKind.STR);
-            case LIGHT -> List.of(AffixKind.AGI, AffixKind.DEX, AffixKind.CRIT_CHANCE, AffixKind.MOVE_SPEED);
-            case ROBE -> List.of(AffixKind.INT, AffixKind.HEALING_PERCENT, AffixKind.MAX_HEALTH);
+            case HEAVY -> List.of(AffixKind.VIT, AffixKind.DEFENSE, AffixKind.MAX_HEALTH, AffixKind.STR,
+                    AffixKind.STR_PERCENT, AffixKind.VIT_PERCENT);
+            case LIGHT -> List.of(AffixKind.AGI, AffixKind.DEX, AffixKind.CRIT_CHANCE, AffixKind.MOVE_SPEED,
+                    AffixKind.AGI_PERCENT, AffixKind.DEX_PERCENT);
+            case ROBE -> List.of(AffixKind.INT, AffixKind.HEALING_PERCENT, AffixKind.MAX_HEALTH,
+                    AffixKind.INT_PERCENT);
         };
         for (AffixKind kind : wanted) {
-            if (pool.allows(kind)) {
+            if (pool.rolls(kind)) {
                 bias.put(kind, 2);
             }
         }

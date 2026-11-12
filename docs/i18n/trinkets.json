@@ -1,0 +1,1302 @@
+{
+  "design.eternalrealm.trinket_novice_str_bracelet": {
+    "ja": "見習いの剛力の腕輪",
+    "en": "Novice Bracelet of Might"
+  },
+  "design.eternalrealm.trinket_novice_str_bracelet.lore": {
+    "ja": "鍛冶屋の徒弟が最初に打つ、素朴な装身具。身に着けた者の膂力を底上げする。",
+    "en": "The plain trinket every smith's apprentice forges first. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_novice_str_stone": {
+    "ja": "見習いの剛力の守り石",
+    "en": "Novice Ward Stone of Might"
+  },
+  "design.eternalrealm.trinket_novice_str_stone.lore": {
+    "ja": "鍛冶屋の徒弟が最初に打つ、素朴な装身具。身に着けた者の膂力を底上げする。",
+    "en": "The plain trinket every smith's apprentice forges first. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_novice_vit_amulet": {
+    "ja": "見習いの堅守の首飾り",
+    "en": "Novice Amulet of Fortitude"
+  },
+  "design.eternalrealm.trinket_novice_vit_amulet.lore": {
+    "ja": "鍛冶屋の徒弟が最初に打つ、素朴な装身具。身に着けた者の体力を底上げする。",
+    "en": "The plain trinket every smith's apprentice forges first. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_novice_vit_talisman": {
+    "ja": "見習いの堅守の護符",
+    "en": "Novice Talisman of Fortitude"
+  },
+  "design.eternalrealm.trinket_novice_vit_talisman.lore": {
+    "ja": "鍛冶屋の徒弟が最初に打つ、素朴な装身具。身に着けた者の体力を底上げする。",
+    "en": "The plain trinket every smith's apprentice forges first. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_novice_agi_earring": {
+    "ja": "見習いの疾風の耳飾り",
+    "en": "Novice Earring of the Gale"
+  },
+  "design.eternalrealm.trinket_novice_agi_earring.lore": {
+    "ja": "鍛冶屋の徒弟が最初に打つ、素朴な装身具。身に着けた者の素早さを底上げする。",
+    "en": "The plain trinket every smith's apprentice forges first. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_novice_agi_bell": {
+    "ja": "見習いの疾風の守り鈴",
+    "en": "Novice Ward Bell of the Gale"
+  },
+  "design.eternalrealm.trinket_novice_agi_bell.lore": {
+    "ja": "鍛冶屋の徒弟が最初に打つ、素朴な装身具。身に着けた者の素早さを底上げする。",
+    "en": "The plain trinket every smith's apprentice forges first. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_novice_int_ring": {
+    "ja": "見習いの叡智の指輪",
+    "en": "Novice Ring of Wisdom"
+  },
+  "design.eternalrealm.trinket_novice_int_ring.lore": {
+    "ja": "鍛冶屋の徒弟が最初に打つ、素朴な装身具。身に着けた者の知力を底上げする。",
+    "en": "The plain trinket every smith's apprentice forges first. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_novice_int_talisman": {
+    "ja": "見習いの叡智の護符",
+    "en": "Novice Talisman of Wisdom"
+  },
+  "design.eternalrealm.trinket_novice_int_talisman.lore": {
+    "ja": "鍛冶屋の徒弟が最初に打つ、素朴な装身具。身に着けた者の知力を底上げする。",
+    "en": "The plain trinket every smith's apprentice forges first. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_novice_dex_earring": {
+    "ja": "見習いの鷹眼の耳飾り",
+    "en": "Novice Earring of the Hawk"
+  },
+  "design.eternalrealm.trinket_novice_dex_earring.lore": {
+    "ja": "鍛冶屋の徒弟が最初に打つ、素朴な装身具。身に着けた者の器用さを底上げする。",
+    "en": "The plain trinket every smith's apprentice forges first. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_novice_dex_bell": {
+    "ja": "見習いの鷹眼の守り鈴",
+    "en": "Novice Ward Bell of the Hawk"
+  },
+  "design.eternalrealm.trinket_novice_dex_bell.lore": {
+    "ja": "鍛冶屋の徒弟が最初に打つ、素朴な装身具。身に着けた者の器用さを底上げする。",
+    "en": "The plain trinket every smith's apprentice forges first. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_novice_luk_ring": {
+    "ja": "見習いの幸運の指輪",
+    "en": "Novice Ring of Fortune"
+  },
+  "design.eternalrealm.trinket_novice_luk_ring.lore": {
+    "ja": "鍛冶屋の徒弟が最初に打つ、素朴な装身具。身に着けた者の運を底上げする。",
+    "en": "The plain trinket every smith's apprentice forges first. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_novice_luk_pouch": {
+    "ja": "見習いの幸運のお守り袋",
+    "en": "Novice Charm Pouch of Fortune"
+  },
+  "design.eternalrealm.trinket_novice_luk_pouch.lore": {
+    "ja": "鍛冶屋の徒弟が最初に打つ、素朴な装身具。身に着けた者の運を底上げする。",
+    "en": "The plain trinket every smith's apprentice forges first. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_wayfarer_str_bracelet": {
+    "ja": "旅人の剛力の腕輪",
+    "en": "Wayfarer Bracelet of Might"
+  },
+  "design.eternalrealm.trinket_wayfarer_str_bracelet.lore": {
+    "ja": "街道を行く者のお守りとして、昔から好まれてきた品。身に着けた者の膂力を底上げする。",
+    "en": "A long-time favourite of those who walk the high roads. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_wayfarer_str_stone": {
+    "ja": "旅人の剛力の守り石",
+    "en": "Wayfarer Ward Stone of Might"
+  },
+  "design.eternalrealm.trinket_wayfarer_str_stone.lore": {
+    "ja": "街道を行く者のお守りとして、昔から好まれてきた品。身に着けた者の膂力を底上げする。",
+    "en": "A long-time favourite of those who walk the high roads. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_wayfarer_vit_amulet": {
+    "ja": "旅人の堅守の首飾り",
+    "en": "Wayfarer Amulet of Fortitude"
+  },
+  "design.eternalrealm.trinket_wayfarer_vit_amulet.lore": {
+    "ja": "街道を行く者のお守りとして、昔から好まれてきた品。身に着けた者の体力を底上げする。",
+    "en": "A long-time favourite of those who walk the high roads. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_wayfarer_vit_talisman": {
+    "ja": "旅人の堅守の護符",
+    "en": "Wayfarer Talisman of Fortitude"
+  },
+  "design.eternalrealm.trinket_wayfarer_vit_talisman.lore": {
+    "ja": "街道を行く者のお守りとして、昔から好まれてきた品。身に着けた者の体力を底上げする。",
+    "en": "A long-time favourite of those who walk the high roads. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_wayfarer_agi_earring": {
+    "ja": "旅人の疾風の耳飾り",
+    "en": "Wayfarer Earring of the Gale"
+  },
+  "design.eternalrealm.trinket_wayfarer_agi_earring.lore": {
+    "ja": "街道を行く者のお守りとして、昔から好まれてきた品。身に着けた者の素早さを底上げする。",
+    "en": "A long-time favourite of those who walk the high roads. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_wayfarer_agi_bell": {
+    "ja": "旅人の疾風の守り鈴",
+    "en": "Wayfarer Ward Bell of the Gale"
+  },
+  "design.eternalrealm.trinket_wayfarer_agi_bell.lore": {
+    "ja": "街道を行く者のお守りとして、昔から好まれてきた品。身に着けた者の素早さを底上げする。",
+    "en": "A long-time favourite of those who walk the high roads. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_wayfarer_int_ring": {
+    "ja": "旅人の叡智の指輪",
+    "en": "Wayfarer Ring of Wisdom"
+  },
+  "design.eternalrealm.trinket_wayfarer_int_ring.lore": {
+    "ja": "街道を行く者のお守りとして、昔から好まれてきた品。身に着けた者の知力を底上げする。",
+    "en": "A long-time favourite of those who walk the high roads. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_wayfarer_int_talisman": {
+    "ja": "旅人の叡智の護符",
+    "en": "Wayfarer Talisman of Wisdom"
+  },
+  "design.eternalrealm.trinket_wayfarer_int_talisman.lore": {
+    "ja": "街道を行く者のお守りとして、昔から好まれてきた品。身に着けた者の知力を底上げする。",
+    "en": "A long-time favourite of those who walk the high roads. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_wayfarer_dex_earring": {
+    "ja": "旅人の鷹眼の耳飾り",
+    "en": "Wayfarer Earring of the Hawk"
+  },
+  "design.eternalrealm.trinket_wayfarer_dex_earring.lore": {
+    "ja": "街道を行く者のお守りとして、昔から好まれてきた品。身に着けた者の器用さを底上げする。",
+    "en": "A long-time favourite of those who walk the high roads. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_wayfarer_dex_bell": {
+    "ja": "旅人の鷹眼の守り鈴",
+    "en": "Wayfarer Ward Bell of the Hawk"
+  },
+  "design.eternalrealm.trinket_wayfarer_dex_bell.lore": {
+    "ja": "街道を行く者のお守りとして、昔から好まれてきた品。身に着けた者の器用さを底上げする。",
+    "en": "A long-time favourite of those who walk the high roads. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_wayfarer_luk_ring": {
+    "ja": "旅人の幸運の指輪",
+    "en": "Wayfarer Ring of Fortune"
+  },
+  "design.eternalrealm.trinket_wayfarer_luk_ring.lore": {
+    "ja": "街道を行く者のお守りとして、昔から好まれてきた品。身に着けた者の運を底上げする。",
+    "en": "A long-time favourite of those who walk the high roads. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_wayfarer_luk_pouch": {
+    "ja": "旅人の幸運のお守り袋",
+    "en": "Wayfarer Charm Pouch of Fortune"
+  },
+  "design.eternalrealm.trinket_wayfarer_luk_pouch.lore": {
+    "ja": "街道を行く者のお守りとして、昔から好まれてきた品。身に着けた者の運を底上げする。",
+    "en": "A long-time favourite of those who walk the high roads. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_warrior_str_bracelet": {
+    "ja": "戦士の剛力の腕輪",
+    "en": "Warrior Bracelet of Might"
+  },
+  "design.eternalrealm.trinket_warrior_str_bracelet.lore": {
+    "ja": "鍛え抜いた鋼に、戦う者の祈りを込めた装身具。身に着けた者の膂力を底上げする。",
+    "en": "Tempered steel, worked with a fighter's prayer. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_warrior_str_stone": {
+    "ja": "戦士の剛力の守り石",
+    "en": "Warrior Ward Stone of Might"
+  },
+  "design.eternalrealm.trinket_warrior_str_stone.lore": {
+    "ja": "鍛え抜いた鋼に、戦う者の祈りを込めた装身具。身に着けた者の膂力を底上げする。",
+    "en": "Tempered steel, worked with a fighter's prayer. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_warrior_vit_amulet": {
+    "ja": "戦士の堅守の首飾り",
+    "en": "Warrior Amulet of Fortitude"
+  },
+  "design.eternalrealm.trinket_warrior_vit_amulet.lore": {
+    "ja": "鍛え抜いた鋼に、戦う者の祈りを込めた装身具。身に着けた者の体力を底上げする。",
+    "en": "Tempered steel, worked with a fighter's prayer. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_warrior_vit_talisman": {
+    "ja": "戦士の堅守の護符",
+    "en": "Warrior Talisman of Fortitude"
+  },
+  "design.eternalrealm.trinket_warrior_vit_talisman.lore": {
+    "ja": "鍛え抜いた鋼に、戦う者の祈りを込めた装身具。身に着けた者の体力を底上げする。",
+    "en": "Tempered steel, worked with a fighter's prayer. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_warrior_agi_earring": {
+    "ja": "戦士の疾風の耳飾り",
+    "en": "Warrior Earring of the Gale"
+  },
+  "design.eternalrealm.trinket_warrior_agi_earring.lore": {
+    "ja": "鍛え抜いた鋼に、戦う者の祈りを込めた装身具。身に着けた者の素早さを底上げする。",
+    "en": "Tempered steel, worked with a fighter's prayer. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_warrior_agi_bell": {
+    "ja": "戦士の疾風の守り鈴",
+    "en": "Warrior Ward Bell of the Gale"
+  },
+  "design.eternalrealm.trinket_warrior_agi_bell.lore": {
+    "ja": "鍛え抜いた鋼に、戦う者の祈りを込めた装身具。身に着けた者の素早さを底上げする。",
+    "en": "Tempered steel, worked with a fighter's prayer. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_warrior_int_ring": {
+    "ja": "戦士の叡智の指輪",
+    "en": "Warrior Ring of Wisdom"
+  },
+  "design.eternalrealm.trinket_warrior_int_ring.lore": {
+    "ja": "鍛え抜いた鋼に、戦う者の祈りを込めた装身具。身に着けた者の知力を底上げする。",
+    "en": "Tempered steel, worked with a fighter's prayer. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_warrior_int_talisman": {
+    "ja": "戦士の叡智の護符",
+    "en": "Warrior Talisman of Wisdom"
+  },
+  "design.eternalrealm.trinket_warrior_int_talisman.lore": {
+    "ja": "鍛え抜いた鋼に、戦う者の祈りを込めた装身具。身に着けた者の知力を底上げする。",
+    "en": "Tempered steel, worked with a fighter's prayer. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_warrior_dex_earring": {
+    "ja": "戦士の鷹眼の耳飾り",
+    "en": "Warrior Earring of the Hawk"
+  },
+  "design.eternalrealm.trinket_warrior_dex_earring.lore": {
+    "ja": "鍛え抜いた鋼に、戦う者の祈りを込めた装身具。身に着けた者の器用さを底上げする。",
+    "en": "Tempered steel, worked with a fighter's prayer. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_warrior_dex_bell": {
+    "ja": "戦士の鷹眼の守り鈴",
+    "en": "Warrior Ward Bell of the Hawk"
+  },
+  "design.eternalrealm.trinket_warrior_dex_bell.lore": {
+    "ja": "鍛え抜いた鋼に、戦う者の祈りを込めた装身具。身に着けた者の器用さを底上げする。",
+    "en": "Tempered steel, worked with a fighter's prayer. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_warrior_luk_ring": {
+    "ja": "戦士の幸運の指輪",
+    "en": "Warrior Ring of Fortune"
+  },
+  "design.eternalrealm.trinket_warrior_luk_ring.lore": {
+    "ja": "鍛え抜いた鋼に、戦う者の祈りを込めた装身具。身に着けた者の運を底上げする。",
+    "en": "Tempered steel, worked with a fighter's prayer. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_warrior_luk_pouch": {
+    "ja": "戦士の幸運のお守り袋",
+    "en": "Warrior Charm Pouch of Fortune"
+  },
+  "design.eternalrealm.trinket_warrior_luk_pouch.lore": {
+    "ja": "鍛え抜いた鋼に、戦う者の祈りを込めた装身具。身に着けた者の運を底上げする。",
+    "en": "Tempered steel, worked with a fighter's prayer. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_veteran_str_bracelet": {
+    "ja": "古強者の剛力の腕輪",
+    "en": "Veteran Bracelet of Might"
+  },
+  "design.eternalrealm.trinket_veteran_str_bracelet.lore": {
+    "ja": "幾多の戦場を越えた者だけが、その重みを知る。身に着けた者の膂力を底上げする。",
+    "en": "Only those who have outlived many battles feel its weight. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_veteran_str_stone": {
+    "ja": "古強者の剛力の守り石",
+    "en": "Veteran Ward Stone of Might"
+  },
+  "design.eternalrealm.trinket_veteran_str_stone.lore": {
+    "ja": "幾多の戦場を越えた者だけが、その重みを知る。身に着けた者の膂力を底上げする。",
+    "en": "Only those who have outlived many battles feel its weight. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_veteran_vit_amulet": {
+    "ja": "古強者の堅守の首飾り",
+    "en": "Veteran Amulet of Fortitude"
+  },
+  "design.eternalrealm.trinket_veteran_vit_amulet.lore": {
+    "ja": "幾多の戦場を越えた者だけが、その重みを知る。身に着けた者の体力を底上げする。",
+    "en": "Only those who have outlived many battles feel its weight. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_veteran_vit_talisman": {
+    "ja": "古強者の堅守の護符",
+    "en": "Veteran Talisman of Fortitude"
+  },
+  "design.eternalrealm.trinket_veteran_vit_talisman.lore": {
+    "ja": "幾多の戦場を越えた者だけが、その重みを知る。身に着けた者の体力を底上げする。",
+    "en": "Only those who have outlived many battles feel its weight. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_veteran_agi_earring": {
+    "ja": "古強者の疾風の耳飾り",
+    "en": "Veteran Earring of the Gale"
+  },
+  "design.eternalrealm.trinket_veteran_agi_earring.lore": {
+    "ja": "幾多の戦場を越えた者だけが、その重みを知る。身に着けた者の素早さを底上げする。",
+    "en": "Only those who have outlived many battles feel its weight. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_veteran_agi_bell": {
+    "ja": "古強者の疾風の守り鈴",
+    "en": "Veteran Ward Bell of the Gale"
+  },
+  "design.eternalrealm.trinket_veteran_agi_bell.lore": {
+    "ja": "幾多の戦場を越えた者だけが、その重みを知る。身に着けた者の素早さを底上げする。",
+    "en": "Only those who have outlived many battles feel its weight. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_veteran_int_ring": {
+    "ja": "古強者の叡智の指輪",
+    "en": "Veteran Ring of Wisdom"
+  },
+  "design.eternalrealm.trinket_veteran_int_ring.lore": {
+    "ja": "幾多の戦場を越えた者だけが、その重みを知る。身に着けた者の知力を底上げする。",
+    "en": "Only those who have outlived many battles feel its weight. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_veteran_int_talisman": {
+    "ja": "古強者の叡智の護符",
+    "en": "Veteran Talisman of Wisdom"
+  },
+  "design.eternalrealm.trinket_veteran_int_talisman.lore": {
+    "ja": "幾多の戦場を越えた者だけが、その重みを知る。身に着けた者の知力を底上げする。",
+    "en": "Only those who have outlived many battles feel its weight. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_veteran_dex_earring": {
+    "ja": "古強者の鷹眼の耳飾り",
+    "en": "Veteran Earring of the Hawk"
+  },
+  "design.eternalrealm.trinket_veteran_dex_earring.lore": {
+    "ja": "幾多の戦場を越えた者だけが、その重みを知る。身に着けた者の器用さを底上げする。",
+    "en": "Only those who have outlived many battles feel its weight. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_veteran_dex_bell": {
+    "ja": "古強者の鷹眼の守り鈴",
+    "en": "Veteran Ward Bell of the Hawk"
+  },
+  "design.eternalrealm.trinket_veteran_dex_bell.lore": {
+    "ja": "幾多の戦場を越えた者だけが、その重みを知る。身に着けた者の器用さを底上げする。",
+    "en": "Only those who have outlived many battles feel its weight. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_veteran_luk_ring": {
+    "ja": "古強者の幸運の指輪",
+    "en": "Veteran Ring of Fortune"
+  },
+  "design.eternalrealm.trinket_veteran_luk_ring.lore": {
+    "ja": "幾多の戦場を越えた者だけが、その重みを知る。身に着けた者の運を底上げする。",
+    "en": "Only those who have outlived many battles feel its weight. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_veteran_luk_pouch": {
+    "ja": "古強者の幸運のお守り袋",
+    "en": "Veteran Charm Pouch of Fortune"
+  },
+  "design.eternalrealm.trinket_veteran_luk_pouch.lore": {
+    "ja": "幾多の戦場を越えた者だけが、その重みを知る。身に着けた者の運を底上げする。",
+    "en": "Only those who have outlived many battles feel its weight. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_valiant_str_bracelet": {
+    "ja": "勇士の剛力の腕輪",
+    "en": "Valiant Bracelet of Might"
+  },
+  "design.eternalrealm.trinket_valiant_str_bracelet.lore": {
+    "ja": "勇士の証として、王都の工房で丁寧に仕上げられた逸品。身に着けた者の膂力を底上げする。",
+    "en": "Finished with care in the capital's workshops, a mark of the valiant. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_valiant_str_stone": {
+    "ja": "勇士の剛力の守り石",
+    "en": "Valiant Ward Stone of Might"
+  },
+  "design.eternalrealm.trinket_valiant_str_stone.lore": {
+    "ja": "勇士の証として、王都の工房で丁寧に仕上げられた逸品。身に着けた者の膂力を底上げする。",
+    "en": "Finished with care in the capital's workshops, a mark of the valiant. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_valiant_vit_amulet": {
+    "ja": "勇士の堅守の首飾り",
+    "en": "Valiant Amulet of Fortitude"
+  },
+  "design.eternalrealm.trinket_valiant_vit_amulet.lore": {
+    "ja": "勇士の証として、王都の工房で丁寧に仕上げられた逸品。身に着けた者の体力を底上げする。",
+    "en": "Finished with care in the capital's workshops, a mark of the valiant. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_valiant_vit_talisman": {
+    "ja": "勇士の堅守の護符",
+    "en": "Valiant Talisman of Fortitude"
+  },
+  "design.eternalrealm.trinket_valiant_vit_talisman.lore": {
+    "ja": "勇士の証として、王都の工房で丁寧に仕上げられた逸品。身に着けた者の体力を底上げする。",
+    "en": "Finished with care in the capital's workshops, a mark of the valiant. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_valiant_agi_earring": {
+    "ja": "勇士の疾風の耳飾り",
+    "en": "Valiant Earring of the Gale"
+  },
+  "design.eternalrealm.trinket_valiant_agi_earring.lore": {
+    "ja": "勇士の証として、王都の工房で丁寧に仕上げられた逸品。身に着けた者の素早さを底上げする。",
+    "en": "Finished with care in the capital's workshops, a mark of the valiant. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_valiant_agi_bell": {
+    "ja": "勇士の疾風の守り鈴",
+    "en": "Valiant Ward Bell of the Gale"
+  },
+  "design.eternalrealm.trinket_valiant_agi_bell.lore": {
+    "ja": "勇士の証として、王都の工房で丁寧に仕上げられた逸品。身に着けた者の素早さを底上げする。",
+    "en": "Finished with care in the capital's workshops, a mark of the valiant. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_valiant_int_ring": {
+    "ja": "勇士の叡智の指輪",
+    "en": "Valiant Ring of Wisdom"
+  },
+  "design.eternalrealm.trinket_valiant_int_ring.lore": {
+    "ja": "勇士の証として、王都の工房で丁寧に仕上げられた逸品。身に着けた者の知力を底上げする。",
+    "en": "Finished with care in the capital's workshops, a mark of the valiant. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_valiant_int_talisman": {
+    "ja": "勇士の叡智の護符",
+    "en": "Valiant Talisman of Wisdom"
+  },
+  "design.eternalrealm.trinket_valiant_int_talisman.lore": {
+    "ja": "勇士の証として、王都の工房で丁寧に仕上げられた逸品。身に着けた者の知力を底上げする。",
+    "en": "Finished with care in the capital's workshops, a mark of the valiant. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_valiant_dex_earring": {
+    "ja": "勇士の鷹眼の耳飾り",
+    "en": "Valiant Earring of the Hawk"
+  },
+  "design.eternalrealm.trinket_valiant_dex_earring.lore": {
+    "ja": "勇士の証として、王都の工房で丁寧に仕上げられた逸品。身に着けた者の器用さを底上げする。",
+    "en": "Finished with care in the capital's workshops, a mark of the valiant. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_valiant_dex_bell": {
+    "ja": "勇士の鷹眼の守り鈴",
+    "en": "Valiant Ward Bell of the Hawk"
+  },
+  "design.eternalrealm.trinket_valiant_dex_bell.lore": {
+    "ja": "勇士の証として、王都の工房で丁寧に仕上げられた逸品。身に着けた者の器用さを底上げする。",
+    "en": "Finished with care in the capital's workshops, a mark of the valiant. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_valiant_luk_ring": {
+    "ja": "勇士の幸運の指輪",
+    "en": "Valiant Ring of Fortune"
+  },
+  "design.eternalrealm.trinket_valiant_luk_ring.lore": {
+    "ja": "勇士の証として、王都の工房で丁寧に仕上げられた逸品。身に着けた者の運を底上げする。",
+    "en": "Finished with care in the capital's workshops, a mark of the valiant. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_valiant_luk_pouch": {
+    "ja": "勇士の幸運のお守り袋",
+    "en": "Valiant Charm Pouch of Fortune"
+  },
+  "design.eternalrealm.trinket_valiant_luk_pouch.lore": {
+    "ja": "勇士の証として、王都の工房で丁寧に仕上げられた逸品。身に着けた者の運を底上げする。",
+    "en": "Finished with care in the capital's workshops, a mark of the valiant. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_elite_str_bracelet": {
+    "ja": "精鋭の剛力の腕輪",
+    "en": "Elite Bracelet of Might"
+  },
+  "design.eternalrealm.trinket_elite_str_bracelet.lore": {
+    "ja": "選ばれた者のために、熟練の職人が一つずつ打ち上げる。身に着けた者の膂力を底上げする。",
+    "en": "Master smiths forge each one by hand for the chosen few. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_elite_str_stone": {
+    "ja": "精鋭の剛力の守り石",
+    "en": "Elite Ward Stone of Might"
+  },
+  "design.eternalrealm.trinket_elite_str_stone.lore": {
+    "ja": "選ばれた者のために、熟練の職人が一つずつ打ち上げる。身に着けた者の膂力を底上げする。",
+    "en": "Master smiths forge each one by hand for the chosen few. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_elite_vit_amulet": {
+    "ja": "精鋭の堅守の首飾り",
+    "en": "Elite Amulet of Fortitude"
+  },
+  "design.eternalrealm.trinket_elite_vit_amulet.lore": {
+    "ja": "選ばれた者のために、熟練の職人が一つずつ打ち上げる。身に着けた者の体力を底上げする。",
+    "en": "Master smiths forge each one by hand for the chosen few. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_elite_vit_talisman": {
+    "ja": "精鋭の堅守の護符",
+    "en": "Elite Talisman of Fortitude"
+  },
+  "design.eternalrealm.trinket_elite_vit_talisman.lore": {
+    "ja": "選ばれた者のために、熟練の職人が一つずつ打ち上げる。身に着けた者の体力を底上げする。",
+    "en": "Master smiths forge each one by hand for the chosen few. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_elite_agi_earring": {
+    "ja": "精鋭の疾風の耳飾り",
+    "en": "Elite Earring of the Gale"
+  },
+  "design.eternalrealm.trinket_elite_agi_earring.lore": {
+    "ja": "選ばれた者のために、熟練の職人が一つずつ打ち上げる。身に着けた者の素早さを底上げする。",
+    "en": "Master smiths forge each one by hand for the chosen few. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_elite_agi_bell": {
+    "ja": "精鋭の疾風の守り鈴",
+    "en": "Elite Ward Bell of the Gale"
+  },
+  "design.eternalrealm.trinket_elite_agi_bell.lore": {
+    "ja": "選ばれた者のために、熟練の職人が一つずつ打ち上げる。身に着けた者の素早さを底上げする。",
+    "en": "Master smiths forge each one by hand for the chosen few. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_elite_int_ring": {
+    "ja": "精鋭の叡智の指輪",
+    "en": "Elite Ring of Wisdom"
+  },
+  "design.eternalrealm.trinket_elite_int_ring.lore": {
+    "ja": "選ばれた者のために、熟練の職人が一つずつ打ち上げる。身に着けた者の知力を底上げする。",
+    "en": "Master smiths forge each one by hand for the chosen few. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_elite_int_talisman": {
+    "ja": "精鋭の叡智の護符",
+    "en": "Elite Talisman of Wisdom"
+  },
+  "design.eternalrealm.trinket_elite_int_talisman.lore": {
+    "ja": "選ばれた者のために、熟練の職人が一つずつ打ち上げる。身に着けた者の知力を底上げする。",
+    "en": "Master smiths forge each one by hand for the chosen few. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_elite_dex_earring": {
+    "ja": "精鋭の鷹眼の耳飾り",
+    "en": "Elite Earring of the Hawk"
+  },
+  "design.eternalrealm.trinket_elite_dex_earring.lore": {
+    "ja": "選ばれた者のために、熟練の職人が一つずつ打ち上げる。身に着けた者の器用さを底上げする。",
+    "en": "Master smiths forge each one by hand for the chosen few. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_elite_dex_bell": {
+    "ja": "精鋭の鷹眼の守り鈴",
+    "en": "Elite Ward Bell of the Hawk"
+  },
+  "design.eternalrealm.trinket_elite_dex_bell.lore": {
+    "ja": "選ばれた者のために、熟練の職人が一つずつ打ち上げる。身に着けた者の器用さを底上げする。",
+    "en": "Master smiths forge each one by hand for the chosen few. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_elite_luk_ring": {
+    "ja": "精鋭の幸運の指輪",
+    "en": "Elite Ring of Fortune"
+  },
+  "design.eternalrealm.trinket_elite_luk_ring.lore": {
+    "ja": "選ばれた者のために、熟練の職人が一つずつ打ち上げる。身に着けた者の運を底上げする。",
+    "en": "Master smiths forge each one by hand for the chosen few. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_elite_luk_pouch": {
+    "ja": "精鋭の幸運のお守り袋",
+    "en": "Elite Charm Pouch of Fortune"
+  },
+  "design.eternalrealm.trinket_elite_luk_pouch.lore": {
+    "ja": "選ばれた者のために、熟練の職人が一つずつ打ち上げる。身に着けた者の運を底上げする。",
+    "en": "Master smiths forge each one by hand for the chosen few. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_heroic_str_bracelet": {
+    "ja": "英雄の剛力の腕輪",
+    "en": "Heroic Bracelet of Might"
+  },
+  "design.eternalrealm.trinket_heroic_str_bracelet.lore": {
+    "ja": "英雄の名とともに語り継がれる、輝く装身具。身に着けた者の膂力を底上げする。",
+    "en": "A shining trinket whose tale is told with its bearer's name. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_heroic_str_stone": {
+    "ja": "英雄の剛力の守り石",
+    "en": "Heroic Ward Stone of Might"
+  },
+  "design.eternalrealm.trinket_heroic_str_stone.lore": {
+    "ja": "英雄の名とともに語り継がれる、輝く装身具。身に着けた者の膂力を底上げする。",
+    "en": "A shining trinket whose tale is told with its bearer's name. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_heroic_vit_amulet": {
+    "ja": "英雄の堅守の首飾り",
+    "en": "Heroic Amulet of Fortitude"
+  },
+  "design.eternalrealm.trinket_heroic_vit_amulet.lore": {
+    "ja": "英雄の名とともに語り継がれる、輝く装身具。身に着けた者の体力を底上げする。",
+    "en": "A shining trinket whose tale is told with its bearer's name. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_heroic_vit_talisman": {
+    "ja": "英雄の堅守の護符",
+    "en": "Heroic Talisman of Fortitude"
+  },
+  "design.eternalrealm.trinket_heroic_vit_talisman.lore": {
+    "ja": "英雄の名とともに語り継がれる、輝く装身具。身に着けた者の体力を底上げする。",
+    "en": "A shining trinket whose tale is told with its bearer's name. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_heroic_agi_earring": {
+    "ja": "英雄の疾風の耳飾り",
+    "en": "Heroic Earring of the Gale"
+  },
+  "design.eternalrealm.trinket_heroic_agi_earring.lore": {
+    "ja": "英雄の名とともに語り継がれる、輝く装身具。身に着けた者の素早さを底上げする。",
+    "en": "A shining trinket whose tale is told with its bearer's name. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_heroic_agi_bell": {
+    "ja": "英雄の疾風の守り鈴",
+    "en": "Heroic Ward Bell of the Gale"
+  },
+  "design.eternalrealm.trinket_heroic_agi_bell.lore": {
+    "ja": "英雄の名とともに語り継がれる、輝く装身具。身に着けた者の素早さを底上げする。",
+    "en": "A shining trinket whose tale is told with its bearer's name. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_heroic_int_ring": {
+    "ja": "英雄の叡智の指輪",
+    "en": "Heroic Ring of Wisdom"
+  },
+  "design.eternalrealm.trinket_heroic_int_ring.lore": {
+    "ja": "英雄の名とともに語り継がれる、輝く装身具。身に着けた者の知力を底上げする。",
+    "en": "A shining trinket whose tale is told with its bearer's name. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_heroic_int_talisman": {
+    "ja": "英雄の叡智の護符",
+    "en": "Heroic Talisman of Wisdom"
+  },
+  "design.eternalrealm.trinket_heroic_int_talisman.lore": {
+    "ja": "英雄の名とともに語り継がれる、輝く装身具。身に着けた者の知力を底上げする。",
+    "en": "A shining trinket whose tale is told with its bearer's name. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_heroic_dex_earring": {
+    "ja": "英雄の鷹眼の耳飾り",
+    "en": "Heroic Earring of the Hawk"
+  },
+  "design.eternalrealm.trinket_heroic_dex_earring.lore": {
+    "ja": "英雄の名とともに語り継がれる、輝く装身具。身に着けた者の器用さを底上げする。",
+    "en": "A shining trinket whose tale is told with its bearer's name. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_heroic_dex_bell": {
+    "ja": "英雄の鷹眼の守り鈴",
+    "en": "Heroic Ward Bell of the Hawk"
+  },
+  "design.eternalrealm.trinket_heroic_dex_bell.lore": {
+    "ja": "英雄の名とともに語り継がれる、輝く装身具。身に着けた者の器用さを底上げする。",
+    "en": "A shining trinket whose tale is told with its bearer's name. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_heroic_luk_ring": {
+    "ja": "英雄の幸運の指輪",
+    "en": "Heroic Ring of Fortune"
+  },
+  "design.eternalrealm.trinket_heroic_luk_ring.lore": {
+    "ja": "英雄の名とともに語り継がれる、輝く装身具。身に着けた者の運を底上げする。",
+    "en": "A shining trinket whose tale is told with its bearer's name. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_heroic_luk_pouch": {
+    "ja": "英雄の幸運のお守り袋",
+    "en": "Heroic Charm Pouch of Fortune"
+  },
+  "design.eternalrealm.trinket_heroic_luk_pouch.lore": {
+    "ja": "英雄の名とともに語り継がれる、輝く装身具。身に着けた者の運を底上げする。",
+    "en": "A shining trinket whose tale is told with its bearer's name. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_champion_str_bracelet": {
+    "ja": "覇者の剛力の腕輪",
+    "en": "Champion Bracelet of Might"
+  },
+  "design.eternalrealm.trinket_champion_str_bracelet.lore": {
+    "ja": "深淵の縁で鍛えられ、覇者の手にだけ馴染むという。身に着けた者の膂力を底上げする。",
+    "en": "Forged at the abyss's rim, it is said to settle only in a champion's hand. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_champion_str_stone": {
+    "ja": "覇者の剛力の守り石",
+    "en": "Champion Ward Stone of Might"
+  },
+  "design.eternalrealm.trinket_champion_str_stone.lore": {
+    "ja": "深淵の縁で鍛えられ、覇者の手にだけ馴染むという。身に着けた者の膂力を底上げする。",
+    "en": "Forged at the abyss's rim, it is said to settle only in a champion's hand. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_champion_vit_amulet": {
+    "ja": "覇者の堅守の首飾り",
+    "en": "Champion Amulet of Fortitude"
+  },
+  "design.eternalrealm.trinket_champion_vit_amulet.lore": {
+    "ja": "深淵の縁で鍛えられ、覇者の手にだけ馴染むという。身に着けた者の体力を底上げする。",
+    "en": "Forged at the abyss's rim, it is said to settle only in a champion's hand. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_champion_vit_talisman": {
+    "ja": "覇者の堅守の護符",
+    "en": "Champion Talisman of Fortitude"
+  },
+  "design.eternalrealm.trinket_champion_vit_talisman.lore": {
+    "ja": "深淵の縁で鍛えられ、覇者の手にだけ馴染むという。身に着けた者の体力を底上げする。",
+    "en": "Forged at the abyss's rim, it is said to settle only in a champion's hand. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_champion_agi_earring": {
+    "ja": "覇者の疾風の耳飾り",
+    "en": "Champion Earring of the Gale"
+  },
+  "design.eternalrealm.trinket_champion_agi_earring.lore": {
+    "ja": "深淵の縁で鍛えられ、覇者の手にだけ馴染むという。身に着けた者の素早さを底上げする。",
+    "en": "Forged at the abyss's rim, it is said to settle only in a champion's hand. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_champion_agi_bell": {
+    "ja": "覇者の疾風の守り鈴",
+    "en": "Champion Ward Bell of the Gale"
+  },
+  "design.eternalrealm.trinket_champion_agi_bell.lore": {
+    "ja": "深淵の縁で鍛えられ、覇者の手にだけ馴染むという。身に着けた者の素早さを底上げする。",
+    "en": "Forged at the abyss's rim, it is said to settle only in a champion's hand. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_champion_int_ring": {
+    "ja": "覇者の叡智の指輪",
+    "en": "Champion Ring of Wisdom"
+  },
+  "design.eternalrealm.trinket_champion_int_ring.lore": {
+    "ja": "深淵の縁で鍛えられ、覇者の手にだけ馴染むという。身に着けた者の知力を底上げする。",
+    "en": "Forged at the abyss's rim, it is said to settle only in a champion's hand. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_champion_int_talisman": {
+    "ja": "覇者の叡智の護符",
+    "en": "Champion Talisman of Wisdom"
+  },
+  "design.eternalrealm.trinket_champion_int_talisman.lore": {
+    "ja": "深淵の縁で鍛えられ、覇者の手にだけ馴染むという。身に着けた者の知力を底上げする。",
+    "en": "Forged at the abyss's rim, it is said to settle only in a champion's hand. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_champion_dex_earring": {
+    "ja": "覇者の鷹眼の耳飾り",
+    "en": "Champion Earring of the Hawk"
+  },
+  "design.eternalrealm.trinket_champion_dex_earring.lore": {
+    "ja": "深淵の縁で鍛えられ、覇者の手にだけ馴染むという。身に着けた者の器用さを底上げする。",
+    "en": "Forged at the abyss's rim, it is said to settle only in a champion's hand. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_champion_dex_bell": {
+    "ja": "覇者の鷹眼の守り鈴",
+    "en": "Champion Ward Bell of the Hawk"
+  },
+  "design.eternalrealm.trinket_champion_dex_bell.lore": {
+    "ja": "深淵の縁で鍛えられ、覇者の手にだけ馴染むという。身に着けた者の器用さを底上げする。",
+    "en": "Forged at the abyss's rim, it is said to settle only in a champion's hand. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_champion_luk_ring": {
+    "ja": "覇者の幸運の指輪",
+    "en": "Champion Ring of Fortune"
+  },
+  "design.eternalrealm.trinket_champion_luk_ring.lore": {
+    "ja": "深淵の縁で鍛えられ、覇者の手にだけ馴染むという。身に着けた者の運を底上げする。",
+    "en": "Forged at the abyss's rim, it is said to settle only in a champion's hand. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_champion_luk_pouch": {
+    "ja": "覇者の幸運のお守り袋",
+    "en": "Champion Charm Pouch of Fortune"
+  },
+  "design.eternalrealm.trinket_champion_luk_pouch.lore": {
+    "ja": "深淵の縁で鍛えられ、覇者の手にだけ馴染むという。身に着けた者の運を底上げする。",
+    "en": "Forged at the abyss's rim, it is said to settle only in a champion's hand. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_starlit_str_bracelet": {
+    "ja": "星詠みの剛力の腕輪",
+    "en": "Starlit Bracelet of Might"
+  },
+  "design.eternalrealm.trinket_starlit_str_bracelet.lore": {
+    "ja": "星の巡りを読む者が、夜空の欠片を封じて仕立てた品。身に着けた者の膂力を底上げする。",
+    "en": "A reader of the stars sealed a shard of the night sky within. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_starlit_str_stone": {
+    "ja": "星詠みの剛力の守り石",
+    "en": "Starlit Ward Stone of Might"
+  },
+  "design.eternalrealm.trinket_starlit_str_stone.lore": {
+    "ja": "星の巡りを読む者が、夜空の欠片を封じて仕立てた品。身に着けた者の膂力を底上げする。",
+    "en": "A reader of the stars sealed a shard of the night sky within. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_starlit_vit_amulet": {
+    "ja": "星詠みの堅守の首飾り",
+    "en": "Starlit Amulet of Fortitude"
+  },
+  "design.eternalrealm.trinket_starlit_vit_amulet.lore": {
+    "ja": "星の巡りを読む者が、夜空の欠片を封じて仕立てた品。身に着けた者の体力を底上げする。",
+    "en": "A reader of the stars sealed a shard of the night sky within. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_starlit_vit_talisman": {
+    "ja": "星詠みの堅守の護符",
+    "en": "Starlit Talisman of Fortitude"
+  },
+  "design.eternalrealm.trinket_starlit_vit_talisman.lore": {
+    "ja": "星の巡りを読む者が、夜空の欠片を封じて仕立てた品。身に着けた者の体力を底上げする。",
+    "en": "A reader of the stars sealed a shard of the night sky within. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_starlit_agi_earring": {
+    "ja": "星詠みの疾風の耳飾り",
+    "en": "Starlit Earring of the Gale"
+  },
+  "design.eternalrealm.trinket_starlit_agi_earring.lore": {
+    "ja": "星の巡りを読む者が、夜空の欠片を封じて仕立てた品。身に着けた者の素早さを底上げする。",
+    "en": "A reader of the stars sealed a shard of the night sky within. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_starlit_agi_bell": {
+    "ja": "星詠みの疾風の守り鈴",
+    "en": "Starlit Ward Bell of the Gale"
+  },
+  "design.eternalrealm.trinket_starlit_agi_bell.lore": {
+    "ja": "星の巡りを読む者が、夜空の欠片を封じて仕立てた品。身に着けた者の素早さを底上げする。",
+    "en": "A reader of the stars sealed a shard of the night sky within. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_starlit_int_ring": {
+    "ja": "星詠みの叡智の指輪",
+    "en": "Starlit Ring of Wisdom"
+  },
+  "design.eternalrealm.trinket_starlit_int_ring.lore": {
+    "ja": "星の巡りを読む者が、夜空の欠片を封じて仕立てた品。身に着けた者の知力を底上げする。",
+    "en": "A reader of the stars sealed a shard of the night sky within. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_starlit_int_talisman": {
+    "ja": "星詠みの叡智の護符",
+    "en": "Starlit Talisman of Wisdom"
+  },
+  "design.eternalrealm.trinket_starlit_int_talisman.lore": {
+    "ja": "星の巡りを読む者が、夜空の欠片を封じて仕立てた品。身に着けた者の知力を底上げする。",
+    "en": "A reader of the stars sealed a shard of the night sky within. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_starlit_dex_earring": {
+    "ja": "星詠みの鷹眼の耳飾り",
+    "en": "Starlit Earring of the Hawk"
+  },
+  "design.eternalrealm.trinket_starlit_dex_earring.lore": {
+    "ja": "星の巡りを読む者が、夜空の欠片を封じて仕立てた品。身に着けた者の器用さを底上げする。",
+    "en": "A reader of the stars sealed a shard of the night sky within. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_starlit_dex_bell": {
+    "ja": "星詠みの鷹眼の守り鈴",
+    "en": "Starlit Ward Bell of the Hawk"
+  },
+  "design.eternalrealm.trinket_starlit_dex_bell.lore": {
+    "ja": "星の巡りを読む者が、夜空の欠片を封じて仕立てた品。身に着けた者の器用さを底上げする。",
+    "en": "A reader of the stars sealed a shard of the night sky within. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_starlit_luk_ring": {
+    "ja": "星詠みの幸運の指輪",
+    "en": "Starlit Ring of Fortune"
+  },
+  "design.eternalrealm.trinket_starlit_luk_ring.lore": {
+    "ja": "星の巡りを読む者が、夜空の欠片を封じて仕立てた品。身に着けた者の運を底上げする。",
+    "en": "A reader of the stars sealed a shard of the night sky within. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_starlit_luk_pouch": {
+    "ja": "星詠みの幸運のお守り袋",
+    "en": "Starlit Charm Pouch of Fortune"
+  },
+  "design.eternalrealm.trinket_starlit_luk_pouch.lore": {
+    "ja": "星の巡りを読む者が、夜空の欠片を封じて仕立てた品。身に着けた者の運を底上げする。",
+    "en": "A reader of the stars sealed a shard of the night sky within. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_celestial_str_bracelet": {
+    "ja": "天穹の剛力の腕輪",
+    "en": "Celestial Bracelet of Might"
+  },
+  "design.eternalrealm.trinket_celestial_str_bracelet.lore": {
+    "ja": "天穹の果てから降りた光を、白銀の枠に留めている。身に着けた者の膂力を底上げする。",
+    "en": "White silver holds light that fell from the edge of the sky. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_celestial_str_stone": {
+    "ja": "天穹の剛力の守り石",
+    "en": "Celestial Ward Stone of Might"
+  },
+  "design.eternalrealm.trinket_celestial_str_stone.lore": {
+    "ja": "天穹の果てから降りた光を、白銀の枠に留めている。身に着けた者の膂力を底上げする。",
+    "en": "White silver holds light that fell from the edge of the sky. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_celestial_vit_amulet": {
+    "ja": "天穹の堅守の首飾り",
+    "en": "Celestial Amulet of Fortitude"
+  },
+  "design.eternalrealm.trinket_celestial_vit_amulet.lore": {
+    "ja": "天穹の果てから降りた光を、白銀の枠に留めている。身に着けた者の体力を底上げする。",
+    "en": "White silver holds light that fell from the edge of the sky. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_celestial_vit_talisman": {
+    "ja": "天穹の堅守の護符",
+    "en": "Celestial Talisman of Fortitude"
+  },
+  "design.eternalrealm.trinket_celestial_vit_talisman.lore": {
+    "ja": "天穹の果てから降りた光を、白銀の枠に留めている。身に着けた者の体力を底上げする。",
+    "en": "White silver holds light that fell from the edge of the sky. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_celestial_agi_earring": {
+    "ja": "天穹の疾風の耳飾り",
+    "en": "Celestial Earring of the Gale"
+  },
+  "design.eternalrealm.trinket_celestial_agi_earring.lore": {
+    "ja": "天穹の果てから降りた光を、白銀の枠に留めている。身に着けた者の素早さを底上げする。",
+    "en": "White silver holds light that fell from the edge of the sky. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_celestial_agi_bell": {
+    "ja": "天穹の疾風の守り鈴",
+    "en": "Celestial Ward Bell of the Gale"
+  },
+  "design.eternalrealm.trinket_celestial_agi_bell.lore": {
+    "ja": "天穹の果てから降りた光を、白銀の枠に留めている。身に着けた者の素早さを底上げする。",
+    "en": "White silver holds light that fell from the edge of the sky. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_celestial_int_ring": {
+    "ja": "天穹の叡智の指輪",
+    "en": "Celestial Ring of Wisdom"
+  },
+  "design.eternalrealm.trinket_celestial_int_ring.lore": {
+    "ja": "天穹の果てから降りた光を、白銀の枠に留めている。身に着けた者の知力を底上げする。",
+    "en": "White silver holds light that fell from the edge of the sky. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_celestial_int_talisman": {
+    "ja": "天穹の叡智の護符",
+    "en": "Celestial Talisman of Wisdom"
+  },
+  "design.eternalrealm.trinket_celestial_int_talisman.lore": {
+    "ja": "天穹の果てから降りた光を、白銀の枠に留めている。身に着けた者の知力を底上げする。",
+    "en": "White silver holds light that fell from the edge of the sky. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_celestial_dex_earring": {
+    "ja": "天穹の鷹眼の耳飾り",
+    "en": "Celestial Earring of the Hawk"
+  },
+  "design.eternalrealm.trinket_celestial_dex_earring.lore": {
+    "ja": "天穹の果てから降りた光を、白銀の枠に留めている。身に着けた者の器用さを底上げする。",
+    "en": "White silver holds light that fell from the edge of the sky. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_celestial_dex_bell": {
+    "ja": "天穹の鷹眼の守り鈴",
+    "en": "Celestial Ward Bell of the Hawk"
+  },
+  "design.eternalrealm.trinket_celestial_dex_bell.lore": {
+    "ja": "天穹の果てから降りた光を、白銀の枠に留めている。身に着けた者の器用さを底上げする。",
+    "en": "White silver holds light that fell from the edge of the sky. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_celestial_luk_ring": {
+    "ja": "天穹の幸運の指輪",
+    "en": "Celestial Ring of Fortune"
+  },
+  "design.eternalrealm.trinket_celestial_luk_ring.lore": {
+    "ja": "天穹の果てから降りた光を、白銀の枠に留めている。身に着けた者の運を底上げする。",
+    "en": "White silver holds light that fell from the edge of the sky. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_celestial_luk_pouch": {
+    "ja": "天穹の幸運のお守り袋",
+    "en": "Celestial Charm Pouch of Fortune"
+  },
+  "design.eternalrealm.trinket_celestial_luk_pouch.lore": {
+    "ja": "天穹の果てから降りた光を、白銀の枠に留めている。身に着けた者の運を底上げする。",
+    "en": "White silver holds light that fell from the edge of the sky. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_divine_str_bracelet": {
+    "ja": "神域の剛力の腕輪",
+    "en": "Divine Bracelet of Might"
+  },
+  "design.eternalrealm.trinket_divine_str_bracelet.lore": {
+    "ja": "神域に触れた者だけが打てる、澄んだ響きの装身具。身に着けた者の膂力を底上げする。",
+    "en": "Its clear ring can only be forged by one who has touched the divine. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_divine_str_stone": {
+    "ja": "神域の剛力の守り石",
+    "en": "Divine Ward Stone of Might"
+  },
+  "design.eternalrealm.trinket_divine_str_stone.lore": {
+    "ja": "神域に触れた者だけが打てる、澄んだ響きの装身具。身に着けた者の膂力を底上げする。",
+    "en": "Its clear ring can only be forged by one who has touched the divine. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_divine_vit_amulet": {
+    "ja": "神域の堅守の首飾り",
+    "en": "Divine Amulet of Fortitude"
+  },
+  "design.eternalrealm.trinket_divine_vit_amulet.lore": {
+    "ja": "神域に触れた者だけが打てる、澄んだ響きの装身具。身に着けた者の体力を底上げする。",
+    "en": "Its clear ring can only be forged by one who has touched the divine. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_divine_vit_talisman": {
+    "ja": "神域の堅守の護符",
+    "en": "Divine Talisman of Fortitude"
+  },
+  "design.eternalrealm.trinket_divine_vit_talisman.lore": {
+    "ja": "神域に触れた者だけが打てる、澄んだ響きの装身具。身に着けた者の体力を底上げする。",
+    "en": "Its clear ring can only be forged by one who has touched the divine. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_divine_agi_earring": {
+    "ja": "神域の疾風の耳飾り",
+    "en": "Divine Earring of the Gale"
+  },
+  "design.eternalrealm.trinket_divine_agi_earring.lore": {
+    "ja": "神域に触れた者だけが打てる、澄んだ響きの装身具。身に着けた者の素早さを底上げする。",
+    "en": "Its clear ring can only be forged by one who has touched the divine. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_divine_agi_bell": {
+    "ja": "神域の疾風の守り鈴",
+    "en": "Divine Ward Bell of the Gale"
+  },
+  "design.eternalrealm.trinket_divine_agi_bell.lore": {
+    "ja": "神域に触れた者だけが打てる、澄んだ響きの装身具。身に着けた者の素早さを底上げする。",
+    "en": "Its clear ring can only be forged by one who has touched the divine. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_divine_int_ring": {
+    "ja": "神域の叡智の指輪",
+    "en": "Divine Ring of Wisdom"
+  },
+  "design.eternalrealm.trinket_divine_int_ring.lore": {
+    "ja": "神域に触れた者だけが打てる、澄んだ響きの装身具。身に着けた者の知力を底上げする。",
+    "en": "Its clear ring can only be forged by one who has touched the divine. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_divine_int_talisman": {
+    "ja": "神域の叡智の護符",
+    "en": "Divine Talisman of Wisdom"
+  },
+  "design.eternalrealm.trinket_divine_int_talisman.lore": {
+    "ja": "神域に触れた者だけが打てる、澄んだ響きの装身具。身に着けた者の知力を底上げする。",
+    "en": "Its clear ring can only be forged by one who has touched the divine. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_divine_dex_earring": {
+    "ja": "神域の鷹眼の耳飾り",
+    "en": "Divine Earring of the Hawk"
+  },
+  "design.eternalrealm.trinket_divine_dex_earring.lore": {
+    "ja": "神域に触れた者だけが打てる、澄んだ響きの装身具。身に着けた者の器用さを底上げする。",
+    "en": "Its clear ring can only be forged by one who has touched the divine. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_divine_dex_bell": {
+    "ja": "神域の鷹眼の守り鈴",
+    "en": "Divine Ward Bell of the Hawk"
+  },
+  "design.eternalrealm.trinket_divine_dex_bell.lore": {
+    "ja": "神域に触れた者だけが打てる、澄んだ響きの装身具。身に着けた者の器用さを底上げする。",
+    "en": "Its clear ring can only be forged by one who has touched the divine. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_divine_luk_ring": {
+    "ja": "神域の幸運の指輪",
+    "en": "Divine Ring of Fortune"
+  },
+  "design.eternalrealm.trinket_divine_luk_ring.lore": {
+    "ja": "神域に触れた者だけが打てる、澄んだ響きの装身具。身に着けた者の運を底上げする。",
+    "en": "Its clear ring can only be forged by one who has touched the divine. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_divine_luk_pouch": {
+    "ja": "神域の幸運のお守り袋",
+    "en": "Divine Charm Pouch of Fortune"
+  },
+  "design.eternalrealm.trinket_divine_luk_pouch.lore": {
+    "ja": "神域に触れた者だけが打てる、澄んだ響きの装身具。身に着けた者の運を底上げする。",
+    "en": "Its clear ring can only be forged by one who has touched the divine. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_aeon_str_bracelet": {
+    "ja": "永劫の剛力の腕輪",
+    "en": "Aeon Bracelet of Might"
+  },
+  "design.eternalrealm.trinket_aeon_str_bracelet.lore": {
+    "ja": "永劫の時を経ても曇らぬ、紫の輝きを宿す。身に着けた者の膂力を底上げする。",
+    "en": "Its violet gleam has not dimmed through an aeon of ages. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_aeon_str_stone": {
+    "ja": "永劫の剛力の守り石",
+    "en": "Aeon Ward Stone of Might"
+  },
+  "design.eternalrealm.trinket_aeon_str_stone.lore": {
+    "ja": "永劫の時を経ても曇らぬ、紫の輝きを宿す。身に着けた者の膂力を底上げする。",
+    "en": "Its violet gleam has not dimmed through an aeon of ages. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_aeon_vit_amulet": {
+    "ja": "永劫の堅守の首飾り",
+    "en": "Aeon Amulet of Fortitude"
+  },
+  "design.eternalrealm.trinket_aeon_vit_amulet.lore": {
+    "ja": "永劫の時を経ても曇らぬ、紫の輝きを宿す。身に着けた者の体力を底上げする。",
+    "en": "Its violet gleam has not dimmed through an aeon of ages. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_aeon_vit_talisman": {
+    "ja": "永劫の堅守の護符",
+    "en": "Aeon Talisman of Fortitude"
+  },
+  "design.eternalrealm.trinket_aeon_vit_talisman.lore": {
+    "ja": "永劫の時を経ても曇らぬ、紫の輝きを宿す。身に着けた者の体力を底上げする。",
+    "en": "Its violet gleam has not dimmed through an aeon of ages. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_aeon_agi_earring": {
+    "ja": "永劫の疾風の耳飾り",
+    "en": "Aeon Earring of the Gale"
+  },
+  "design.eternalrealm.trinket_aeon_agi_earring.lore": {
+    "ja": "永劫の時を経ても曇らぬ、紫の輝きを宿す。身に着けた者の素早さを底上げする。",
+    "en": "Its violet gleam has not dimmed through an aeon of ages. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_aeon_agi_bell": {
+    "ja": "永劫の疾風の守り鈴",
+    "en": "Aeon Ward Bell of the Gale"
+  },
+  "design.eternalrealm.trinket_aeon_agi_bell.lore": {
+    "ja": "永劫の時を経ても曇らぬ、紫の輝きを宿す。身に着けた者の素早さを底上げする。",
+    "en": "Its violet gleam has not dimmed through an aeon of ages. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_aeon_int_ring": {
+    "ja": "永劫の叡智の指輪",
+    "en": "Aeon Ring of Wisdom"
+  },
+  "design.eternalrealm.trinket_aeon_int_ring.lore": {
+    "ja": "永劫の時を経ても曇らぬ、紫の輝きを宿す。身に着けた者の知力を底上げする。",
+    "en": "Its violet gleam has not dimmed through an aeon of ages. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_aeon_int_talisman": {
+    "ja": "永劫の叡智の護符",
+    "en": "Aeon Talisman of Wisdom"
+  },
+  "design.eternalrealm.trinket_aeon_int_talisman.lore": {
+    "ja": "永劫の時を経ても曇らぬ、紫の輝きを宿す。身に着けた者の知力を底上げする。",
+    "en": "Its violet gleam has not dimmed through an aeon of ages. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_aeon_dex_earring": {
+    "ja": "永劫の鷹眼の耳飾り",
+    "en": "Aeon Earring of the Hawk"
+  },
+  "design.eternalrealm.trinket_aeon_dex_earring.lore": {
+    "ja": "永劫の時を経ても曇らぬ、紫の輝きを宿す。身に着けた者の器用さを底上げする。",
+    "en": "Its violet gleam has not dimmed through an aeon of ages. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_aeon_dex_bell": {
+    "ja": "永劫の鷹眼の守り鈴",
+    "en": "Aeon Ward Bell of the Hawk"
+  },
+  "design.eternalrealm.trinket_aeon_dex_bell.lore": {
+    "ja": "永劫の時を経ても曇らぬ、紫の輝きを宿す。身に着けた者の器用さを底上げする。",
+    "en": "Its violet gleam has not dimmed through an aeon of ages. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_aeon_luk_ring": {
+    "ja": "永劫の幸運の指輪",
+    "en": "Aeon Ring of Fortune"
+  },
+  "design.eternalrealm.trinket_aeon_luk_ring.lore": {
+    "ja": "永劫の時を経ても曇らぬ、紫の輝きを宿す。身に着けた者の運を底上げする。",
+    "en": "Its violet gleam has not dimmed through an aeon of ages. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_aeon_luk_pouch": {
+    "ja": "永劫の幸運のお守り袋",
+    "en": "Aeon Charm Pouch of Fortune"
+  },
+  "design.eternalrealm.trinket_aeon_luk_pouch.lore": {
+    "ja": "永劫の時を経ても曇らぬ、紫の輝きを宿す。身に着けた者の運を底上げする。",
+    "en": "Its violet gleam has not dimmed through an aeon of ages. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_eternal_str_bracelet": {
+    "ja": "永遠の剛力の腕輪",
+    "en": "Eternal Bracelet of Might"
+  },
+  "design.eternalrealm.trinket_eternal_str_bracelet.lore": {
+    "ja": "この世界の果てで鍛えられた、永遠の名を冠する装身具。身に着けた者の膂力を底上げする。",
+    "en": "Forged at the end of this world, it bears the name of eternity. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_eternal_str_stone": {
+    "ja": "永遠の剛力の守り石",
+    "en": "Eternal Ward Stone of Might"
+  },
+  "design.eternalrealm.trinket_eternal_str_stone.lore": {
+    "ja": "この世界の果てで鍛えられた、永遠の名を冠する装身具。身に着けた者の膂力を底上げする。",
+    "en": "Forged at the end of this world, it bears the name of eternity. It raises the wearer's might."
+  },
+  "design.eternalrealm.trinket_eternal_vit_amulet": {
+    "ja": "永遠の堅守の首飾り",
+    "en": "Eternal Amulet of Fortitude"
+  },
+  "design.eternalrealm.trinket_eternal_vit_amulet.lore": {
+    "ja": "この世界の果てで鍛えられた、永遠の名を冠する装身具。身に着けた者の体力を底上げする。",
+    "en": "Forged at the end of this world, it bears the name of eternity. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_eternal_vit_talisman": {
+    "ja": "永遠の堅守の護符",
+    "en": "Eternal Talisman of Fortitude"
+  },
+  "design.eternalrealm.trinket_eternal_vit_talisman.lore": {
+    "ja": "この世界の果てで鍛えられた、永遠の名を冠する装身具。身に着けた者の体力を底上げする。",
+    "en": "Forged at the end of this world, it bears the name of eternity. It raises the wearer's vitality."
+  },
+  "design.eternalrealm.trinket_eternal_agi_earring": {
+    "ja": "永遠の疾風の耳飾り",
+    "en": "Eternal Earring of the Gale"
+  },
+  "design.eternalrealm.trinket_eternal_agi_earring.lore": {
+    "ja": "この世界の果てで鍛えられた、永遠の名を冠する装身具。身に着けた者の素早さを底上げする。",
+    "en": "Forged at the end of this world, it bears the name of eternity. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_eternal_agi_bell": {
+    "ja": "永遠の疾風の守り鈴",
+    "en": "Eternal Ward Bell of the Gale"
+  },
+  "design.eternalrealm.trinket_eternal_agi_bell.lore": {
+    "ja": "この世界の果てで鍛えられた、永遠の名を冠する装身具。身に着けた者の素早さを底上げする。",
+    "en": "Forged at the end of this world, it bears the name of eternity. It raises the wearer's swiftness."
+  },
+  "design.eternalrealm.trinket_eternal_int_ring": {
+    "ja": "永遠の叡智の指輪",
+    "en": "Eternal Ring of Wisdom"
+  },
+  "design.eternalrealm.trinket_eternal_int_ring.lore": {
+    "ja": "この世界の果てで鍛えられた、永遠の名を冠する装身具。身に着けた者の知力を底上げする。",
+    "en": "Forged at the end of this world, it bears the name of eternity. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_eternal_int_talisman": {
+    "ja": "永遠の叡智の護符",
+    "en": "Eternal Talisman of Wisdom"
+  },
+  "design.eternalrealm.trinket_eternal_int_talisman.lore": {
+    "ja": "この世界の果てで鍛えられた、永遠の名を冠する装身具。身に着けた者の知力を底上げする。",
+    "en": "Forged at the end of this world, it bears the name of eternity. It raises the wearer's mind."
+  },
+  "design.eternalrealm.trinket_eternal_dex_earring": {
+    "ja": "永遠の鷹眼の耳飾り",
+    "en": "Eternal Earring of the Hawk"
+  },
+  "design.eternalrealm.trinket_eternal_dex_earring.lore": {
+    "ja": "この世界の果てで鍛えられた、永遠の名を冠する装身具。身に着けた者の器用さを底上げする。",
+    "en": "Forged at the end of this world, it bears the name of eternity. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_eternal_dex_bell": {
+    "ja": "永遠の鷹眼の守り鈴",
+    "en": "Eternal Ward Bell of the Hawk"
+  },
+  "design.eternalrealm.trinket_eternal_dex_bell.lore": {
+    "ja": "この世界の果てで鍛えられた、永遠の名を冠する装身具。身に着けた者の器用さを底上げする。",
+    "en": "Forged at the end of this world, it bears the name of eternity. It raises the wearer's aim."
+  },
+  "design.eternalrealm.trinket_eternal_luk_ring": {
+    "ja": "永遠の幸運の指輪",
+    "en": "Eternal Ring of Fortune"
+  },
+  "design.eternalrealm.trinket_eternal_luk_ring.lore": {
+    "ja": "この世界の果てで鍛えられた、永遠の名を冠する装身具。身に着けた者の運を底上げする。",
+    "en": "Forged at the end of this world, it bears the name of eternity. It raises the wearer's fortune."
+  },
+  "design.eternalrealm.trinket_eternal_luk_pouch": {
+    "ja": "永遠の幸運のお守り袋",
+    "en": "Eternal Charm Pouch of Fortune"
+  },
+  "design.eternalrealm.trinket_eternal_luk_pouch.lore": {
+    "ja": "この世界の果てで鍛えられた、永遠の名を冠する装身具。身に着けた者の運を底上げする。",
+    "en": "Forged at the end of this world, it bears the name of eternity. It raises the wearer's fortune."
+  },
+  "smith.eternalrealm.trinket_grade.novice": {
+    "ja": "見習い",
+    "en": "Novice"
+  },
+  "smith.eternalrealm.trinket_grade.wayfarer": {
+    "ja": "旅人",
+    "en": "Wayfarer"
+  },
+  "smith.eternalrealm.trinket_grade.warrior": {
+    "ja": "戦士",
+    "en": "Warrior"
+  },
+  "smith.eternalrealm.trinket_grade.veteran": {
+    "ja": "古強者",
+    "en": "Veteran"
+  },
+  "smith.eternalrealm.trinket_grade.valiant": {
+    "ja": "勇士",
+    "en": "Valiant"
+  },
+  "smith.eternalrealm.trinket_grade.elite": {
+    "ja": "精鋭",
+    "en": "Elite"
+  },
+  "smith.eternalrealm.trinket_grade.heroic": {
+    "ja": "英雄",
+    "en": "Heroic"
+  },
+  "smith.eternalrealm.trinket_grade.champion": {
+    "ja": "覇者",
+    "en": "Champion"
+  },
+  "smith.eternalrealm.trinket_grade.starlit": {
+    "ja": "星詠み",
+    "en": "Starlit"
+  },
+  "smith.eternalrealm.trinket_grade.celestial": {
+    "ja": "天穹",
+    "en": "Celestial"
+  },
+  "smith.eternalrealm.trinket_grade.divine": {
+    "ja": "神域",
+    "en": "Divine"
+  },
+  "smith.eternalrealm.trinket_grade.aeon": {
+    "ja": "永劫",
+    "en": "Aeon"
+  },
+  "smith.eternalrealm.trinket_grade.eternal": {
+    "ja": "永遠",
+    "en": "Eternal"
+  }
+}

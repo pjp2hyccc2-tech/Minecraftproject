@@ -11,7 +11,8 @@ import java.util.random.RandomGenerator;
 /**
  * The bonuses a random affix can grant. {@link #id()} is the stable persistence key: never rename it.
  *
- * <p>Primary stat kinds add to the character's {@code StatBlock}; the others map onto {@link CombatModifiers}. Values
+ * <p>Primary stat kinds add to the character's {@code StatBlock}, stat percent kinds ({@link #isStatPercent()}) raise a
+ * primary stat by a percentage ({@code StatPercents}); the others map onto {@link CombatModifiers}. Values
  * live on a fixed grid so they survive JSON round trips exactly: flat kinds are whole numbers, percent kinds are
  * fractions in steps of 0.001 (0.1 %). The roll range grows linearly from tier 1 to tier 7 (rounded to the grid), so
  * a better tier always rolls at least as high as the tier below. Which kinds can appear on which piece is decided by
@@ -36,7 +37,17 @@ public enum AffixKind {
     RANGED_PERCENT("ranged_percent", null, 1000, 20, 40, 80, 140, 5_000),
     MAGIC_PERCENT("magic_percent", null, 1000, 20, 40, 80, 140, 5_000),
     HEALING_PERCENT("healing_percent", null, 1000, 20, 40, 80, 140, 5_000),
-    MOVE_SPEED("move_speed", null, 1000, 20, 30, 50, 80, 500);
+    MOVE_SPEED("move_speed", null, 1000, 20, 30, 50, 80, 500),
+    /*
+     * Percentage bonuses of a primary stat (0.08 = STR +8 %), applied after every flat source (see StatPercents).
+     * Unlike the other affixes they also grow with enhancement (EquipmentStats#percentFactor).
+     */
+    STR_PERCENT("str_percent", null, StatType.STR, 1000, 20, 40, 80, 120, 1_000),
+    VIT_PERCENT("vit_percent", null, StatType.VIT, 1000, 20, 40, 80, 120, 1_000),
+    AGI_PERCENT("agi_percent", null, StatType.AGI, 1000, 20, 40, 80, 120, 1_000),
+    INT_PERCENT("int_percent", null, StatType.INT, 1000, 20, 40, 80, 120, 1_000),
+    DEX_PERCENT("dex_percent", null, StatType.DEX, 1000, 20, 40, 80, 120, 1_000),
+    LUK_PERCENT("luk_percent", null, StatType.LUK, 1000, 20, 40, 80, 120, 1_000);
 
     /**
      * Stored values may exceed the current maximum of their tier by this factor. Anything higher is forged or corrupt;
@@ -46,6 +57,7 @@ public enum AffixKind {
 
     private final String id;
     private final StatType stat;
+    private final StatType percentStat;
     private final int scale;
     private final int[] minUnits = new int[ItemTier.COUNT];
     private final int[] maxUnits = new int[ItemTier.COUNT];
@@ -57,8 +69,15 @@ public enum AffixKind {
      * @param capUnits absolute sanity limit of a stored value, in grid units
      */
     AffixKind(String id, StatType stat, int scale, int firstMin, int firstMax, int lastMin, int lastMax, int capUnits) {
+        this(id, stat, null, scale, firstMin, firstMax, lastMin, lastMax, capUnits);
+    }
+
+    /** @param percentStat the primary stat a percent kind raises ({@code stat} is then {@code null}) */
+    AffixKind(String id, StatType stat, StatType percentStat, int scale, int firstMin, int firstMax, int lastMin,
+              int lastMax, int capUnits) {
         this.id = id;
         this.stat = stat;
+        this.percentStat = percentStat;
         this.scale = scale;
         this.capUnits = capUnits;
         for (int i = 0; i < ItemTier.COUNT; i++) {
@@ -84,6 +103,28 @@ public enum AffixKind {
 
     public boolean isPrimaryStat() {
         return stat != null;
+    }
+
+    /** The primary stat a stat percent kind raises by a percentage, or empty. */
+    public Optional<StatType> percentStat() {
+        return Optional.ofNullable(percentStat);
+    }
+
+    /** Whether this kind raises a primary stat by a percentage (STR +8 %) rather than a flat amount. */
+    public boolean isStatPercent() {
+        return percentStat != null;
+    }
+
+    /** The stat percent kind of a primary stat. */
+    public static AffixKind percentOf(StatType stat) {
+        return switch (Objects.requireNonNull(stat, "stat")) {
+            case STR -> STR_PERCENT;
+            case VIT -> VIT_PERCENT;
+            case AGI -> AGI_PERCENT;
+            case INT -> INT_PERCENT;
+            case DEX -> DEX_PERCENT;
+            case LUK -> LUK_PERCENT;
+        };
     }
 
     /** Whether values are fractions shown as percentages. */
@@ -156,12 +197,13 @@ public enum AffixKind {
     }
 
     /**
-     * Adds a secondary kind's value to {@code builder}; primary stat kinds leave it unchanged. A switch expression, so
-     * a new kind does not compile until it is mapped.
+     * Adds a secondary kind's value to {@code builder}; primary stat and stat percent kinds leave it unchanged. A
+     * switch expression, so a new kind does not compile until it is mapped.
      */
     CombatModifiers.Builder addTo(CombatModifiers.Builder builder, double value) {
         return switch (this) {
             case STR, VIT, AGI, INT, DEX, LUK -> builder;
+            case STR_PERCENT, VIT_PERCENT, AGI_PERCENT, INT_PERCENT, DEX_PERCENT, LUK_PERCENT -> builder;
             case DEFENSE -> builder.defense(value);
             case MAX_HEALTH -> builder.healthFlat(value);
             case CRIT_CHANCE -> builder.crit(value);

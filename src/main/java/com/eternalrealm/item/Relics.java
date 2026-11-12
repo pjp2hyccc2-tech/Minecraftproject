@@ -1,6 +1,6 @@
 package com.eternalrealm.item;
 
-import com.eternalrealm.character.StatBlock;
+import com.eternalrealm.character.StatPercents;
 import com.eternalrealm.character.StatType;
 import com.eternalrealm.combat.CombatModifiers;
 import com.eternalrealm.combat.DamageType;
@@ -353,14 +353,18 @@ public final class Relics {
                 sources, key, theme, 1.40, 1.40, piece, two, new ArmorSet.SetBonus(fourMods, fourPerks));
     }
 
-    /** Accessory: two primary stats and one bonus by focus, all growing with the level. */
+    /**
+     * Accessory: two primary stats as percentages (the main ×1.25 and the second ×0.5 of a catalogue accessory of the
+     * same level, {@link Trinkets#accessoryPercent}) and one bonus by focus, all growing with the level.
+     */
     static TrinketDesign accessory(RelicTable.Row row, int index, int level, Set<DesignSource> sources) {
         TrinketKind kind = TrinketKind.valueOf(row.accessory());
         StatType main = StatType.valueOf(row.accessoryMain());
         StatType second = StatType.valueOf(row.accessorySecond());
-        Map<StatType, Integer> stats = new EnumMap<>(StatType.class);
-        stats.put(main, (int) Math.round(3 + 0.30 * level));
-        stats.merge(second, (int) Math.round(2 + 0.16 * level), Integer::sum);
+        double base = Trinkets.accessoryPercent(level);
+        Map<StatType, Double> percents = new EnumMap<>(StatType.class);
+        percents.put(main, round(1.25 * base));
+        percents.merge(second, round(0.5 * base), Double::sum);
         CombatModifiers.Builder b = CombatModifiers.builder();
         switch (AccessoryFocus.valueOf(row.accessoryFocus())) {
             case CRIT -> b.crit(round(0.01 + 0.0006 * level));
@@ -377,18 +381,22 @@ public final class Relics {
             case MOVE -> b.moveSpeed(round(0.01 + 0.0004 * level));
             case HEALING -> b.healing(round(0.02 + 0.001 * level));
         }
-        StatBlock block = StatBlock.of(stats);
+        StatPercents block = StatPercents.of(percents);
         return new TrinketDesign("relic_" + row.key() + "_" + kind.id(), Design.TRINKET_MODELS + index * 2, kind,
                 row.field(), level, sources, row.key(), block, b.build(), List.of(),
                 TrinketDesign.statBias(block, kind.slot()));
     }
 
-    /** Charm: VIT, LUK, max health and defense, and a perk by focus. */
+    /**
+     * Charm: VIT and LUK as percentages (×1.25 and ×0.6 of a catalogue charm of the same level,
+     * {@link Trinkets#charmPercent}), max health and defense, and a perk by focus.
+     */
     static TrinketDesign charm(RelicTable.Row row, int index, int level, Set<DesignSource> sources) {
         TrinketKind kind = TrinketKind.valueOf(row.charm());
-        Map<StatType, Integer> stats = new EnumMap<>(StatType.class);
-        stats.put(StatType.VIT, (int) Math.round(2 + 0.2 * level));
-        stats.put(StatType.LUK, (int) Math.round(1 + 0.12 * level));
+        double base = Trinkets.charmPercent(level);
+        Map<StatType, Double> percents = new EnumMap<>(StatType.class);
+        percents.put(StatType.VIT, round(1.25 * base));
+        percents.put(StatType.LUK, round(0.6 * base));
         CombatModifiers.Builder b = CombatModifiers.builder().healthFlat(r1(0.6 * level)).defense(r1(0.5 * level));
         List<PassiveEffect> perks = new ArrayList<>();
         switch (CharmFocus.valueOf(row.charmFocus())) {
@@ -399,7 +407,7 @@ public final class Relics {
             case LIFESTEAL -> perks.add(new PassiveEffect.Lifesteal(round(0.01 + 0.0002 * level)));
             case HEALTH -> b.healthPercent(round(0.03 + 0.001 * level));
         }
-        StatBlock block = StatBlock.of(stats);
+        StatPercents block = StatPercents.of(percents);
         return new TrinketDesign("relic_" + row.key() + "_" + kind.id(), Design.TRINKET_MODELS + index * 2 + 1, kind,
                 row.field(), level, sources, row.key(), block, b.build(), perks,
                 TrinketDesign.statBias(block, kind.slot()));

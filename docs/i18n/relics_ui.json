@@ -36,7 +36,7 @@
   "tooltip.eternalrealm.equipment.stat": {"ja": "%s +%s", "en": "%s +%s"},
   "screen.eternalrealm.equipment.slot.accessory_1": {"ja": "飾1", "en": "Acc1"},
   "screen.eternalrealm.equipment.slot.accessory_2": {"ja": "飾2", "en": "Acc2"},
-  "screen.eternalrealm.equipment.slot.charm": {"ja": "守", "en": "Chm"},
+  "screen.eternalrealm.equipment.slot.charm": {"ja": "守1", "en": "Chm1"},
   "screen.eternalrealm.equipment.duplicate": {"ja": "同じ装身具は一つしか着けられません", "en": "Only one of each trinket can be worn"},
   "message.eternalrealm.bag.equip.duplicate": {"ja": "同じ装身具は一つしか着けられません", "en": "You already wear that trinket"},
   "message.eternalrealm.equipment.level_required": {"ja": "%2$sを装備するにはレベル%1$sが必要です", "en": "You need level %1$s to equip %2$s"},

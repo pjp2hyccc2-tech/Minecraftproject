@@ -74,8 +74,8 @@ public record WeaponDesign(String id, int model, WeaponType type, int field, int
     static Map<AffixKind, Integer> checkedBias(String id, Map<AffixKind, Integer> bias, AffixPool pool) {
         Map<AffixKind, Integer> copy = new EnumMap<>(AffixKind.class);
         for (Map.Entry<AffixKind, Integer> entry : Objects.requireNonNull(bias, "bias").entrySet()) {
-            if (!pool.allows(entry.getKey())) {
-                throw new IllegalArgumentException(id + ": " + entry.getKey() + " cannot appear on this piece");
+            if (!pool.rolls(entry.getKey())) {
+                throw new IllegalArgumentException(id + ": " + entry.getKey() + " cannot roll on this piece");
             }
             copy.put(entry.getKey(), Checks.range("bias of " + entry.getKey(), entry.getValue(), 1, 20));
         }

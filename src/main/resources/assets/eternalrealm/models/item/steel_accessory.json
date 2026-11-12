@@ -9,6 +9,42 @@
         "custom_model_data": 5000
       },
       "model": "eternalrealm:item/trinket/relic_b1_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5212
+      },
+      "model": "eternalrealm:item/trinket/trinket_wayfarer_str_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5214
+      },
+      "model": "eternalrealm:item/trinket/trinket_wayfarer_vit_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5216
+      },
+      "model": "eternalrealm:item/trinket/trinket_wayfarer_agi_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5218
+      },
+      "model": "eternalrealm:item/trinket/trinket_wayfarer_int_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5220
+      },
+      "model": "eternalrealm:item/trinket/trinket_wayfarer_dex_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5222
+      },
+      "model": "eternalrealm:item/trinket/trinket_wayfarer_luk_ring"
     }
   ]
 }

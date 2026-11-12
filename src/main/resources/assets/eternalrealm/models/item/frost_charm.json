@@ -81,6 +81,42 @@
         "custom_model_data": 5123
       },
       "model": "eternalrealm:item/trinket/relic_w_reed_serpent_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5237
+      },
+      "model": "eternalrealm:item/trinket/trinket_veteran_str_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5239
+      },
+      "model": "eternalrealm:item/trinket/trinket_veteran_vit_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5241
+      },
+      "model": "eternalrealm:item/trinket/trinket_veteran_agi_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5243
+      },
+      "model": "eternalrealm:item/trinket/trinket_veteran_int_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5245
+      },
+      "model": "eternalrealm:item/trinket/trinket_veteran_dex_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5247
+      },
+      "model": "eternalrealm:item/trinket/trinket_veteran_luk_pouch"
     }
   ]
 }

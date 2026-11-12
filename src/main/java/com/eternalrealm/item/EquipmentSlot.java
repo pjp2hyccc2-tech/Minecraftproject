@@ -13,9 +13,9 @@ import java.util.Optional;
  * Minecraft's own {@code EquipmentSlot}: the platform layer maps HEAD/CHEST/LEGS/FEET to the vanilla armor slots and
  * WEAPON to the main hand.</p>
  *
- * <p>The trinkets (装身具, owner's request of 2026-11-11) have slots of their own that vanilla does not know: two
- * accessories (アクセサリー: rings, amulets, earrings, bracelets) and one charm (お守り). They carry no defense; their
- * worth is in their stats ({@link TrinketDesign}).</p>
+ * <p>The trinkets (装身具, owner's request of 2026-11-11) have slots of their own that vanilla does not know: four
+ * accessories (アクセサリー: rings, amulets, earrings, bracelets) and two charms (お守り) since the owner's request of
+ * 2026-11-13. They carry no defense; their worth is in their stat percentages ({@link TrinketDesign}).</p>
  */
 public enum EquipmentSlot {
     WEAPON("weapon", 0.0),
@@ -55,9 +55,13 @@ public enum EquipmentSlot {
         return this == ACCESSORY || this == CHARM;
     }
 
-    /** How many pieces of this slot can be worn at once: two accessories, one of everything else. */
+    /** How many pieces of this slot can be worn at once: four accessories, two charms, one of everything else. */
     public int capacity() {
-        return this == ACCESSORY ? 2 : 1;
+        return switch (this) {
+            case ACCESSORY -> 4;
+            case CHARM -> 2;
+            default -> 1;
+        };
     }
 
     /** Fraction of a full armor set's defense and max health this piece carries; 0 for the weapon. */

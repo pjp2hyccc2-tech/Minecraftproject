@@ -117,6 +117,258 @@
         "custom_model_data": 5118
       },
       "model": "eternalrealm:item/trinket/relic_w_gravebloom_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5272
+      },
+      "model": "eternalrealm:item/trinket/trinket_heroic_str_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5274
+      },
+      "model": "eternalrealm:item/trinket/trinket_heroic_vit_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5276
+      },
+      "model": "eternalrealm:item/trinket/trinket_heroic_agi_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5278
+      },
+      "model": "eternalrealm:item/trinket/trinket_heroic_int_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5280
+      },
+      "model": "eternalrealm:item/trinket/trinket_heroic_dex_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5282
+      },
+      "model": "eternalrealm:item/trinket/trinket_heroic_luk_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5284
+      },
+      "model": "eternalrealm:item/trinket/trinket_champion_str_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5286
+      },
+      "model": "eternalrealm:item/trinket/trinket_champion_vit_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5288
+      },
+      "model": "eternalrealm:item/trinket/trinket_champion_agi_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5290
+      },
+      "model": "eternalrealm:item/trinket/trinket_champion_int_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5292
+      },
+      "model": "eternalrealm:item/trinket/trinket_champion_dex_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5294
+      },
+      "model": "eternalrealm:item/trinket/trinket_champion_luk_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5296
+      },
+      "model": "eternalrealm:item/trinket/trinket_starlit_str_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5298
+      },
+      "model": "eternalrealm:item/trinket/trinket_starlit_vit_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5300
+      },
+      "model": "eternalrealm:item/trinket/trinket_starlit_agi_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5302
+      },
+      "model": "eternalrealm:item/trinket/trinket_starlit_int_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5304
+      },
+      "model": "eternalrealm:item/trinket/trinket_starlit_dex_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5306
+      },
+      "model": "eternalrealm:item/trinket/trinket_starlit_luk_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5308
+      },
+      "model": "eternalrealm:item/trinket/trinket_celestial_str_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5310
+      },
+      "model": "eternalrealm:item/trinket/trinket_celestial_vit_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5312
+      },
+      "model": "eternalrealm:item/trinket/trinket_celestial_agi_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5314
+      },
+      "model": "eternalrealm:item/trinket/trinket_celestial_int_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5316
+      },
+      "model": "eternalrealm:item/trinket/trinket_celestial_dex_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5318
+      },
+      "model": "eternalrealm:item/trinket/trinket_celestial_luk_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5320
+      },
+      "model": "eternalrealm:item/trinket/trinket_divine_str_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5322
+      },
+      "model": "eternalrealm:item/trinket/trinket_divine_vit_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5324
+      },
+      "model": "eternalrealm:item/trinket/trinket_divine_agi_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5326
+      },
+      "model": "eternalrealm:item/trinket/trinket_divine_int_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5328
+      },
+      "model": "eternalrealm:item/trinket/trinket_divine_dex_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5330
+      },
+      "model": "eternalrealm:item/trinket/trinket_divine_luk_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5332
+      },
+      "model": "eternalrealm:item/trinket/trinket_aeon_str_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5334
+      },
+      "model": "eternalrealm:item/trinket/trinket_aeon_vit_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5336
+      },
+      "model": "eternalrealm:item/trinket/trinket_aeon_agi_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5338
+      },
+      "model": "eternalrealm:item/trinket/trinket_aeon_int_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5340
+      },
+      "model": "eternalrealm:item/trinket/trinket_aeon_dex_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5342
+      },
+      "model": "eternalrealm:item/trinket/trinket_aeon_luk_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5344
+      },
+      "model": "eternalrealm:item/trinket/trinket_eternal_str_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5346
+      },
+      "model": "eternalrealm:item/trinket/trinket_eternal_vit_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5348
+      },
+      "model": "eternalrealm:item/trinket/trinket_eternal_agi_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5350
+      },
+      "model": "eternalrealm:item/trinket/trinket_eternal_int_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5352
+      },
+      "model": "eternalrealm:item/trinket/trinket_eternal_dex_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5354
+      },
+      "model": "eternalrealm:item/trinket/trinket_eternal_luk_ring"
     }
   ]
 }

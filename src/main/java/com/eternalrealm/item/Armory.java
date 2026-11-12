@@ -164,13 +164,19 @@ public final class Armory {
         return DESIGNS;
     }
 
-    /** A design of the catalogue or a relic ({@link Relics}) by id. */
+    /** A design of the catalogue, a relic ({@link Relics}) or a catalogue trinket ({@link Trinkets}) by id. */
     public static Optional<Design> design(String id) {
         if (id == null) {
             return Optional.empty();
         }
         Design design = BY_ID.get(id);
-        return design != null ? Optional.of(design) : id.startsWith("relic_") ? Relics.design(id) : Optional.empty();
+        if (design != null) {
+            return Optional.of(design);
+        }
+        if (id.startsWith("relic_")) {
+            return Relics.design(id);
+        }
+        return id.startsWith(Trinkets.PREFIX) ? Trinkets.design(id).map(Design.class::cast) : Optional.empty();
     }
 
     public static Optional<WeaponDesign> weapon(String id) {
@@ -181,10 +187,13 @@ public final class Armory {
         return Optional.ofNullable(id == null ? null : SETS_BY_ID.get(id));
     }
 
-    /** A design of the catalogue or a relic by its model number. */
+    /** A design of the catalogue, a relic or a catalogue trinket by its model number. */
     public static Optional<Design> byModel(int model) {
         Design design = BY_MODEL.get(model);
-        return design != null ? Optional.of(design) : Relics.byModel(model);
+        if (design != null) {
+            return Optional.of(design);
+        }
+        return model >= Trinkets.MODELS ? Trinkets.byModel(model).map(Design.class::cast) : Relics.byModel(model);
     }
 
     /** The named weapons of a field (boss weapons included), in catalogue order. */

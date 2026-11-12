@@ -1,0 +1,78 @@
+{
+  "affix.eternalrealm.str_percent": {
+    "ja": "STR +%s%%",
+    "en": "STR +%s%%"
+  },
+  "affix.eternalrealm.vit_percent": {
+    "ja": "VIT +%s%%",
+    "en": "VIT +%s%%"
+  },
+  "affix.eternalrealm.agi_percent": {
+    "ja": "AGI +%s%%",
+    "en": "AGI +%s%%"
+  },
+  "affix.eternalrealm.int_percent": {
+    "ja": "INT +%s%%",
+    "en": "INT +%s%%"
+  },
+  "affix.eternalrealm.dex_percent": {
+    "ja": "DEX +%s%%",
+    "en": "DEX +%s%%"
+  },
+  "affix.eternalrealm.luk_percent": {
+    "ja": "LUK +%s%%",
+    "en": "LUK +%s%%"
+  },
+  "screen.eternalrealm.equipment.stat.str_percent": {
+    "ja": "STR％",
+    "en": "STR %"
+  },
+  "screen.eternalrealm.equipment.stat.vit_percent": {
+    "ja": "VIT％",
+    "en": "VIT %"
+  },
+  "screen.eternalrealm.equipment.stat.agi_percent": {
+    "ja": "AGI％",
+    "en": "AGI %"
+  },
+  "screen.eternalrealm.equipment.stat.int_percent": {
+    "ja": "INT％",
+    "en": "INT %"
+  },
+  "screen.eternalrealm.equipment.stat.dex_percent": {
+    "ja": "DEX％",
+    "en": "DEX %"
+  },
+  "screen.eternalrealm.equipment.stat.luk_percent": {
+    "ja": "LUK％",
+    "en": "LUK %"
+  },
+  "tooltip.eternalrealm.equipment.stat_percent": {
+    "ja": "%s +%s%%",
+    "en": "%s +%s%%"
+  },
+  "tooltip.eternalrealm.equipment.enhancement_percent": {
+    "ja": "強化 +%1$s/%2$s（基本性能 +%3$s%%・ステータス％ +%4$s%%）",
+    "en": "Enhanced +%1$s/%2$s (base stats +%3$s%%, stat percentages +%4$s%%)"
+  },
+  "screen.eternalrealm.equipment.slot.accessory_3": {
+    "ja": "飾3",
+    "en": "Acc3"
+  },
+  "screen.eternalrealm.equipment.slot.accessory_4": {
+    "ja": "飾4",
+    "en": "Acc4"
+  },
+  "screen.eternalrealm.equipment.slot.charm_2": {
+    "ja": "守2",
+    "en": "Chm2"
+  },
+  "screen.eternalrealm.smith.trinket_header": {
+    "ja": "%1$s 装身具・%2$s（Lv%3$s〜）",
+    "en": "%1$s Trinkets: %2$s (Lv%3$s+)"
+  },
+  "screen.eternalrealm.smith.stat.percent": {
+    "ja": "%s％",
+    "en": "%s %%"
+  }
+}

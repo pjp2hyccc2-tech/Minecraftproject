@@ -39,6 +39,42 @@
         "custom_model_data": 5098
       },
       "model": "eternalrealm:item/trinket/relic_w_bramble_knight_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5224
+      },
+      "model": "eternalrealm:item/trinket/trinket_warrior_str_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5226
+      },
+      "model": "eternalrealm:item/trinket/trinket_warrior_vit_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5228
+      },
+      "model": "eternalrealm:item/trinket/trinket_warrior_agi_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5230
+      },
+      "model": "eternalrealm:item/trinket/trinket_warrior_int_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5232
+      },
+      "model": "eternalrealm:item/trinket/trinket_warrior_dex_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5234
+      },
+      "model": "eternalrealm:item/trinket/trinket_warrior_luk_ring"
     }
   ]
 }

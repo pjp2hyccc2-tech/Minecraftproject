@@ -39,6 +39,42 @@
         "custom_model_data": 5099
       },
       "model": "eternalrealm:item/trinket/relic_w_bramble_knight_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5225
+      },
+      "model": "eternalrealm:item/trinket/trinket_warrior_str_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5227
+      },
+      "model": "eternalrealm:item/trinket/trinket_warrior_vit_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5229
+      },
+      "model": "eternalrealm:item/trinket/trinket_warrior_agi_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5231
+      },
+      "model": "eternalrealm:item/trinket/trinket_warrior_int_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5233
+      },
+      "model": "eternalrealm:item/trinket/trinket_warrior_dex_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5235
+      },
+      "model": "eternalrealm:item/trinket/trinket_warrior_luk_pouch"
     }
   ]
 }

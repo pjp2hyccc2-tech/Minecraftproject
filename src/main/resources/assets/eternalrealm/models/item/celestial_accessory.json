@@ -21,6 +21,42 @@
         "custom_model_data": 5110
       },
       "model": "eternalrealm:item/trinket/relic_w_ash_herald_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5260
+      },
+      "model": "eternalrealm:item/trinket/trinket_elite_str_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5262
+      },
+      "model": "eternalrealm:item/trinket/trinket_elite_vit_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5264
+      },
+      "model": "eternalrealm:item/trinket/trinket_elite_agi_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5266
+      },
+      "model": "eternalrealm:item/trinket/trinket_elite_int_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5268
+      },
+      "model": "eternalrealm:item/trinket/trinket_elite_dex_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5270
+      },
+      "model": "eternalrealm:item/trinket/trinket_elite_luk_ring"
     }
   ]
 }

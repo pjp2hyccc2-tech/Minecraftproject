@@ -35,6 +35,17 @@ import java.util.TreeMap;
  * boss weapon S × 12 + E × 6 + U × 4, tier gold × 6 (the soul forge)
  * level       the design's level
  * </pre>
+ *
+ * <p><b>Trinkets</b> ({@link #trinketRecipes()}, the catalogue of {@link Trinkets}):</p>
+ * <pre>
+ * grades 1-7 (tier t)    accessory W × 3 + A × 2, charm A × 3 + W × 2, enhancement stones × t,
+ *                        tier 2+ plus 2 of the previous area's material of the same role;
+ *                        gold: the tier's gold × 1.2 (accessory) or × 1.0 (charm)
+ * grades 8-13 (k = 1..6) void essence and abyss crystal × (4 + 2k), oblivion shard × k, end soul × k,
+ *                        the focus's elite material × 2k, enhancement stones × 5k, reroll crystals × k;
+ *                        gold 1500k² + 2500k (charm × 0.8)
+ * level                  the trinket's level
+ * </pre>
  */
 public final class Recipes {
     /** Index = tier number − 1: gold of a weapon or chest piece. */
@@ -42,6 +53,7 @@ public final class Recipes {
 
     private static final List<Recipe> CATALOG;
     private static final List<Recipe> DESIGNS;
+    private static final List<Recipe> TRINKETS;
     private static final Map<String, Recipe> BY_ID;
 
     static {
@@ -65,8 +77,17 @@ public final class Recipes {
             }
             designs.add(recipe);
         }
+        List<Recipe> trinkets = new ArrayList<>();
+        for (TrinketDesign design : Trinkets.all()) {
+            Recipe recipe = trinketRecipeFor(design);
+            if (byId.put(recipe.id(), recipe) != null) {
+                throw new ExceptionInInitializerError("Duplicate recipe id " + recipe.id());
+            }
+            trinkets.add(recipe);
+        }
         CATALOG = Collections.unmodifiableList(catalog);
         DESIGNS = Collections.unmodifiableList(designs);
+        TRINKETS = Collections.unmodifiableList(trinkets);
         BY_ID = Collections.unmodifiableMap(byId);
     }
 
@@ -81,6 +102,23 @@ public final class Recipes {
     /** The recipes of the named designs, in catalogue order (field weapons, boss weapons, armor pieces). */
     public static List<Recipe> designRecipes() {
         return DESIGNS;
+    }
+
+    /** The recipes of the catalogue trinkets ({@link Trinkets#all()} order: grade by grade). */
+    public static List<Recipe> trinketRecipes() {
+        return TRINKETS;
+    }
+
+    /** The trinket recipes of one grade. */
+    public static List<Recipe> trinketRecipes(Trinkets.Grade grade) {
+        Objects.requireNonNull(grade, "grade");
+        List<Recipe> result = new ArrayList<>();
+        for (Recipe recipe : TRINKETS) {
+            if (recipe.design().level() == grade.level()) {
+                result.add(recipe);
+            }
+        }
+        return Collections.unmodifiableList(result);
     }
 
     /** The design recipes of a field (its weapons, its boss weapons and its armor pieces). */
@@ -178,6 +216,36 @@ public final class Recipes {
                 ingredients.merge(elite, step, Integer::sum);
             }
             gold = Math.round(tierGold(tier) * (1.5 + 0.5 * step) * percent / 100.0);
+        }
+        return new Recipe(design.id(), design.base(), ingredients, gold, design.level(), design);
+    }
+
+    private static Recipe trinketRecipeFor(TrinketDesign design) {
+        Trinkets.Grade grade = Trinkets.gradeOf(design).orElseThrow();
+        Trinkets.Focus focus = Trinkets.focusOf(design).orElseThrow();
+        boolean charm = design.slot() == EquipmentSlot.CHARM;
+        Map<String, Integer> ingredients = new TreeMap<>();
+        long gold;
+        if (grade.ordinal() < ItemTier.COUNT) {
+            ItemTier tier = grade.tier();
+            ingredients.put(charm ? Materials.armorMaterial(tier) : Materials.weaponMaterial(tier), 3);
+            ingredients.merge(charm ? Materials.weaponMaterial(tier) : Materials.armorMaterial(tier), 2, Integer::sum);
+            ingredients.put(Materials.ENHANCEMENT_STONE, tier.number());
+            Optional<ItemTier> previous = ItemTier.byNumber(tier.number() - 1);
+            previous.ifPresent(old -> ingredients.merge(
+                    charm ? Materials.armorMaterial(old) : Materials.weaponMaterial(old), 2, Integer::sum));
+            gold = Math.round(tierGold(tier) * (charm ? 1.0 : 1.2));
+        } else {
+            int k = grade.ordinal() - ItemTier.COUNT + 1;
+            ingredients.put(Materials.VOID_ESSENCE, 4 + 2 * k);
+            ingredients.put(Materials.ABYSS_CRYSTAL, 4 + 2 * k);
+            ingredients.put(Materials.ofField(7, Materials.Grade.ELITE).get(0), k);
+            ingredients.put(Materials.ofField(7, Materials.Grade.BOSS).get(0), k);
+            ingredients.merge(focus.eliteMaterial(), 2 * k, Integer::sum);
+            ingredients.put(Materials.ENHANCEMENT_STONE, 5 * k);
+            ingredients.put(Materials.REROLL_CRYSTAL, k);
+            long base = 1500L * k * k + 2500L * k;
+            gold = charm ? Math.round(base * 0.8) : base;
         }
         return new Recipe(design.id(), design.base(), ingredients, gold, design.level(), design);
     }

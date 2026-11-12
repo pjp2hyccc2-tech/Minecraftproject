@@ -81,6 +81,42 @@
         "custom_model_data": 5122
       },
       "model": "eternalrealm:item/trinket/relic_w_reed_serpent_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5236
+      },
+      "model": "eternalrealm:item/trinket/trinket_veteran_str_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5238
+      },
+      "model": "eternalrealm:item/trinket/trinket_veteran_vit_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5240
+      },
+      "model": "eternalrealm:item/trinket/trinket_veteran_agi_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5242
+      },
+      "model": "eternalrealm:item/trinket/trinket_veteran_int_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5244
+      },
+      "model": "eternalrealm:item/trinket/trinket_veteran_dex_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5246
+      },
+      "model": "eternalrealm:item/trinket/trinket_veteran_luk_ring"
     }
   ]
 }

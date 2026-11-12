@@ -30,7 +30,7 @@ public class ItemDefinitionsTest {
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             assertEquals(slot.toString(), slot.isTrinket(), EquipmentSlot.trinkets().contains(slot));
             assertEquals(slot.toString(), slot.isArmor(), EquipmentSlot.armor().contains(slot));
-            assertEquals(slot == EquipmentSlot.ACCESSORY ? 2 : 1, slot.capacity());
+            assertEquals(slot == EquipmentSlot.ACCESSORY ? 4 : slot == EquipmentSlot.CHARM ? 2 : 1, slot.capacity());
         }
         double total = 0;
         for (EquipmentSlot slot : EquipmentSlot.values()) {
@@ -251,6 +251,36 @@ public class ItemDefinitionsTest {
         double str = expected.get(AffixKind.STR);
         assertEquals(str, expected.get(AffixKind.INT), 0.02);
         assertEquals(str, expected.get(AffixKind.DEX), 0.02);
+        // the stat percentages too, exactly: every armor piece rolls STR %, INT % and DEX % alike
+        for (EquipmentSlot slot : EquipmentSlot.armor()) {
+            AffixPool pool = AffixPool.of(slot, null);
+            assertEquals(slot.toString(), pool.weight(AffixKind.STR_PERCENT), pool.weight(AffixKind.INT_PERCENT));
+            assertEquals(slot.toString(), pool.weight(AffixKind.STR_PERCENT), pool.weight(AffixKind.DEX_PERCENT));
+            assertTrue(slot + " rolls percentages", pool.rolls(AffixKind.STR_PERCENT));
+        }
+        // weapons keep their flat attack stat and damage percentages
+        for (WeaponType type : WeaponType.values()) {
+            for (AffixKind kind : AffixKind.values()) {
+                assertFalse(type + " " + kind, kind.isStatPercent() && AffixPool.of(EquipmentSlot.WEAPON, type)
+                        .allows(kind));
+            }
+        }
+    }
+
+    @Test
+    public void statPercentKindsRaiseTheirStat() {
+        for (StatType stat : StatType.values()) {
+            AffixKind kind = AffixKind.percentOf(stat);
+            assertTrue(kind.isStatPercent() && kind.isPercent() && !kind.isPrimaryStat());
+            assertEquals(stat, kind.percentStat().orElseThrow());
+            assertTrue(kind.stat().isEmpty());
+            assertEquals(stat.id() + "_percent", kind.id());
+        }
+        assertEquals(0.02, AffixKind.STR_PERCENT.min(ItemTier.IRON), 0.0);
+        assertEquals(0.12, AffixKind.STR_PERCENT.max(ItemTier.ABYSS), 0.0);
+        assertEquals("12", AffixKind.STR_PERCENT.format(0.12));
+        assertFalse(AffixKind.STR.isStatPercent());
+        assertTrue(AffixKind.STR.percentStat().isEmpty());
     }
 
     @Test
@@ -269,9 +299,10 @@ public class ItemDefinitionsTest {
     @Test
     public void weightedDrawsFollowTheScript() {
         AffixPool pool = AffixPool.of(EquipmentSlot.FEET, null);
-        // FEET in enum order: VIT 1, AGI 3, DEX 1, LUK 1, DEFENSE 2, MAX_HEALTH 2, MOVE_SPEED 3 (total 13)
-        assertEquals(13, pool.totalWeight());
-        // draw 0 → VIT (value index 0), then draw 11 of the remaining 12 → MOVE_SPEED (value index 0)
+        // FEET in enum order: VIT 1, AGI 3, DEX 1, LUK 1, DEFENSE 2, MAX_HEALTH 2, MOVE_SPEED 3, STR % 1, AGI % 1,
+        // INT % 1, DEX % 1 (total 17)
+        assertEquals(17, pool.totalWeight());
+        // draw 0 → VIT (value index 0), then draw 11 of the remaining 16 → MOVE_SPEED (value index 0)
         List<Affix> affixes = pool.roll(ItemTier.IRON, 2, ScriptedRandom.ofInts(0, 0, 11, 0));
         assertEquals(List.of(new Affix(AffixKind.VIT, 1), new Affix(AffixKind.MOVE_SPEED, 0.02)), affixes);
         // draw 1 → AGI (weight 3 covers 1..3)

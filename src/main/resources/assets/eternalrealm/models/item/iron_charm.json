@@ -2,5 +2,43 @@
   "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "eternalrealm:item/trinket/base_charm"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 5201
+      },
+      "model": "eternalrealm:item/trinket/trinket_novice_str_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5203
+      },
+      "model": "eternalrealm:item/trinket/trinket_novice_vit_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5205
+      },
+      "model": "eternalrealm:item/trinket/trinket_novice_agi_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5207
+      },
+      "model": "eternalrealm:item/trinket/trinket_novice_int_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5209
+      },
+      "model": "eternalrealm:item/trinket/trinket_novice_dex_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5211
+      },
+      "model": "eternalrealm:item/trinket/trinket_novice_luk_pouch"
+    }
+  ]
 }
