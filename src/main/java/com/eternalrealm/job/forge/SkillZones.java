@@ -89,6 +89,13 @@ public final class SkillZones {
         if (zone.look() != null) {
             com.eternalrealm.item.forge.ArtVisuals.zoneCreated(caster.serverLevel(), zone.look(), center,
                     zone.radius(), zone.delayTicks());
+        } else if (theme != null) {
+            // the light of the area for its whole life, drawn by every client close enough to see it
+            com.eternalrealm.network.forge.ERNetwork.sendToNear(caster.serverLevel(), center.x, center.y, center.z,
+                    64.0 + zone.radius(), com.eternalrealm.network.forge.SkillFxPacket.zone(theme, center.x, center.y,
+                            center.z, caster.getYRot(), zone.radius(), zone.delayTicks(), zone.pulses(),
+                            zone.intervalTicks(), zone.healFraction() > 0.0, zone.damageMultiplier() > 0.0,
+                            caster.getRandom().nextInt()));
         }
     }
 

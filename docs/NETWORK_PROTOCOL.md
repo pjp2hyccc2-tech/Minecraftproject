@@ -5,7 +5,7 @@
 | 項目 | 値 |
 |---|---|
 | チャンネル | `eternalrealm:main`（Forge SimpleChannel） |
-| プロトコル版 | `"9"`（`ERNetwork.PROTOCOL_VERSION`）。Phase 2 で戦闘パケット追加のため 1→2、以後の追加を経て、スキルツリー（職業スキル枠5・6、職業武器の拒否、スナップショットのスキル枠）で 4→5、HUD 刷新（`UseItemPacket`、戦闘値の回復薬補正）で 5→6、カバンの取得表示（`PickupFeedPacket`）で 6→7、スキルのロックオン（`CombatActionPacket` に targetId）で 7→8、伝説の旅人の技の演出（`HeroFxPacket`）で 8→9 |
+| プロトコル版 | `"10"`（`ERNetwork.PROTOCOL_VERSION`）。Phase 2 で戦闘パケット追加のため 1→2、以後の追加を経て、スキルツリー（職業スキル枠5・6、職業武器の拒否、スナップショットのスキル枠）で 4→5、HUD 刷新（`UseItemPacket`、戦闘値の回復薬補正）で 5→6、カバンの取得表示（`PickupFeedPacket`）で 6→7、スキルのロックオン（`CombatActionPacket` に targetId）で 7→8、伝説の旅人の技の演出（`HeroFxPacket`）で 8→9、スキルの光（`SkillFxPacket`）で 9→10 |
 | 互換性 | クライアント・サーバーとも**完全一致のみ受け入れ**。MOD未導入のクライアントは接続時に拒否 |
 | 版上げ条件 | パケットの追加・削除・順序変更・フィールド変更のいずれか |
 
@@ -25,6 +25,7 @@
 | 10 | `UseItemPacket` | C→S | slot (VarInt: インベントリの 0〜35)。クイック使用（1〜3キー）とカバンの「使う」。サーバーがスロット・アイテム・レベル・クールダウンを確認（`QuickUse.useSlot`）。範囲外のスロットは**違反** | 5 B | サーバー |
 | 11 | `PickupFeedPacket` | S→C | stack (ItemStack: 1個。名前・アイコン・レア度), count (VarInt, 1〜1,000,000), flags (byte: 1=カバンが満杯で足元に落ちた) | 2 KB（ItemStack の NBT 込み） | クライアント（取得した本人だけに送る） |
 | 12 | `HeroFxPacket` | S→C | entityId (VarInt: 伝説の旅人), action (byte: 0〜19 = 技 `Travellers.Move` の序数、100 = 加入の身振り、101 = 起き上がり。127 まで), x/y/z (float: 狙う位置), seed (int: 流れ星や斬撃の配置を全クライアントでそろえる) | 32 B | クライアント（その旅人を見ている全員に送る。体がその技のアニメーションを演じ、光の演出を描く。[travellers.md](modules/travellers.md)） |
+| 13 | `SkillFxPacket` | S→C | kind (byte: 0=地面の領域 1=爆発), theme (byte: `SkillTheme` の序数), x/y/z (float: 領域の中心／爆発の位置), yaw (float: 術者の向き), radius (float: 0.5〜16), delay (short: 最初の脈動までの tick, 0〜600), pulses (byte: 1〜64), interval (short: 脈動の間隔 tick, 1〜600), flags (byte: 1=回復 2=ダメージ), seed (int: 細部の配置を全クライアントでそろえる) | 40 B | クライアント（その位置から 64 ブロック以内の全員。スキルの光 [skills.md §6.1](modules/skills.md)） |
 
 ステータスの並び順は `StatType` の宣言順（ネットワークIDは固定値で、再利用・並べ替え禁止）。
 
@@ -154,3 +155,13 @@
   本人の行と仲間の行の `party` を送る。
 - C→S `UiActionPacket`: `dialogue.choice {id, choice}`（id は 1 以上、choice は 0〜3。範囲外は違反。問いが無い・期限切れの id は無視）、
   `traveller.dismiss {id}`（id は旅人の id、32文字まで。仲間でなければ何もしない）。
+
+## 付録: スキルの光（版 10: `SkillFxPacket` を追加）
+
+- S→C `SkillFxPacket`（ID 13、上の表）: 職業スキルの地面の領域（`SkillZones.create`。武技の領域は従来どおり武技の演出）ができたとき、
+  またはスキルの魔法・矢が爆発したとき（`CombatHits.explosion`）、その位置から 64 ブロック（領域は＋半径）以内の全員へ。クライアントは
+  領域の一生分の光（`job.fx.Fields.zone`）か爆発の光（`Fields.blast`）を描く（`client.SkillFx`）。見た目だけで、ダメージ・回復・効果は
+  サーバーが決める。デコード時に kind・theme・座標（有限・ワールド内）・yaw・半径・tick・脈動数・flags を検証し、外れれば切断。
+- スキルの行動そのものの光は既存の `PlayerActionPacket`（行動ID・時間）から各クライアントが組み立てる（新しいデータなし）。
+- スキルの魔法弾（`MagicProjectile`）と矢（`SkillArrow`）にエンティティ同期データ `THEME`（byte、-1=なし）を追加。クライアントが飛ぶ光の
+  テーマに使う。

@@ -1,5 +1,8 @@
 package com.eternalrealm.combat.forge;
 
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -19,6 +22,9 @@ import java.util.Set;
  * up, disappears when it hits a block and is never saved.
  */
 public final class SkillArrow extends AbstractArrow {
+    /** The {@code SkillTheme} ordinal of a job skill's arrow (-1: a plain shot): the client draws its light. */
+    private static final EntityDataAccessor<Byte> THEME = SynchedEntityData.defineId(SkillArrow.class,
+            EntityDataSerializers.BYTE);
     private ProjectilePayload payload;
     private int pierceLeft;
     private final Set<Integer> alreadyHit = new HashSet<>();
@@ -40,7 +46,21 @@ public final class SkillArrow extends AbstractArrow {
         arrow.pickup = AbstractArrow.Pickup.DISALLOWED;
         arrow.setBaseDamage(0.0);
         arrow.setCritArrow(payload.roll().critical());
+        if (payload.theme() != null) {
+            arrow.entityData.set(THEME, (byte) payload.theme().ordinal());
+        }
         return arrow;
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(THEME, (byte) -1);
+    }
+
+    /** The theme ordinal of a job skill's arrow, or -1 (a plain shot). */
+    public int skillTheme() {
+        return entityData.get(THEME);
     }
 
     @Override

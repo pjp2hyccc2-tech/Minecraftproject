@@ -68,6 +68,7 @@ public final class ClientModEvents {
         ClientboundHandlers.setPlayerActionHandler(CombatAnimations::onRemoteAction);
         ClientboundHandlers.setTelegraphHandler(com.eternalrealm.client.telegraph.ClientTelegraphs::accept);
         ClientboundHandlers.setHeroFxHandler(HeroFx::accept);
+        ClientboundHandlers.setSkillFxHandler(SkillFx::accept);
         com.eternalrealm.block.forge.LightShaftBlockEntity.clientLoaded =
                 com.eternalrealm.client.block.ClientLightShafts::onLoaded;
         com.eternalrealm.item.forge.EquipmentStacks.setViewerLevel(() -> ClientCharacterState.snapshot()

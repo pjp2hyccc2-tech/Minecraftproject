@@ -16,7 +16,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
  */
 public final class ERNetwork {
     /** Bump whenever a packet is added, removed, reordered or its layout changes. */
-    public static final String PROTOCOL_VERSION = "9";
+    public static final String PROTOCOL_VERSION = "10";
 
     private static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
             .named(ResourceLocation.fromNamespaceAndPath(ModInfo.MOD_ID, "main"))
@@ -102,6 +102,11 @@ public final class ERNetwork {
                 .decoder(HeroFxPacket::decode)
                 .consumerMainThread(HeroFxPacket::handle)
                 .add();
+        CHANNEL.messageBuilder(SkillFxPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(SkillFxPacket::encode)
+                .decoder(SkillFxPacket::decode)
+                .consumerMainThread(SkillFxPacket::handle)
+                .add();
     }
 
     public static void sendToPlayer(ServerPlayer player, Object message) {
@@ -116,6 +121,13 @@ public final class ERNetwork {
     /** To every player tracking {@code entity} and the entity itself if it is a player. */
     public static void sendToTrackingAndSelf(net.minecraft.world.entity.Entity entity, Object message) {
         CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
+    }
+
+    /** To every player within {@code radius} blocks of {@code (x, y, z)} in {@code level}. */
+    public static void sendToNear(net.minecraft.server.level.ServerLevel level, double x, double y, double z,
+                                  double radius, Object message) {
+        CHANNEL.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(x, y, z, radius,
+                level.dimension())), message);
     }
 
     /** Client side only (called from client/ui code). */

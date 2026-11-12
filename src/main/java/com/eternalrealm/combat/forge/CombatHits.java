@@ -174,6 +174,10 @@ public final class CombatHits {
         double radius = payload.spec().explosionRadius();
         if (payload.theme() != null) {
             com.eternalrealm.job.forge.SkillVisuals.explosion(level, payload.theme(), at, radius);
+            // the light of the burst, drawn by every client close enough to see it
+            com.eternalrealm.network.forge.ERNetwork.sendToNear(level, at.x, at.y, at.z, 64.0,
+                    com.eternalrealm.network.forge.SkillFxPacket.blast(payload.theme(), at.x, at.y, at.z,
+                            attacker.getYRot(), radius, attacker.getRandom().nextInt()));
         } else {
             level.sendParticles(radius >= 4.0 ? ParticleTypes.EXPLOSION_EMITTER : ParticleTypes.EXPLOSION, at.x, at.y,
                     at.z, 1, 0.0, 0.0, 0.0, 0.0);

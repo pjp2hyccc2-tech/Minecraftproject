@@ -18,6 +18,7 @@ public final class ERClientConfig {
     public static final ForgeConfigSpec.BooleanValue COMBAT_HUD;
     public static final ForgeConfigSpec.BooleanValue CAMERA_SHAKE;
     public static final ForgeConfigSpec.BooleanValue WEAPON_ANIMATIONS;
+    public static final ForgeConfigSpec.BooleanValue SKILL_EFFECTS;
     public static final ForgeConfigSpec.BooleanValue DIALOGUE_AUTO_ADVANCE;
     public static final ForgeConfigSpec.IntValue DIALOGUE_TEXT_SPEED;
 
@@ -42,6 +43,9 @@ public final class ERClientConfig {
         CAMERA_SHAKE = builder.comment("Shake the camera on heavy hits, skills and boss slams").define("cameraShake", true);
         WEAPON_ANIMATIONS = builder.comment("Animate weapons and arms for combo steps, skills and charges (first and third person)")
                 .define("weaponAnimations", true);
+        SKILL_EFFECTS = builder.comment("Draw the light of job skills and ultimates: cuts, magic circles, blasts, glowing",
+                "ground areas and the trails of skill spells and arrows (false: only the particles; always off with a",
+                "shader pack)").define("skillEffects", true);
         builder.pop();
         builder.comment("Dialogue box").push("dialogue");
         DIALOGUE_AUTO_ADVANCE = builder.comment("Lines in the box above the hotbar (areas, bosses, news) advance by themselves "
