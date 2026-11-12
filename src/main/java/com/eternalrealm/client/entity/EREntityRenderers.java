@@ -76,5 +76,6 @@ public final class EREntityRenderers {
                     context -> new BossRenderer(context, kind.rig(), walkSpeed));
         }
         event.registerEntityRenderer(NpcEntities.NPC.get(), NpcRenderer::new);
+        event.registerEntityRenderer(NpcEntities.WANDERER.get(), NpcRenderer::new);
     }
 }

@@ -33,7 +33,7 @@ python3 tools/art_entities/generate_npc.py mina lilia   # 指定したアピア�
   約0.6秒かけて消える）、**talk**（話しかけられたときの仕草1回。お辞儀、豪快な笑い、敬礼、祝福…）。
 - アニメーションの開始時刻はエンティティごとにずらす（群衆が一斉に同じ動きをしない）。
 
-## 3. アピアランス（62）
+## 3. アピアランス（68）
 
 | 区分 | ID |
 |---|---|
@@ -43,6 +43,7 @@ python3 tools/art_entities/generate_npc.py mina lilia   # 指定したアピア�
 | 町の人（12種×2色） | merchant, housewife, farmer, sailor, noble_lady, noble_gent, elder, apprentice, maid, bard, child, adventurer（各 `…2` が別の色・性別・髪型） |
 | 衛兵・聖職者 | guard（斧槍と青い陣羽織の門衛）, knight（全身鎧・盾・剣の王城騎士）, archer（長弓と矢筒の城壁弓兵）, priest（司祭）, nun（修道女） |
 | ダンジョン入口の門番 | warden_d1〜warden_d8（地域の色: 王国の青、森の緑、砂漠の砂色と赤、凍獄の灰青と毛皮、氷城の水色と白い毛皮、火山の黒と橙、天空の白金、終焉の塔の黒紫）, warden（それ以外） |
+| 放浪の冒険者（[wanderers.md](wanderers.md)） | wanderer_bold（ドワーフの地図描き。羅針の杖）, wanderer_mirka（鷹匠。肩に鷹、長弓）, wanderer_graus（鐘の騎士。背中の青銅の鐘とハルバード）, wanderer_sele（潮歌いの詩人。真珠色のリュート） |
 | その他 | citizen（既定。不明なIDもこれ） |
 
 縮尺（当たり判定も追従）: 子ども0.68〜0.8、チコ0.8、イルザ0.92 … ゴラン1.04、グスタフ1.08。発光: リリア（王笏・ペンダント・ティアラ）、

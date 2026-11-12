@@ -46,6 +46,7 @@ minecraftproject/
     │   ├── bootstrap/     [Forge] ServerBootstrap（コンポジションルート・tick・停止処理）
     │   ├── config/        [Forge] ERServerConfig / ERClientConfig
     │   ├── testkit/       [Forge] テスト用コマンド /er admin test（最大化・見学用の屋敷、modules/testkit.md）
+    │   │   └── bots/      [純粋] BotIds, BotPlans（テストボットの番号・色・判断）; forge/ [Forge] テストボット本体と /er admin bots
     │   ├── client/        [クライアント専用] 表示用状態、キー割り当て、クライアントイベント
     │   ├── ui/            [クライアント専用] hud/（HUD）, screen/（キャラクター画面）
     │   └── gametest/      [Forge・開発時のみ有効] サーバー内統合テスト
