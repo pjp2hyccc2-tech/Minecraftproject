@@ -61,7 +61,12 @@ public final class PartyScreen extends JournalScreen {
             for (JsonElement element : party.get().getAsJsonArray("members")) {
                 JsonObject member = element.getAsJsonObject();
                 String id = ClientUiState.stringOr(member, "id", "");
-                if (iAmLeader && !id.equals(me)) {
+                if (member.has("companion")) {
+                    String who = ClientUiState.stringOr(member, "companion", "");
+                    addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.party.part"),
+                            b -> send("traveller.dismiss", "id", who)).bounds(left + CONTENT_WIDTH - 52, y, 50, 14)
+                            .build());
+                } else if (iAmLeader && !id.equals(me)) {
                     addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.party.promote"),
                             b -> send("party.promote", "id", id)).bounds(left + CONTENT_WIDTH - 104, y, 50, 14).build());
                     addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.party.kick"),
@@ -134,12 +139,17 @@ public final class PartyScreen extends JournalScreen {
         for (JsonElement element : members) {
             JsonObject member = element.getAsJsonObject();
             boolean online = member.has("online") && member.get("online").getAsBoolean();
-            String label = (member.has("leader") && member.get("leader").getAsBoolean() ? "★ " : "")
-                    + ClientUiState.stringOr(member, "name", "?");
-            graphics.drawString(font, label, left + 2, y + 3, online ? 0xFFFFFF : 0x707070);
+            boolean companion = member.has("companion");
+            String name = member.has("nameKey") ? Component.translatable(ClientUiState.stringOr(member, "nameKey", ""))
+                    .getString() : ClientUiState.stringOr(member, "name", "?");
+            String label = (member.has("leader") && member.get("leader").getAsBoolean() ? "★ " : companion ? "✦ " : "")
+                    + name;
+            graphics.drawString(font, label, left + 2, y + 3, companion ? 0xFFE8B0 : online ? 0xFFFFFF : 0x707070);
             if (online && member.has("level")) {
-                graphics.drawString(font, Component.translatable("job.eternalrealm." + ClientUiState.stringOr(member, "job", "none"))
-                        .append(" Lv" + member.get("level").getAsInt()), left + 100, y + 3, 0xB0D0FF);
+                Component role = companion ? Component.translatable(ClientUiState.stringOr(member, "titleKey", ""))
+                        : Component.translatable("job.eternalrealm." + ClientUiState.stringOr(member, "job", "none"));
+                graphics.drawString(font, role.copy().append(" Lv" + member.get("level").getAsInt()), left + 100,
+                        y + 3, companion ? 0xFFD27A : 0xB0D0FF);
             }
             if (online && member.has("hp")) {
                 graphics.drawString(font, String.format(java.util.Locale.ROOT, "%.0f/%.0f",

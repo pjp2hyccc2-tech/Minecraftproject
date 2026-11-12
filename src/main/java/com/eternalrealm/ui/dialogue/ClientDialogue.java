@@ -36,7 +36,8 @@ public final class ClientDialogue {
     private static final int MAX_AMBIENT_QUEUE = 6;
     private static final Deque<Conversation> MODAL = new ArrayDeque<>();
     private static final Deque<Conversation> AMBIENT = new ArrayDeque<>();
-    private static final Map<String, Boolean> PORTRAITS = new HashMap<>();
+    /** Portrait textures by speaker id: their side in pixels, 0 when the resource pack has none. */
+    private static final Map<String, Integer> PORTRAITS = new HashMap<>();
     @Nullable
     private static Conversation modal;
     @Nullable
@@ -45,8 +46,12 @@ public final class ClientDialogue {
     private ClientDialogue() {
     }
 
-    /** One line: narration has no speaker. */
-    public record Line(@Nullable Component speaker, Component text, @Nullable ResourceLocation portrait) {
+    /**
+     * One line: narration has no speaker. {@code portraitPixels} is the side of the portrait texture (48 for the
+     * townsfolk, 96 for the legendary travellers' sharper portraits).
+     */
+    public record Line(@Nullable Component speaker, Component text, @Nullable ResourceLocation portrait,
+                       int portraitPixels) {
         public boolean narration() {
             return speaker == null;
         }
@@ -66,15 +71,31 @@ public final class ClientDialogue {
         private final int id;
         private final boolean modal;
         private final List<Line> lines;
+        private final List<Component> choices;
         private int index;
         private long lineStart;
         private boolean revealed;
         private boolean finished;
 
         Conversation(int id, boolean modal, List<Line> lines) {
+            this(id, modal, lines, List.of());
+        }
+
+        Conversation(int id, boolean modal, List<Line> lines, List<Component> choices) {
             this.id = id;
             this.modal = modal;
             this.lines = List.copyOf(lines);
+            this.choices = List.copyOf(choices);
+        }
+
+        /** The answers of a question (shown under its last line), empty for a plain dialogue. */
+        public List<Component> choices() {
+            return choices;
+        }
+
+        /** Whether the last line is written out and the player has to pick an answer. */
+        public boolean awaitingChoice() {
+            return !finished && !choices.isEmpty() && index == lines.size() - 1 && lineComplete();
         }
 
         public Line line() {
@@ -128,7 +149,7 @@ public final class ClientDialogue {
 
     // ------------------------------------------------------------------ input from the server
 
-    /** {@code {id, modal, lines: [{speaker?, portrait?, text}]}}. Malformed data is ignored. */
+    /** {@code {id, modal, lines: [{speaker?, portrait?, text}], choices?: [key]}}. Malformed data is ignored. */
     public static void accept(JsonObject data) {
         int id = ClientUiState.intOr(data, "id", 0);
         boolean isModal = data.has("modal") && data.get("modal").isJsonPrimitive() && data.get("modal").getAsBoolean();
@@ -144,14 +165,24 @@ public final class ClientDialogue {
                     continue;
                 }
                 String speaker = ClientUiState.stringOr(entry, "speaker", "");
+                String portraitId = ClientUiState.stringOr(entry, "portrait", "");
+                ResourceLocation portrait = portrait(portraitId);
                 lines.add(new Line(speaker.isEmpty() ? null : Component.translatable(speaker),
-                        Component.translatable(text), portrait(ClientUiState.stringOr(entry, "portrait", ""))));
+                        Component.translatable(text), portrait, portrait == null ? 0 : PORTRAITS.get(portraitId)));
             }
         }
         if (lines.isEmpty()) {
             return;
         }
-        Conversation conversation = new Conversation(id, isModal, lines);
+        List<Component> choices = new ArrayList<>();
+        if (data.get("choices") instanceof JsonArray options && isModal) {
+            for (JsonElement option : options) {
+                if (option.isJsonPrimitive() && choices.size() < 4) {
+                    choices.add(Component.translatable(option.getAsString()));
+                }
+            }
+        }
+        Conversation conversation = new Conversation(id, isModal, lines, choices);
         if (isModal) {
             MODAL.add(conversation);
         } else {
@@ -162,16 +193,28 @@ public final class ClientDialogue {
         }
     }
 
-    /** Portrait texture of a speaker id, if the resource pack has one. */
+    /** Portrait texture of a speaker id, if the resource pack has one (its size is remembered in PORTRAITS). */
     @Nullable
     private static ResourceLocation portrait(String speakerId) {
         if (speakerId.isEmpty() || !ResourceLocation.isValidPath(speakerId)) {
             return null;
         }
         ResourceLocation location = new ResourceLocation("eternalrealm", "textures/gui/portrait/" + speakerId + ".png");
-        boolean present = PORTRAITS.computeIfAbsent(speakerId, id ->
-                Minecraft.getInstance().getResourceManager().getResource(location).isPresent());
-        return present ? location : null;
+        int pixels = PORTRAITS.computeIfAbsent(speakerId, id -> pixelsOf(location));
+        return pixels > 0 ? location : null;
+    }
+
+    private static int pixelsOf(ResourceLocation location) {
+        var resource = Minecraft.getInstance().getResourceManager().getResource(location);
+        if (resource.isEmpty()) {
+            return 0;
+        }
+        try (var in = resource.get().open();
+             var image = com.mojang.blaze3d.platform.NativeImage.read(in)) {
+            return Math.max(1, image.getWidth());
+        } catch (java.io.IOException | RuntimeException e) {
+            return 48;
+        }
     }
 
     // ------------------------------------------------------------------ per tick
@@ -239,8 +282,30 @@ public final class ClientDialogue {
             UiSounds.click();
             return false;
         }
+        if (!conversation.choices.isEmpty()) {
+            return false; // a question: it waits for an answer
+        }
         finish(conversation, conversation.size());
         return true;
+    }
+
+    /** The player picks answer {@code choice} of a question: the server is told, the exchange goes to the log. */
+    public static void choose(Conversation conversation, int choice) {
+        if (conversation.finished || choice < 0 || choice >= conversation.choices.size()) {
+            return;
+        }
+        conversation.finished = true;
+        log(conversation, conversation.size());
+        Minecraft.getInstance().gui.getChat().addMessage(Component.literal("» ")
+                .append(conversation.choices.get(choice).copy()).withStyle(ChatFormatting.GOLD));
+        JsonObject args = new JsonObject();
+        args.addProperty("id", conversation.id);
+        args.addProperty("choice", choice);
+        ERNetwork.sendToServer(new UiActionPacket("dialogue.choice", args));
+        UiSounds.click();
+        if (modal == conversation) {
+            modal = null;
+        }
     }
 
     /** Esc / screen closed: the rest of the conversation goes to the chat log. */

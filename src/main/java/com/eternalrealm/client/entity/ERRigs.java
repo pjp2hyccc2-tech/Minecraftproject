@@ -11,6 +11,8 @@ import com.eternalrealm.client.entity.model.gen.FlyerEnemyAnimations;
 import com.eternalrealm.client.entity.model.gen.FlyerEnemyGeometry;
 import com.eternalrealm.client.entity.model.gen.GolemEnemyAnimations;
 import com.eternalrealm.client.entity.model.gen.GolemEnemyGeometry;
+import com.eternalrealm.client.entity.model.gen.HeroAnimations;
+import com.eternalrealm.client.entity.model.gen.HeroGeometry;
 import com.eternalrealm.client.entity.model.gen.HumanoidEnemyAnimations;
 import com.eternalrealm.client.entity.model.gen.HumanoidEnemyGeometry;
 import com.eternalrealm.client.entity.model.gen.KingBossAnimations;
@@ -61,6 +63,10 @@ public final class ERRigs {
             DragonBossGeometry.TOGGLED_PARTS, DragonBossGeometry.VISIBLE, DragonBossGeometry.POSED_PARTS,
             DragonBossGeometry.POSES, DragonBossGeometry.SCALES, DragonBossGeometry.GLOWS,
             DragonBossAnimations::forVariant);
+    /** The four legendary travellers; slots as in {@link com.eternalrealm.npc.HeroBodies}. */
+    public static final RigTables HERO = new RigTables("hero", HeroGeometry.VARIANTS, HeroGeometry.TOGGLED_PARTS,
+            HeroGeometry.VISIBLE, HeroGeometry.POSED_PARTS, HeroGeometry.POSES, HeroGeometry.SCALES, HeroGeometry.GLOWS,
+            HeroAnimations::forVariant);
     /** The town NPCs; slots: idle, walk, work, talk. */
     public static final RigTables NPC = new RigTables("npc", NpcGeometry.VARIANTS, NpcGeometry.TOGGLED_PARTS,
             NpcGeometry.VISIBLE, NpcGeometry.POSED_PARTS, NpcGeometry.POSES, NpcGeometry.SCALES, NpcGeometry.GLOWS,

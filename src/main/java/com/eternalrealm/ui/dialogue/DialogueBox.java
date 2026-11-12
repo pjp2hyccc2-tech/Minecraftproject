@@ -85,7 +85,9 @@ final class DialogueBox {
             int px = left + pad + 1;
             int py = top + (height - portraitSize) / 2;
             graphics.fill(px - 1, py - 1, px + portraitSize + 1, py + portraitSize + 1, 0xFF05070C);
-            graphics.blit(line.portrait(), px, py, portraitSize, portraitSize, 0.0F, 0.0F, 48, 48, 48, 48);
+            int pixels = Math.max(1, line.portraitPixels());
+            graphics.blit(line.portrait(), px, py, portraitSize, portraitSize, 0.0F, 0.0F, pixels, pixels, pixels,
+                    pixels);
             graphics.renderOutline(px - 1, py - 1, portraitSize + 2, portraitSize + 2, 0xFF6E5A33);
         }
 

@@ -49,11 +49,13 @@ public final class PartyHudOverlay implements IGuiOverlay {
             int y = area.y() + (shown % layout.partyPerColumn()) * rowHeight;
             JsonObject member = element.getAsJsonObject();
             boolean online = member.has("online") && member.get("online").getAsBoolean();
-            String name = ClientUiState.stringOr(member, "name", "?");
+            String name = member.has("nameKey")
+                    ? net.minecraft.network.chat.Component.translatable(ClientUiState.stringOr(member, "nameKey", ""))
+                    .getString() : ClientUiState.stringOr(member, "name", "?");
             boolean leader = member.has("leader") && member.get("leader").getAsBoolean();
             graphics.fill(x, y, x + width, y + rowHeight - (compact ? 1 : 2), 0x80000000);
             int nameColor = online ? jobColor(ClientUiState.stringOr(member, "job", "none")) : 0x707070;
-            String label = (leader ? "★" : "") + name;
+            String label = (leader ? "★" : member.has("companion") ? "✦" : "") + name;
             if (online && member.has("level")) {
                 label += " Lv" + member.get("level").getAsInt();
             }

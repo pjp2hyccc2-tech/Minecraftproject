@@ -48,6 +48,8 @@ public final class EREntityRenderers {
         boss(event, BossRig.QUEEN, QueenBossGeometry::create);
         boss(event, BossRig.DRAGON, DragonBossGeometry::create);
         event.registerLayerDefinition(ERModelLayers.npc(), () -> NpcGeometry.create(0.0F));
+        event.registerLayerDefinition(ERModelLayers.hero(),
+                () -> com.eternalrealm.client.entity.model.gen.HeroGeometry.create(0.0F));
     }
 
     private static void boss(EntityRenderersEvent.RegisterLayerDefinitions event, BossRig rig,
@@ -76,6 +78,6 @@ public final class EREntityRenderers {
                     context -> new BossRenderer(context, kind.rig(), walkSpeed));
         }
         event.registerEntityRenderer(NpcEntities.NPC.get(), NpcRenderer::new);
-        event.registerEntityRenderer(NpcEntities.TRAVELLER.get(), NpcRenderer::new);
+        event.registerEntityRenderer(NpcEntities.TRAVELLER.get(), HeroRenderer::new);
     }
 }
