@@ -489,11 +489,11 @@ public final class TravellerMoves {
 
     private static void dragonStroke(ServerLevel level, TravellerEntity t, Run run) {
         Vec3 origin = t.position();
-        Vec3 forward = flat(run.point().subtract(origin));
-        if (forward.lengthSqr() < 1.0E-4) {
-            forward = Vec3.directionFromRotation(0.0F, t.getYRot());
+        Vec3 aimed = flat(run.point().subtract(origin));
+        if (aimed.lengthSqr() < 1.0E-4) {
+            aimed = Vec3.directionFromRotation(0.0F, t.getYRot());
         }
-        forward = forward.normalize();
+        final Vec3 forward = aimed.normalize();
         double length = run.move().radius();
         Vec3 side = new Vec3(-forward.z, 0.0, forward.x);
         play(new Show(level, 14) {
