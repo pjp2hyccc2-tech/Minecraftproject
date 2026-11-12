@@ -866,7 +866,11 @@ public final class TravellerMoves {
         announce(t, STAND_UP, t.position(), 0);
         Vec3 at = t.position().add(0.0, 1.0, 0.0);
         burst(level, miracle ? HOLY : STEEL, at, 24, 0.5, 0.02);
-        sound(level, at, miracle ? ERSounds.SKILL_HEAL : SoundEvents.ARMOR_EQUIP_IRON, 0.8F, 1.2F);
+        if (miracle) {
+            sound(level, at, ERSounds.SKILL_HEAL, 0.8F, 1.2F);
+        } else {
+            sound(level, at, SoundEvents.ARMOR_EQUIP_IRON, 0.8F, 1.2F);
+        }
     }
 
     /** A purchase at the shop: a few coins between the traveller and the shopkeeper. */
