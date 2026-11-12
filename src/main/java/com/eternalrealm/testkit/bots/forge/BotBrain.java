@@ -716,7 +716,7 @@ public final class BotBrain {
                 }
             }
             case 2 -> {
-                if (!combat.fighting() && reviving == null) {
+                if (!combat.fighting() && reviving == null && ticks % 5 == 0) {
                     Optional<Mob> prey = BotCombat.nearestMonster(bot, bot.position(), 20.0,
                             mob -> horizontal(mob.position(), roamCenter) <= roamRadius + 16.0);
                     if (prey.isPresent()) {
@@ -779,7 +779,7 @@ public final class BotBrain {
             bot.fallDistance = 0.0F;
             return;
         }
-        if (combat.fighting() || reviving != null) {
+        if (combat.fighting() || reviving != null || ticks % 5 != 0) {
             return;
         }
         LivingEntity theirs = lead instanceof TestBot leadBot ? leadBot.mind().enemy() : null;
@@ -797,7 +797,7 @@ public final class BotBrain {
 
     /** On the way: a monster that goes for the bot is fought. */
     private void defend() {
-        if (combat.fighting()) {
+        if (combat.fighting() || ticks % 5 != 0) {
             return;
         }
         BotCombat.nearestMonster(bot, bot.position(), 10.0, mob -> mob.getTarget() == bot).ifPresent(combat::engage);
