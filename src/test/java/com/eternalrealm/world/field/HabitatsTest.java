@@ -87,6 +87,68 @@ public class HabitatsTest {
         }
     }
 
+    /**
+     * Owner, 2026-11-12: 「フィールドの敵スポーン範囲を広くして、湧く数を今の３．５倍にして」: 3.5 times as many monsters,
+     * appearing over half as far out again, and never where they must not (another field, another habitat's home
+     * ground, the capital, a waystone, a lord's territory, a calamity's lair, a dungeon entrance).
+     */
+    @Test
+    public void threeAndAHalfTimesAsManyMonstersAppearOverAWiderGround() {
+        int homeSamples = 0;
+        int openSamples = 0;
+        for (Habitats.Habitat habitat : Habitats.all()) {
+            int base = FieldSitesGenerator.basePopulationOf(Monsters.require(habitat.monster()));
+            assertTrue(habitat.id() + ": " + habitat.population(),
+                    habitat.population() == FieldSitesGenerator.crowded(base)
+                            || habitat.population() == FieldSitesGenerator.crowded(Math.min(16, base * 3 / 2)));
+            assertEquals(habitat.id(), Math.round(habitat.radius() * Habitats.SPREAD), habitat.spawnRadius());
+            assertTrue(habitat.id(), habitat.spawnRadius() >= 60);
+            int n = 600;
+            for (int i = 0; i < n; i++) {
+                double angle = i * 2.399963;
+                double d = habitat.spawnRadius() * Math.sqrt((i + 0.5) / n);
+                double x = habitat.x() + 0.5 + Math.cos(angle) * d;
+                double z = habitat.z() + 0.5 + Math.sin(angle) * d;
+                boolean home = habitat.distanceTo(x, z) <= habitat.radius() - 0.5;
+                boolean open = Habitats.spawnable(habitat, x, z);
+                if (home) {
+                    homeSamples++;
+                    assertTrue(habitat.id() + ": its own home ground is closed at " + x + "," + z, open);
+                }
+                if (!open) {
+                    continue;
+                }
+                openSamples++;
+                assertEquals(habitat.id(), habitat.field(), FieldLayout.areaAt(x, z));
+                assertTrue(habitat.id(), FieldLayout.capitalDistance(x, z) >= Habitats.CAPITAL_CLEARANCE);
+                for (Habitats.Habitat other : Habitats.all()) {
+                    assertTrue(habitat.id() + " appears at home in " + other.id(),
+                            other == habitat || other.distanceTo(x, z) >= other.radius());
+                }
+                for (FieldLayout.Waystone stone : FieldLayout.waystones()) {
+                    assertTrue(habitat.id() + " appears at " + stone.id(),
+                            Math.hypot(x - stone.x(), z - stone.z()) >= Habitats.WAYSTONE_CLEARANCE);
+                }
+                for (FieldThreats.Lord lord : FieldThreats.lords()) {
+                    assertTrue(habitat.id() + " appears in the territory of " + lord.id(),
+                            Math.hypot(x - lord.x(), z - lord.z()) >= lord.territory() + Habitats.LORD_CLEARANCE);
+                }
+                for (FieldThreats.Calamity calamity : FieldThreats.calamities()) {
+                    assertTrue(habitat.id() + " appears in a lair", Math.hypot(x - calamity.x(), z - calamity.z())
+                            >= FieldThreats.LAIR_RADIUS + Habitats.LAIR_CLEARANCE);
+                }
+                for (LandmarkSite site : LandmarkSites.all()) {
+                    assertTrue(habitat.id() + " appears at the entrance of " + site.dungeonId(),
+                            Math.hypot(x - site.x(), z - site.z()) >= site.padRadius() + Habitats.ENTRANCE_CLEARANCE);
+                }
+            }
+            assertFalse(habitat.id() + " appears beyond its spawn radius",
+                    Habitats.spawnable(habitat, habitat.x() + habitat.spawnRadius() + 1.0, habitat.z()));
+        }
+        // the wider ground is real: monsters appear over well more than their home grounds
+        assertTrue("open " + openSamples + " / home " + homeSamples, openSamples >= homeSamples * 1.5);
+    }
+
     @Test
     public void weakerMonstersLiveNearerTheFieldsShrine() {
         for (int field = 1; field <= FieldLayout.FIELD_COUNT; field++) {

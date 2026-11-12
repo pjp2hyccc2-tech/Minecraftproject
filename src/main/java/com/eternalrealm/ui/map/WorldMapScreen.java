@@ -845,6 +845,9 @@ public final class WorldMapScreen extends Screen {
             int color = max < playerLevel - 3 ? 0x6AC86A : min > playerLevel + 3 ? 0xE0503A : 0xE8C66A;
             MapDraw.disc(graphics, sx, sy, radius, 0x48000000 | color);
             MapDraw.ring(graphics, sx, sy, Math.max(0.0F, radius - 1.2F), radius, 0xD0000000 | color);
+            // the faint outer ring: as far out as its monsters appear and roam
+            float spread = (float) Math.max(radius + 1.0, habitat.spawnRadius() * ppb);
+            MapDraw.ring(graphics, sx, sy, Math.max(0.0F, spread - 0.8F), spread, 0x58000000 | color);
             Component name = Component.translatable(template.translationKey());
             if (ppb >= 0.55) {
                 label(graphics, name.copy().withStyle(style -> style.withColor(color)), sx, sy - 4.0F);

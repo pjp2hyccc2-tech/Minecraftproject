@@ -25,39 +25,49 @@ import java.util.SplittableRandom;
 
 /**
  * Field monsters. In アストリア they live in their fixed habitats ({@link Habitats}): twice per second every habitat a
- * player is near fills up to its population (quickly while it is half empty, then one monster every few seconds, so a
+ * player is near fills up to its population (quickly while it is half empty, then a monster every second or two, so a
  * killed one comes back), at the monster's own levels, now and then the field's elite instead, each at least
  * {@value #SPACING} blocks from any other monster (owner, 2026-11-12: 「敵の湧く間隔を5ブロックごとにしてもう少し
- * スポーンさせて」). Habitat monsters keep near the spot they appeared at, walk back when they stray and give up a chase
- * far from home. Every field monster is calm until a player hurts it or comes within the aggro radius
- * ({@link MonsterTempers}: 5 blocks). Elsewhere (a world without アストリア) monsters of the area's table appear around
- * each player as before: 14-40 blocks away on solid ground, up to 21 per player and a cap per server. Monsters that
- * ignore players in daylight (spiders, endermen) are pointed at a player in sight once they may fight them.
+ * スポーンさせて」), anywhere over the habitat's spawn radius where {@link Habitats#spawnable} allows and never so far
+ * from every player that it would be despawned at once (owner, 2026-11-12: 「フィールドの敵スポーン範囲を広くして、
+ * 湧く数を今の３．５倍にして」: half as far out again, 3.5 times as many). Habitat monsters keep near the spot they
+ * appeared at, walk back when they stray and give up a chase far from home. Every field monster is calm until a
+ * player hurts it or comes within the aggro radius ({@link MonsterTempers}: 5 blocks). Elsewhere (a world without
+ * アストリア) monsters of the area's table appear around each player: 14-56 blocks away on solid ground, up to 74 per
+ * player and a cap per server. Monsters that ignore players in daylight (spiders, endermen) are pointed at a player in
+ * sight once they may fight them.
  */
 public final class MonsterSpawner {
-    private static final int NEAR_RADIUS = 48;
-    /** Three times the original seven. */
-    private static final int PER_PLAYER_CAP = 21;
-    private static final int LEVEL_CAP_BASE = 72;
-    private static final int LEVEL_CAP_PER_PLAYER = 27;
+    private static final int NEAR_RADIUS = 64;
+    /** 3.5 times the 21 before 2026-11-12 (itself three times the original seven). */
+    private static final int PER_PLAYER_CAP = 74;
+    /** 3.5 times the 72 + 27 per player before 2026-11-12. */
+    private static final int LEVEL_CAP_BASE = 252;
+    private static final int LEVEL_CAP_PER_PLAYER = 95;
     private static final double MIN_DISTANCE = 14.0;
-    private static final double MAX_DISTANCE = 40.0;
+    /** Before 2026-11-12: 40. */
+    private static final double MAX_DISTANCE = 56.0;
     /** Height difference to the player a spawn spot may have (hills and valleys). */
     private static final double MAX_HEIGHT_DIFFERENCE = 20.0;
     private static final int ATTEMPTS = 10;
     /** Chance that a normal monster comes with company (one or two more of its kind next to it). */
     private static final double PACK_CHANCE = 0.5;
-    /** Spawns per player per round while far below the cap (the field fills up quickly again). */
-    private static final int BURST = 2;
+    /** Spawns per player per round while far below the cap (the field fills up quickly again; before: 2). */
+    private static final int BURST = 7;
     private static final int RECOUNT_TICKS = 100;
     private static final double DESPAWN_DISTANCE = 96.0;
 
     /** Persistent tag naming a monster's habitat. */
     public static final String HABITAT_TAG = "er_habitat";
-    /** Spawns per habitat per round while it is less than half full. */
-    private static final int FILL_BURST = 2;
-    /** Ticks between spawns of a habitat that is at least half full (a killed monster is back after this). */
-    private static final int RESPAWN_TICKS = 80;
+    /** Spawns per habitat per round while it is less than half full (before 2026-11-12: 2). */
+    private static final int FILL_BURST = 7;
+    /**
+     * Ticks between spawns of a habitat that is at least half full (a killed monster is back after this; before
+     * 2026-11-12: 80, for a habitat a third as crowded).
+     */
+    private static final int RESPAWN_TICKS = 23;
+    /** A monster never appears farther than this from every player (it would be despawned at the next count). */
+    private static final double SPAWN_REACH = 80.0;
     /** Monsters never appear closer than this to a player. */
     private static final double PLAYER_CLEARANCE = 9.0;
     /**
@@ -240,11 +250,10 @@ public final class MonsterSpawner {
             if (!anyPlayerNear(players, habitat)) {
                 continue;
             }
+            int reach = habitat.spawnRadius() + Habitats.LEASH_MARGIN + 16;
             List<Mob> home = level.getEntitiesOfClass(Mob.class, new net.minecraft.world.phys.AABB(
-                    habitat.x() - habitat.radius() - Habitats.LEASH_MARGIN - 16, level.getMinBuildHeight(),
-                    habitat.z() - habitat.radius() - Habitats.LEASH_MARGIN - 16,
-                    habitat.x() + habitat.radius() + Habitats.LEASH_MARGIN + 16, level.getMaxBuildHeight(),
-                    habitat.z() + habitat.radius() + Habitats.LEASH_MARGIN + 16),
+                    habitat.x() - reach, level.getMinBuildHeight(), habitat.z() - reach,
+                    habitat.x() + reach, level.getMaxBuildHeight(), habitat.z() + reach),
                     mob -> habitat.id().equals(mob.getPersistentData().getString(HABITAT_TAG)) && mob.isAlive());
             if (tick % MonsterTempers.LOOK_STEP == 7) {
                 leash(habitat, home);
@@ -261,12 +270,12 @@ public final class MonsterSpawner {
                     levelCount++;
                 }
             }
-            nextHabitatSpawn.put(habitat.id(), tick + (filling ? 10 : RESPAWN_TICKS + random.nextInt(40)));
+            nextHabitatSpawn.put(habitat.id(), tick + (filling ? 10 : RESPAWN_TICKS + random.nextInt(12)));
         }
     }
 
     private static boolean anyPlayerNear(List<ServerPlayer> players, Habitats.Habitat habitat) {
-        double reach = Habitats.ACTIVE_RADIUS + habitat.radius();
+        double reach = Habitats.ACTIVE_RADIUS + habitat.spawnRadius();
         for (ServerPlayer player : players) {
             double dx = player.getX() - habitat.x();
             double dz = player.getZ() - habitat.z();
@@ -286,11 +295,11 @@ public final class MonsterSpawner {
             double distance = habitat.distanceTo(mob.getX(), mob.getZ());
             boolean chasing = mob.getTarget() != null && mob.getTarget().isAlive();
             double[] spot = homeSpot(mob, habitat);
-            if (chasing && distance > habitat.radius() + Habitats.LEASH_MARGIN) {
+            if (chasing && distance > habitat.spawnRadius() + Habitats.LEASH_MARGIN) {
                 mob.setTarget(null);
                 mob.getNavigation().moveTo(spot[0], mob.getY(), spot[1], 1.1);
             } else if (!chasing && mob.getNavigation().isDone()
-                    && (distance > habitat.radius() + Habitats.WANDER_MARGIN
+                    && (distance > habitat.spawnRadius() + Habitats.WANDER_MARGIN
                     || Math.hypot(mob.getX() - spot[0], mob.getZ() - spot[1]) > HOME_DRIFT)) {
                 mob.getNavigation().moveTo(spot[0], mob.getY(), spot[1], 1.0);
             }
@@ -307,8 +316,8 @@ public final class MonsterSpawner {
             double dx = mob.getX() - habitat.x();
             double dz = mob.getZ() - habitat.z();
             double distance = Math.hypot(dx, dz);
-            double keep = distance <= habitat.radius() - 2.0 || distance < 1.0e-6 ? 1.0
-                    : (habitat.radius() - 2.0) / distance;
+            double keep = distance <= habitat.spawnRadius() - 2.0 || distance < 1.0e-6 ? 1.0
+                    : (habitat.spawnRadius() - 2.0) / distance;
             data.putInt(HOME_X_TAG, Mth.floor(habitat.x() + dx * keep));
             data.putInt(HOME_Z_TAG, Mth.floor(habitat.z() + dz * keep));
             MonsterTempers.makeCalm(mob);
@@ -332,10 +341,11 @@ public final class MonsterSpawner {
         }
         for (int attempt = 0; attempt < ATTEMPTS; attempt++) {
             double angle = random.nextDouble() * Math.PI * 2.0;
-            double distance = Math.sqrt(random.nextDouble()) * habitat.radius();
+            double distance = Math.sqrt(random.nextDouble()) * habitat.spawnRadius();
             int x = Mth.floor(habitat.x() + Math.cos(angle) * distance);
             int z = Mth.floor(habitat.z() + Math.sin(angle) * distance);
-            if (!level.hasChunkAt(new BlockPos(x, 64, z)) || tooCloseToPlayer(players, x + 0.5, z + 0.5)) {
+            if (!Habitats.spawnable(habitat, x + 0.5, z + 0.5) || !level.hasChunkAt(new BlockPos(x, 64, z))
+                    || tooCloseToPlayer(players, x + 0.5, z + 0.5) || !withinReach(players, x + 0.5, z + 0.5)) {
                 continue;
             }
             int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
@@ -373,6 +383,18 @@ public final class MonsterSpawner {
                 x + SPACING, y + 6.0, z + SPACING);
         return !level.getEntitiesOfClass(Mob.class, box, mob -> MonsterTags.isMonster(mob) && mob.isAlive()
                 && Math.hypot(mob.getX() - x, mob.getZ() - z) < SPACING).isEmpty();
+    }
+
+    /** Some player is within {@link #SPAWN_REACH} of (x, z) (so the monster is not despawned at once). */
+    private static boolean withinReach(List<ServerPlayer> players, double x, double z) {
+        for (ServerPlayer player : players) {
+            double dx = player.getX() - x;
+            double dz = player.getZ() - z;
+            if (dx * dx + dz * dz <= SPAWN_REACH * SPAWN_REACH) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static boolean tooCloseToPlayer(List<ServerPlayer> players, double x, double z) {

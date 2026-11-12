@@ -265,13 +265,25 @@ public final class FieldSitesGenerator {
     /** The largest habitat radius; candidates are checked for it. */
     static final int MAX_RADIUS = 45;
 
-    /** Owner, 2026-11-12: 「もう少しスポーンさせて」: half as many again as before (3/4/6). */
+    /**
+     * Owner, 2026-11-12: 「もう少しスポーンさせて」 (half as many again as the 3/4/6 before: 5/6/9), then the same day
+     * 「湧く数を今の３．５倍にして」: {@link Habitats#CROWD} times that.
+     */
     static int populationOf(MonsterTemplate template) {
+        return crowded(basePopulationOf(template));
+    }
+
+    static int basePopulationOf(MonsterTemplate template) {
         return switch (template.baseEntityType()) {
             case "minecraft:ravager" -> 5;
             case "minecraft:blaze", "minecraft:phantom" -> 6;
             default -> 9;
         };
+    }
+
+    /** A population of before 2026-11-12's 3.5 times. */
+    static int crowded(int base) {
+        return (int) Math.round(base * Habitats.CROWD);
     }
 
     private void placeHabitats(int field) {
@@ -343,8 +355,9 @@ public final class FieldSitesGenerator {
             String second = site.id() + "_2";
             boolean common = species.stream().anyMatch(e -> e.template().id().equals(site.monster()) && e.weight() >= 25);
             if (common && !site.id().endsWith("_2") && placed.stream().noneMatch(s -> s.id().equals(second))) {
+                int base = basePopulationOf(Monsters.require(site.monster()));
                 placed.set(i, new Site(site.id(), site.field(), site.monster(), site.x(), site.z(), site.radius(),
-                        Math.min(16, site.population() * 3 / 2)));
+                        crowded(Math.min(16, base * 3 / 2))));
             }
         }
         habitats.addAll(placed);
