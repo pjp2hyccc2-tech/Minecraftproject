@@ -71,8 +71,8 @@ public final class TestBotGameTests {
         int number = BotIds.MAX;
         UUID id = BotIds.idOf(number);
         TestBot bot = TestBots.spawnHeld(server, number, 1200);
-        Vec3 start = helper.absoluteVec(new Vec3(1.5, 1.0, 4.5));
-        Vec3 end = helper.absoluteVec(new Vec3(7.5, 1.0, 4.5));
+        Vec3 start = helper.absoluteVec(new Vec3(1.5, 2.0, 4.5)); // on the arena's floor
+        Vec3 end = helper.absoluteVec(new Vec3(7.5, 2.0, 4.5));
         AtomicInteger stage = new AtomicInteger();
         AtomicInteger steps = new AtomicInteger();
         AtomicReference<Vec3> last = new AtomicReference<>();
@@ -162,7 +162,7 @@ public final class TestBotGameTests {
                         if (!context.playerData().isActive(id)) {
                             return; // the character is loading
                         }
-                        Vec3 at = helper.absoluteVec(new Vec3(2.5, 1.0, 4.5));
+                        Vec3 at = helper.absoluteVec(new Vec3(2.5, 2.0, 4.5));
                         bot.teleportTo(helper.getLevel(), at.x, at.y, at.z, -90.0F, 0.0F);
                         CharacterSnapshot me = context.playerData().snapshot(id).orElseThrow();
                         if (!me.hasJob()) {
@@ -171,7 +171,7 @@ public final class TestBotGameTests {
                         check(WeaponItem.profileOf(bot.getMainHandItem()) != null, "a weapon in hand");
                         ServerLevel level = helper.getLevel();
                         MonsterTemplate template = Monsters.require("wandering_dead");
-                        Vec3 there = helper.absoluteVec(new Vec3(6.5, 1.0, 4.5));
+                        Vec3 there = helper.absoluteVec(new Vec3(6.5, 2.0, 4.5));
                         Mob mob = MonsterFactory.spawn(level, new MonsterSpawn(template, template.levels().min()),
                                 there.x, there.y, there.z, 90.0F)
                                 .orElseThrow(() -> new GameTestAssertException("no body for wandering_dead"));
@@ -204,7 +204,11 @@ public final class TestBotGameTests {
             if (failure.get() != null) {
                 throw failure.get();
             }
-            check(done.get(), "waiting for the bot to land a blow");
+            Mob mob = enemy.get();
+            check(done.get(), mob == null ? "waiting for the character to load"
+                    : String.format(java.util.Locale.ROOT, "waiting for the bot to land a blow (%.1f blocks away, "
+                    + "monster at %.0f/%.0f, bot sees it: %s)", bot.distanceTo(mob), mob.getHealth(), before.get(),
+                    bot.hasLineOfSight(mob)));
         });
     }
 
