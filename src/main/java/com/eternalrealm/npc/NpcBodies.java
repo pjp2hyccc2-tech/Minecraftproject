@@ -19,8 +19,7 @@ public final class NpcBodies {
             "sailor", "sailor2", "noble_lady", "noble_lady2", "noble_gent", "noble_gent2", "elder", "elder2",
             "apprentice", "apprentice2", "maid", "maid2", "bard", "bard2", "child", "child2", "adventurer",
             "adventurer2", "innkeeper", "guard", "knight", "archer", "priest", "nun", "warden", "warden_d1",
-            "warden_d2", "warden_d3", "warden_d4", "warden_d5", "warden_d6", "warden_d7", "warden_d8",
-            "traveller_bold", "traveller_mirka", "traveller_graus", "traveller_sele");
+            "warden_d2", "warden_d3", "warden_d4", "warden_d5", "warden_d6", "warden_d7", "warden_d8");
 
     private NpcBodies() {
     }
@@ -38,12 +37,12 @@ public final class NpcBodies {
     public static float scale(String id) {
         return switch (id == null ? "" : id) {
             case "mina", "lilia", "housewife", "housewife2", "noble_lady", "noble_lady2", "nun" -> 0.95F;
-            case "pim", "marta", "chloe", "selene", "innkeeper", "traveller_sele" -> 0.96F;
+            case "pim", "marta", "chloe", "selene", "innkeeper" -> 0.96F;
             case "goran", "helga", "knight" -> 1.04F;
             case "hagen", "khalid" -> 1.03F;
             case "luce", "neris", "bard", "bard2" -> 0.97F;
-            case "chico", "traveller_mirka" -> 0.8F;
-            case "gant", "king", "traveller_graus" -> 1.06F;
+            case "chico" -> 0.8F;
+            case "gant", "king" -> 1.06F;
             case "zain", "guard", "warden", "warden_d1", "warden_d2", "warden_d3", "warden_d4", "warden_d5", "warden_d6", "warden_d7", "warden_d8" -> 1.02F;
             case "gustav" -> 1.08F;
             case "wolfram" -> 1.07F;
@@ -52,7 +51,6 @@ public final class NpcBodies {
             case "maid", "maid2" -> 0.94F;
             case "child" -> 0.7F;
             case "child2" -> 0.68F;
-            case "traveller_bold" -> 0.84F;
             default -> 1.0F;
         };
     }
@@ -60,7 +58,7 @@ public final class NpcBodies {
     /** Seconds of the talk gesture of an appearance (3 if unknown). */
     public static float talkSeconds(String id) {
         return switch (id == null ? "" : id) {
-            case "pim", "luce", "marta", "zain", "chloe", "gustav", "nox", "laszlo", "neris", "khalid", "helga", "king", "merchant", "merchant2", "farmer", "stable_master", "sailor", "sailor2", "noble_gent", "noble_gent2", "bard", "bard2", "adventurer2", "traveller_bold", "traveller_sele" -> 3.2F;
+            case "pim", "luce", "marta", "zain", "chloe", "gustav", "nox", "laszlo", "neris", "khalid", "helga", "king", "merchant", "merchant2", "farmer", "stable_master", "sailor", "sailor2", "noble_gent", "noble_gent2", "bard", "bard2", "adventurer2" -> 3.2F;
             case "mina", "lilia", "selene", "housewife", "housewife2", "farmer2", "noble_lady", "noble_lady2", "maid", "maid2", "innkeeper", "priest", "nun" -> 3.4F;
             default -> 3.0F;
         };

@@ -92,16 +92,13 @@ public final class NpcAnimations {
             case "elder2" -> new AnimationDefinition[]{IDLE_STILL, WALK, WORK, TALK_GRUFF};
             case "apprentice", "apprentice2", "child", "child2" -> new AnimationDefinition[]{IDLE, WALK, WORK, TALK_KID};
             case "maid", "maid2" -> new AnimationDefinition[]{IDLE, WALK, WORK_SWEEP, TALK_BOW};
-            case "bard", "bard2", "traveller_sele" -> new AnimationDefinition[]{IDLE, WALK, WORK_LUTE, TALK_FLOURISH};
+            case "bard", "bard2" -> new AnimationDefinition[]{IDLE, WALK, WORK_LUTE, TALK_FLOURISH};
             case "adventurer" -> new AnimationDefinition[]{IDLE, WALK, WORK, TALK_POINT};
             case "adventurer2" -> new AnimationDefinition[]{IDLE, WALK, WORK, TALK_SCHOLAR};
             case "guard" -> new AnimationDefinition[]{IDLE_STILL, WALK, WORK_GUARD, TALK_SALUTE};
             case "knight", "archer" -> new AnimationDefinition[]{IDLE_STILL, WALK, WORK_WATCH, TALK_SALUTE};
             case "priest", "nun" -> new AnimationDefinition[]{IDLE_STILL, WALK, WORK_PRAY, TALK_BLESS};
             case "warden", "warden_d1", "warden_d2", "warden_d3", "warden_d4", "warden_d5", "warden_d6", "warden_d7", "warden_d8" -> new AnimationDefinition[]{IDLE_STILL, WALK, WORK_WATCH, TALK_GRUFF};
-            case "traveller_bold" -> new AnimationDefinition[]{IDLE, WALK, WORK_STAFF, TALK_HEARTY};
-            case "traveller_mirka" -> new AnimationDefinition[]{IDLE, WALK, WORK_PIGEON, TALK_POINT};
-            case "traveller_graus" -> new AnimationDefinition[]{IDLE, WALK, WORK_GUARD, TALK_SALUTE};
             default -> new AnimationDefinition[]{IDLE, WALK, WORK, TALK};
         };
     }
