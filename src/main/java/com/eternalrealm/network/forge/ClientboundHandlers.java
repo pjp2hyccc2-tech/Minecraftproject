@@ -30,6 +30,8 @@ public final class ClientboundHandlers {
 
     private static volatile Consumer<TelegraphPacket> telegraphHandler = telegraph -> {
     };
+    private static volatile Consumer<HeroFxPacket> heroFxHandler = fx -> {
+    };
 
     private ClientboundHandlers() {
     }
@@ -60,6 +62,14 @@ public final class ClientboundHandlers {
 
     static void onTelegraph(TelegraphPacket packet) {
         telegraphHandler.accept(packet);
+    }
+
+    public static void setHeroFxHandler(Consumer<HeroFxPacket> handler) {
+        heroFxHandler = Objects.requireNonNull(handler, "handler");
+    }
+
+    static void onHeroFx(HeroFxPacket packet) {
+        heroFxHandler.accept(packet);
     }
 
     public static void setPickupFeedHandler(Consumer<PickupFeedPacket> handler) {

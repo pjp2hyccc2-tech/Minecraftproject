@@ -138,7 +138,17 @@ public class NpcEntity extends PathfinderMob {
 
     @Override
     public EntityDimensions getDimensions(Pose pose) {
-        return super.getDimensions(pose).scale(NpcBodies.scale(getAppearance()));
+        return super.getDimensions(pose).scale(bodyScale());
+    }
+
+    /** Model and hitbox scale (the appearance's; the travellers' hero bodies have their own). */
+    protected float bodyScale() {
+        return NpcBodies.scale(getAppearance());
+    }
+
+    /** Seconds the talk gesture lasts. */
+    protected float talkSeconds() {
+        return NpcBodies.talkSeconds(getAppearance());
     }
 
     // ---------------------------------------------------------------------------------------- post and mode
@@ -207,7 +217,7 @@ public class NpcEntity extends PathfinderMob {
             return;
         }
         this.talkTarget = player;
-        this.talkTicks = Mth.ceil(NpcBodies.talkSeconds(getAppearance()) * 20.0F);
+        this.talkTicks = Mth.ceil(talkSeconds() * 20.0F);
         getNavigation().stop();
         level().broadcastEntityEvent(this, TALK_EVENT);
     }
@@ -220,7 +230,7 @@ public class NpcEntity extends PathfinderMob {
     public void handleEntityEvent(byte id) {
         if (id == TALK_EVENT) {
             this.talkAnimation.start(this.tickCount);
-            this.clientTalkTicks = Mth.ceil(NpcBodies.talkSeconds(getAppearance()) * 20.0F) + 1;
+            this.clientTalkTicks = Mth.ceil(talkSeconds() * 20.0F) + 1;
             return;
         }
         super.handleEntityEvent(id);
@@ -351,6 +361,11 @@ public class NpcEntity extends PathfinderMob {
     @Override
     public boolean hurt(DamageSource source, float amount) {
         return source.is(DamageTypeTags.BYPASSES_INVULNERABILITY) && super.hurt(source, amount);
+    }
+
+    /** The plain living-entity damage, for the NPCs that can be hurt (the travellers decide what reaches them). */
+    protected final boolean livingHurt(DamageSource source, float amount) {
+        return super.hurt(source, amount);
     }
 
     @Override

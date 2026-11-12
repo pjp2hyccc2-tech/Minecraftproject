@@ -69,6 +69,7 @@ public final class EternalRealm {
         com.eternalrealm.quest.forge.QuestActions.register();
         com.eternalrealm.npc.forge.NpcServices.register();
         com.eternalrealm.story.forge.StoryActions.register();
+        com.eternalrealm.npc.forge.TravellerDirector.registerActions();
         com.eternalrealm.world.forge.WaystoneService.register();
         com.eternalrealm.item.forge.SmithService.register();
         com.eternalrealm.item.forge.BagService.register();

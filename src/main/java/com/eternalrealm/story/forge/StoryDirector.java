@@ -76,6 +76,13 @@ public final class StoryDirector {
     private record Pending(Runnable action, long expiresAt) {
     }
 
+    /** A question waiting for the player's answer. */
+    private record Asked(java.util.function.IntConsumer answer, long expiresAt) {
+    }
+
+    /** Per player: dialogue id -> what to do with the answer. */
+    private final Map<UUID, Map<Integer, Asked>> asked = new HashMap<>();
+
     /** Plays the trigger's dialogue, if the story has one (see {@link #trigger(StoryTrigger, ServerPlayer, Collection, Runnable)}). */
     public boolean trigger(StoryTrigger trigger, ServerPlayer source, Collection<ServerPlayer> party) {
         return trigger(trigger, source, party, null);
@@ -141,6 +148,36 @@ public final class StoryDirector {
             return;
         }
         int id = nextDialogueId++;
+        JsonObject data = payload(id, lines, modal);
+        if (then != null) {
+            pending.computeIfAbsent(player.getUUID(), key -> new HashMap<>()).put(id, new Pending(then, now + PENDING_TTL_TICKS));
+        }
+        com.eternalrealm.server.UiData.send(player, CHANNEL, data);
+    }
+
+    /**
+     * Asks the player: the lines in the dialogue window, then the choices (translation keys, at most
+     * {@link #MAX_CHOICES}) under the last line. {@code answer} gets the index of the choice, or -1 when the player
+     * closed the window without choosing (or logged out first: then it is dropped).
+     */
+    public void ask(ServerPlayer player, List<DialogueLine> lines, List<String> choices,
+                    java.util.function.IntConsumer answer) {
+        if (lines.isEmpty() || choices.isEmpty() || choices.size() > MAX_CHOICES) {
+            throw new IllegalArgumentException("a question needs lines and 1.." + MAX_CHOICES + " choices");
+        }
+        int id = nextDialogueId++;
+        JsonObject data = payload(id, lines, true);
+        JsonArray options = new JsonArray();
+        choices.forEach(options::add);
+        data.add("choices", options);
+        asked.computeIfAbsent(player.getUUID(), key -> new HashMap<>()).put(id, new Asked(answer, now + PENDING_TTL_TICKS));
+        com.eternalrealm.server.UiData.send(player, CHANNEL, data);
+    }
+
+    /** Most choices a question can offer. */
+    public static final int MAX_CHOICES = 4;
+
+    private static JsonObject payload(int id, List<DialogueLine> lines, boolean modal) {
         JsonObject data = new JsonObject();
         data.addProperty("id", id);
         data.addProperty("modal", modal);
@@ -155,10 +192,16 @@ public final class StoryDirector {
             array.add(entry);
         }
         data.add("lines", array);
-        if (then != null) {
-            pending.computeIfAbsent(player.getUUID(), key -> new HashMap<>()).put(id, new Pending(then, now + PENDING_TTL_TICKS));
+        return data;
+    }
+
+    /** {@code dialogue.choice}: the player answered question {@code id} with choice {@code choice}. */
+    public void onDialogueChoice(ServerPlayer player, int id, int choice) {
+        Map<Integer, Asked> mine = asked.get(player.getUUID());
+        Asked question = mine == null ? null : mine.remove(id);
+        if (question != null && choice >= 0 && choice < MAX_CHOICES) {
+            question.answer().accept(choice);
         }
-        com.eternalrealm.server.UiData.send(player, CHANNEL, data);
     }
 
     /** One line of battle talk (a boss's bark) in the ambient box of everyone fighting. */
@@ -174,6 +217,11 @@ public final class StoryDirector {
         Pending done = mine == null ? null : mine.remove(id);
         if (done != null) {
             done.action().run();
+        }
+        Map<Integer, Asked> questions = asked.get(player.getUUID());
+        Asked question = questions == null ? null : questions.remove(id);
+        if (question != null) {
+            question.answer().accept(-1); // closed without an answer
         }
     }
 
@@ -201,6 +249,7 @@ public final class StoryDirector {
 
     public void onLogout(UUID playerId) {
         pending.remove(playerId);
+        asked.remove(playerId);
         heardServiceLines.remove(playerId);
         checkedLogins.remove(playerId);
     }
@@ -224,6 +273,8 @@ public final class StoryDirector {
         if (tick % 200 == 7) {
             pending.values().forEach(mine -> mine.values().removeIf(entry -> entry.expiresAt() < now));
             pending.values().removeIf(Map::isEmpty);
+            asked.values().forEach(mine -> mine.values().removeIf(entry -> entry.expiresAt() < now));
+            asked.values().removeIf(Map::isEmpty);
         }
         if (endingStart >= 0) {
             tickEnding();

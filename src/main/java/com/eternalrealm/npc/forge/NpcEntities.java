@@ -21,7 +21,7 @@ public final class NpcEntities {
     public static final RegistryObject<EntityType<NpcEntity>> NPC = ENTITY_TYPES.register("npc",
             () -> EntityType.Builder.<NpcEntity>of(NpcEntity::new, MobCategory.MISC)
                     .sized(0.6F, 1.95F).clientTrackingRange(10).build(ModInfo.MOD_ID + ":npc"));
-    /** The travelling adventurers (docs/modules/travellers.md): never saved, brought by {@link TravellerDirector}. */
+    /** The four legendary travellers (docs/modules/travellers.md): never saved, brought by {@link TravellerDirector}. */
     public static final RegistryObject<EntityType<TravellerEntity>> TRAVELLER = ENTITY_TYPES.register("traveller",
             () -> EntityType.Builder.<TravellerEntity>of(TravellerEntity::new, MobCategory.MISC)
                     .sized(0.6F, 1.95F).clientTrackingRange(10).noSave().build(ModInfo.MOD_ID + ":traveller"));

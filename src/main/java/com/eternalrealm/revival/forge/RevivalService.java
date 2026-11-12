@@ -362,7 +362,7 @@ public final class RevivalService {
             return false;
         }
         DOWN.remove(target.getUUID());
-        stand(target, RevivalRules.Way.PETAL_ALLY, helper, 0.0);
+        stand(target, RevivalRules.Way.PETAL_ALLY, helper.getDisplayName(), 0.0);
         helper.displayClientMessage(Component.translatable("message.eternalrealm.revival.you_revived",
                 target.getDisplayName()).withStyle(ChatFormatting.GREEN), true);
         return true;
@@ -377,7 +377,20 @@ public final class RevivalService {
             return false;
         }
         DOWN.remove(target.getUUID());
-        stand(target, RevivalRules.Way.RESURRECTION, caster, fraction);
+        stand(target, RevivalRules.Way.RESURRECTION, caster.getDisplayName(), fraction);
+        return true;
+    }
+
+    /**
+     * A miracle (the sister's prayer, docs/modules/travellers.md): raises the fallen {@code target} where they lie
+     * with all their health; {@code by} names who did it. False if the target is not fallen.
+     */
+    public static boolean miracle(ServerPlayer target, Component by) {
+        if (!DOWN.containsKey(target.getUUID())) {
+            return false;
+        }
+        DOWN.remove(target.getUUID());
+        stand(target, RevivalRules.Way.RESURRECTION, by, 1.0);
         return true;
     }
 
@@ -477,7 +490,7 @@ public final class RevivalService {
     }
 
     /** Back on their feet: health, combat state, a short grace, light and sound, the screen closes. */
-    private static void stand(ServerPlayer player, RevivalRules.Way way, ServerPlayer helper, double resurrection) {
+    private static void stand(ServerPlayer player, RevivalRules.Way way, Component helper, double resurrection) {
         MinecraftServer server = player.server;
         player.getPersistentData().remove(MARK);
         ServerContext.current().ifPresent(context -> context.combat().onRespawn(player, true));
@@ -498,7 +511,7 @@ public final class RevivalService {
         level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.AMETHYST_BLOCK_CHIME,
                 SoundSource.PLAYERS, 1.0F, 1.2F);
         Component message = helper == null ? Component.translatable(way.translationKey())
-                : Component.translatable(way.translationKey(), helper.getDisplayName());
+                : Component.translatable(way.translationKey(), helper);
         player.displayClientMessage(message.copy().withStyle(ChatFormatting.GREEN), false);
         UiData.send(player, CHANNEL, upMessage(way.name().toLowerCase(java.util.Locale.ROOT)));
         syncBodies(server);

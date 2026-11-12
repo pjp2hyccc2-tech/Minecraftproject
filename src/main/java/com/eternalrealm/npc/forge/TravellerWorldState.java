@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Where each travelling adventurer is (saved with the realm's dimension as data/eternalrealm_travellers.dat), so
+ * Where each legendary traveller is on their round (saved with the realm's dimension as data/eternalrealm_travellers.dat), so
  * they go on from where they were when the world is opened again. Server thread only.
  */
 public final class TravellerWorldState extends SavedData {

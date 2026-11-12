@@ -244,6 +244,33 @@ public final class PartyManager {
                 }
             }
         }
+        // a player travelling with the legendary travellers alone: their frames as a party of their own
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            UUID id = player.getUUID();
+            if (inParty.contains(id)) {
+                continue;
+            }
+            JsonArray companions = com.eternalrealm.npc.forge.TravellerDirector.hudRows(id);
+            if (companions.isEmpty()) {
+                if (lastHud.containsKey(id) && !"{}".equals(lastHud.get(id))) {
+                    clearHud(id);
+                }
+                continue;
+            }
+            inParty.add(id);
+            JsonObject data = new JsonObject();
+            data.addProperty("raid", false);
+            data.addProperty("capacity", PartyRules.defaults().maxPartySize());
+            JsonArray members = new JsonArray();
+            members.add(memberRow(id, true));
+            members.addAll(companions);
+            data.add("members", members);
+            String json = data.toString();
+            if (!json.equals(lastHud.get(id))) {
+                lastHud.put(id, json);
+                UiData.send(player, "party", data);
+            }
+        }
         lastHud.keySet().removeIf(id -> !inParty.contains(id) && !lastHud.get(id).equals("{}"));
     }
 
@@ -253,24 +280,31 @@ public final class PartyManager {
         data.addProperty("capacity", service.capacity(party));
         JsonArray members = new JsonArray();
         for (UUID id : party.memberIds()) {
-            JsonObject member = new JsonObject();
-            member.addProperty("id", id.toString());
-            member.addProperty("name", Names.of(server, id));
-            member.addProperty("leader", party.isLeader(id));
-            ServerPlayer player = server.getPlayerList().getPlayer(id);
-            member.addProperty("online", player != null);
-            if (player != null) {
-                member.addProperty("hp", Math.round(player.getHealth() * 10.0) / 10.0);
-                member.addProperty("maxHp", Math.round(player.getMaxHealth() * 10.0) / 10.0);
-                member.addProperty("down", com.eternalrealm.revival.forge.RevivalService.isDown(id));
-                Optional<CharacterSnapshot> snapshot = playerData.snapshot(id);
-                member.addProperty("level", snapshot.map(CharacterSnapshot::level).orElse(1));
-                member.addProperty("job", snapshot.map(s -> JobType.fromStored(s.jobId()).id()).orElse("none"));
-            }
-            members.add(member);
+            members.add(memberRow(id, party.isLeader(id)));
+        }
+        for (UUID id : party.memberIds()) {
+            members.addAll(com.eternalrealm.npc.forge.TravellerDirector.hudRows(id)); // single-player companions
         }
         data.add("members", members);
         return data;
+    }
+
+    private JsonObject memberRow(UUID id, boolean leader) {
+        JsonObject member = new JsonObject();
+        member.addProperty("id", id.toString());
+        member.addProperty("name", Names.of(server, id));
+        member.addProperty("leader", leader);
+        ServerPlayer player = server.getPlayerList().getPlayer(id);
+        member.addProperty("online", player != null);
+        if (player != null) {
+            member.addProperty("hp", Math.round(player.getHealth() * 10.0) / 10.0);
+            member.addProperty("maxHp", Math.round(player.getMaxHealth() * 10.0) / 10.0);
+            member.addProperty("down", com.eternalrealm.revival.forge.RevivalService.isDown(id));
+            Optional<CharacterSnapshot> snapshot = playerData.snapshot(id);
+            member.addProperty("level", snapshot.map(CharacterSnapshot::level).orElse(1));
+            member.addProperty("job", snapshot.map(s -> JobType.fromStored(s.jobId()).id()).orElse("none"));
+        }
+        return member;
     }
 
     private void clearHud(ServerPlayer player) {
