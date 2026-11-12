@@ -415,3 +415,35 @@ Decisions:
   stars and cuts. The server's particles draw the same moves for shader packs.
 They are called travellers (伝説の旅人) so as not to be confused with the roaming field bosses (`world.field.Wanderers`,
 放浪する大物).
+
+## D-SKILLFX: every job skill and ultimate is a show of light drawn by every client (2026-11-12)
+The owner: 「この四人のスキルのように全部のアクティブスキルと必殺技の視覚的効果、エフェクトを作り直して。高クオリティで派手に
+仕上げて」. The 187 actives and 33 ultimates had server particles only. Decisions:
+- **Generated from the skill, hand-made for ultimates**: a pure engine (`job.fx`) turns each skill's own data (hit frames
+  and their shapes, projectiles, effects, theme, job) into a show of light layers on the skill's timeline, so every
+  active gets light that matches what it does, and a skill changed later changes its light with it. The 33 ultimates
+  get hand-made finales (`Ultimates`). A test keeps any two skills of a job from looking alike.
+- **No new data for a skill's own light**: every client already learns when a player's action starts
+  (`PlayerActionPacket`, or its own prediction) and builds the same show from the same definitions; only what lands
+  away from the caster is announced (`SkillFxPacket`, protocol 10: ground areas for their whole life, blasts of
+  exploding spells) and skill projectiles carry their theme as entity data. The server's particles stay (and are all a
+  shader pack sees).
+- **Light that reads from where you stand**: a cut is a band in a plane through the caster; seen edge-on (the
+  third-person camera straight behind, or the caster's own eye a hand above every cut) it is a thin line. Each client
+  turns cut planes a few degrees towards its own camera (at most 48°) and pushes them off the caster's own eye in first
+  person; light hugging the caster's body thins out near the camera. The same pure code draws the software preview, so
+  every skill was looked at in third and first person before it reached the game.
+- **Budgets**: one show at most 16,000 quads in a frame (tested at every tick), 48,000 for all skill light of a frame on
+  a client (farther shows wait), drawn within 96 blocks; a client switch (`combat.skillEffects`).
+
+## D-SPAWN35: habitats spread half as far again and hold 3.5 times as many monsters (2026-11-12)
+The owner: 「フィールドの敵スポーン範囲を広くして、湧く数を今の３．５倍にして」. The 157 habitats keep their places (their home
+grounds are fixed by D-HABITAT2X's tests), but their monsters now appear and roam over 1.5 times the radius
+(`Habitats.SPREAD`, 40 → 60 blocks), only where `Habitats.spawnable` allows: in the habitat's own field, outside every
+other habitat's home ground and clear of the capital, the waystones, the lords' territories, the calamities' lairs and
+the dungeon entrances (the same things a home ground keeps away from). Every population is 3.5 times what it was
+(5/6/9/13 → 18/21/32/46, `Habitats.CROWD`), a half-empty habitat fills 3.5 times as fast and a killed monster is back
+after about 1.2-1.7 s instead of 4-6 s, and the server caps grow with them (252 + 95 per player). A monster never appears
+more than 80 blocks from every player (it would be despawned at once). Without アストリア, the old around-the-player
+spawns reach 56 blocks instead of 40 and hold 74 per player instead of 21. The map draws the wider ring faintly around
+each habitat.
