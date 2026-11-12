@@ -47,6 +47,8 @@ minecraftproject/
     │   ├── config/        [Forge] ERServerConfig / ERClientConfig
     │   ├── testkit/       [Forge] テスト用コマンド /er admin test（最大化・見学用の屋敷、modules/testkit.md）
     │   │   └── bots/      [純粋] BotIds, BotPlans（テストボットの番号・色・判断）; forge/ [Forge] テストボット本体と /er admin bots
+    │   ├── npc/           [純粋] NpcBodies・HeroBodies（生成）, Townsfolk, Travellers（伝説の旅人の強さ・技・巡り）;
+    │   │                  forge/ [Forge] 町のNPC, 伝説の旅人の体・技・監督（modules/npc.md, modules/travellers.md）
     │   ├── client/        [クライアント専用] 表示用状態、キー割り当て、クライアントイベント
     │   ├── ui/            [クライアント専用] hud/（HUD）, screen/（キャラクター画面）
     │   └── gametest/      [Forge・開発時のみ有効] サーバー内統合テスト

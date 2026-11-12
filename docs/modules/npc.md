@@ -33,7 +33,7 @@ python3 tools/art_entities/generate_npc.py mina lilia   # 指定したアピア�
   約0.6秒かけて消える）、**talk**（話しかけられたときの仕草1回。お辞儀、豪快な笑い、敬礼、祝福…）。
 - アニメーションの開始時刻はエンティティごとにずらす（群衆が一斉に同じ動きをしない）。
 
-## 3. アピアランス（68）
+## 3. アピアランス（64）
 
 | 区分 | ID |
 |---|---|
@@ -41,10 +41,13 @@ python3 tools/art_entities/generate_npc.py mina lilia   # 指定したアピア�
 | 物語キャラ | lilia（星門の間の王女。星の王笏）, gustav（ギルドマスター。眼帯とシチュー）, nox（星詠み。宙に浮く星図）, laszlo（皿洗い中の元盗賊王。足かせ付き）, wolfram（療養中の銀狼。包帯と銀狼の毛皮）, adel（騎士団長。大剣）, king（国王ベルトラン十四世。いつでも出撃できる胸甲と王冠、うれし涙） |
 | クエストNPC | neris（エルフの賢者）, khalid（隊商長）, helga（北の族長）, ilsa（竜鍛冶）, selene（神託人形。浮遊）, gunter（塔守） |
 | 町の人（12種×2色） | merchant, housewife, farmer, sailor, noble_lady, noble_gent, elder, apprentice, maid, bard, child, adventurer（各 `…2` が別の色・性別・髪型） |
+| 町の人（1色の役目） | stable_master（厩舎長。農夫の体に青いつなぎ）, innkeeper（星灯りの館の女将。ワイン色のドレスと山吹色のショール） |
 | 衛兵・聖職者 | guard（斧槍と青い陣羽織の門衛）, knight（全身鎧・盾・剣の王城騎士）, archer（長弓と矢筒の城壁弓兵）, priest（司祭）, nun（修道女） |
 | ダンジョン入口の門番 | warden_d1〜warden_d8（地域の色: 王国の青、森の緑、砂漠の砂色と赤、凍獄の灰青と毛皮、氷城の水色と白い毛皮、火山の黒と橙、天空の白金、終焉の塔の黒紫）, warden（それ以外） |
-| 旅の冒険者（[travellers.md](travellers.md)） | traveller_bold（ドワーフの地図描き。羅針の杖）, traveller_mirka（鷹匠。肩に鷹、長弓）, traveller_graus（鐘の騎士。背中の青銅の鐘とハルバード）, traveller_sele（潮歌いの詩人。真珠色のリュート） |
 | その他 | citizen（既定。不明なIDもこれ） |
+
+伝説の旅人4人（[travellers.md](travellers.md)）はこの NPC リグではなく、2倍の解像度と戦いのアニメーションを持つ **英雄リグ**
+（`tools/art_entities/generate_hero.py`、`textures/entity/hero/`、96×96 の肖像）で描く。
 
 縮尺（当たり判定も追従）: 子ども0.68〜0.8、チコ0.8、イルザ0.92 … ゴラン1.04、グスタフ1.08。発光: リリア（王笏・ペンダント・ティアラ）、
 ノクス（星図・ローブの星）、ネリス（杖のつぼみ）、セレネ（目・光輪・天球儀）、ギュンター（ランタン）、修道女（ろうそく）。

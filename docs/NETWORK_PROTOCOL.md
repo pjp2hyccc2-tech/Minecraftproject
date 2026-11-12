@@ -5,7 +5,7 @@
 | 項目 | 値 |
 |---|---|
 | チャンネル | `eternalrealm:main`（Forge SimpleChannel） |
-| プロトコル版 | `"8"`（`ERNetwork.PROTOCOL_VERSION`）。Phase 2 で戦闘パケット追加のため 1→2、以後の追加を経て、スキルツリー（職業スキル枠5・6、職業武器の拒否、スナップショットのスキル枠）で 4→5、HUD 刷新（`UseItemPacket`、戦闘値の回復薬補正）で 5→6、カバンの取得表示（`PickupFeedPacket`）で 6→7、スキルのロックオン（`CombatActionPacket` に targetId）で 7→8 |
+| プロトコル版 | `"9"`（`ERNetwork.PROTOCOL_VERSION`）。Phase 2 で戦闘パケット追加のため 1→2、以後の追加を経て、スキルツリー（職業スキル枠5・6、職業武器の拒否、スナップショットのスキル枠）で 4→5、HUD 刷新（`UseItemPacket`、戦闘値の回復薬補正）で 5→6、カバンの取得表示（`PickupFeedPacket`）で 6→7、スキルのロックオン（`CombatActionPacket` に targetId）で 7→8、伝説の旅人の技の演出（`HeroFxPacket`）で 8→9 |
 | 互換性 | クライアント・サーバーとも**完全一致のみ受け入れ**。MOD未導入のクライアントは接続時に拒否 |
 | 版上げ条件 | パケットの追加・削除・順序変更・フィールド変更のいずれか |
 
@@ -24,6 +24,7 @@
 | 6〜9 | `UiActionPacket` `UiDataPacket` `PlayerActionPacket` `TelegraphPacket` | | （各モジュールの説明を参照） | | |
 | 10 | `UseItemPacket` | C→S | slot (VarInt: インベントリの 0〜35)。クイック使用（1〜3キー）とカバンの「使う」。サーバーがスロット・アイテム・レベル・クールダウンを確認（`QuickUse.useSlot`）。範囲外のスロットは**違反** | 5 B | サーバー |
 | 11 | `PickupFeedPacket` | S→C | stack (ItemStack: 1個。名前・アイコン・レア度), count (VarInt, 1〜1,000,000), flags (byte: 1=カバンが満杯で足元に落ちた) | 2 KB（ItemStack の NBT 込み） | クライアント（取得した本人だけに送る） |
+| 12 | `HeroFxPacket` | S→C | entityId (VarInt: 伝説の旅人), action (byte: 0〜19 = 技 `Travellers.Move` の序数、100 = 加入の身振り、101 = 起き上がり。127 まで), x/y/z (float: 狙う位置), seed (int: 流れ星や斬撃の配置を全クライアントでそろえる) | 32 B | クライアント（その旅人を見ている全員に送る。体がその技のアニメーションを演じ、光の演出を描く。[travellers.md](modules/travellers.md)） |
 
 ステータスの並び順は `StatType` の宣言順（ネットワークIDは固定値で、再利用・並べ替え禁止）。
 
@@ -141,3 +142,15 @@
   ログイン・リスポーン・ディメンション移動・付け外しのたびに本人へ送る。装備画面が使う。
 - 必要レベルの足りない武器での攻撃・ガード・武技は既存の `CombatStatusPacket` の outcome `REJECTED_NOT_ALLOWED` で断り、理由はメッセージで送る
   （[modules/armory.md](modules/armory.md)）。
+
+## 付録: 伝説の旅人（版 9: `HeroFxPacket` を追加）
+
+- S→C `HeroFxPacket`（ID 12、上の表）: 旅人が技・加入の身振り・起き上がりを始めたとき、その旅人を見ている全員へ。クライアントは
+  体のアニメーション（`TravellerEntity.startAction`）と光の演出（`client.HeroFx`）を始める。ダメージ・回復・効果はすべてサーバーが
+  決め、このパケットは見た目だけ。デコード時に action（0〜127）と座標（有限の数）を検証する。
+- S→C `UiDataPacket` の `dialogue` に省略可能な `choices: ["<翻訳キー>", ...]`（最大4つ。問いかけ。[modules/story.md](modules/story.md)）。
+- S→C `UiDataPacket` の `party` の `members` に仲間の行: `{id, companion: "<rosalind|siegwald|kaylen|mariel>", name, nameKey,
+  titleKey, leader: false, online: true, hp, maxHp, down, level: 100, job}`。ほかのプレイヤーとパーティーを組んでいなくても、仲間がいれば
+  本人の行と仲間の行の `party` を送る。
+- C→S `UiActionPacket`: `dialogue.choice {id, choice}`（id は 1 以上、choice は 0〜3。範囲外は違反。問いが無い・期限切れの id は無視）、
+  `traveller.dismiss {id}`（id は旅人の id、32文字まで。仲間でなければ何もしない）。

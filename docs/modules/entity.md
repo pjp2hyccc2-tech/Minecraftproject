@@ -19,6 +19,7 @@
 `previews/boss_sizes.png`（全ボス・全形態を1.8ブロックのプレイヤーと同じ縮尺で並べた図、2ブロックごとの目盛り）。
 
 町のNPC（窓口・物語キャラ・町の人・衛兵）の体 `eternalrealm:npc` は同じパイプラインの別リグ（`generate_npc.py`）で、[npc.md](npc.md) に分けて記す。
+伝説の旅人4人の体 `eternalrealm:traveller` は2倍の解像度の英雄リグ（`generate_hero.py`）で、[travellers.md](travellers.md) に記す。
 
 ## 2. エンティティとバリアント
 

@@ -375,18 +375,43 @@ its character carries on and clients recognise it and paint it a single colour o
 `remove` logs them out; `purge` also gives up their rooms and removes their ranking entries. They do not take part in
 dungeons, PvP, the auction, crafting, mounts, quests or guilds, and do not equip dropped gear (they sell it).
 
-## D-TRAVELLERS: four original travelling adventurers instead of copied anime characters (2026-11-12)
+## D-TRAVELLERS: four original legendary travellers instead of copied anime characters (2026-11-12)
 The owner asked for four characters from other works (from the images: two from one anime, one each from two others) to
 appear as a hidden element in single-player, with an AI that adventures, rests at the inn and shops, and with their
 manner, animations and the look and effects of their skills and magic reproduced. Reproducing those characters (their
-looks, names, lines and signature techniques) would copy other people's copyrighted works, so they were not made. The
-request's structure was kept with four original characters instead (`npc.Travellers`, `npc.forge.Traveller*`): Bold the
-dwarf map-maker, Mirka the falconer, Graus the bell knight and Sele the tide-singer, with none of those characters'
-signature features. They live only on an integrated server that is not opened to LAN and has nobody but its owner (a
-LAN guest or a test bot makes it multiplayer); each goes round field, item shop and inn on a schedule saved with the
-world, and has a body only while the player is near where it is (bodies are never saved). Their bodies are NPC bodies
-(painted by script like the town's people), so they walk, idle, gesture and have portraits; they fight with particle
-choreographies (two skills each) that deal a share of a monster's maximum health and never hurt players; they cannot
-be hurt. The first meeting gives their introduction and a count of the travellers met (character extension). They are
-called travellers (旅の冒険者) so as not to be confused with the roaming field bosses (`world.field.Wanderers`,
+looks, names, lines and signature techniques) would copy other people's copyrighted works, so they were not made; the
+request's structure was kept with four original characters (`npc.Travellers`, `npc.forge.Traveller*`). The same day the
+owner gave them titles of their own and asked for them to be rebuilt to match: the wandering witch who once defended the
+kingdom alone (Rosalind), the knight who turned a dragon with an iron sword (Siegwald), the only one who cleared every EX
+dungeon, a spellblade (Kaylen), and the sister whose holy magic ended the plague and raised the kingdom (Mariel); met in
+single-player and asked along, they join the player's party; their strength follows their titles; special equipment,
+showy textures and animations, beautiful older-sister women and cool men; and special, showy skills and ultimates.
+Decisions:
+- **Single-player only**: an integrated server, not opened to LAN, with nobody but its owner (a LAN guest or a test bot
+  makes it multiplayer; they vanish and come back when it is single-player again). On their own each goes round field,
+  item shop and inn on a schedule saved with the world, and has a body only while the player is near (never saved).
+- **A hero rig of their own** (`tools/art_entities/rig_hero.py`, `HeroModel`): the town NPCs' body (8x8 face, four
+  animation slots) cannot carry special equipment or fight, so the four have a rig at twice the resolution (two texels
+  per unit, a 16x16 face, 512x256 textures with an emissive layer, 96x96 portraits) and twelve animation slots (idle,
+  walk, run, ready, talk, two attacks, two skills, the ultimate, down, join), painted and animated by script. The moment
+  a blow lands is exported with the animation (`HeroBodies.hits`), and the server lands it then, so the body and the hit
+  never disagree.
+- **Strength measured against the enemy**: a blow is a level-matched player's hit (`MonsterScaling.referenceLightHit` at
+  the enemy's level) times the move's power, so they are as strong at level 5 as at 90; a boss takes 35 %
+  (`BOSS_SHARE`), so the legends help without taking the fight from the player. They stand at the level cap, monsters'
+  blows reach them only through a toughness share (the knight 15 %), players and the world never hurt them, and their
+  kills (experience, gold, drops, quests) are the player's.
+- **They fall, they do not die**: a lethal blow makes them fall (down for 15 s, then up with 40 % health); the sister's
+  sanctuary and prayer raise them at once, and her prayer also raises a fallen player. Falling gives the healer and the
+  knight's guard a purpose without ever losing a legend.
+- **Companions live in the character, bodies in the moment**: the party is a character extension (`travellers_party`);
+  `TravellerDirector` brings each body to the player's side in whatever world they are, across logins. Their party
+  frames are added to the party HUD (a virtual party when the player has none) but they are not party members: invites,
+  leadership and raids are untouched.
+- **Asked, not clicked**: meeting and talking end in a question (`StoryDirector.ask`, choices in the dialogue window,
+  `dialogue.choice`), which the story's dialogue had not had.
+- **Light drawn by the client**: each move is announced once (`HeroFxPacket`, protocol 9); every client plays the body's
+  animation and draws the move's light (`HeroFx`: additive bands, rings, stars and ribbons), seeded so all see the same
+  stars and cuts. The server's particles draw the same moves for shader packs.
+They are called travellers (伝説の旅人) so as not to be confused with the roaming field bosses (`world.field.Wanderers`,
 放浪する大物).
