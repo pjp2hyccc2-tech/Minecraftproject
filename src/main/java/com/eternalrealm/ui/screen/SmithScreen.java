@@ -13,6 +13,7 @@ import com.eternalrealm.item.ItemTier;
 import com.eternalrealm.item.Recipe;
 import com.eternalrealm.item.Recipes;
 import com.eternalrealm.item.Reroll;
+import com.eternalrealm.item.Trinkets;
 import com.eternalrealm.item.forge.ERGearItems;
 import com.eternalrealm.item.forge.EquipmentStacks;
 import com.eternalrealm.item.forge.Inventories;
@@ -37,6 +38,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -45,7 +47,8 @@ import java.util.UUID;
 
 /**
  * The smithy (鍛冶屋), laid out like a hunting game's forge: on the left what can be worked on (the player's gear, worn
- * pieces first, or the recipes by tier), in the middle the piece with its numbers now → after (in green), the
+ * pieces and trinkets first, or the recipes by tier with the trinkets of each grade folded under their header), in the
+ * middle the piece with its numbers now → after (in green, stat percentages included), the
  * enhancement pips and the success chance, on the right exactly what it costs with "have / need" for every material and
  * the gold, and one big button. Everything shown is computed here from the player's own inventory and the pure rules;
  * the server checks every request again ({@link SmithService}) and answers with the outcome, which plays as a banner
@@ -73,10 +76,18 @@ public final class SmithScreen extends Screen {
 
     /**
      * A line of the left list: a tier header (tier set, recipe == null), a field header of the named designs (field
-     * set, recipe == null) or a recipe.
+     * set, recipe == null), a trinket grade header (grade set, recipe == null; a click folds or unfolds it) or a
+     * recipe.
      */
-    private record Line(ItemTier tier, int field, Recipe recipe) {
+    private record Line(ItemTier tier, int field, Trinkets.Grade grade, Recipe recipe) {
+        Line(ItemTier tier, int field, Recipe recipe) {
+            this(tier, field, null, recipe);
+        }
     }
+
+    /** Trinket grades whose recipes are listed; the others are folded under their header (kept while the game runs). */
+    private static final EnumSet<Trinkets.Grade> OPEN_GRADES = EnumSet.noneOf(Trinkets.Grade.class);
+    private static boolean gradesChosen;
 
     /** Fields in the order their named designs open up (by level). */
     private static final int[] FIELD_ORDER = {1, 8, 2, 9, 3, 10, 4, 5, 6, 7};
@@ -231,6 +242,16 @@ public final class SmithScreen extends Screen {
             if (data.isPresent()) {
                 out.add(new Piece(slot, stack, data.get(), slot >= 36 || slot == inventory.selected));
             }
+            if (slot == 36) {
+                // the worn trinkets, right after the armor (smithy slots 41..46, the server's storage order)
+                for (int i = 0; i < com.eternalrealm.client.ClientTrinkets.size(); i++) {
+                    ItemStack trinket = com.eternalrealm.client.ClientTrinkets.get(i);
+                    Optional<EquipmentData> worn = EquipmentStacks.read(trinket);
+                    if (worn.isPresent() && worn.get().uniqueId() != null) {
+                        out.add(new Piece(SmithService.FIRST_TRINKET_SLOT + i, trinket, worn.get(), true));
+                    }
+                }
+            }
         }
         return out;
     }
@@ -245,6 +266,17 @@ public final class SmithScreen extends Screen {
     }
 
     private static List<Line> recipeLines() {
+        if (!gradesChosen) {
+            // at first only the best trinket grade the character may craft is unfolded
+            gradesChosen = true;
+            Trinkets.Grade best = Trinkets.Grade.NOVICE;
+            for (Trinkets.Grade grade : Trinkets.Grade.values()) {
+                if (level() >= grade.level()) {
+                    best = grade;
+                }
+            }
+            OPEN_GRADES.add(best);
+        }
         List<Line> lines = new ArrayList<>();
         for (ItemTier tier : ItemTier.values()) {
             List<Recipe> recipes = Recipes.forTier(tier);
@@ -254,6 +286,12 @@ public final class SmithScreen extends Screen {
             lines.add(new Line(tier, 0, null));
             for (Recipe recipe : recipes) {
                 lines.add(new Line(tier, 0, recipe));
+            }
+            trinketSection(lines, Trinkets.Grade.ofTier(tier));
+        }
+        for (Trinkets.Grade grade : Trinkets.Grade.values()) {
+            if (grade.ordinal() >= ItemTier.COUNT) {
+                trinketSection(lines, grade);
             }
         }
         for (int field : FIELD_ORDER) {
@@ -267,6 +305,16 @@ public final class SmithScreen extends Screen {
             }
         }
         return lines;
+    }
+
+    /** A trinket grade's header and, when unfolded, its twelve recipes. */
+    private static void trinketSection(List<Line> lines, Trinkets.Grade grade) {
+        lines.add(new Line(null, 0, grade, null));
+        if (OPEN_GRADES.contains(grade)) {
+            for (Recipe recipe : Recipes.trinketRecipes(grade)) {
+                lines.add(new Line(null, 0, grade, recipe));
+            }
+        }
     }
 
     private Optional<Recipe> selectedRecipe() {
@@ -383,11 +431,22 @@ public final class SmithScreen extends Screen {
             int index = scroll + (int) ((mouseY - y0) / ROW);
             if (tab == Tab.CRAFT) {
                 List<Line> lines = recipeLines();
-                if (index >= 0 && index < lines.size() && lines.get(index).recipe() != null
-                        && (int) ((mouseY - y0) / ROW) < listRows()) {
-                    selectedRecipe = lines.get(index).recipe().id();
-                    click();
-                    return true;
+                if (index >= 0 && index < lines.size() && (int) ((mouseY - y0) / ROW) < listRows()) {
+                    Line line = lines.get(index);
+                    if (line.recipe() != null) {
+                        selectedRecipe = line.recipe().id();
+                        click();
+                        return true;
+                    }
+                    if (line.grade() != null) {
+                        // fold or unfold the grade's trinkets
+                        if (!OPEN_GRADES.remove(line.grade())) {
+                            OPEN_GRADES.add(line.grade());
+                        }
+                        scroll = Mth.clamp(scroll, 0, Math.max(0, recipeLines().size() - listRows()));
+                        click();
+                        return true;
+                    }
                 }
             } else {
                 List<Piece> pieces = pieces();
@@ -514,6 +573,19 @@ public final class SmithScreen extends Screen {
         for (int i = scroll; i < lines.size() && i - scroll < listRows(); i++) {
             Line line = lines.get(i);
             int rowTop = y + (i - scroll) * ROW;
+            if (line.recipe() == null && line.grade() != null) {
+                // the trinkets of a grade (装身具), folded or not
+                Trinkets.Grade grade = line.grade();
+                boolean open = OPEN_GRADES.contains(grade);
+                boolean hovered = mouseX >= x0 && mouseX < x1 && mouseY >= rowTop && mouseY < rowTop + ROW;
+                graphics.fill(x0 + 1, rowTop + 2, x1 - 1, rowTop + ROW - 2, hovered ? 0x60307A8A : 0x40306A7A);
+                graphics.drawString(font, font.plainSubstrByWidth(Component.translatable(
+                                "screen.eternalrealm.smith.trinket_header", open ? "▼" : "▶",
+                                Component.translatable("smith.eternalrealm.trinket_grade." + grade.id()), grade.level())
+                        .getString(), listWidth() - 10), x0 + 5, rowTop + 6,
+                        level >= grade.level() ? 0xFF8AE0F0 : 0xFF5A6A70, false);
+                continue;
+            }
             if (line.recipe() == null && line.tier() == null) {
                 // the named designs of a field (armory)
                 graphics.fill(x0 + 1, rowTop + 2, x1 - 1, rowTop + ROW - 2, 0x40A05A20);
@@ -602,11 +674,20 @@ public final class SmithScreen extends Screen {
             if (data.isWeapon()) {
                 y = statRow(graphics, y, "screen.eternalrealm.smith.stat.attack", EquipmentStats.baseAttack(data),
                         EquipmentStats.baseAttack(next));
-            } else {
+            } else if (!data.isTrinket()) {
                 y = statRow(graphics, y, "screen.eternalrealm.smith.stat.defense", EquipmentStats.baseDefense(data),
                         EquipmentStats.baseDefense(next));
                 y = statRow(graphics, y, "screen.eternalrealm.smith.stat.health", EquipmentStats.baseMaxHealth(data),
                         EquipmentStats.baseMaxHealth(next));
+            }
+            // the stat percentages grow faster (+10 % of themselves per level)
+            com.eternalrealm.character.StatPercents nowPercents = EquipmentStats.of(data).percents();
+            com.eternalrealm.character.StatPercents nextPercents = EquipmentStats.of(next).percents();
+            for (com.eternalrealm.character.StatType type : com.eternalrealm.character.StatType.values()) {
+                if (nextPercents.get(type) > 0.0) {
+                    y = statPercentRow(graphics, y, type, nowPercents.get(type) * 100.0,
+                            nextPercents.get(type) * 100.0);
+                }
             }
             y = percentRow(graphics, y, (EquipmentStats.enhancementFactor(data.enhancement()) - 1.0) * 100.0,
                     (EquipmentStats.enhancementFactor(next.enhancement()) - 1.0) * 100.0);
@@ -668,16 +749,21 @@ public final class SmithScreen extends Screen {
         int y = itemHeader(graphics, stack, recipe.requiredLevel());
         if (data.isWeapon()) {
             y = valueRow(graphics, y, "screen.eternalrealm.smith.stat.attack", EquipmentStats.baseAttack(data));
-        } else {
+        } else if (!data.isTrinket()) {
             y = valueRow(graphics, y, "screen.eternalrealm.smith.stat.defense", EquipmentStats.baseDefense(data));
             y = valueRow(graphics, y, "screen.eternalrealm.smith.stat.health", EquipmentStats.baseMaxHealth(data));
         }
         if (recipe.design() != null) {
-            // what makes the design special: its traits, perks, art or set bonuses
+            // what makes the design special: its stat percentages, traits, perks, art or set bonuses
             int shown = 0;
             for (com.eternalrealm.item.TooltipLine line : com.eternalrealm.item.EquipmentTooltip.lines(data)) {
+                boolean trinketStats = line.kind() == com.eternalrealm.item.TooltipLine.Kind.BASE_STAT
+                        && data.isTrinket();
                 switch (line.kind()) {
-                    case TRAIT, PERK, ART, SET -> {
+                    case TRAIT, PERK, ART, SET, BASE_STAT -> {
+                        if (line.kind() == com.eternalrealm.item.TooltipLine.Kind.BASE_STAT && !trinketStats) {
+                            continue;
+                        }
                         for (var part : font.split(EquipmentStacks.component(line), cx1 - cx0 - 16)) {
                             if (shown++ < 9) {
                                 graphics.drawString(font, part, cx0 + 8, y, 0xFFFFFF, false);
@@ -748,6 +834,19 @@ public final class SmithScreen extends Screen {
         return y + 12;
     }
 
+    /** "STR%  +33 → +36.3" for a stat percentage of the piece. */
+    private int statPercentRow(GuiGraphics graphics, int y, com.eternalrealm.character.StatType type, double now,
+                               double next) {
+        int x = centerLeft() + 8;
+        graphics.drawString(font, Component.translatable("screen.eternalrealm.smith.stat.percent", type.name()), x, y,
+                0xFFFFD27A, false);
+        int col = x + 70;
+        graphics.drawString(font, "+" + number(now) + "%", col, y, 0xFFFFFF, false);
+        graphics.drawString(font, "→", col + 34, y, 0xFFB0B0B0, false);
+        graphics.drawString(font, "+" + number(next) + "%", col + 46, y, next > now ? GOOD : 0xFFFFFF, false);
+        return y + 12;
+    }
+
     private int percentRow(GuiGraphics graphics, int y, double now, double next) {
         int x = centerLeft() + 8;
         graphics.drawString(font, Component.translatable("screen.eternalrealm.smith.stat.bonus"), x, y, 0xFFC8C0B0,
@@ -812,8 +911,10 @@ public final class SmithScreen extends Screen {
             if (y > bottom() - 10) {
                 break;
             }
+            // as it counts (rarity and, for stat percentages, enhancement included), like the tooltip
             graphics.drawString(font, Component.translatable(affix.kind().translationKey(),
-                    affix.kind().format(affix.value())).withStyle(ChatFormatting.AQUA), x + 4, y, 0xFFFFFF, false);
+                    affix.kind().format(EquipmentStats.affixValue(affix, data.rarity(), data.enhancement())))
+                    .withStyle(ChatFormatting.AQUA), x + 4, y, 0xFFFFFF, false);
             y += 10;
         }
     }

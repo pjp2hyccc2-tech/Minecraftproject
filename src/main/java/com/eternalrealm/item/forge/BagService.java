@@ -28,7 +28,7 @@ import java.util.Optional;
  *     armor piece into its armor slot, an accessory or a charm into a trinket slot ({@link TrinketSlots}: the
  *     {@code target} one if given, else the first free one); what was worn goes back into the bag slot. The job's
  *     weapons, the level and (trinkets) one copy of each named trinket count.</li>
- *     <li>{@value #UNEQUIP} {@code {target: weapon|head|chest|legs|feet|accessory_1|accessory_2|charm}}: into the
+ *     <li>{@value #UNEQUIP} {@code {target: weapon|head|chest|legs|feet|accessory_1..4|charm|charm_2}}: into the
  *     first free bag slot.</li>
  *     <li>{@value #SORT}: equipment, consumables, materials, the rest; matching stacks merged.</li>
  *     <li>{@value #DISCARD} {@code {slot}}: the stack is destroyed (the client asked for a confirmation).</li>

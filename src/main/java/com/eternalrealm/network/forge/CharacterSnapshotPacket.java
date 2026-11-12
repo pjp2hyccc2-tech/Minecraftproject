@@ -2,6 +2,7 @@ package com.eternalrealm.network.forge;
 
 import com.eternalrealm.character.CharacterSnapshot;
 import com.eternalrealm.character.StatBlock;
+import com.eternalrealm.character.StatPercents;
 import com.eternalrealm.character.StatType;
 import com.eternalrealm.season.SeasonId;
 import io.netty.handler.codec.DecoderException;
@@ -15,15 +16,24 @@ import java.util.function.Supplier;
 
 /**
  * S2C: the authoritative state of the receiving player's own character (HUD, journal), plus the stats the job and the
- * equipment add on top of it.
+ * equipment add on top of it (flat and percentage stats together) and the equipment's stat percentages (protocol 11;
+ * sent on the 0.1 % grid as whole tenths of a percent).
  */
-public record CharacterSnapshotPacket(CharacterSnapshot snapshot, StatBlock bonusStats) {
+public record CharacterSnapshotPacket(CharacterSnapshot snapshot, StatBlock bonusStats, StatPercents statPercents) {
     static final int MAX_BYTES = 12288;
     static final int MAX_SKILLS = 128;
+    /** Stat percentages travel as whole thousandths (0.1 %). */
+    private static final double PERCENT_SCALE = 1000.0;
 
     public CharacterSnapshotPacket {
         Objects.requireNonNull(snapshot, "snapshot");
         Objects.requireNonNull(bonusStats, "bonusStats");
+        Objects.requireNonNull(statPercents, "statPercents");
+    }
+
+    /** A snapshot without stat percentages. */
+    public CharacterSnapshotPacket(CharacterSnapshot snapshot, StatBlock bonusStats) {
+        this(snapshot, bonusStats, StatPercents.ZERO);
     }
 
     public void encode(FriendlyByteBuf buffer) {
@@ -47,6 +57,9 @@ public record CharacterSnapshotPacket(CharacterSnapshot snapshot, StatBlock bonu
         buffer.writeVarInt(snapshot.skillLoadout().size());
         for (String id : snapshot.skillLoadout()) {
             buffer.writeUtf(id, 64);
+        }
+        for (StatType type : StatType.values()) {
+            buffer.writeVarInt((int) Math.round(statPercents.get(type) * PERCENT_SCALE));
         }
     }
 
@@ -81,8 +94,17 @@ public record CharacterSnapshotPacket(CharacterSnapshot snapshot, StatBlock bonu
             for (int i = 0; i < loadoutSize; i++) {
                 loadout.add(buffer.readUtf(64));
             }
+            Map<StatType, Double> percents = new EnumMap<>(StatType.class);
+            for (StatType type : StatType.values()) {
+                int thousandths = buffer.readVarInt();
+                if (thousandths < 0 || thousandths > StatPercents.MAX * PERCENT_SCALE) {
+                    throw new DecoderException("Stat percent out of range: " + thousandths);
+                }
+                percents.put(type, thousandths / PERCENT_SCALE);
+            }
             return new CharacterSnapshotPacket(new CharacterSnapshot(season, level, levelCap, experience,
-                    experienceToNext, unspent, allocated, total, jobId, gold, skillPoints, skills, loadout), bonus);
+                    experienceToNext, unspent, allocated, total, jobId, gold, skillPoints, skills, loadout), bonus,
+                    StatPercents.of(percents));
         } catch (IllegalArgumentException e) {
             throw new DecoderException("Invalid CharacterSnapshotPacket: " + e.getMessage(), e);
         }

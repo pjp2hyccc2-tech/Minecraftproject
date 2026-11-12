@@ -114,6 +114,7 @@ public final class CharacterScreen extends JournalScreen {
         graphics.drawString(font, Component.translatable("screen.eternalrealm.character.job_gold",
                 Component.translatable(job.translationKey()), format(snapshot.gold())), left + 150, top + 14, 0xE8C66A);
         StatBlock bonus = ClientCharacterState.bonusStats();
+        com.eternalrealm.character.StatPercents percents = ClientCharacterState.statPercents();
 
         int rowY = top + HEADER_HEIGHT;
         for (StatType stat : StatType.values()) {
@@ -121,14 +122,26 @@ public final class CharacterScreen extends JournalScreen {
             int total = Math.min(StatBlock.MAX_VALUE, snapshot.totalStats().get(stat) + extra);
             int allocated = snapshot.allocatedStats().get(stat);
             graphics.drawString(font, Component.translatable(stat.translationKey()), left, rowY + 4, 0xFFFFFF);
-            graphics.drawString(font, Component.literal(Integer.toString(total)), left + 40, rowY + 4, 0xFFFFFF);
+            graphics.drawString(font, Component.literal(Integer.toString(total)), left + 30, rowY + 4, 0xFFFFFF);
             if (allocated > 0) {
-                graphics.drawString(font, Component.literal("(+" + allocated + ")"), left + 70, rowY + 4, 0x7CFC7C);
+                graphics.drawString(font, Component.literal("(+" + allocated + ")"), left + 58, rowY + 4, 0x7CFC7C);
             }
             if (extra > 0) {
-                graphics.drawString(font, Component.literal("[+" + extra + "]"), left + 104, rowY + 4, 0x8AB4FF);
+                graphics.drawString(font, Component.literal("[+" + extra + "]"), left + 96, rowY + 4, 0x8AB4FF);
             }
-            graphics.drawString(font, Component.translatable(stat.descriptionKey()), left + 140, rowY + 4, 0x909090);
+            double percent = percents.get(stat);
+            if (percent > 0.0) {
+                // the equipment's percentage of this stat (what multiplies everything flat)
+                graphics.drawString(font, Component.literal("+" + percentText(percent) + "%"), left + 140, rowY + 4,
+                        0xFFD27A);
+            }
+            int descriptionX = left + 182;
+            String description = Component.translatable(stat.descriptionKey()).getString();
+            int room = left + PANEL_WIDTH - 32 - descriptionX;
+            if (font.width(description) > room) {
+                description = font.plainSubstrByWidth(description, room - font.width("…")) + "…";
+            }
+            graphics.drawString(font, description, descriptionX, rowY + 4, 0x909090);
             rowY += ROW_HEIGHT;
         }
         CombatStats combat = ClientCombatState.stats();
@@ -152,6 +165,13 @@ public final class CharacterScreen extends JournalScreen {
 
     private void line(GuiGraphics graphics, int rowY, int index, String key, Object... args) {
         graphics.drawString(font, Component.translatable(key, args), left, rowY + 1 + index * 10, 0xD8D8D8);
+    }
+
+    /** {@code 707} or {@code 12.5}: a stat percentage without the sign. */
+    private static String percentText(double fraction) {
+        double value = Math.round(fraction * 1000.0) / 10.0;
+        return value >= 100.0 || value == Math.rint(value) ? String.format(Locale.ROOT, "%.0f", value)
+                : String.format(Locale.ROOT, "%.1f", value);
     }
 
     private static String pct(double fraction) {

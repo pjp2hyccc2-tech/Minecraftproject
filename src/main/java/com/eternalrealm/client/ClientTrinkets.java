@@ -8,13 +8,14 @@ import net.minecraft.nbt.TagParser;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * The owning player's trinkets (two accessories and the charm) as the server last sent them (UI data channel
+ * The owning player's trinkets (four accessories and two charms) as the server last sent them (UI data channel
  * {@code trinkets}, {@code TrinketSlots}): the equipment screen shows and compares them. Client thread only.
  */
 public final class ClientTrinkets {
     /** The channel of {@code com.eternalrealm.item.forge.TrinketSlots}. */
     static final String CHANNEL = "trinkets";
-    private static final ItemStack[] STACKS = {ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY};
+    private static final ItemStack[] STACKS = {ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY,
+            ItemStack.EMPTY, ItemStack.EMPTY};
 
     private ClientTrinkets() {
     }
@@ -23,7 +24,7 @@ public final class ClientTrinkets {
         ClientChannels.register(CHANNEL, ClientTrinkets::accept);
     }
 
-    /** Slot 0 and 1: accessories, 2: the charm. */
+    /** Storage order of {@code TrinketSlots.Slot}: 0, 1, 3, 4 the accessories, 2 and 5 the charms. */
     public static ItemStack get(int index) {
         return index >= 0 && index < STACKS.length ? STACKS[index] : ItemStack.EMPTY;
     }

@@ -2,6 +2,7 @@ package com.eternalrealm.job.forge;
 
 import com.eternalrealm.character.CharacterSnapshot;
 import com.eternalrealm.character.StatBlock;
+import com.eternalrealm.character.StatPercents;
 import com.eternalrealm.combat.CombatModifiers;
 import com.eternalrealm.job.ComposedStats;
 import com.eternalrealm.job.JobType;
@@ -14,9 +15,9 @@ import java.util.function.Function;
  * the gear reader; until then equipment adds nothing.
  */
 public final class PlayerStats {
-    /** Stats and secondary modifiers granted by what a player wears. */
-    public record Gear(StatBlock stats, CombatModifiers modifiers) {
-        public static final Gear NONE = new Gear(StatBlock.ZERO, CombatModifiers.NONE);
+    /** Flat stats, stat percentages and secondary modifiers granted by what a player wears. */
+    public record Gear(StatBlock stats, StatPercents percents, CombatModifiers modifiers) {
+        public static final Gear NONE = new Gear(StatBlock.ZERO, StatPercents.ZERO, CombatModifiers.NONE);
     }
 
     private static volatile Function<ServerPlayer, Gear> gearReader = player -> Gear.NONE;
@@ -34,7 +35,8 @@ public final class PlayerStats {
             gear = Gear.NONE; // never let a broken item break the character
         }
         JobType job = JobType.fromStored(snapshot.jobId());
-        return ComposedStats.compose(snapshot.totalStats(), snapshot.level(), job, gear.stats(), gear.modifiers(),
+        return ComposedStats.compose(snapshot.totalStats(), snapshot.level(), job, gear.stats(), gear.percents(),
+                gear.modifiers(),
                 com.eternalrealm.job.SkillTree.passives(job, snapshot.level(), snapshot.skillInvestments()).modifiers());
     }
 

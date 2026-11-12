@@ -227,6 +227,9 @@ public final class CombatDriver {
                 combatant.setAllowedWeapons(Jobs.get(job).weapons());
                 StatEffects.apply(player, stats);
                 ERNetwork.sendToPlayer(player, new CombatStatsPacket(stats));
+                // the character screen shows what the gear adds (flat and percentage stats): keep it current
+                ERNetwork.sendToPlayer(player, new com.eternalrealm.network.forge.CharacterSnapshotPacket(character,
+                        composed.bonus(), composed.percents()));
                 sendStatus(player, combatant, false, RequestOutcome.IGNORED, DefenseEvent.NONE);
             } catch (RuntimeException e) {
                 LOG.error("Could not apply combat stats for {}", player.getGameProfile().getName(), e);

@@ -17,6 +17,12 @@ public final class CharacterSync {
     private CharacterSync() {
     }
 
+    /** The snapshot with what the job and the equipment add (flat and percentage stats). */
+    public static CharacterSnapshotPacket packet(ServerPlayer player, com.eternalrealm.character.CharacterSnapshot snapshot) {
+        com.eternalrealm.job.ComposedStats composed = PlayerStats.compose(player, snapshot);
+        return new CharacterSnapshotPacket(snapshot, composed.bonus(), composed.percents());
+    }
+
     public static void flush(ServerContext context) {
         List<UUID> changed = context.syncQueue().drain();
         if (changed.isEmpty()) {
@@ -29,7 +35,7 @@ public final class CharacterSync {
                 continue;
             }
             context.playerData().snapshot(playerId).ifPresent(snapshot -> ERNetwork.sendToPlayer(player,
-                    new CharacterSnapshotPacket(snapshot, PlayerStats.compose(player, snapshot).bonus())));
+                    packet(player, snapshot)));
             com.eternalrealm.social.forge.NameplateTeams.update(player);
         }
     }

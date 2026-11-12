@@ -20,21 +20,25 @@ import java.util.Locale;
 import java.util.Optional;
 
 /**
- * The trinket slots (装身具, owner's request of 2026-11-11): two accessories and one charm next to the weapon and the
- * armor. Vanilla has no such slots, so the stacks live in the player's persistent data ({@value #TAG}): they stay with
- * the character through logouts, deaths (whatever the keep-inventory rule says) and dimension changes. The owning
- * client sees them over the UI data channel {@value #CHANNEL} (the equipment screen); their stats count like the
- * armor's ({@link GearEvents}). Server thread only.
+ * The trinket slots (装身具, owner's request of 2026-11-11): four accessories and two charms (since 2026-11-13) next to
+ * the weapon and the armor. Vanilla has no such slots, so the stacks live in the player's persistent data
+ * ({@value #TAG}, index = {@link Slot#ordinal()}; the slots added later come last, so older saves keep their places):
+ * they stay with the character through logouts, deaths (whatever the keep-inventory rule says) and dimension changes.
+ * The owning client sees them over the UI data channel {@value #CHANNEL} (the equipment screen); their stats count
+ * like the armor's ({@link GearEvents}). Server thread only.
  */
 public final class TrinketSlots {
     public static final String CHANNEL = "trinkets";
     static final String TAG = "ERTrinkets";
 
-    /** The three slots, in screen order. */
+    /** The six slots, in storage order (never reorder: the ordinal is the saved index). */
     public enum Slot {
         ACCESSORY_1(EquipmentSlot.ACCESSORY),
         ACCESSORY_2(EquipmentSlot.ACCESSORY),
-        CHARM(EquipmentSlot.CHARM);
+        CHARM(EquipmentSlot.CHARM),
+        ACCESSORY_3(EquipmentSlot.ACCESSORY),
+        ACCESSORY_4(EquipmentSlot.ACCESSORY),
+        CHARM_2(EquipmentSlot.CHARM);
 
         private final EquipmentSlot kind;
 
@@ -42,7 +46,7 @@ public final class TrinketSlots {
             this.kind = kind;
         }
 
-        /** {@code accessory_1}, {@code accessory_2}, {@code charm}: the UI action target. */
+        /** {@code accessory_1} .. {@code accessory_4}, {@code charm}, {@code charm_2}: the UI action target. */
         public String id() {
             return name().toLowerCase(Locale.ROOT);
         }
@@ -122,7 +126,7 @@ public final class TrinketSlots {
         return first;
     }
 
-    /** Sends the three slots to the owning client (login, respawn, every change). */
+    /** Sends the six slots (storage order) to the owning client (login, respawn, every change). */
     public static void sync(ServerPlayer player) {
         JsonObject data = new JsonObject();
         JsonArray stacks = new JsonArray();

@@ -37,7 +37,8 @@ import java.util.SplittableRandom;
 
 /**
  * Personal loot of a monster: its drop table rolled with the killer's luck (LUK), materials and equipment of the
- * table's tier (rarity rolled by the monster module; the piece's base leans towards the killer's job weapon). Drops
+ * table's tier (rarity rolled by the monster module; the piece's base leans towards the killer's job weapon; 10 %, 18 %
+ * from elites, are a trinket of the tier's grade, {@code com.eternalrealm.item.Trinkets#forDrop}). Drops
  * can only be picked up by the killer; rare and better pieces glow, legendary ones are announced to the server.
  */
 public final class LootDrops {
@@ -68,11 +69,17 @@ public final class LootDrops {
             } else if (drop instanceof LootDrop.EquipmentDrop equipment) {
                 ItemTier tier = ItemTier.byNumber(equipment.tier()).orElse(ItemTier.IRON);
                 ItemRarity rarity = ItemRarity.byId(equipment.rarity().id()).orElse(ItemRarity.COMMON);
-                // some drops are a named design of the field (armory), rolled at the same rarity
-                java.util.Optional<com.eternalrealm.item.Design> design =
-                        RANDOM.nextDouble() < com.eternalrealm.item.ArmoryDrops.fieldDesignShare(elite)
-                                ? com.eternalrealm.item.ArmoryDrops.fieldDesign(field, level, RANDOM)
-                                : java.util.Optional.empty();
+                // some drops are a trinket of the tier's grade (装身具, leaning towards the killer's job stats), some a
+                // named design of the field (armory); both rolled at the same rarity
+                java.util.Optional<com.eternalrealm.item.Design> design;
+                if (RANDOM.nextDouble() < com.eternalrealm.item.Trinkets.dropShare(elite)) {
+                    design = java.util.Optional.of(com.eternalrealm.item.Trinkets.forDrop(tier, level,
+                            jobStats(killer), RANDOM));
+                } else if (RANDOM.nextDouble() < com.eternalrealm.item.ArmoryDrops.fieldDesignShare(elite)) {
+                    design = com.eternalrealm.item.ArmoryDrops.fieldDesign(field, level, RANDOM);
+                } else {
+                    design = java.util.Optional.empty();
+                }
                 EquipmentData data = design.isPresent() ? EquipmentGenerator.roll(design.get(), rarity, RANDOM)
                         : EquipmentGenerator.roll(baseFor(killer, tier), rarity, RANDOM);
                 spawn(killer, victim, EquipmentStacks.create(data), rarity);
@@ -103,6 +110,23 @@ public final class LootDrops {
             item = location == null ? null : ForgeRegistries.ITEMS.getValue(location);
         }
         return item == null || item == Items.AIR ? null : item;
+    }
+
+    /** The stats the killer's job grows (a dropped trinket's focus leans towards them); none without a job. */
+    private static java.util.Set<com.eternalrealm.character.StatType> jobStats(ServerPlayer killer) {
+        JobType job = ServerContext.current().flatMap(context -> context.playerData().snapshot(killer.getUUID()))
+                .map(CharacterSnapshot::jobId).map(JobType::fromStored).orElse(JobType.NONE);
+        java.util.Set<com.eternalrealm.character.StatType> stats =
+                java.util.EnumSet.noneOf(com.eternalrealm.character.StatType.class);
+        if (job.isChosen()) {
+            com.eternalrealm.character.StatBlock growth = Jobs.get(job).growthPerLevel();
+            for (com.eternalrealm.character.StatType type : com.eternalrealm.character.StatType.values()) {
+                if (growth.get(type) > 0) {
+                    stats.add(type);
+                }
+            }
+        }
+        return stats;
     }
 
     /**

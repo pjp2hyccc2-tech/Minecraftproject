@@ -28,10 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The equipment (装備): the eight slots around the character (head, chest, legs, feet on the left; weapon, two
- * accessories and the charm on the right), the pieces in the bag that fit the selected slot with a comparison against
- * what is worn, equip and take off, and the totals of everything worn. The job's weapons and the level requirements
- * are shown; the server checks them again ({@link BagService}). Relics (金枠) wear the gold frame.
+ * The equipment (装備): the eleven slots around the character (head, chest, legs, feet on the left; the weapon on top
+ * of two columns on the right, four accessories in two pairs and the two charms below them), the pieces in the bag
+ * that fit the selected slot with a comparison against what is worn, equip and take off, and the totals of everything
+ * worn (flat stats and stat percentages). The job's weapons and the level requirements are shown; the server checks
+ * them again ({@link BagService}). Relics (金枠) wear the gold frame.
  */
 public final class EquipmentScreen extends Screen {
     /** The boxes of the screen: what fits in each, and the UI action target. */
@@ -43,11 +44,14 @@ public final class EquipmentScreen extends Screen {
         FEET(EquipmentSlot.FEET, "feet", -1),
         ACCESSORY_1(EquipmentSlot.ACCESSORY, "accessory_1", 0),
         ACCESSORY_2(EquipmentSlot.ACCESSORY, "accessory_2", 1),
-        CHARM(EquipmentSlot.CHARM, "charm", 2);
+        ACCESSORY_3(EquipmentSlot.ACCESSORY, "accessory_3", 3),
+        ACCESSORY_4(EquipmentSlot.ACCESSORY, "accessory_4", 4),
+        CHARM(EquipmentSlot.CHARM, "charm", 2),
+        CHARM_2(EquipmentSlot.CHARM, "charm_2", 5);
 
         final EquipmentSlot kind;
         final String target;
-        /** Index in {@link ClientTrinkets}, -1 for the weapon and the armor. */
+        /** Index in {@link ClientTrinkets} (the server's storage order), -1 for the weapon and the armor. */
         final int trinket;
 
         Box(EquipmentSlot kind, String target, int trinket) {
@@ -58,7 +62,7 @@ public final class EquipmentScreen extends Screen {
     }
 
     private static final int WIDTH = 312;
-    private static final int HEIGHT = 216;
+    private static final int HEIGHT = 240;
     private static final int BOX = 20;
     private static final int ROW = 18;
     private static final int LIST_ROWS = 4;
@@ -128,10 +132,10 @@ public final class EquipmentScreen extends Screen {
         graphics.renderOutline(left, top, WIDTH, HEIGHT, RIM);
         graphics.renderOutline(left + 2, top + 2, WIDTH - 4, HEIGHT - 4, RIM_DARK);
         graphics.drawString(font, title, left + 8, top + 7, RIM, true);
-        // the character between the slots
-        int cx = left + 72;
-        graphics.fill(left + 32, top + 20, left + 112, top + 120, PANEL_INNER);
-        InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, cx, top + 112, 38, cx - mouseX,
+        // the character between the armor and the weapon and trinkets
+        int cx = left + 60;
+        graphics.fill(left + 32, top + 20, left + 88, top + 120, PANEL_INNER);
+        InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, cx, top + 112, 36, cx - mouseX,
                 top + 60 - mouseY, player);
         ItemStack hovered = ItemStack.EMPTY;
         for (Box each : Box.values()) {
@@ -426,10 +430,13 @@ public final class EquipmentScreen extends Screen {
             case CHEST -> new int[] {left + 8, top + 46};
             case LEGS -> new int[] {left + 8, top + 70};
             case FEET -> new int[] {left + 8, top + 94};
-            case WEAPON -> new int[] {left + 118, top + 22};
-            case ACCESSORY_1 -> new int[] {left + 118, top + 46};
-            case ACCESSORY_2 -> new int[] {left + 118, top + 70};
-            case CHARM -> new int[] {left + 118, top + 94};
+            case WEAPON -> new int[] {left + 106, top + 22};
+            case ACCESSORY_1 -> new int[] {left + 94, top + 46};
+            case ACCESSORY_2 -> new int[] {left + 118, top + 46};
+            case ACCESSORY_3 -> new int[] {left + 94, top + 70};
+            case ACCESSORY_4 -> new int[] {left + 118, top + 70};
+            case CHARM -> new int[] {left + 94, top + 94};
+            case CHARM_2 -> new int[] {left + 118, top + 94};
         };
     }
 

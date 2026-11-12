@@ -32,7 +32,8 @@ import java.util.UUID;
  * player's own inventory and the pure rules ({@link Enhancement}, {@link Reroll}, {@link Crafting}); it only sends
  * intents — enhance or reroll the piece in inventory slot N with id U, craft recipe R — and the server checks them
  * all again (the piece is still there, the stones/materials and gold are there) before it takes anything. The outcome
- * goes back on {@link #RESULT_CHANNEL} so the screen can play its success or failure animation.
+ * goes back on {@link #RESULT_CHANNEL} so the screen can play its success or failure animation. Worn trinkets are
+ * worked on where they are ({@link #FIRST_TRINKET_SLOT}).
  */
 public final class SmithService {
     /** S2C: open the smithy screen ({@code {"npc": id}}). */
@@ -42,6 +43,9 @@ public final class SmithService {
     public static final String ENHANCE = "smith.enhance";
     public static final String REROLL = "smith.reroll";
     public static final String CRAFT = "smith.craft";
+    /** Smithy slots 41..46 are the worn trinkets ({@link TrinketSlots.Slot} in storage order). */
+    public static final int FIRST_TRINKET_SLOT = 41;
+    public static final int LAST_SLOT = FIRST_TRINKET_SLOT + 5;
     private static final SplittableRandom RANDOM = new SplittableRandom();
 
     private SmithService() {
@@ -62,12 +66,20 @@ public final class SmithService {
     }
 
     private static int slot(JsonObject args) {
-        return (int) UiArgs.number(args, "slot", 0, 40);
+        return (int) UiArgs.number(args, "slot", 0, LAST_SLOT);
+    }
+
+    /** The worn trinket slot of a smithy slot (41..46), if it is one. */
+    public static Optional<TrinketSlots.Slot> trinketSlot(int slot) {
+        int index = slot - FIRST_TRINKET_SLOT;
+        TrinketSlots.Slot[] slots = TrinketSlots.Slot.values();
+        return index >= 0 && index < slots.length ? Optional.of(slots[index]) : Optional.empty();
     }
 
     /**
      * The stack in {@code slot} of the smithy's numbering: 0..35 the main inventory, 36..39 the worn armour (feet,
-     * legs, chest, head), 40 the off hand.
+     * legs, chest, head), 40 the off hand (the worn trinkets, 41..46, live elsewhere: {@link #stackAt(ServerPlayer,
+     * int)}).
      */
     public static ItemStack stackAt(net.minecraft.world.entity.player.Inventory inventory, int slot) {
         if (slot >= 0 && slot < inventory.items.size()) {
@@ -79,9 +91,25 @@ public final class SmithService {
         return slot == 40 ? inventory.offhand.get(0) : ItemStack.EMPTY;
     }
 
+    /** The stack in a smithy slot, worn trinkets included (a copy for those: write it back with {@link #store}). */
+    static ItemStack stackAt(ServerPlayer player, int slot) {
+        Optional<TrinketSlots.Slot> trinket = trinketSlot(slot);
+        return trinket.isPresent() ? TrinketSlots.get(player, trinket.get()) : stackAt(player.getInventory(), slot);
+    }
+
+    /** After a change: a worn trinket goes back into its slot (stats re-derived, client told). */
+    private static void store(ServerPlayer player, int slot, ItemStack stack) {
+        Optional<TrinketSlots.Slot> trinket = trinketSlot(slot);
+        if (trinket.isPresent()) {
+            TrinketSlots.set(player, trinket.get(), stack);
+        } else {
+            player.getInventory().setChanged();
+        }
+    }
+
     /** The equipment in {@code slot}, if it is still the piece the screen showed. */
     private static ItemStack piece(ServerPlayer player, int slot, UUID id) {
-        ItemStack stack = stackAt(player.getInventory(), slot);
+        ItemStack stack = stackAt(player, slot);
         Optional<EquipmentData> data = EquipmentStacks.read(stack);
         return data.isPresent() && data.get().uniqueId().equals(id) ? stack : ItemStack.EMPTY;
     }
@@ -113,7 +141,7 @@ public final class SmithService {
         }
         Enhancement.Result outcome = Enhancement.attempt(data.get(), RANDOM);
         EquipmentStacks.write(stack, outcome.item());
-        player.getInventory().setChanged();
+        store(player, slot, stack);
         boolean success = outcome.outcome() == Enhancement.Outcome.SUCCESS;
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
                 success ? com.eternalrealm.sound.ERSounds.ENHANCE_SUCCESS.get()
@@ -141,7 +169,7 @@ public final class SmithService {
             return;
         }
         EquipmentStacks.write(stack, Reroll.reroll(data.get(), RANDOM));
-        player.getInventory().setChanged();
+        store(player, slot, stack);
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.AMETHYST_BLOCK_CHIME,
                 SoundSource.PLAYERS, 1.0F, 1.0F);
         result(player, "reroll", "success", data.get().enhancement(), stack.getHoverName());

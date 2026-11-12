@@ -42,7 +42,7 @@ public final class GearEvents {
             return PlayerStats.Gear.NONE;
         }
         GearBonus bonus = Gear.sum(worn, level(player), player.getUUID());
-        return new PlayerStats.Gear(bonus.stats(), bonus.modifiers());
+        return new PlayerStats.Gear(bonus.stats(), bonus.percents(), bonus.modifiers());
     }
 
     /** Perks of the held named weapon (and its element) and of the worn set bonuses. */

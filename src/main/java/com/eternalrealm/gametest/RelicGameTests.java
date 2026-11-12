@@ -1,6 +1,7 @@
 package com.eternalrealm.gametest;
 
 import com.eternalrealm.character.SetLevelResult;
+import com.eternalrealm.character.StatPercents;
 import com.eternalrealm.character.StatType;
 import com.eternalrealm.combat.ActionDefinition;
 import com.eternalrealm.combat.CombatEvent;
@@ -20,6 +21,7 @@ import com.eternalrealm.item.GeneratedArts;
 import com.eternalrealm.item.ItemRarity;
 import com.eternalrealm.item.ItemTier;
 import com.eternalrealm.item.Relics;
+import com.eternalrealm.item.Trinkets;
 import com.eternalrealm.item.WeaponArt;
 import com.eternalrealm.item.WeaponDesign;
 import com.eternalrealm.item.forge.BagService;
@@ -137,7 +139,7 @@ public final class RelicGameTests {
         String art = GeneratedArts.forDesign(alvin.weapon().id()).orElseThrow().id();
         check(action.isPresent() && action.get().id().equals(art), "at level 55 the relic's art " + art
                 + " should start, got " + action);
-        // the trinkets: their own slots, their stats, one copy of each
+        // the trinkets: their own slots, their stat percentages, one copy of each
         ComposedStats before = PlayerStats.compose(player, data.snapshot(id).orElseThrow());
         ItemStack ring = RelicDrops.create(alvin.accessory(), random);
         ItemStack bell = RelicDrops.create(alvin.charm(), random);
@@ -156,16 +158,44 @@ public final class RelicGameTests {
         ComposedStats after = PlayerStats.compose(player, data.snapshot(id).orElseThrow());
         EquipmentData ringData = EquipmentStacks.read(ring).orElseThrow();
         EquipmentData bellData = EquipmentStacks.read(bell).orElseThrow();
+        StatPercents added = EquipmentStats.of(ringData).percents().plus(EquipmentStats.of(bellData).percents());
+        check(added.get(StatType.STR) > 0.0 && added.get(StatType.VIT) > 0.0,
+                "the ring raises STR and the bell VIT by percentages: " + added);
         for (StatType type : StatType.values()) {
-            int added = EquipmentStats.of(ringData).stats().get(type) + EquipmentStats.of(bellData).stats().get(type);
-            check(after.total().get(type) - before.total().get(type) == added, type + " should rise by " + added
-                    + ": " + before.total().get(type) + " -> " + after.total().get(type));
+            // nothing else worn raises a stat by a percentage, so the flat stats are those before
+            int expected = StatPercents.apply(before.total().get(type), added.get(type));
+            check(after.total().get(type) == expected, type + " should become " + expected + " (+"
+                    + Math.round(added.get(type) * 1000) / 10.0 + "%): " + before.total().get(type) + " -> "
+                    + after.total().get(type));
         }
         check(after.modifiers().maxHealthFlat() > before.modifiers().maxHealthFlat(), "the charm adds max health");
         // a second copy of the same accessory is refused
         inventory.items.set(6, RelicDrops.create(alvin.accessory(), random));
         expect(BagService.equip(player, 6, TrinketSlots.Slot.ACCESSORY_2), BagService.EquipResult.DUPLICATE,
                 "the same accessory twice");
+        // four accessories and two charms: catalogue trinkets fill the free slots in order
+        int bagSlot = 7;
+        for (Trinkets.Focus focus : java.util.List.of(Trinkets.Focus.STR, Trinkets.Focus.AGI, Trinkets.Focus.INT)) {
+            inventory.items.set(bagSlot++, EquipmentStacks.create(EquipmentGenerator.roll(
+                    Trinkets.of(Trinkets.Grade.HEROIC, focus, false), ItemRarity.RARE, random)));
+        }
+        inventory.items.set(bagSlot, EquipmentStacks.create(EquipmentGenerator.roll(
+                Trinkets.of(Trinkets.Grade.HEROIC, Trinkets.Focus.STR, true), ItemRarity.RARE, random)));
+        for (int slot = 7; slot <= 10; slot++) {
+            expect(BagService.equip(player, slot), BagService.EquipResult.OK, "catalogue trinket from bag slot " + slot);
+        }
+        for (TrinketSlots.Slot slot : TrinketSlots.Slot.values()) {
+            check(!TrinketSlots.get(player, slot).isEmpty(), slot + " should be worn");
+        }
+        check(TrinketSlots.worn(player).size() == 6, "six trinkets worn, got " + TrinketSlots.worn(player).size());
+        ComposedStats six = PlayerStats.compose(player, data.snapshot(id).orElseThrow());
+        check(six.total().get(StatType.STR) > after.total().get(StatType.STR),
+                "the STR bracelet and stone raise STR further: " + after.total().get(StatType.STR) + " -> "
+                        + six.total().get(StatType.STR));
+        for (TrinketSlots.Slot slot : java.util.List.of(TrinketSlots.Slot.ACCESSORY_2, TrinketSlots.Slot.ACCESSORY_3,
+                TrinketSlots.Slot.ACCESSORY_4, TrinketSlots.Slot.CHARM_2)) {
+            check(BagService.unequip(player, slot), "taking " + slot + " off");
+        }
         // taking it off puts it back into the bag
         check(BagService.unequip(player, TrinketSlots.Slot.ACCESSORY_1), "taking the ring off");
         check(TrinketSlots.get(player, TrinketSlots.Slot.ACCESSORY_1).isEmpty(), "the slot should be empty");

@@ -2,6 +2,7 @@ package com.eternalrealm.client;
 
 import com.eternalrealm.character.CharacterSnapshot;
 import com.eternalrealm.character.StatBlock;
+import com.eternalrealm.character.StatPercents;
 import com.eternalrealm.network.forge.CharacterSnapshotPacket;
 
 import java.util.Optional;
@@ -13,6 +14,7 @@ import java.util.Optional;
 public final class ClientCharacterState {
     private static CharacterSnapshot snapshot;
     private static StatBlock bonusStats = StatBlock.ZERO;
+    private static StatPercents statPercents = StatPercents.ZERO;
 
     private ClientCharacterState() {
     }
@@ -21,9 +23,14 @@ public final class ClientCharacterState {
         return Optional.ofNullable(snapshot);
     }
 
-    /** Stats the job and the equipment add on top of the snapshot's own totals. */
+    /** Stats the job and the equipment add on top of the snapshot's own totals (flat and percentages together). */
     public static StatBlock bonusStats() {
         return bonusStats;
+    }
+
+    /** The equipment's stat percentages (STR +250 %: what multiplies the flat stats). */
+    public static StatPercents statPercents() {
+        return statPercents;
     }
 
     public static void apply(CharacterSnapshotPacket packet) {
@@ -33,11 +40,13 @@ public final class ClientCharacterState {
         }
         snapshot = packet.snapshot();
         bonusStats = packet.bonusStats();
+        statPercents = packet.statPercents();
         ClientCombatState.onCharacter(snapshot);
     }
 
     public static void clear() {
         snapshot = null;
         bonusStats = StatBlock.ZERO;
+        statPercents = StatPercents.ZERO;
     }
 }

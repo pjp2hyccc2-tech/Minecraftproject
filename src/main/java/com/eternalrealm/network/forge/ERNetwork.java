@@ -16,7 +16,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
  */
 public final class ERNetwork {
     /** Bump whenever a packet is added, removed, reordered or its layout changes. */
-    public static final String PROTOCOL_VERSION = "10";
+    public static final String PROTOCOL_VERSION = "11";
 
     private static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
             .named(ResourceLocation.fromNamespaceAndPath(ModInfo.MOD_ID, "main"))
