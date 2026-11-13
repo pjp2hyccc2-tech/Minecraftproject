@@ -41,6 +41,13 @@ public final class ERServerConfig {
     public static final ForgeConfigSpec.BooleanValue IGNORE_PARTY_SIZE;
     public static final ForgeConfigSpec.BooleanValue SPECIAL_MOVES;
     public static final ForgeConfigSpec.BooleanValue DUNGEON_TRAPS;
+    public static final ForgeConfigSpec.BooleanValue CHUNK_PREGEN;
+    public static final ForgeConfigSpec.BooleanValue PREGEN_WHOLE_MAP;
+    public static final ForgeConfigSpec.IntValue PREGEN_MAX_IN_FLIGHT;
+    public static final ForgeConfigSpec.DoubleValue PREGEN_MAX_TICK_MILLIS;
+    public static final ForgeConfigSpec.BooleanValue DUNGEON_PREBUILD;
+    public static final ForgeConfigSpec.BooleanValue MONSTER_AI_THROTTLE;
+    public static final ForgeConfigSpec.IntValue MONSTER_AI_THROTTLE_RANGE;
     public static final ForgeConfigSpec.DoubleValue MOB_KILL_EXP_PER_MAX_HEALTH;
 
     public static final ForgeConfigSpec.ConfigValue<String> SEASON_ID;
@@ -151,6 +158,31 @@ public final class ERServerConfig {
                 .defineInRange("relicDropChance", 0.001, 0.0, 1.0);
         CALAMITY_RELIC_DROP_CHANCE = builder.comment("The same for a field calamity (災厄): one kill in a hundred.")
                 .defineInRange("calamityRelicDropChance", 0.01, 0.0, 1.0);
+        builder.pop();
+
+        builder.comment("Keeping the game light without giving anything up (docs/modules/worldgen.md, boss.md, bestiary.md).")
+                .push("performance");
+        CHUNK_PREGEN = builder.comment("Generate アストリア ahead of the players in the background, without any message: first the",
+                        "12 chunks beyond what each player sees (where they are heading first), then the rest of the map. A",
+                        "chunk made earlier is only read from disk when a player arrives. Works only while the server has",
+                        "time to spare (pregenMaxTickMillis).")
+                .define("chunkPregen", true);
+        PREGEN_WHOLE_MAP = builder.comment("After the chunks ahead of the players, make the rest of the map too (about 44,000 chunks,",
+                        "a few hundred MB of save). Chunks made in advance keep the land of the version that made them.")
+                .define("pregenWholeMap", true);
+        PREGEN_MAX_IN_FLIGHT = builder.comment("Chunks being made at the same time at most (the service starts at 2 and adapts:",
+                        "more while the server is relaxed, half as many when it is busy).")
+                .defineInRange("pregenMaxChunksInFlight", 6, 1, 64);
+        PREGEN_MAX_TICK_MILLIS = builder.comment("New chunks are only started while the average server tick is shorter than this.")
+                .defineInRange("pregenMaxTickMillis", 35.0, 5.0, 50.0);
+        DUNGEON_PREBUILD = builder.comment("Start building a dungeon in the background when a player comes near its gate (or opens",
+                        "the gatekeeper's list after running it), so a run starts without the wait and the lag of building.")
+                .define("dungeonPrebuild", true);
+        MONSTER_AI_THROTTLE = builder.comment("Field monsters that stand idle with no player near think only every fourth tick (they",
+                        "wake up as soon as a player comes near, they are hurt, or they move).")
+                .define("monsterAiThrottle", true);
+        MONSTER_AI_THROTTLE_RANGE = builder.comment("Blocks: no player within this distance counts as \"no player near\".")
+                .defineInRange("monsterAiThrottleRange", 32, 16, 128);
         builder.pop();
 
         builder.comment("Health and hunger. There is no hunger: the food bar is hidden and always full.").push("survival");
