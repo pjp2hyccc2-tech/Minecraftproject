@@ -101,9 +101,16 @@ public final class DungeonService {
     private SlotLedger ledger;
     /** Whether the slots left holding blocks by the last session were handed to the clearing. */
     private boolean restored;
+    /** Parties getting ready to set out (出発の準備). */
+    private final ReadyChecks readyChecks;
 
     public DungeonService(MinecraftServer server) {
         this.server = server;
+        this.readyChecks = new ReadyChecks(this, server);
+    }
+
+    public ReadyChecks readyChecks() {
+        return readyChecks;
     }
 
     ServerPlayer player(UUID id) {
@@ -136,36 +143,50 @@ public final class DungeonService {
 
     // ------------------------------------------------------------------ start
 
+    /** What a start needs once its checks have passed. */
+    private record Plan(List<ServerPlayer> members, Optional<DungeonDefinition> dungeon, RaidDefinition raid,
+                        int areaId, boolean sizeOk, String nameKey, int level) {
+    }
+
+    /** The reason a start is refused, or what it needs. */
+    private record Checked(Optional<Component> refusal, Plan plan) {
+        static Checked no(Component reason) {
+            return new Checked(Optional.of(reason), null);
+        }
+    }
+
     /**
-     * The party (or the solo player) enters a dungeon ("d1".."d8") or the final raid ("final").
-     *
-     * @return why the run could not start (the caller shows it: the gatekeeper's screen does), or empty once the run is
-     *         being prepared
+     * Why {@code leader} could not set out for {@code contentId} right now (not the party's leader, a member offline
+     * or already in a dungeon, the wrong party size, sealed); empty when they could. Changes nothing.
      */
-    public Optional<Component> start(ServerPlayer leader, String contentId, Difficulty difficulty) {
+    public Optional<Component> refusal(ServerPlayer leader, String contentId) {
+        return check(leader, contentId).refusal();
+    }
+
+    private Checked check(ServerPlayer leader, String contentId) {
         ServerContext context = ServerContext.current().orElse(null);
         if (context == null) {
-            return refusal("message.eternalrealm.gate.unavailable");
+            return Checked.no(red("message.eternalrealm.gate.unavailable"));
         }
         Optional<Party> party = context.game().parties().service().partyOf(leader.getUUID());
         if (party.isPresent() && !party.get().isLeader(leader.getUUID())) {
-            return refusal("message.eternalrealm.dungeon.leader_only");
+            return Checked.no(red("message.eternalrealm.dungeon.leader_only"));
         }
         List<ServerPlayer> members = new ArrayList<>();
         for (UUID id : party.map(Party::memberIds).orElse(List.of(leader.getUUID()))) {
             ServerPlayer member = player(id);
             if (member == null) {
-                return refusal("message.eternalrealm.dungeon.member_offline");
+                return Checked.no(red("message.eternalrealm.dungeon.member_offline"));
             }
             if (byMember.containsKey(id)) {
-                return refusal("message.eternalrealm.dungeon.member_busy");
+                return Checked.no(red("message.eternalrealm.dungeon.member_busy"));
             }
             members.add(member);
         }
         Optional<DungeonDefinition> dungeon = Dungeons.byId(contentId);
         RaidDefinition raid = Dungeons.FINAL_RAID.id().equals(contentId) ? Dungeons.FINAL_RAID : null;
         if (dungeon.isEmpty() && raid == null) {
-            return refusal("message.eternalrealm.gate.unavailable");
+            return Checked.no(red("message.eternalrealm.gate.unavailable"));
         }
         int areaId;
         int minSize;
@@ -190,13 +211,36 @@ public final class DungeonService {
             level = raid.recommendedLevel();
         }
         if (!sizeOk && !com.eternalrealm.config.ERServerConfig.IGNORE_PARTY_SIZE.get()) {
-            return Optional.of(Component.translatable("message.eternalrealm.dungeon.party_size", minSize, maxSize)
+            return Checked.no(Component.translatable("message.eternalrealm.dungeon.party_size", minSize, maxSize)
                     .withStyle(ChatFormatting.RED));
         }
         if (!context.game().world().isUnlocked(areaId)
                 || (raid != null && !context.game().world().progress().finalBossUnlocked())) {
-            return refusal("message.eternalrealm.dungeon.locked");
+            return Checked.no(red("message.eternalrealm.dungeon.locked"));
         }
+        return new Checked(Optional.empty(), new Plan(List.copyOf(members), dungeon, raid, areaId, sizeOk, nameKey,
+                level));
+    }
+
+    /**
+     * The party (or the solo player) enters a dungeon ("d1".."d8") or the final raid ("final").
+     *
+     * @return why the run could not start (the caller shows it: the gatekeeper's screen does), or empty once the run is
+     *         being prepared
+     */
+    public Optional<Component> start(ServerPlayer leader, String contentId, Difficulty difficulty) {
+        Checked checked = check(leader, contentId);
+        if (checked.refusal().isPresent()) {
+            return checked.refusal();
+        }
+        Plan plan = checked.plan();
+        List<ServerPlayer> members = plan.members();
+        Optional<DungeonDefinition> dungeon = plan.dungeon();
+        RaidDefinition raid = plan.raid();
+        int areaId = plan.areaId();
+        boolean sizeOk = plan.sizeOk();
+        String nameKey = plan.nameKey();
+        int level = plan.level();
         DungeonSite site = prepared.remove(contentId);
         Optional<InstanceSlot> slot = site != null ? Optional.of(site.slot) : allocator.allocate();
         if (slot.isEmpty() && !prepared.isEmpty()) {
@@ -255,8 +299,8 @@ public final class DungeonService {
         return Optional.empty();
     }
 
-    private static Optional<Component> refusal(String key) {
-        return Optional.of(Component.translatable(key).withStyle(ChatFormatting.RED));
+    private static Component red(String key) {
+        return Component.translatable(key).withStyle(ChatFormatting.RED);
     }
 
     /** The dungeon (or "final") the player last set out for since the server started, if any. */
@@ -269,6 +313,11 @@ public final class DungeonService {
     public void tick(long now) {
         if (!restored) {
             restoreLeftovers();
+        }
+        try {
+            readyChecks.tick(now);
+        } catch (RuntimeException e) {
+            org.slf4j.LoggerFactory.getLogger(DungeonService.class).error("Ready checks failed", e);
         }
         long buildDeadline = System.nanoTime() + ACTIVE_BUILD_NANOS;
         for (DungeonInstance instance : List.copyOf(instances)) {
@@ -363,6 +412,13 @@ public final class DungeonService {
     }
 
     /** A gatekeeper's list was opened: the dungeon this player ran last is prepared again. */
+    /** A party is getting ready for {@code contentId} (a ready check): its site starts being built meanwhile. */
+    public void prepareAhead(String contentId) {
+        if (prebuildEnabled()) {
+            prepare(contentId, server.getTickCount());
+        }
+    }
+
     public void onGatekeeper(ServerPlayer player) {
         String last = lastRun.get(player.getUUID());
         if (last != null && !byMember.containsKey(player.getUUID()) && prebuildEnabled()) {

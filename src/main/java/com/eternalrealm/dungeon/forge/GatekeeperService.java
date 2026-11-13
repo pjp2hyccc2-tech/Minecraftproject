@@ -166,9 +166,10 @@ public final class GatekeeperService {
     }
 
     /**
-     * Sends the player's party off to {@code id} if their screen is still good for it ({@link GateBoard.Session}).
+     * Sends the player's party off to {@code id} if their screen is still good for it ({@link GateBoard.Session}); a
+     * party of two or more first gets a ready check ({@link ReadyChecks}).
      *
-     * @return why not, or empty once the run is being prepared
+     * @return why not, or empty once the run is being prepared (or the party is being asked)
      * @throws UiArgs.InvalidArgumentException for an id that is no dungeon (only a tampered client sends one)
      */
     public static Optional<Component> setOut(ServerPlayer player, ServerContext context, String id,
@@ -182,7 +183,12 @@ public final class GatekeeperService {
             SESSIONS.remove(player.getUUID());
             return Optional.of(Component.translatable("message.eternalrealm.gate.too_far"));
         }
-        Optional<Component> refusal = context.game().dungeons().start(player, id, difficulty);
+        // a party of two or more is asked whether everyone is ready first (出発の準備); a player alone goes at once
+        Optional<Party> party = context.game().parties().service().partyOf(player.getUUID());
+        Optional<Component> refusal = party.isPresent() && party.get().size() > 1
+                && party.get().isLeader(player.getUUID())
+                ? context.game().dungeons().readyChecks().begin(player, party.get(), id, difficulty)
+                : context.game().dungeons().start(player, id, difficulty);
         if (refusal.isEmpty()) {
             SESSIONS.remove(player.getUUID());
         }

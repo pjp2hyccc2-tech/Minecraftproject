@@ -116,13 +116,29 @@ public final class DungeonEvents {
         }
     }
 
-    /** {@code /dungeon leave}: give up and go back. */
+    /**
+     * {@code /dungeon leave}: give up and go back. {@code /dungeon ready ok|wait|open|cancel}: answer the party's ready
+     * check (the chat buttons run these), open its screen again, or (the leader) call it off.
+     */
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
         dispatcher.register(Commands.literal("dungeon").then(Commands.literal("leave").executes(ctx -> {
             ServerPlayer player = ctx.getSource().getPlayerOrException();
             ServerContext.current().ifPresent(context -> context.game().dungeons().leave(player));
             return 1;
-        })));
+        })).then(Commands.literal("ready")
+                .then(Commands.literal("ok").executes(ctx -> ready(ctx.getSource(), (checks, p) -> checks.answer(p, true))))
+                .then(Commands.literal("wait").executes(ctx -> ready(ctx.getSource(),
+                        (checks, p) -> checks.answer(p, false))))
+                .then(Commands.literal("open").executes(ctx -> ready(ctx.getSource(), ReadyChecks::show)))
+                .then(Commands.literal("cancel").executes(ctx -> ready(ctx.getSource(), ReadyChecks::callOff)))));
+    }
+
+    private static int ready(CommandSourceStack source,
+                             java.util.function.BiConsumer<ReadyChecks, ServerPlayer> action)
+            throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        ServerPlayer player = source.getPlayerOrException();
+        ServerContext.current().ifPresent(context -> action.accept(context.game().dungeons().readyChecks(), player));
+        return 1;
     }
 }
