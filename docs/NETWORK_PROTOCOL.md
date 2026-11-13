@@ -195,3 +195,12 @@
   ダンジョンでない id・知らない難易度は違反。門番が開いた画面（5分以内・8ブロック以内・同じ次元）からだけ受け付ける。
 - S→C UI データ `gatekeeper.result`: `{ok}`、断ったときは `message`（コンポーネントの JSON）。
 
+### 出発の準備（2026-11-13・パケット追加なし）
+
+- 転移門の `gate.start` が2人以上のパーティのリーダーから来ると、すぐには始めず出発の準備を始める（`ok` の返事はそのまま）。
+- S→C UI データ `ready_check`: 確認中は `{active: true, open, id, name, difficulty, phase: "waiting"|"countdown", left, leader,
+  members: [{id, name, ready, leader}]}`（`open` は画面を開くとき、`left` は残りの tick）。答えが変わる・秒読みが始まる／止まる
+  たびに全員に送る。終わると `{active: false, outcome: "go"|"cancelled"|"changed"|"timeout"|"failed", message}`。
+- C→S UI 操作 `ready.set`（`{ready: true|false}`）、`ready.cancel`（リーダーだけ）、`ready.open`（画面をもう一度）。確認中でない人や
+  リーダーでない人の中止は違反ではなく、アクションバーに理由。同じことをチャットのボタンが `/dungeon ready ok|wait|open|cancel` で行う。
+

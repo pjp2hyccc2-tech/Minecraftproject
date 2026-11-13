@@ -577,3 +577,18 @@ The owner found the dungeon selection bland (「ダンジョンの選択画面�
   hardest open dungeon the player's level is ready for. The difficulty chosen last stays chosen. The screen does not pause
   the game, so the dungeon prepared for the player keeps building while they read.
 
+## D-READYCHECK: a party is asked whether everyone is ready before it sets out (2026-11-13)
+
+The owner asked whether several parties opening the same dungeon at once would overlap (they do not: every run is built in a
+slot of its own, 1,024 blocks apart, and a slot is reused only once cleared) and for a ready button per member
+(「メンバーの準備ができてるかのボタンを置いて欲しい 準備中、準備OKって感じで」). Decisions:
+- **Only for parties**: a player alone still sets out at once; a party of two or more led by the player at the gate gets a
+  ready check. The leader is ready from the start (they asked); the others answer 準備OK / 準備中 and can change their mind.
+- **Everyone ready → 3-second countdown → set out**, without the leader pressing again; anyone going back to 準備中 stops the
+  countdown. The leader can call it off; a changed party (someone leaves, joins, goes offline, enters a dungeon, the leader
+  changes) ends it; so do 2 minutes without everyone ready (the chat says who was not ready). `DungeonService.start` checks
+  everything again when the countdown ends, and the dungeon's site is built while the party gets ready.
+- **Answering from anywhere**: members may be in the field when the leader asks, so the check opens a screen only for those
+  with no other screen up, and stays on the HUD (and on the party frames) while closed; the chat carries [準備OK] [準備中]
+  [画面を開く] buttons (`/dungeon ready ...`). No new key binding.
+
