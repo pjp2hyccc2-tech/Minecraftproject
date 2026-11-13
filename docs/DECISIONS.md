@@ -475,3 +475,18 @@ A level-100 build topped out near STR 614 (×13 physical damage). Decisions:
   (protocol 11) and is re-sent whenever gear changes the stats.
 - **Not rebalanced (yet)**: monster health and damage are unchanged, so endgame damage rises steeply (STR 4,000 ≈ ×81
   physical damage). Scaling monsters is a separate decision for the owner.
+
+### D-STATPERCENT, revised the same day: every specialised stat reaches about 4 000, and the capped stats overflow
+The owner: 「STRだけじゃなくて、そのステータスに特化したらどれでもそれくらいいくようにして」. Two things stood in the way:
+- **Sources were uneven**: armor rolled STR %, INT % and DEX % on every piece but AGI % and LUK % on one or two, and AGI
+  and LUK sat flat on only two armor pieces. Now every armor piece rolls all six percentages (weight 1 each), AGI is
+  added flat to the chest and LUK to the legs (three pieces each, like STR, INT and DEX; VIT on all four). A perfect
+  build of any stat collects +706.7 %: STR, AGI, DEX, LUK 3,912, VIT 4,081 (a priest's staff rolls VIT), INT 4,711 for
+  the mage whose job grows INT twice as fast (3,912 for a priest). `StatGrowthTest` checks all six.
+- **Three stats stopped working long before 4 000**: max health is capped at +1,000 (Minecraft's attribute), damage
+  reduction at 75 %, attack speed at ×0.6 action time, critical chance at 75 %. Instead of raising those caps (which
+  would break the vanilla attribute, animations and invulnerability), what lies beyond a cap turns into something
+  else, with diminishing returns and its own cap: excess critical chance becomes critical damage 1 : 1 (LUK, within ×10),
+  excess attack speed becomes evasion up to 30 % (AGI; with trinket perks and the evasion effect at most 60 %), excess
+  max health becomes damage reduction on top of the cap, up to +15 % (VIT, 90 % at most). Below the caps nothing changes.
+  CombatStats carries the evasion (protocol 12).

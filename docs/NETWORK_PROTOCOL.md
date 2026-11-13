@@ -5,7 +5,7 @@
 | 項目 | 値 |
 |---|---|
 | チャンネル | `eternalrealm:main`（Forge SimpleChannel） |
-| プロトコル版 | `"11"`（`ERNetwork.PROTOCOL_VERSION`）。Phase 2 で戦闘パケット追加のため 1→2、以後の追加を経て、スキルツリー（職業スキル枠5・6、職業武器の拒否、スナップショットのスキル枠）で 4→5、HUD 刷新（`UseItemPacket`、戦闘値の回復薬補正）で 5→6、カバンの取得表示（`PickupFeedPacket`）で 6→7、スキルのロックオン（`CombatActionPacket` に targetId）で 7→8、伝説の旅人の技の演出（`HeroFxPacket`）で 8→9、スキルの光（`SkillFxPacket`）で 9→10、ステータス％（`CharacterSnapshotPacket` の末尾に装備の％）で 10→11 |
+| プロトコル版 | `"12"`（`ERNetwork.PROTOCOL_VERSION`）。Phase 2 で戦闘パケット追加のため 1→2、以後の追加を経て、スキルツリー（職業スキル枠5・6、職業武器の拒否、スナップショットのスキル枠）で 4→5、HUD 刷新（`UseItemPacket`、戦闘値の回復薬補正）で 5→6、カバンの取得表示（`PickupFeedPacket`）で 6→7、スキルのロックオン（`CombatActionPacket` に targetId）で 7→8、伝説の旅人の技の演出（`HeroFxPacket`）で 8→9、スキルの光（`SkillFxPacket`）で 9→10、ステータス％（`CharacterSnapshotPacket` の末尾に装備の％）で 10→11、見切り（`CombatStatsPacket` の末尾に evasion）で 11→12 |
 | 互換性 | クライアント・サーバーとも**完全一致のみ受け入れ**。MOD未導入のクライアントは接続時に拒否 |
 | 版上げ条件 | パケットの追加・削除・順序変更・フィールド変更のいずれか |
 
@@ -176,3 +176,8 @@
   （版が違えばログインできない）。
 - UI 操作: `bag.equip` / `bag.unequip` の `target` に `accessory_3`・`accessory_4`・`charm_2`、`smith.enhance` / `smith.reroll` の
   `slot` に 41〜46（身に着けた装身具）。
+
+## 付録: 見切り（版 12: `CombatStatsPacket` に evasion）
+
+- `CombatStatsPacket`: 22個の double の後に **evasion**（double、0〜0.30。攻撃速度の上限を超えた分から。`CombatStats.evasion`）。
+  最大 23×8 = 184 B。
