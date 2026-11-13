@@ -89,7 +89,7 @@ public final class FantasyChat {
             GuiGraphics graphics = event.getGuiGraphics();
             int width = event.getWindow().getGuiScaledWidth();
             int height = event.getWindow().getGuiScaledHeight();
-            if (minecraft.gui.getChat().isChatFocused()) {
+            if (minecraft.screen instanceof ChatScreen) { // the chat is open (what vanilla calls focused)
                 openWindow = window(minecraft, height);
                 ChatArt.back(graphics, openWindow[0], openWindow[1], openWindow[2], openWindow[3], 1.0F, 0x70);
             } else {
