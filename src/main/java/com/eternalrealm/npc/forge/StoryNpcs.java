@@ -46,7 +46,10 @@ public final class StoryNpcs {
     /** Places (or moves back) any story character ({@link com.eternalrealm.story.StoryNpc} id) at {@code pos}. */
     public static Optional<Mob> ensure(ServerLevel level, BlockPos pos, String characterId, Component name, float yaw) {
         Optional<Mob> npc = Npcs.ensure(level, pos, NpcRole.STORY, yaw, CHARACTER, characterId);
-        npc.ifPresent(mob -> mob.setCustomName(name.copy().withStyle(ChatFormatting.AQUA)));
+        npc.ifPresent(mob -> {
+            mob.setCustomName(name.copy().withStyle(ChatFormatting.AQUA));
+            NpcWhereabouts.saw(mob);
+        });
         return npc;
     }
 

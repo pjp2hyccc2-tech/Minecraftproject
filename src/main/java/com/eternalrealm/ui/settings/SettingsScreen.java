@@ -27,6 +27,7 @@ public final class SettingsScreen extends Screen {
 
     private static final List<Option> OPTIONS = List.of(
             new Option("flag_animation", ERClientConfig.FLAG_ANIMATION),
+            new Option("quest_path", ERClientConfig.QUEST_PATH),
             new Option("hud", ERClientConfig.HUD_ENABLED),
             new Option("minimap", ERClientConfig.MINIMAP_ENABLED),
             new Option("minimap_rotate", ERClientConfig.MINIMAP_ROTATE),

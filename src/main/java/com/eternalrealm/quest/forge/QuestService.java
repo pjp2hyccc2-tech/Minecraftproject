@@ -68,6 +68,7 @@ public final class QuestService {
     private final ZoneId zone = ZoneId.systemDefault();
     private final QuestEngine engine = new QuestEngine(Quests.catalog());
     private final Map<UUID, QuestLogState> logs = new HashMap<>();
+    private final QuestGuides guides;
     private long dayIndex;
 
     public QuestService(MinecraftServer server, PlayerDataService playerData, WorldService world,
@@ -78,11 +79,18 @@ public final class QuestService {
         this.rankings = Objects.requireNonNull(rankings, "rankings");
         this.clock = Objects.requireNonNull(clock, "clock");
         this.dayIndex = currentDay();
+        this.guides = new QuestGuides(this, server);
         world.onEnter((player, area) -> event(player, new GameEvent.AreaEntered(area.id())));
     }
 
     public QuestEngine engine() {
         return engine;
+    }
+
+    /** The player chose which quest the yellow dots follow ("" the default, "-" none): the journal's 案内 button. */
+    public void guide(ServerPlayer player, String questId) {
+        guides.choose(player, questId);
+        sendView(player);
     }
 
     private long currentDay() {
@@ -301,6 +309,7 @@ public final class QuestService {
     }
 
     public void tickSecond() {
+        guides.tick();
         long day = currentDay();
         if (day == dayIndex) {
             return;
@@ -317,6 +326,7 @@ public final class QuestService {
 
     public void onLogout(UUID playerId) {
         logs.remove(playerId);
+        guides.onLogout(playerId);
     }
 
     // ------------------------------------------------------------------ text
@@ -427,6 +437,7 @@ public final class QuestService {
         }
         data.add("available", available);
         data.addProperty("max", QuestEngine.MAX_ACTIVE_QUESTS);
+        data.addProperty("guided", guides.guidedQuest(player));
         UiData.send(player, CHANNEL, data);
     }
 

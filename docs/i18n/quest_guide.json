@@ -1,0 +1,16 @@
+{
+  "guide.eternalrealm.talk": {"ja": "%sと話す", "en": "Talk to %s"},
+  "guide.eternalrealm.turn_in": {"ja": "%sに報告する", "en": "Report to %s"},
+  "guide.eternalrealm.area": {"ja": "%sへ向かう", "en": "Head to %s"},
+  "guide.eternalrealm.hunt": {"ja": "%sを狩る", "en": "Hunt %s"},
+  "guide.eternalrealm.hunt_any": {"ja": "%sで魔物を狩る", "en": "Hunt monsters in %s"},
+  "guide.eternalrealm.collect": {"ja": "%sを集める", "en": "Gather %s"},
+  "guide.eternalrealm.dungeon": {"ja": "%sに挑む", "en": "Enter %s"},
+  "guide.eternalrealm.boss": {"ja": "%sを討つ", "en": "Defeat %s"},
+  "screen.eternalrealm.quest.guide": {"ja": "案内", "en": "Guide"},
+  "screen.eternalrealm.quest.guiding": {"ja": "案内中", "en": "Guiding"},
+  "screen.eternalrealm.quest.guide.tooltip": {"ja": "地面の黄色い点々で、このクエストの次の目的地まで道案内する。", "en": "Yellow dots on the ground lead you to this quest's next place."},
+  "screen.eternalrealm.quest.guiding.tooltip": {"ja": "このクエストを道案内中。押すと案内をやめる。", "en": "This quest is being guided. Press to stop guiding."},
+  "screen.eternalrealm.settings.quest_path": {"ja": "クエストの道案内", "en": "Quest path"},
+  "screen.eternalrealm.settings.quest_path.tooltip": {"ja": "案内中のクエストの目的地まで、地面とミニマップに黄色い点々で道を示す。どのクエストを案内するかは冒険手帳のクエストの「案内」で選ぶ（最初はメインクエスト）。", "en": "Yellow dots on the ground and the minimap show the way to the guided quest's next place. Pick the quest with Guide in the journal's quest page (the main quest at first)."}
+}

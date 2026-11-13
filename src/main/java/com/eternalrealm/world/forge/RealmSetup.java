@@ -41,8 +41,7 @@ import java.util.Set;
 public final class RealmSetup {
     private static final Map<NpcRole, HubSpot> SPOTS = new EnumMap<>(NpcRole.class);
     /** The dungeon entrance where each area's quest giver waits (Nordia's at the prison, d4). */
-    private static final Map<String, String> GIVER_AT = Map.of("elder_forest_sage", "d2", "sandria_caravan_master", "d3",
-            "nordia_chieftain", "d4", "dragonia_blacksmith", "d6", "celestia_oracle", "d7", "tower_watcher", "d8");
+    private static final Map<String, String> GIVER_AT = com.eternalrealm.world.guide.AstoriaPlaces.GIVER_DUNGEONS;
     private static final List<StoryNpc> CHARACTERS = List.of(StoryNpc.LILIA, StoryNpc.GUSTAV, StoryNpc.NOX,
             StoryNpc.LASZLO, StoryNpc.WOLFRAM);
     private static final Set<String> ENTRANCES_DONE = new HashSet<>();

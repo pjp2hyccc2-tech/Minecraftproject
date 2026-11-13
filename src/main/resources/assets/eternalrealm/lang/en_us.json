@@ -7290,5 +7290,19 @@
   "screen.eternalrealm.ready.hint": "Closing this keeps the check going; the buttons in chat answer it too",
   "screen.eternalrealm.ready.went": "Setting out!",
   "screen.eternalrealm.ready.hud_waiting": "You: not yet - answer with [Ready] in chat",
-  "screen.eternalrealm.ready.hud_ready": "You: ready - waiting for the others"
+  "screen.eternalrealm.ready.hud_ready": "You: ready - waiting for the others",
+  "guide.eternalrealm.talk": "Talk to %s",
+  "guide.eternalrealm.turn_in": "Report to %s",
+  "guide.eternalrealm.area": "Head to %s",
+  "guide.eternalrealm.hunt": "Hunt %s",
+  "guide.eternalrealm.hunt_any": "Hunt monsters in %s",
+  "guide.eternalrealm.collect": "Gather %s",
+  "guide.eternalrealm.dungeon": "Enter %s",
+  "guide.eternalrealm.boss": "Defeat %s",
+  "screen.eternalrealm.quest.guide": "Guide",
+  "screen.eternalrealm.quest.guiding": "Guiding",
+  "screen.eternalrealm.quest.guide.tooltip": "Yellow dots on the ground lead you to this quest's next place.",
+  "screen.eternalrealm.quest.guiding.tooltip": "This quest is being guided. Press to stop guiding.",
+  "screen.eternalrealm.settings.quest_path": "Quest path",
+  "screen.eternalrealm.settings.quest_path.tooltip": "Yellow dots on the ground and the minimap show the way to the guided quest's next place. Pick the quest with Guide in the journal's quest page (the main quest at first)."
 }

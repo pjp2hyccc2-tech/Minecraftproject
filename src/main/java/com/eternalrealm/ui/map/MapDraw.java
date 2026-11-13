@@ -78,6 +78,36 @@ public final class MapDraw {
         end(buffer);
     }
 
+    /**
+     * Many small dots in one draw call: each centre ({x, y} pairs, {@code count} of them) gets a dark disc of
+     * {@code outline} radius under a {@code fill} disc of {@code radius}.
+     */
+    public static void dots(GuiGraphics graphics, float[] centres, int count, float radius, float outline, int fill,
+                            int outlineArgb) {
+        if (count <= 0) {
+            return;
+        }
+        Matrix4f matrix = graphics.pose().last().pose();
+        BufferBuilder buffer = begin(graphics, false);
+        int segments = 8;
+        for (int pass = 0; pass < 2; pass++) {
+            float r = pass == 0 ? outline : radius;
+            int argb = pass == 0 ? outlineArgb : fill;
+            for (int n = 0; n < count; n++) {
+                float cx = centres[n * 2];
+                float cy = centres[n * 2 + 1];
+                for (int i = 0; i < segments; i++) {
+                    double a0 = Math.PI * 2.0 * i / segments;
+                    double a1 = Math.PI * 2.0 * (i + 1) / segments;
+                    colored(buffer, matrix, cx, cy, argb);
+                    colored(buffer, matrix, cx + (float) Math.cos(a1) * r, cy + (float) Math.sin(a1) * r, argb);
+                    colored(buffer, matrix, cx + (float) Math.cos(a0) * r, cy + (float) Math.sin(a0) * r, argb);
+                }
+            }
+        }
+        end(buffer);
+    }
+
     /** A filled triangle. */
     public static void triangle(GuiGraphics graphics, float x1, float y1, float x2, float y2, float x3, float y3,
                                 int argb) {

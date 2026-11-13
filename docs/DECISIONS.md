@@ -592,3 +592,22 @@ slot of its own, 1,024 blocks apart, and a slot is reused only once cleared) and
   with no other screen up, and stays on the HUD (and on the party frames) while closed; the chat carries [準備OK] [準備中]
   [画面を開く] buttons (`/dungeon ready ...`). No new key binding.
 
+
+## D-QUESTPATH: yellow dots lead to where the guided quest wants the player next (2026-11-13)
+
+The owner asked for the way to a quest's place to be shown with yellow dots (「クエストの場所までの道を黄色い点々で表示してあげて欲しい。
+入り組んでて分からない人多いと思うから」). Decisions:
+- **The server knows where, the client knows the way**: the server picks the place from the quest (pure `QuestGuide`: report to
+  the giver when ready, otherwise the first unfinished objective — an NPC, a field, the nearest haunt of a monster or of one that
+  drops the item, a dungeon's gate) and sends only that point; the client finds the walkable way over the blocks it has loaded
+  (pure `PathSearch`, an A* over standing cells: steps up one block, drops up to three, swims at a cost, never into lava or fire,
+  through wooden doors and gates). The server never pathfinds for players, and the client needs no world it does not have.
+- **A little each tick, never a hitch**: 1,500 cells per tick, within 96 blocks and 30,000 cells. A place farther than that, or
+  in chunks not loaded yet, gets dots to where the route comes closest, searched again as the player walks (every 3 s after
+  12 blocks) and at once when they stray 4 blocks from the dots. Dots walked past disappear.
+- **One quest at a time, the player's choice**: the journal's quest page has a 案内 button per quest; the main quest is guided
+  until the player picks another, and pressing the guided one again turns the guide off. The settings screen can hide the dots
+  altogether. Quest NPCs that walk about are found where the server last saw them.
+- **Readable, not loud**: small glowing discs on the ground with a slow wave of light running towards the place, fading out
+  past 56 blocks; a pillar of golden light where the route reaches the place; the same dots, a golden star and the distance on
+  the minimap. No depth writes, so dots behind walls stay hidden.

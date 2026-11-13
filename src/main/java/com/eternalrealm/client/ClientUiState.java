@@ -57,6 +57,12 @@ public final class ClientUiState {
                 ? element.getAsLong() : fallback;
     }
 
+    public static double doubleOr(JsonObject object, String key, double fallback) {
+        JsonElement element = object.get(key);
+        return element != null && element.isJsonPrimitive() && element.getAsJsonPrimitive().isNumber()
+                ? element.getAsDouble() : fallback;
+    }
+
     public static String stringOr(JsonObject object, String key, String fallback) {
         JsonElement element = object.get(key);
         return element != null && element.isJsonPrimitive() ? element.getAsString() : fallback;

@@ -14,8 +14,8 @@ import net.minecraft.network.chat.MutableComponent;
 import java.util.Optional;
 
 /**
- * Quest page: the active quests with their objectives (turn in when ready, abandon) on the left, the quests that can
- * be accepted now on the right. Main quests are gold, side quests aqua, dailies green.
+ * Quest page: the active quests with their objectives (turn in when ready, guide there with the yellow dots, abandon) on
+ * the left, the quests that can be accepted now on the right. Main quests are gold, side quests aqua, dailies green.
  */
 public final class QuestScreen extends JournalScreen {
     private static final int COLUMN = CONTENT_WIDTH / 2 - 4;
@@ -37,6 +37,7 @@ public final class QuestScreen extends JournalScreen {
             return;
         }
         int y = top + 26;
+        String guided = ClientUiState.stringOr(data.get(), "guided", "");
         for (JsonElement element : data.get().getAsJsonArray("active")) {
             JsonObject quest = element.getAsJsonObject();
             String id = ClientUiState.stringOr(quest, "id", "");
@@ -44,8 +45,19 @@ public final class QuestScreen extends JournalScreen {
             int buttonY = y + 11 + lines * 10;
             if (quest.has("ready") && quest.get("ready").getAsBoolean()) {
                 addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.quest.turn_in"),
-                        b -> send("quest.turn_in", id)).bounds(left, buttonY, 60, 14).build());
+                        b -> send("quest.turn_in", id)).bounds(left, buttonY, 50, 14).build());
             }
+            // 案内: the yellow dots lead to this quest's next place; pressed again, no dots
+            boolean guiding = id.equals(guided);
+            addRenderableWidget(Button.builder(guiding
+                            ? Component.translatable("screen.eternalrealm.quest.guiding").withStyle(
+                            net.minecraft.ChatFormatting.GOLD)
+                            : Component.translatable("screen.eternalrealm.quest.guide"),
+                    b -> send("quest.guide", guiding ? "-" : id))
+                    .bounds(left + COLUMN - 104, buttonY, 50, 14)
+                    .tooltip(net.minecraft.client.gui.components.Tooltip.create(Component.translatable(guiding
+                            ? "screen.eternalrealm.quest.guiding.tooltip" : "screen.eternalrealm.quest.guide.tooltip")))
+                    .build());
             addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.quest.abandon"),
                     b -> send("quest.abandon", id)).bounds(left + COLUMN - 50, buttonY, 50, 14).build());
             y = buttonY + 18;

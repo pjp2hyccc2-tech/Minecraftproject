@@ -18,6 +18,14 @@ public final class QuestActions {
 
     public static void register() {
         UiActions.register("quest.view", (player, context, args) -> context.game().quests().sendView(player));
+        // which quest the yellow dots follow: a quest id, "" for the default (the main quest), "-" for none
+        UiActions.register("quest.guide", (player, context, args) -> {
+            String id = args.has("id") && args.get("id").isJsonPrimitive() ? args.get("id").getAsString() : "";
+            if (!id.isEmpty() && !id.equals("-") && !id.matches("[a-z0-9_]{1,64}")) {
+                throw new com.eternalrealm.server.UiArgs.InvalidArgumentException("bad quest id");
+            }
+            context.game().quests().guide(player, id);
+        });
         UiActions.register("quest.accept", (player, context, args) ->
                 context.game().quests().accept(player, UiArgs.id(args, "id")));
         UiActions.register("quest.abandon", (player, context, args) ->

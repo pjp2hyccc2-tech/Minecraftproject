@@ -22,6 +22,7 @@ public final class ERClientConfig {
     public static final ForgeConfigSpec.BooleanValue DIALOGUE_AUTO_ADVANCE;
     public static final ForgeConfigSpec.IntValue DIALOGUE_TEXT_SPEED;
     public static final ForgeConfigSpec.BooleanValue FLAG_ANIMATION;
+    public static final ForgeConfigSpec.BooleanValue QUEST_PATH;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -58,6 +59,10 @@ public final class ERClientConfig {
         builder.comment("Scenery").push("scenery");
         FLAG_ANIMATION = builder.comment("Flags, banners and bunting wave in the wind (false: they hang still in a light breeze,",
                 "which is lighter in the capital with its hundreds of flags)").define("flagAnimation", true);
+        builder.pop();
+        builder.comment("Quest guide").push("guide");
+        QUEST_PATH = builder.comment("Yellow dots on the ground lead to where the guided quest wants you next (pick the quest",
+                "with the 案内 button in the journal)").define("questPath", true);
         builder.pop();
         SPEC = builder.build();
     }

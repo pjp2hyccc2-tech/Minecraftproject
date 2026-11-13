@@ -39,6 +39,10 @@ public final class MinimapOverlay implements IGuiOverlay {
     private static final int RIM_DARK = 0xFF2A2016;
     private static final int PARTY = 0xFF55E0FF;
     private static final int PLAYER = 0xFFFFFFFF;
+    /** The quest guide's yellow (dots, the arrow and the distance). */
+    private static final int GUIDE_DOT = 0xFFFFD447;
+    /** On the minimap the dots are this far apart (px). */
+    private static final double GUIDE_GAP = 3.5;
     private static final net.minecraft.resources.ResourceLocation NPC_ICONS = new net.minecraft.resources.ResourceLocation(
             com.eternalrealm.core.ModInfo.MOD_ID, NpcMarkers.ATLAS);
     /** Size of an NPC icon on the minimap (GUI pixels) and of its label text. */
@@ -98,6 +102,9 @@ public final class MinimapOverlay implements IGuiOverlay {
         if (minecraft.level == null) {
             return lines;
         }
+        if (com.eternalrealm.client.guide.GuideClient.active()) {
+            lines++; // "▶ 森の賢者と話す 238m"
+        }
         if (ClientMapState.inDungeonDimension(minecraft.level) && ClientMapState.view().dungeon().isPresent()) {
             return lines + 2;
         }
@@ -129,6 +136,7 @@ public final class MinimapOverlay implements IGuiOverlay {
         }
 
         Marker marker = new Marker(graphics, cx, cy, radius, px, pz, yaw, rotate, pixelsPerBlock);
+        marker.route(com.eternalrealm.client.guide.GuideClient.dots());
         boolean dungeon = ClientMapState.inDungeonDimension(minecraft.level);
         if (dungeon) {
             view.dungeon().ifPresent(d -> {
@@ -151,6 +159,8 @@ public final class MinimapOverlay implements IGuiOverlay {
                 }
             }
         }
+        com.eternalrealm.client.guide.GuideClient.target().ifPresent(target -> marker.goal(target[0], target[1],
+                minecraft.level.getGameTime() + partialTick));
         String here = ClientMapState.dimensionOf(minecraft.level);
         for (MapView.Member member : view.party()) {
             if (!member.dimension().equals(here)) {
@@ -194,11 +204,38 @@ public final class MinimapOverlay implements IGuiOverlay {
             y = centered(graphics, font, WorldMapScreen.levelRange(definition).copy().withStyle(ChatFormatting.GRAY), area,
                     y, bottom);
         }
+        y = guideLine(graphics, font, area, y, bottom, player);
         if (coordinates()) {
             String text = String.format(Locale.ROOT, "%d, %d, %d", player.getBlockX(), player.getBlockY(),
                     player.getBlockZ());
             centered(graphics, font, Component.literal(text).withStyle(ChatFormatting.GRAY), area, y, bottom);
         }
+    }
+
+    /**
+     * "▶ 森の賢者と話す 238m": where the yellow dots lead, shortened to the width with the distance kept whole.
+     *
+     * @return the next line's top
+     */
+    private static int guideLine(GuiGraphics graphics, Font font, com.eternalrealm.hud.Rect area, int y, int bottom,
+                                 LocalPlayer player) {
+        java.util.Optional<double[]> target = com.eternalrealm.client.guide.GuideClient.target();
+        java.util.Optional<Component> label = com.eternalrealm.client.guide.GuideClient.label();
+        if (target.isEmpty() || label.isEmpty() || y + font.lineHeight > bottom + 1) {
+            return y;
+        }
+        int metres = (int) Math.round(Math.hypot(target.get()[0] - player.getX(), target.get()[1] - player.getZ()));
+        String distance = " " + metres + "m";
+        String arrow = "▶ ";
+        int room = area.width() - font.width(arrow) - font.width(distance);
+        net.minecraft.util.FormattedCharSequence text = font.split(label.get(), Math.max(8, room)).stream()
+                .findFirst().orElse(net.minecraft.util.FormattedCharSequence.EMPTY);
+        int width = font.width(arrow) + font.width(text) + font.width(distance);
+        int x = area.x() + (area.width() - width) / 2;
+        x = graphics.drawString(font, arrow, x, y, GUIDE_DOT, true);
+        x = graphics.drawString(font, text, x, y, 0xFFF4E8C8, true);
+        graphics.drawString(font, distance, x, y, GUIDE_DOT, true);
+        return y + font.lineHeight + 1;
     }
 
     /** "部屋 2/4", the boss room, or the entrance hall before the start. */
@@ -256,6 +293,73 @@ public final class MinimapOverlay implements IGuiOverlay {
         private double[] at(double x, double z, float inset) {
             double[] offset = MapMath.toMinimap(x - px, z - pz, yaw, rotate, pixelsPerBlock);
             return offset[0] * offset[0] + offset[1] * offset[1] <= (radius - inset) * (radius - inset) ? offset : null;
+        }
+
+        /** The quest guide's route: little yellow dots a few pixels apart (whatever the zoom). */
+        void route(java.util.List<double[]> dots) {
+            if (dots.size() < 2) {
+                return;
+            }
+            double blocksApart = Math.max(com.eternalrealm.client.guide.GuideClient.SPACING, GUIDE_GAP / pixelsPerBlock);
+            int every = Math.max(1, (int) Math.round(blocksApart / com.eternalrealm.client.guide.GuideClient.SPACING));
+            float[] centres = new float[(dots.size() / every + 1) * 2];
+            int count = 0;
+            for (int i = 0; i < dots.size(); i += every) {
+                double[] dot = dots.get(i);
+                double[] p = at(dot[0], dot[2], 1.5F);
+                if (p != null) {
+                    centres[count * 2] = cx + (float) p[0];
+                    centres[count * 2 + 1] = cy + (float) p[1];
+                    count++;
+                }
+            }
+            MapDraw.dots(graphics, centres, count, 1.0F, 1.6F, GUIDE_DOT, 0xB0000000);
+        }
+
+        /**
+         * Where the guide leads: a pulsing golden star on the map, or, when it is beyond the map, a golden mark on the
+         * rim pointing the way.
+         */
+        void goal(double x, double z, float time) {
+            double[] offset = MapMath.toMinimap(x - px, z - pz, yaw, rotate, pixelsPerBlock);
+            double[] p = MapMath.clampToCircle(offset[0], offset[1], radius - 4.0);
+            float sx = cx + (float) p[0];
+            float sy = cy + (float) p[1];
+            if (p[2] > 0.0) { // clamped: off the map
+                double angle = Math.atan2(p[1], p[0]);
+                float tipX = cx + (float) (Math.cos(angle) * (radius - 0.5));
+                float tipY = cy + (float) (Math.sin(angle) * (radius - 0.5));
+                float baseX = cx + (float) (Math.cos(angle) * (radius - 7.0));
+                float baseY = cy + (float) (Math.sin(angle) * (radius - 7.0));
+                float nx = (float) -Math.sin(angle);
+                float ny = (float) Math.cos(angle);
+                MapDraw.triangle(graphics, tipX, tipY, baseX + nx * 4.5F, baseY + ny * 4.5F, baseX - nx * 4.5F,
+                        baseY - ny * 4.5F, 0xFF000000);
+                MapDraw.triangle(graphics, tipX - (float) Math.cos(angle) * 1.2F, tipY - (float) Math.sin(angle) * 1.2F,
+                        baseX + nx * 3.0F + (float) Math.cos(angle) * 0.8F, baseY + ny * 3.0F + (float) Math.sin(angle) * 0.8F,
+                        baseX - nx * 3.0F + (float) Math.cos(angle) * 0.8F, baseY - ny * 3.0F + (float) Math.sin(angle) * 0.8F,
+                        GUIDE_DOT);
+                return;
+            }
+            float pulse = 0.5F + 0.5F * Mth.sin(time * 0.2F);
+            MapDraw.disc(graphics, sx, sy, 5.5F + pulse * 1.5F, (int) (0x50 * (1.0F - pulse * 0.5F)) << 24 | 0xFFD447);
+            star(sx, sy, 5.2F, 0xFF000000);
+            star(sx, sy, 3.8F, GUIDE_DOT);
+        }
+
+        /** A five-pointed star (outer radius {@code size}). */
+        private void star(float x, float y, float size, int argb) {
+            float inner = size * 0.45F;
+            for (int k = 0; k < 5; k++) {
+                double tip = -Math.PI / 2.0 + k * Math.PI * 2.0 / 5.0;
+                double left = tip - Math.PI / 5.0;
+                double right = tip + Math.PI / 5.0;
+                MapDraw.triangle(graphics, x + (float) Math.cos(tip) * size, y + (float) Math.sin(tip) * size,
+                        x + (float) Math.cos(left) * inner, y + (float) Math.sin(left) * inner,
+                        x + (float) Math.cos(right) * inner, y + (float) Math.sin(right) * inner, argb);
+                MapDraw.triangle(graphics, x, y, x + (float) Math.cos(left) * inner, y + (float) Math.sin(left) * inner,
+                        x + (float) Math.cos(right) * inner, y + (float) Math.sin(right) * inner, argb);
+            }
         }
 
         void trap(double x, double z) {

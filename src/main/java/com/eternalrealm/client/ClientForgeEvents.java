@@ -41,6 +41,7 @@ public final class ClientForgeEvents {
         SkillFx.tick();
         com.eternalrealm.client.boss.BossBodyEffects.tick();
         com.eternalrealm.client.block.ClientLightShafts.tick();
+        com.eternalrealm.client.guide.GuideClient.tick();
         BotSkins.tick(minecraft);
         KeyConflicts.resolveOnce();
     }
@@ -106,6 +107,7 @@ public final class ClientForgeEvents {
     public static void onRenderLevelStage(RenderLevelStageEvent event) {
         com.eternalrealm.client.telegraph.TelegraphRenderer.render(event);
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_PARTICLES) {
+            com.eternalrealm.client.guide.GuideRenderer.render(event);
             ArtTrails.render(event);
             HeroFx.render(event);
             SkillFx.render(event);
@@ -145,6 +147,7 @@ public final class ClientForgeEvents {
         com.eternalrealm.client.boss.BossBodyEffects.clear();
         com.eternalrealm.ui.dialogue.ClientDialogue.clear();
         com.eternalrealm.ui.gate.ReadyCheckClient.clear();
+        com.eternalrealm.client.guide.GuideClient.clear();
         com.eternalrealm.client.telegraph.ClientTelegraphs.clear();
         com.eternalrealm.client.block.ClientLightShafts.clear();
     }

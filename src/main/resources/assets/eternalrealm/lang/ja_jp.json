@@ -7290,5 +7290,19 @@
   "screen.eternalrealm.ready.hint": "閉じても準備は続く。チャットのボタンでも答えられる",
   "screen.eternalrealm.ready.went": "出発！",
   "screen.eternalrealm.ready.hud_waiting": "あなた: 準備中 ― チャットの[準備OK]で答える",
-  "screen.eternalrealm.ready.hud_ready": "あなた: 準備OK ― ほかの人を待っている"
+  "screen.eternalrealm.ready.hud_ready": "あなた: 準備OK ― ほかの人を待っている",
+  "guide.eternalrealm.talk": "%sと話す",
+  "guide.eternalrealm.turn_in": "%sに報告する",
+  "guide.eternalrealm.area": "%sへ向かう",
+  "guide.eternalrealm.hunt": "%sを狩る",
+  "guide.eternalrealm.hunt_any": "%sで魔物を狩る",
+  "guide.eternalrealm.collect": "%sを集める",
+  "guide.eternalrealm.dungeon": "%sに挑む",
+  "guide.eternalrealm.boss": "%sを討つ",
+  "screen.eternalrealm.quest.guide": "案内",
+  "screen.eternalrealm.quest.guiding": "案内中",
+  "screen.eternalrealm.quest.guide.tooltip": "地面の黄色い点々で、このクエストの次の目的地まで道案内する。",
+  "screen.eternalrealm.quest.guiding.tooltip": "このクエストを道案内中。押すと案内をやめる。",
+  "screen.eternalrealm.settings.quest_path": "クエストの道案内",
+  "screen.eternalrealm.settings.quest_path.tooltip": "案内中のクエストの目的地まで、地面とミニマップに黄色い点々で道を示す。どのクエストを案内するかは冒険手帳のクエストの「案内」で選ぶ（最初はメインクエスト）。"
 }

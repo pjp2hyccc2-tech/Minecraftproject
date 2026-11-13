@@ -204,3 +204,15 @@
 - C→S UI 操作 `ready.set`（`{ready: true|false}`）、`ready.cancel`（リーダーだけ）、`ready.open`（画面をもう一度）。確認中でない人や
   リーダーでない人の中止は違反ではなく、アクションバーに理由。同じことをチャットのボタンが `/dungeon ready ok|wait|open|cancel` で行う。
 
+
+## 付録: クエストの道案内（2026-11-13・パケット追加なし・版は変えない）
+
+黄色い点々の道案内（[modules/map.md](modules/map.md) §「クエストの道案内」）。行き先はサーバー、道はクライアントが決める。
+
+- S→C UI データ `quest_guide`: `{off, quest, active}`、行き先があれば `kind`（`talk`／`turn_in`／`area`／`hunt`／`collect`／
+  `dungeon`／`boss`）、`x`・`z`（ブロックの中心）、`dim`（次元 id）、`label`（「森の賢者と話す」のコンポーネントの JSON）も。
+  毎秒作り直し、前に送ったものと違うときだけ送る（行き先は整数ブロックに丸めるので、歩き回る NPC で毎秒は送らない）。
+  アストリアの外では `active: false`。約 200 B。
+- S→C UI データ `quests` に `guided`（案内中のクエスト id、なければ `""`）を追加。
+- C→S UI 操作 `quest.guide`: `{id}`。`""` は既定（メインクエスト）、`"-"` は案内なし、それ以外は `[a-z0-9_]{1,64}` のクエスト
+  id。形が違えば違反。受けていないクエストを選んでも違反ではない（既定に戻る）。
