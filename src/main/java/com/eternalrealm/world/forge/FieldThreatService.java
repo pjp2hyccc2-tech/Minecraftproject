@@ -1357,7 +1357,7 @@ public final class FieldThreatService {
                     c.addProperty("bz", Math.round(state.fight.body().getZ()));
                 }
                 c.addProperty("level", calamityLevel(calamity));
-                c.addProperty("defeats", growth.defeats(field));
+                c.addProperty("defeats", growth.defeats(fieldNumber));
                 entry.add("calamity", c);
             });
             JsonArray lords = new JsonArray();
