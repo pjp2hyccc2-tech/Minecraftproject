@@ -490,3 +490,39 @@ The owner: 「STRだけじゃなくて、そのステータスに特化したら
   excess attack speed becomes evasion up to 30 % (AGI; with trinket perks and the evasion effect at most 60 %), excess
   max health becomes damage reduction on top of the cap, up to +15 % (VIT, 90 % at most). Below the caps nothing changes.
   CombatStats carries the evasion (protocol 12).
+
+## D-CALAMITYGROWTH: a field's calamity comes back one level stronger after every defeat; its relics drop at 1 % (2026-11-13)
+The owner: 「各フィールドの災厄は倒される毎にレベルが1上がるようにして」「災厄のレアの報酬は0.1%から1%に変更」. Decisions:
+- **Per field, saved with the miasma**: `CalamityGrowth` counts the defeats of each field's calamity; level = base + defeats,
+  capped at 100 (the monster level cap). The counts live in Astoria's threat data next to the miasma, so they survive a
+  restart; broken data starts over at zero instead of failing the load.
+- **Grown like the rest of the world**: health × referenceLightHit(level) / referenceLightHit(base) — the same curve that
+  sets a player's reference hit at that level, so the fight takes about as many hits at every level (Lv15 → 25 ×1.43,
+  Lv15 → 100 ×4.7). Damage grows by 70 % of that (×3.6 at the extreme) so a grown calamity hurts more without becoming
+  a one-shot; phases, abilities and armor do not change (`BossDefinition.atLevel`, which returns the definition itself
+  when nothing changes).
+- **The rewards follow the level**: experience and gold are computed at the calamity's current level (never below the
+  reward template's minimum), so farming a grown calamity pays more. The level is shown wherever the calamity is
+  (manifest announcement, boss HUD, bounty board, map) and announced after each defeat ("次に現れるときは Lv○○",
+  or that it has reached its peak).
+- **Relics from calamities at 1 %**: calamities are rare, server-wide events that need many players, so their relics
+  (`Relics.SourceKind.CALAMITY`) drop at 1 % per rewarded player (server config `calamityRelicDropChance`, default 0.01).
+  Dungeon bosses, lords and wanderers keep 0.1 % (`relicDropChance`).
+
+## D-NAMEDTRINKETS: 48 named accessories and charms of the lords and dungeons, eight new kinds (2026-11-13)
+The owner: 「アクセサリーとお守りの種類を増やして、ダンジョンの報酬、宝箱報酬、ヌシドロップ、生成、からも手に入るようにして」. Decisions:
+- **More kinds**: eight new trinket kinds (brooch, circlet, anklet, medal; mirror, feather, beads, doll), appended to
+  `TrinketKind` so saved stacks keep their kind; each with its own 16×16 icon pattern.
+- **Named, not random**: one trinket per lord (30, accessories and charms alternating) and an accessory and a charm per
+  dungeon and the final raid (18), at the level of their source (a lord's field cap + 2, a dungeon's recommended level).
+  Each has two stats by percentage (main 1.1 × and second 0.4 × the catalogue trinket of its level) and one effect of its
+  own (critical chance or damage, damage, attack speed, movement, healing, max health %, defense, life steal, counter,
+  evasion, heal on kill, last stand, skill power, or an on-hit burn, slow, poison, bleed, stun or freeze), growing with
+  the level and the rarity's power. They are the "story" pieces between the catalogue's plain grades and the relics.
+- **Every source the owner listed**: lord drops (6 % per contributor, 15 % for the hero), dungeon clear rewards (the
+  dungeon's own: NORMAL 12 %, HARD 20 %, EX 30 %), the bonus chest (a trinket card, weight 8 + 4 × the clear tier — half
+  the dungeon's own, half the catalogue's), 15 % of every reward equipment piece of dungeons, lords and calamities turns
+  into a catalogue trinket, and the smithy (each named trinket from its field's materials and boss soul).
+- **One data file**: `tools/art/named_trinkets_data.py` generates the Java table, the names and lore in both languages,
+  the icons, models and base-item overrides (like the relics), with a `--check` mode; ids `trinket_lord_*` /
+  `trinket_dungeon_*` and models 5400+ are fixed so saved stacks stay readable.
