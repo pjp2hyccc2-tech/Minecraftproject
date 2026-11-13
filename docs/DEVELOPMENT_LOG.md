@@ -1127,6 +1127,11 @@ STR+10とかじゃなくてSTR+10%とかにして、強化もできるように�
   `dungeonPrebuild`, `monsterAiThrottle`, `monsterAiThrottleRange`。
 - 確認: オフライン1263件成功（新規 `ChunkPregenPlanTest`・`MonsterThrottleTest`・`ScrollingWindowTest`）。GameTest
   `DungeonSiteGameTests`（森のダンジョンを軽い方法で建てて計画どおり・柵の扉がつながる・葉が消えない・片付け後は空）。
+- 停止したサーバーがスロットに残したもの（ラン中・下準備・片付け途中）を、次の起動で作り直して片付ける（ダンジョン次元の
+  `data/eternalrealm_dungeon_slots.dat`、`InstanceAllocator.reserve`）。下準備で残りやすくなったため。
+- CI: 1回目（43359477076）は新しい GameTest が「森の床の葉が見つからない」で失敗（作った配置では葉の目印がすべて内装の下だった。
+  建物そのものは計画どおり）→ 葉の確認をパレットで行うよう修正。CI 43360141035 と 43360727823: コンパイル・ユニットテスト・
+  GameTest 166件すべて成功。配布した jar は 43360727823 のもの（PC が未接続のためファイルで送付）。
 - **未確認（実機が必要）**: 先読みの速さと体感（飛行中のカクつき）、CPU の使い方、セーブの増え方、ダンジョンの入場・終了時の
   体感と下準備の当たり方、休む魔物の見え方、ミニマップの見た目（折り返しの継ぎ目がないこと）、旗を止めたときの王都の軽さ。
 
