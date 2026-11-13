@@ -15,10 +15,13 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.MapColor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Map colours of the chunks the client has loaded, one ARGB value per column (0 = nothing to show), computed a few
@@ -54,11 +57,27 @@ final class ChunkColors {
     private ClientLevel level;
     private boolean cave;
     private int refY;
-    private int version;
+    /** Chunks whose colours changed since the minimap last asked (it repaints just those). */
+    private final Set<Long> changed = new HashSet<>();
+    /** Every colour may have changed (another world or dimension, cave mode switched): repaint everything. */
+    private boolean allChanged = true;
 
-    /** Increases whenever a chunk's colours change (the texture must be redrawn). */
-    int version() {
-        return version;
+    /** Whether everything has to be repainted since the last call (and forgets it). */
+    boolean takeAllChanged() {
+        boolean all = allChanged;
+        allChanged = false;
+        if (all) {
+            changed.clear();
+        }
+        return all;
+    }
+
+    /** Hands the chunks whose colours changed since the last call to {@code sink} (and forgets them). */
+    void drainChanged(java.util.function.LongConsumer sink) {
+        for (long key : changed) {
+            sink.accept(key);
+        }
+        changed.clear();
     }
 
     boolean caveMode() {
@@ -69,7 +88,7 @@ final class ChunkColors {
         cache.clear();
         dimension = null;
         level = null;
-        version++;
+        allChanged = true;
     }
 
     /** Computes up to {@code budget} missing or outdated chunks, nearest first. */
@@ -78,14 +97,14 @@ final class ChunkColors {
             cache.clear();
             level = clientLevel;
             dimension = clientLevel.dimension();
-            version++;
+            allChanged = true;
         }
         boolean caveNow = caveMode(clientLevel, player);
         int feet = player.getBlockY();
         if (caveNow != cave || (caveNow && Math.abs(feet - refY) >= 2)) {
+            allChanged |= caveNow != cave; // a chunk of the other mode is not shown: everything changes at once
             cave = caveNow;
             refY = feet;
-            version++;
         }
         int playerChunkX = player.getBlockX() >> 4;
         int playerChunkZ = player.getBlockZ() >> 4;
@@ -107,7 +126,9 @@ final class ChunkColors {
             }
             int[] colors = cave ? caveColors(clientLevel, chunk, refY) : surfaceColors(clientLevel, chunk);
             cache.put(key, new Cached(colors, gameTime, cave, refY));
-            version++;
+            if (entry == null || entry.cave() != cave || !Arrays.equals(entry.colors(), colors)) {
+                changed.add(key); // a refresh that finds the chunk as it was paints nothing
+            }
             if (++done >= budget) {
                 break;
             }

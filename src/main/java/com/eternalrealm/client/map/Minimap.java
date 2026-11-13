@@ -3,17 +3,27 @@ package com.eternalrealm.client.map;
 import com.eternalrealm.config.ERClientConfig;
 import com.eternalrealm.core.ModInfo;
 import com.eternalrealm.world.map.MapMath;
+import com.eternalrealm.world.map.ScrollingWindow;
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.ChunkPos;
 import org.slf4j.Logger;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The minimap's state: whether it is shown, its zoom, and the {@link #TEXTURE} with the map colours of the
- * {@link #SIZE}×{@link #SIZE} blocks around the player, redrawn from {@link ChunkColors} when the player moves to
- * another block or new chunk colours arrive (at most every other tick). Client thread only.
+ * {@link #SIZE}×{@link #SIZE} blocks around the player. The texture wraps around ({@link ScrollingWindow}): world
+ * block (x, z) always sits at texel (x mod {@value #SIZE}, z mod {@value #SIZE}), so walking paints only the strip
+ * that comes into view and new chunk colours from {@link ChunkColors} paint only their chunk (the owner, 2026-11-13:
+ * lighter while walking); the overlay draws it with texture coordinates x / size, z / size. At most every other tick.
+ * Client thread only.
  */
 public final class Minimap {
     /** Blocks (and texels) along each side of the texture. */
@@ -23,13 +33,18 @@ public final class Minimap {
     private static final int[] ZOOM_RADIUS = {32, 48, 64, 96, 128};
     private static final Logger LOG = LogUtils.getLogger();
     private static final ChunkColors COLORS = new ChunkColors();
+    private static final int GL_TEXTURE_2D = 3553;
+    private static final int GL_TEXTURE_WRAP_S = 10242;
+    private static final int GL_TEXTURE_WRAP_T = 10243;
+    private static final int GL_REPEAT = 10497;
     private static DynamicTexture texture;
     private static boolean failed;
-    private static int originX;
-    private static int originZ;
-    private static int drawnVersion = -1;
-    private static int drawnX = Integer.MIN_VALUE;
-    private static int drawnZ = Integer.MIN_VALUE;
+    /** Corner of the world window the texture holds, and whether it holds one. */
+    private static int windowX;
+    private static int windowZ;
+    private static boolean drawn;
+    private static boolean repaintAll = true;
+    private static final Set<Long> PENDING = new HashSet<>();
     private static long lastDraw;
 
     private Minimap() {
@@ -80,18 +95,18 @@ public final class Minimap {
         }
     }
 
-    /** World block at the texture's texel (0, 0). */
+    /** World block at texture coordinate 0: the texture repeats every {@link #SIZE} blocks from the world origin. */
     public static int originX() {
-        return originX;
+        return 0;
     }
 
     public static int originZ() {
-        return originZ;
+        return 0;
     }
 
     /** Whether the texture holds a picture yet. */
     public static boolean ready() {
-        return texture != null && drawnVersion >= 0;
+        return texture != null && drawn;
     }
 
     /** Showing the floor at the player's height (dungeons, caves). */
@@ -99,19 +114,21 @@ public final class Minimap {
         return COLORS.caveMode();
     }
 
-    /** Client tick: computes chunk colours around the player and redraws the texture when needed. */
+    /** Client tick: computes chunk colours around the player and paints what changed into the texture. */
     public static void tick(Minecraft minecraft) {
         if (failed || minecraft.level == null || minecraft.player == null || !visible()) {
             return;
         }
         try {
             long time = minecraft.level.getGameTime();
-            COLORS.tick(minecraft.level, minecraft.player, time, drawnVersion < 0 ? 10 : 5);
-            int x = minecraft.player.getBlockX();
-            int z = minecraft.player.getBlockZ();
-            boolean moved = x != drawnX || z != drawnZ;
-            if ((moved || COLORS.version() != drawnVersion) && (time - lastDraw >= 2 || time < lastDraw)) {
-                redraw(minecraft, x, z);
+            COLORS.tick(minecraft.level, minecraft.player, time, drawn ? 5 : 10);
+            repaintAll |= COLORS.takeAllChanged();
+            COLORS.drainChanged(PENDING::add);
+            int x = minecraft.player.getBlockX() - SIZE / 2;
+            int z = minecraft.player.getBlockZ() - SIZE / 2;
+            boolean moved = x != windowX || z != windowZ;
+            if ((moved || repaintAll || !PENDING.isEmpty() || !drawn) && (time - lastDraw >= 2 || time < lastDraw)) {
+                paint(minecraft, x, z);
                 lastDraw = time;
             }
         } catch (RuntimeException e) {
@@ -120,50 +137,72 @@ public final class Minimap {
         }
     }
 
-    private static void redraw(Minecraft minecraft, int centerX, int centerZ) {
+    /** Moves the window's corner to (x, z): paints what came into view and the chunks whose colours changed. */
+    private static void paint(Minecraft minecraft, int x, int z) {
         if (texture == null) {
             texture = new DynamicTexture(SIZE, SIZE, true);
             minecraft.getTextureManager().register(TEXTURE, texture);
+            texture.bind();
+            RenderSystem.texParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // the window wraps around
+            RenderSystem.texParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            repaintAll = true;
         }
         NativeImage image = texture.getPixels();
         if (image == null) {
             return;
         }
-        int newOriginX = centerX - SIZE / 2;
-        int newOriginZ = centerZ - SIZE / 2;
-        for (int chunkZ = newOriginZ >> 4; chunkZ <= (newOriginZ + SIZE - 1) >> 4; chunkZ++) {
-            for (int chunkX = newOriginX >> 4; chunkX <= (newOriginX + SIZE - 1) >> 4; chunkX++) {
-                int[] colors = COLORS.get(chunkX, chunkZ);
-                for (int localZ = 0; localZ < 16; localZ++) {
-                    int texelZ = (chunkZ << 4) + localZ - newOriginZ;
-                    if (texelZ < 0 || texelZ >= SIZE) {
-                        continue;
-                    }
-                    for (int localX = 0; localX < 16; localX++) {
-                        int texelX = (chunkX << 4) + localX - newOriginX;
-                        if (texelX < 0 || texelX >= SIZE) {
-                            continue;
-                        }
-                        int argb = colors == null ? 0 : colors[localZ * 16 + localX];
-                        image.setPixelRGBA(texelX, texelZ, MapMath.argbToAbgr(argb));
-                    }
-                }
+        List<int[]> strips = drawn && !repaintAll ? ScrollingWindow.entering(windowX, windowZ, x, z, SIZE) : null;
+        windowX = x;
+        windowZ = z;
+        if (strips == null) {
+            paintRect(image, new int[]{x, z, x + SIZE, z + SIZE});
+            texture.upload();
+            repaintAll = false;
+            PENDING.clear();
+            drawn = true;
+            return;
+        }
+        for (long key : PENDING) {
+            int chunkX = ChunkPos.getX(key) << 4;
+            int chunkZ = ChunkPos.getZ(key) << 4;
+            int[] chunk = ScrollingWindow.clip(new int[]{chunkX, chunkZ, chunkX + 16, chunkZ + 16}, x, z, SIZE);
+            if (chunk != null) {
+                strips.add(chunk);
             }
         }
-        texture.upload();
-        originX = newOriginX;
-        originZ = newOriginZ;
-        drawnX = centerX;
-        drawnZ = centerZ;
-        drawnVersion = COLORS.version();
+        PENDING.clear();
+        texture.bind();
+        for (int[] rect : strips) {
+            paintRect(image, rect);
+            for (int[] texels : ScrollingWindow.texels(rect, SIZE)) {
+                image.upload(0, texels[0], texels[1], texels[0], texels[1], texels[2], texels[3], false, false);
+            }
+        }
+    }
+
+    /** Writes the colours of a world rectangle (end exclusive, at most the texture's size) into the image. */
+    private static void paintRect(NativeImage image, int[] rect) {
+        for (int z = rect[1]; z < rect[3]; z++) {
+            int texelZ = Math.floorMod(z, SIZE);
+            int[] colors = null;
+            int colorsChunkX = Integer.MIN_VALUE;
+            for (int x = rect[0]; x < rect[2]; x++) {
+                if ((x >> 4) != colorsChunkX) {
+                    colorsChunkX = x >> 4;
+                    colors = COLORS.get(colorsChunkX, z >> 4);
+                }
+                int argb = colors == null ? 0 : colors[(z & 15) * 16 + (x & 15)];
+                image.setPixelRGBA(Math.floorMod(x, SIZE), texelZ, MapMath.argbToAbgr(argb));
+            }
+        }
     }
 
     /** Leaving the world: forget every colour (the texture is kept for the next world). */
     public static void clear() {
         COLORS.clear();
-        drawnVersion = -1;
-        drawnX = Integer.MIN_VALUE;
-        drawnZ = Integer.MIN_VALUE;
+        drawn = false;
+        repaintAll = true;
+        PENDING.clear();
         lastDraw = 0;
         if (texture != null && texture.getPixels() != null) {
             texture.getPixels().fillRect(0, 0, SIZE, SIZE, 0);
