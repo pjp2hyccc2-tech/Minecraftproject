@@ -30,14 +30,15 @@ import java.util.concurrent.CompletableFuture;
 
 /**
  * Builds an instance's decoration ({@link DungeonDecor}) after its build plan: planned off the server thread while the
- * plan is being built, then placed a slice per tick like the plan. Blocks are set without shape updates (the plan
- * says how fences join and where lanterns hang), so nothing pops off while the rest is still going up.
+ * plan is being built, then placed a slice per tick like the plan, until the tick's time is up. Blocks are set
+ * without shape updates (the plan says how fences join and where lanterns hang), so nothing pops off while the rest is
+ * still going up, and only where they differ from what is there.
  *
  * <p>If planning fails the instance simply stays undecorated (logged): the decoration never blocks a run.</p>
  */
 public final class DecorBuilder {
-    /** Decoration blocks placed per tick. */
-    public static final int BLOCKS_PER_TICK = 4000;
+    /** Blocks between two looks at the clock. */
+    private static final int CHECK_EVERY = 256;
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final int FLAGS = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
     private static final Map<String, BlockState> STATES = new HashMap<>();
@@ -71,18 +72,24 @@ public final class DecorBuilder {
         return Optional.ofNullable(plan);
     }
 
-    /** Places the next slice. @return whether the decoration is complete (or given up) */
-    public boolean buildSlice() {
+    /**
+     * Places blocks until {@code deadline} ({@link System#nanoTime()}). @return whether the decoration is complete (or
+     * given up)
+     */
+    public boolean buildSlice(long deadline) {
         Optional<DecorPlan> ready = plan();
         if (ready.isEmpty()) {
             return failed;
         }
         List<DecorBlock> blocks = ready.get().blocks();
-        int budget = BLOCKS_PER_TICK;
-        while (index < blocks.size() && budget-- > 0) {
+        int count = 0;
+        while (index < blocks.size()) {
+            if ((++count & (CHECK_EVERY - 1)) == 0 && System.nanoTime() >= deadline) {
+                return false;
+            }
             place(blocks.get(index++));
         }
-        return index >= blocks.size();
+        return true;
     }
 
     private void place(DecorBlock block) {
@@ -97,7 +104,9 @@ public final class DecorBuilder {
                 return;
             }
         }
-        level.setBlock(pos, state, FLAGS);
+        if (level.getBlockState(pos) != state) {
+            level.setBlock(pos, state, FLAGS);
+        }
         if (block.nbt() != null) {
             BlockEntity entity = level.getBlockEntity(pos);
             if (entity != null) {

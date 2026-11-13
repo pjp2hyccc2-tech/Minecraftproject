@@ -53,6 +53,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -68,11 +69,30 @@ public final class DungeonService {
     /** Boss rewards are this many kills of the boss's own minion at the boss's level. */
     private static final int BOSS_REWARD_FACTOR = 40;
     private static final SplittableRandom RANDOM = new SplittableRandom();
+    /** Time per tick for the sites of runs that wait for their build (the party is told it is being prepared). */
+    private static final long ACTIVE_BUILD_NANOS = 12_000_000L;
+    /** Time per tick for building prepared sites and clearing finished ones, when the server has time to spare. */
+    private static final long BACKGROUND_NANOS = 3_000_000L;
+    /** A server busier than this (average tick, ms) gets a third of the background time. */
+    private static final double BUSY_TICK_MILLIS = 40.0;
+    /** A player this close to a dungeon's gate (blocks) has its site prepared. */
+    private static final int PREPARE_RADIUS = 48;
+    private static final int MAX_PREPARED = 2;
+    /** Prepared sites only take a slot while more than this many are free (runs always find one). */
+    private static final int FREE_SLOTS_KEPT = 2;
+    /** A prepared site nobody wanted for this long is cleared again. */
+    private static final long PREPARED_TTL_TICKS = 20L * 60 * 5;
 
     private final MinecraftServer server;
     private final InstanceAllocator allocator = new InstanceAllocator();
     private final List<DungeonInstance> instances = new ArrayList<>();
     private final Map<UUID, DungeonInstance> byMember = new HashMap<>();
+    /** Sites built ahead of a run, by dungeon ("d1".."d8", "final"). */
+    private final Map<String, DungeonSite> prepared = new LinkedHashMap<>();
+    /** Sites of finished runs (and of prepared sites nobody used) being cleared. */
+    private final List<DungeonSite> clearing = new ArrayList<>();
+    /** The last dungeon each player ran (prepared again when they ask a gatekeeper). */
+    private final Map<UUID, String> lastRun = new HashMap<>();
 
     public DungeonService(MinecraftServer server) {
         this.server = server;
@@ -169,7 +189,13 @@ public final class DungeonService {
             fail(leader, "message.eternalrealm.dungeon.locked");
             return;
         }
-        Optional<InstanceSlot> slot = allocator.allocate();
+        DungeonSite site = prepared.remove(contentId);
+        Optional<InstanceSlot> slot = site != null ? Optional.of(site.slot) : allocator.allocate();
+        if (slot.isEmpty() && !prepared.isEmpty()) {
+            // a site prepared for another dungeon makes room (its slot is free again once it is cleared)
+            retire(prepared.remove(prepared.keySet().iterator().next()));
+            slot = allocator.allocate();
+        }
         if (slot.isEmpty()) {
             leader.displayClientMessage(Component.translatable(InstanceAllocator.FULL_MESSAGE_KEY,
                     allocator.maxInstances()).withStyle(ChatFormatting.RED), true);
@@ -177,7 +203,7 @@ public final class DungeonService {
         }
         List<UUID> ids = members.stream().map(ServerPlayer::getUUID).toList();
         DungeonRun run;
-        DungeonLayout layout;
+        DungeonLayout layout = site != null ? site.layout : null;
         boolean relaxed = !sizeOk; // only possible with dungeons.ignorePartySize
         if (dungeon.isPresent()) {
             DungeonDefinition definition = dungeon.get();
@@ -187,7 +213,9 @@ public final class DungeonService {
                         definition.bossId(), definition.timeLimitTicks());
             }
             run = new DungeonRun(definition, ids, FailurePolicy.defaults());
-            layout = DungeonLayoutGenerator.generate(definition, RANDOM.nextLong());
+            if (layout == null) {
+                layout = DungeonLayoutGenerator.generate(definition, RANDOM.nextLong());
+            }
         } else {
             RaidDefinition definition = raid;
             if (relaxed) {
@@ -195,18 +223,24 @@ public final class DungeonService {
                         Math.max(raid.maxPartySize(), ids.size()), raid.theme(), raid.bossId(), raid.timeLimitTicks());
             }
             run = DungeonRun.raid(definition, ids, FailurePolicy.defaults());
-            layout = DungeonLayoutGenerator.raidArena(definition);
+            if (layout == null) {
+                layout = DungeonLayoutGenerator.raidArena(definition);
+            }
+        }
+        if (site == null) {
+            site = new DungeonSite(contentId, layout, slot.get(), DungeonLevels.level(server));
         }
         Map<UUID, DungeonInstance.Origin> returns = new HashMap<>();
         for (ServerPlayer member : members) {
             returns.put(member.getUUID(), new DungeonInstance.Origin(member.level().dimension(), member.position(),
                     member.getYRot()));
         }
-        DungeonInstance instance = new DungeonInstance(this, contentId, nameKey, areaId, level, difficulty, run, layout,
-                slot.get(), DungeonLevels.level(server), returns);
+        DungeonInstance instance = new DungeonInstance(this, contentId, nameKey, areaId, level, difficulty, run, site,
+                returns);
         instances.add(instance);
         for (UUID id : ids) {
             byMember.put(id, instance);
+            lastRun.put(id, contentId);
         }
         run.startBuilding();
         instance.tellAll(Component.translatable("message.eternalrealm.dungeon.preparing", Component.translatable(nameKey),
@@ -220,21 +254,160 @@ public final class DungeonService {
     // ------------------------------------------------------------------ tick and events
 
     public void tick(long now) {
+        long buildDeadline = System.nanoTime() + ACTIVE_BUILD_NANOS;
         for (DungeonInstance instance : List.copyOf(instances)) {
             try {
-                instance.tick(now);
+                instance.tick(now, buildDeadline);
             } catch (RuntimeException e) {
                 org.slf4j.LoggerFactory.getLogger(DungeonService.class).error("Dungeon instance {} failed; closing it",
                         instance.instanceId, e);
                 instance.close();
             }
         }
+        try {
+            background(now);
+        } catch (RuntimeException e) {
+            org.slf4j.LoggerFactory.getLogger(DungeonService.class).error("Preparing or clearing dungeon sites failed",
+                    e);
+        }
     }
 
-    void release(DungeonInstance instance) {
+    /** A run is over: its members are free again and its site is cleared in the background. */
+    void retire(DungeonInstance instance) {
         instances.remove(instance);
-        allocator.release(instance.slot);
         byMember.values().removeIf(value -> value == instance);
+        retire(instance.site);
+    }
+
+    private void retire(DungeonSite site) {
+        if (!site.touched()) {
+            site.releaseChunks();
+            allocator.release(site.slot); // nothing was built there
+            return;
+        }
+        site.startClearing();
+        clearing.add(site);
+    }
+
+    /**
+     * Clears finished sites and builds prepared ones, a little each tick while the server has time; once a second
+     * looks for players near a gate.
+     */
+    private void background(long now) {
+        long budget = averageTickMillis() > BUSY_TICK_MILLIS ? BACKGROUND_NANOS / 3 : BACKGROUND_NANOS;
+        long deadline = System.nanoTime() + budget;
+        for (DungeonSite site : List.copyOf(clearing)) {
+            if (site.clear(deadline, now)) {
+                clearing.remove(site);
+                allocator.release(site.slot);
+            }
+            if (System.nanoTime() >= deadline) {
+                return;
+            }
+        }
+        if (now % 20 == 0) {
+            prepareNearGates(now);
+        }
+        for (DungeonSite site : List.copyOf(prepared.values())) {
+            if (!site.isBuilt()) {
+                site.build(deadline, now);
+                if (System.nanoTime() >= deadline) {
+                    return;
+                }
+            }
+        }
+    }
+
+    /** Players near a dungeon's gate (in アストリア) get its site prepared; sites nobody wants any more go. */
+    private void prepareNearGates(long now) {
+        ServerLevel astoria = server.getLevel(com.eternalrealm.world.forge.AstoriaDimension.LEVEL);
+        if (astoria != null && prebuildEnabled()) {
+            for (ServerPlayer player : astoria.players()) {
+                if (player.isSpectator() || byMember.containsKey(player.getUUID())) {
+                    continue;
+                }
+                for (com.eternalrealm.world.gen.LandmarkSite gate : com.eternalrealm.world.gen.LandmarkSites.all()) {
+                    double dx = player.getX() - gate.x();
+                    double dz = player.getZ() - gate.z();
+                    if (dx * dx + dz * dz <= (double) PREPARE_RADIUS * PREPARE_RADIUS) {
+                        prepare(gate.dungeonId(), now);
+                    }
+                }
+            }
+        }
+        Iterator<DungeonSite> sites = prepared.values().iterator();
+        while (sites.hasNext()) {
+            DungeonSite site = sites.next();
+            if (now - site.lastWanted > PREPARED_TTL_TICKS) {
+                sites.remove();
+                retire(site);
+            }
+        }
+    }
+
+    /** A gatekeeper's list was opened: the dungeon this player ran last is prepared again. */
+    public void onGatekeeper(ServerPlayer player) {
+        String last = lastRun.get(player.getUUID());
+        if (last != null && !byMember.containsKey(player.getUUID()) && prebuildEnabled()) {
+            prepare(last, server.getTickCount());
+        }
+    }
+
+    /** Starts building a dungeon's site ahead of its run (if it is open, and slots are plentiful). */
+    private void prepare(String contentId, long now) {
+        DungeonSite existing = prepared.get(contentId);
+        if (existing != null) {
+            existing.lastWanted = now;
+            return;
+        }
+        if (prepared.size() >= MAX_PREPARED || allocator.maxInstances() - allocator.inUse() <= FREE_SLOTS_KEPT
+                || server instanceof net.minecraft.gametest.framework.GameTestServer) {
+            return;
+        }
+        ServerContext context = ServerContext.current().orElse(null);
+        if (context == null) {
+            return;
+        }
+        DungeonLayout layout;
+        Optional<DungeonDefinition> dungeon = Dungeons.byId(contentId);
+        if (dungeon.isPresent()) {
+            if (!context.game().world().isUnlocked(dungeon.get().areaId())) {
+                return;
+            }
+            layout = DungeonLayoutGenerator.generate(dungeon.get(), RANDOM.nextLong());
+        } else if (Dungeons.FINAL_RAID.id().equals(contentId)) {
+            if (!context.game().world().isUnlocked(Dungeons.FINAL_RAID.areaId())
+                    || !context.game().world().progress().finalBossUnlocked()) {
+                return;
+            }
+            layout = DungeonLayoutGenerator.raidArena(Dungeons.FINAL_RAID);
+        } else {
+            return;
+        }
+        Optional<InstanceSlot> slot = allocator.allocate();
+        if (slot.isEmpty()) {
+            return;
+        }
+        DungeonSite site = new DungeonSite(contentId, layout, slot.get(), DungeonLevels.level(server));
+        site.lastWanted = now;
+        prepared.put(contentId, site);
+    }
+
+    private static boolean prebuildEnabled() {
+        try {
+            return com.eternalrealm.config.ERServerConfig.DUNGEON_PREBUILD.get();
+        } catch (IllegalStateException e) {
+            return false;
+        }
+    }
+
+    private double averageTickMillis() {
+        long[] times = server.tickTimes;
+        long sum = 0L;
+        for (long time : times) {
+            sum += time;
+        }
+        return times.length == 0 ? 0.0 : sum / (double) times.length / 1_000_000.0;
     }
 
     /** A living entity died: wave monsters advance the run, boss adds may break a shield. */
@@ -341,7 +514,10 @@ public final class DungeonService {
         instance.dispatch(instance.run.onPlayerLeft(player.getUUID()));
     }
 
-    /** Server stopping: everyone out (blocks are left; a fresh run overwrites its slot). */
+    /**
+     * Server stopping: everyone out (blocks are left, prepared and half-cleared sites too; a fresh run overwrites its
+     * slot).
+     */
     public void shutdown() {
         for (DungeonInstance instance : List.copyOf(instances)) {
             for (UUID member : instance.run.members()) {
@@ -351,6 +527,8 @@ public final class DungeonService {
                 }
             }
         }
+        prepared.clear();
+        clearing.clear();
         DungeonResults.clear();
     }
 

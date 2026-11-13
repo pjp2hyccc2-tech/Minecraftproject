@@ -4,14 +4,12 @@ import com.eternalrealm.boss.Bosses;
 import com.eternalrealm.boss.Difficulty;
 import com.eternalrealm.boss.forge.BossFight;
 import com.eternalrealm.dungeon.BlockBox;
-import com.eternalrealm.dungeon.BlockFill;
 import com.eternalrealm.dungeon.BlockPoint;
 import com.eternalrealm.dungeon.BlockRole;
 import com.eternalrealm.dungeon.Door;
 import com.eternalrealm.dungeon.DungeonLayout;
 import com.eternalrealm.dungeon.DungeonRun;
 import com.eternalrealm.dungeon.DungeonRunEvent;
-import com.eternalrealm.dungeon.DungeonTheme;
 import com.eternalrealm.dungeon.InstanceSlot;
 import com.eternalrealm.dungeon.MonsterCount;
 import com.eternalrealm.dungeon.RoomLayout;
@@ -36,7 +34,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -50,13 +47,13 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * One running instance: builds its layout a slice per tick, brings the members in, spawns the waves, opens the
- * doors, starts the boss fight and finally sends everyone back to where they came from and clears the blocks.
+ * One running instance: has its site built (a slice per tick, {@link DungeonSite}), brings the members in, spawns the
+ * waves, opens the doors, starts the boss fight and finally sends everyone back to where they came from and hands the
+ * site back to the service to be cleared.
  */
 final class DungeonInstance {
     static final String INSTANCE = "er_instance";
     static final String ROOM = "er_room";
-    private static final int BLOCKS_PER_TICK = 6000;
     /** Time to look at the result screen and pick the bonus card before everyone is sent out. */
     private static final int EXIT_DELAY_TICKS = DungeonResults.EXIT_SECONDS * 20;
     private static final int FAIL_EXIT_DELAY_TICKS = 5 * 20;
@@ -75,18 +72,13 @@ final class DungeonInstance {
     final InstanceSlot slot;
     final ServerLevel level;
     final BlockPos origin;
+    /** The slot's blocks: built before the run (perhaps already while the party walked to the gate), cleared after. */
+    final DungeonSite site;
     final Map<UUID, Origin> returns = new HashMap<>();
     private final DungeonService service;
-    private final List<BlockFill> plan;
     /** The interior decoration, built after the plan (docs/modules/dungeons.md). */
     private final DecorBuilder decor;
-    private List<BlockBox> clearBoxes = List.of();
     private final Set<UUID> spawned = new HashSet<>();
-    private int fillIndex;
-    private long fillOffset;
-    private boolean clearing;
-    private int clearIndex;
-    private long clearOffset;
     private BossFight fight;
     /** The traps (null until built, or when disabled in the server config). */
     private DungeonHazards hazards;
@@ -97,8 +89,7 @@ final class DungeonInstance {
     private boolean closed;
 
     DungeonInstance(DungeonService service, String contentId, String nameKey, int areaId, int recommendedLevel,
-                    Difficulty difficulty, DungeonRun run, DungeonLayout layout, InstanceSlot slot, ServerLevel level,
-                    Map<UUID, Origin> returns) {
+                    Difficulty difficulty, DungeonRun run, DungeonSite site, Map<UUID, Origin> returns) {
         this.service = service;
         this.contentId = contentId;
         this.nameKey = nameKey;
@@ -106,13 +97,13 @@ final class DungeonInstance {
         this.recommendedLevel = recommendedLevel;
         this.difficulty = difficulty;
         this.run = run;
-        this.layout = layout;
-        this.slot = slot;
-        this.level = level;
-        this.origin = DungeonLevels.origin(level, slot);
+        this.site = site;
+        this.layout = site.layout;
+        this.slot = site.slot;
+        this.level = site.level;
+        this.origin = site.origin;
         this.returns.putAll(returns);
-        this.plan = layout.buildPlan();
-        this.decor = new DecorBuilder(level, origin, layout);
+        this.decor = site.decor;
     }
 
     Optional<BossFight> fight() {
@@ -125,18 +116,15 @@ final class DungeonInstance {
 
     // ------------------------------------------------------------------ tick
 
-    void tick(long tick) {
+    /** @param buildDeadline until when ({@link System#nanoTime()}) the site may be built on this tick */
+    void tick(long tick, long buildDeadline) {
         now = tick;
         if (closed) {
             return;
         }
-        if (clearing) {
-            clearSlice();
-            return;
-        }
         RunState state = run.state();
         if (state == RunState.BUILDING) {
-            if (buildSlice() && decor.buildSlice()) {
+            if (site.build(buildDeadline, now)) {
                 handle(run.onBuilt());
                 if (trapsEnabled()) {
                     hazards = DungeonHazards.forInstance(level, layout, origin, difficulty);
@@ -168,61 +156,6 @@ final class DungeonInstance {
         } else if (exitAt >= 0 && (exitAt - now) % 100 == 0 && exitAt - now > 0) {
             tellAll(Component.translatable("message.eternalrealm.dungeon.leaving", (exitAt - now) / 20)
                     .withStyle(ChatFormatting.GRAY), true);
-        }
-    }
-
-    /** Places the next slice of the build plan. @return whether everything is placed */
-    private boolean buildSlice() {
-        int budget = BLOCKS_PER_TICK;
-        DungeonTheme theme = layout.theme();
-        while (fillIndex < plan.size() && budget > 0) {
-            BlockFill fill = plan.get(fillIndex);
-            BlockBox box = fill.box();
-            long volume = box.volume();
-            while (fillOffset < volume && budget > 0) {
-                int dx = (int) (fillOffset % box.sizeX());
-                int dz = (int) ((fillOffset / box.sizeX()) % box.sizeZ());
-                int dy = (int) (fillOffset / ((long) box.sizeX() * box.sizeZ()));
-                int x = origin.getX() + box.minX() + dx;
-                int y = origin.getY() + box.minY() + dy;
-                int z = origin.getZ() + box.minZ() + dz;
-                BlockState state = DungeonPalette.block(theme, fill.role(), x, y, z);
-                level.setBlock(new BlockPos(x, y, z), state, Block.UPDATE_CLIENTS);
-                fillOffset++;
-                budget--;
-            }
-            if (fillOffset >= volume) {
-                fillIndex++;
-                fillOffset = 0;
-            }
-        }
-        return fillIndex >= plan.size();
-    }
-
-    /** Clears the occupied boxes a slice per tick, then releases the slot. */
-    private void clearSlice() {
-        List<BlockBox> boxes = clearBoxes;
-        int budget = BLOCKS_PER_TICK * 2;
-        while (clearIndex < boxes.size() && budget > 0) {
-            BlockBox box = boxes.get(clearIndex);
-            long volume = box.volume();
-            while (clearOffset < volume && budget > 0) {
-                int dx = (int) (clearOffset % box.sizeX());
-                int dz = (int) ((clearOffset / box.sizeX()) % box.sizeZ());
-                int dy = (int) (clearOffset / ((long) box.sizeX() * box.sizeZ()));
-                level.setBlock(new BlockPos(origin.getX() + box.minX() + dx, origin.getY() + box.minY() + dy,
-                        origin.getZ() + box.minZ() + dz), Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
-                clearOffset++;
-                budget--;
-            }
-            if (clearOffset >= volume) {
-                clearIndex++;
-                clearOffset = 0;
-            }
-        }
-        if (clearIndex >= boxes.size()) {
-            closed = true;
-            service.release(this);
         }
     }
 
@@ -395,11 +328,12 @@ final class DungeonInstance {
                 && Math.abs(player.getZ() - (origin.getZ() + half)) < half + 72;
     }
 
-    /** Sends the members out and starts clearing the blocks. */
+    /** Sends the members out and hands the site back to be cleared (in the background, a little each tick). */
     void close() {
-        if (clearing || closed) {
+        if (closed) {
             return;
         }
+        closed = true;
         if (run.state() != RunState.CLOSED) {
             handle(run.close(now));
         }
@@ -431,10 +365,7 @@ final class DungeonInstance {
                 com.eternalrealm.monster.forge.MonsterTags.TAG) || mob.getTags().contains(BossFight.TAG))) {
             leftover.discard();
         }
-        decor.drainFluids();
-        clearBoxes = new ArrayList<>(layout.occupiedBoxes());
-        clearBoxes.addAll(decor.extraBoxes());
-        clearing = true;
+        service.retire(this);
     }
 
     /**

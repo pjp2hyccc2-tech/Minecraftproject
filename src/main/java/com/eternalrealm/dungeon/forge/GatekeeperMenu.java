@@ -31,6 +31,8 @@ public final class GatekeeperMenu {
 
     public static void open(ServerPlayer player) {
         ServerMenu.open(player, Component.translatable("screen.eternalrealm.gate.title"), 3, GatekeeperMenu::fill);
+        // the dungeon this player ran last starts being built while they choose
+        ServerContext.current().ifPresent(context -> context.game().dungeons().onGatekeeper(player));
     }
 
     private static void fill(ServerMenu menu) {

@@ -4,6 +4,7 @@ import com.eternalrealm.dungeon.BlockRole;
 import com.eternalrealm.dungeon.DungeonTheme;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 /** The blocks of each dungeon theme per {@link BlockRole}; floors and walls mix two blocks for texture. */
@@ -21,8 +22,13 @@ public final class DungeonPalette {
             case WALL -> pick(alt, wall(theme), wallAlt(theme));
             case PILLAR -> pillar(theme).defaultBlockState();
             case LIGHT -> light(theme).defaultBlockState();
-            case ACCENT -> accent(theme).defaultBlockState();
+            case ACCENT -> kept(accent(theme).defaultBlockState());
         };
+    }
+
+    /** Leaves never decay in a dungeon (nothing holds them up there; the forest's floor marks are azalea leaves). */
+    private static BlockState kept(BlockState state) {
+        return state.hasProperty(LeavesBlock.PERSISTENT) ? state.setValue(LeavesBlock.PERSISTENT, true) : state;
     }
 
     private static BlockState pick(boolean alt, Block normal, Block other) {
