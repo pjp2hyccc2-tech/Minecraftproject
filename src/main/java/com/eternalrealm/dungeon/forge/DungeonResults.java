@@ -12,6 +12,9 @@ import com.eternalrealm.item.EquipmentGenerator;
 import com.eternalrealm.item.ItemRarity;
 import com.eternalrealm.item.ItemTier;
 import com.eternalrealm.item.Materials;
+import com.eternalrealm.item.NamedTrinkets;
+import com.eternalrealm.item.TrinketDesign;
+import com.eternalrealm.item.Trinkets;
 import com.eternalrealm.item.forge.ERGearItems;
 import com.eternalrealm.item.forge.EquipmentStacks;
 import com.eternalrealm.item.forge.Inventories;
@@ -206,7 +209,11 @@ public final class DungeonResults {
 
     private static Card rollCard(ServerContext context, ServerPlayer player, DungeonInstance instance, int tier) {
         int equipmentWeight = 5 + 5 * tier;
-        int roll = RANDOM.nextInt(30 + 20 + 15 + 25 + equipmentWeight);
+        int trinketWeight = 8 + 4 * tier;
+        int roll = RANDOM.nextInt(30 + 20 + 15 + 25 + equipmentWeight + trinketWeight);
+        if (roll >= 90 + equipmentWeight) {
+            return trinketCard(context, player, instance, tier);
+        }
         if (roll < 30) {
             Item stone = ERGearItems.material(Materials.ENHANCEMENT_STONE);
             if (stone != null) {
@@ -236,6 +243,26 @@ public final class DungeonResults {
         long base = Math.max(1, instance.recommendedLevel) * (20L + 15L * tier);
         long gold = Math.max(10L, Math.round(base * (0.75 + RANDOM.nextDouble() * 0.5)));
         return new Card(null, gold);
+    }
+
+    /**
+     * A trinket in the bonus chest (装身具): half the time one of the dungeon's own (名品の装身具), otherwise one of the
+     * smithy's catalogue of the area's grade; the rarity floor grows with the clear rank like the equipment card's.
+     */
+    private static Card trinketCard(ServerContext context, ServerPlayer player, DungeonInstance instance, int tier) {
+        double luck = context.combat().service().get(player.getUUID()).map(Combatant::stats)
+                .map(CombatStats::lootBonus).orElse(0.0);
+        ItemRarity rarity = EquipmentGenerator.rollRarity(luck, RANDOM);
+        ItemRarity floor = tier >= 3 ? ItemRarity.EPIC : tier >= 2 ? ItemRarity.RARE : ItemRarity.UNCOMMON;
+        if (rarity.rank() < floor.rank()) {
+            rarity = floor;
+        }
+        Optional<TrinketDesign> named = RANDOM.nextBoolean()
+                ? NamedTrinkets.dungeonDrop(instance.contentId, RANDOM)
+                : Optional.empty();
+        TrinketDesign design = named.orElseGet(() -> Trinkets.forDrop(DungeonService.tierOfArea(instance.areaId),
+                instance.recommendedLevel, LootDrops.jobStats(player), RANDOM));
+        return new Card(EquipmentStacks.create(EquipmentGenerator.roll(design, rarity, RANDOM)), 0L);
     }
 
     private static void pick(ServerPlayer player, ServerContext context, int index) {

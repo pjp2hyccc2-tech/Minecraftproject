@@ -117,6 +117,54 @@
         "custom_model_data": 5247
       },
       "model": "eternalrealm:item/trinket/trinket_veteran_luk_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5403
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_nebula"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5405
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_lunar"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5407
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_rustbone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5421
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_brutus"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5423
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_strom"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5425
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_drowned_fisher"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5437
+      },
+      "model": "eternalrealm:item/trinket/trinket_dungeon_d4_charm"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5439
+      },
+      "model": "eternalrealm:item/trinket/trinket_dungeon_d5_charm"
     }
   ]
 }

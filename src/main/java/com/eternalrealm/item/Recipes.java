@@ -46,6 +46,10 @@ import java.util.TreeMap;
  *                        gold 1500k² + 2500k (charm × 0.8)
  * level                  the trinket's level
  * </pre>
+ *
+ * <p><b>Named trinkets</b> of the lords and dungeons ({@link #namedTrinketRecipes()}, {@link NamedTrinkets}): from the
+ * materials of their field, F1 × 5 + F2 × 3 (a charm the other way round) + U × 2 + E × 2 + the field's boss soul;
+ * gold the tier's × 2.5 (charm × 2.0); level the trinket's.</p>
  */
 public final class Recipes {
     /** Index = tier number − 1: gold of a weapon or chest piece. */
@@ -54,6 +58,7 @@ public final class Recipes {
     private static final List<Recipe> CATALOG;
     private static final List<Recipe> DESIGNS;
     private static final List<Recipe> TRINKETS;
+    private static final List<Recipe> NAMED_TRINKETS;
     private static final Map<String, Recipe> BY_ID;
 
     static {
@@ -85,9 +90,18 @@ public final class Recipes {
             }
             trinkets.add(recipe);
         }
+        List<Recipe> named = new ArrayList<>();
+        for (TrinketDesign design : NamedTrinkets.all()) {
+            Recipe recipe = namedTrinketRecipeFor(design);
+            if (byId.put(recipe.id(), recipe) != null) {
+                throw new ExceptionInInitializerError("Duplicate recipe id " + recipe.id());
+            }
+            named.add(recipe);
+        }
         CATALOG = Collections.unmodifiableList(catalog);
         DESIGNS = Collections.unmodifiableList(designs);
         TRINKETS = Collections.unmodifiableList(trinkets);
+        NAMED_TRINKETS = Collections.unmodifiableList(named);
         BY_ID = Collections.unmodifiableMap(byId);
     }
 
@@ -115,6 +129,22 @@ public final class Recipes {
         List<Recipe> result = new ArrayList<>();
         for (Recipe recipe : TRINKETS) {
             if (recipe.design().level() == grade.level()) {
+                result.add(recipe);
+            }
+        }
+        return Collections.unmodifiableList(result);
+    }
+
+    /** The recipes of the named trinkets of the lords and dungeons ({@link NamedTrinkets#all()} order). */
+    public static List<Recipe> namedTrinketRecipes() {
+        return NAMED_TRINKETS;
+    }
+
+    /** The named trinket recipes of a field (listed by the smithy with the field's named designs). */
+    public static List<Recipe> namedTrinketRecipes(int field) {
+        List<Recipe> result = new ArrayList<>();
+        for (Recipe recipe : NAMED_TRINKETS) {
+            if (recipe.design().field() == field) {
                 result.add(recipe);
             }
         }
@@ -247,6 +277,25 @@ public final class Recipes {
             long base = 1500L * k * k + 2500L * k;
             gold = charm ? Math.round(base * 0.8) : base;
         }
+        return new Recipe(design.id(), design.base(), ingredients, gold, design.level(), design);
+    }
+
+    /**
+     * A named trinket from the materials of its field (F1, F2 the commons, U the uncommon, E the elite, S the boss's
+     * soul): accessory F1 × 5 + F2 × 3, charm F2 × 5 + F1 × 3, both + U × 2 + E × 2 + S × 1; gold the tier's × 2.5
+     * (charm × 2.0).
+     */
+    private static Recipe namedTrinketRecipeFor(TrinketDesign design) {
+        int field = design.field();
+        List<String> commons = Materials.ofField(field, Materials.Grade.COMMON);
+        boolean charm = design.slot() == EquipmentSlot.CHARM;
+        Map<String, Integer> ingredients = new TreeMap<>();
+        ingredients.put(commons.get(charm ? 1 : 0), 5);
+        ingredients.merge(commons.get(charm ? 0 : 1), 3, Integer::sum);
+        ingredients.merge(Materials.ofField(field, Materials.Grade.UNCOMMON).get(0), 2, Integer::sum);
+        ingredients.merge(Materials.ofField(field, Materials.Grade.ELITE).get(0), 2, Integer::sum);
+        ingredients.merge(Materials.ofField(field, Materials.Grade.BOSS).get(0), 1, Integer::sum);
+        long gold = Math.round(tierGold(design.base().tier()) * (charm ? 2.0 : 2.5));
         return new Recipe(design.id(), design.base(), ingredients, gold, design.level(), design);
     }
 

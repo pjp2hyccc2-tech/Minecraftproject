@@ -45,6 +45,12 @@
         "custom_model_data": 5223
       },
       "model": "eternalrealm:item/trinket/trinket_wayfarer_luk_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5433
+      },
+      "model": "eternalrealm:item/trinket/trinket_dungeon_d2_charm"
     }
   ]
 }

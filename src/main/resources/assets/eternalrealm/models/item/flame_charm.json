@@ -171,6 +171,36 @@
         "custom_model_data": 5259
       },
       "model": "eternalrealm:item/trinket/trinket_valiant_luk_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5409
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_goura"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5411
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_ord"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5427
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_barbas"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5429
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_ankara"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5441
+      },
+      "model": "eternalrealm:item/trinket/trinket_dungeon_d6_charm"
     }
   ]
 }

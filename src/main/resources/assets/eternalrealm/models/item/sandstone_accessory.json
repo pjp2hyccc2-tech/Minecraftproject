@@ -75,6 +75,24 @@
         "custom_model_data": 5234
       },
       "model": "eternalrealm:item/trinket/trinket_warrior_luk_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5400
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_garm"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5402
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_durn"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5434
+      },
+      "model": "eternalrealm:item/trinket/trinket_dungeon_d3_accessory"
     }
   ]
 }

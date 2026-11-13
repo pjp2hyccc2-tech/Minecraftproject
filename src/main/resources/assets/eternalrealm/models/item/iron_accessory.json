@@ -39,6 +39,12 @@
         "custom_model_data": 5210
       },
       "model": "eternalrealm:item/trinket/trinket_novice_luk_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5430
+      },
+      "model": "eternalrealm:item/trinket/trinket_dungeon_d1_accessory"
     }
   ]
 }

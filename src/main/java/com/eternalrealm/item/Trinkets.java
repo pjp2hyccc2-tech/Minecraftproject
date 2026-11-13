@@ -30,7 +30,8 @@ import java.util.random.RandomGenerator;
  *                   VIT max health, LUK critical chance)
  * charm             focus stat +0.6 × a(L),  plus max health 0.4 × level and defense 0.3 × level
  * sources           forged at the smithy ({@link Recipes#trinketRecipes()}); grades 1-8 also drop in the fields
- *                   ({@link #forDrop})
+ *                   ({@link #forDrop}), and the equipment piece of a dungeon clear, a lord's and a calamity's rewards
+ *                   is one {@link #REWARD_SHARE} of the time (the dungeon's bonus chest may offer one, too)
  * </pre>
  *
  * <p>The same named trinket counts once ({@link Gear#usable}), so a build that wants four STR accessories wears four
@@ -234,6 +235,11 @@ public final class Trinkets {
     public static final double CHAMPION_SHARE = 0.5;
     /** The killer's job stats are this many times as likely as the focus of a dropped trinket. */
     public static final int JOB_FOCUS_WEIGHT = 2;
+    /**
+     * Share of the equipment piece of a dungeon clear, a lord's or a calamity's rewards that is a trinket of the tier's
+     * grade instead (owner's request of 2026-11-13).
+     */
+    public static final double REWARD_SHARE = 0.15;
 
     public static double dropShare(boolean elite) {
         return elite ? DROP_SHARE_ELITE : DROP_SHARE;

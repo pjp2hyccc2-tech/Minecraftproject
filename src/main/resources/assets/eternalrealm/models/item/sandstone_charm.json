@@ -75,6 +75,18 @@
         "custom_model_data": 5235
       },
       "model": "eternalrealm:item/trinket/trinket_warrior_luk_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5401
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_hook"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5435
+      },
+      "model": "eternalrealm:item/trinket/trinket_dungeon_d3_charm"
     }
   ]
 }

@@ -171,6 +171,24 @@
         "custom_model_data": 5258
       },
       "model": "eternalrealm:item/trinket/trinket_valiant_luk_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5410
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_mistweaver"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5428
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_dock_brawler"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5440
+      },
+      "model": "eternalrealm:item/trinket/trinket_dungeon_d6_accessory"
     }
   ]
 }

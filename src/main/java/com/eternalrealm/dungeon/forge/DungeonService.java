@@ -24,6 +24,8 @@ import com.eternalrealm.item.forge.ArmoryStacks;
 import com.eternalrealm.item.ItemRarity;
 import com.eternalrealm.item.ItemTier;
 import com.eternalrealm.item.Materials;
+import com.eternalrealm.item.NamedTrinkets;
+import com.eternalrealm.item.Trinkets;
 import com.eternalrealm.item.forge.ERGearItems;
 import com.eternalrealm.item.forge.EquipmentStacks;
 import com.eternalrealm.item.forge.Inventories;
@@ -441,7 +443,11 @@ public final class DungeonService {
             rarity = floor;
         }
         ItemTier tier = tierOfArea(instance.areaId);
-        ItemStack piece = EquipmentStacks.create(EquipmentGenerator.roll(LootDrops.baseFor(player, tier), rarity, RANDOM));
+        // the piece is now and then an accessory or a charm of the tier's grade (装身具)
+        ItemStack piece = RANDOM.nextDouble() < Trinkets.REWARD_SHARE
+                ? EquipmentStacks.create(EquipmentGenerator.roll(Trinkets.forDrop(tier, instance.recommendedLevel,
+                        LootDrops.jobStats(player), RANDOM), rarity, RANDOM))
+                : EquipmentStacks.create(EquipmentGenerator.roll(LootDrops.baseFor(player, tier), rarity, RANDOM));
         player.sendSystemMessage(Component.translatable("message.eternalrealm.dungeon.reward", piece.getDisplayName())
                 .withStyle(ChatFormatting.GOLD));
         given.add(piece.copy());
@@ -464,6 +470,15 @@ public final class DungeonService {
                 ArmoryStacks.announce(player, named, design);
                 given.add(named.copy());
                 Inventories.give(player, named);
+            });
+        }
+        // the dungeon's own trinkets (名品の装身具): an accessory and a charm per dungeon
+        if (RANDOM.nextDouble() < NamedTrinkets.Difficulty.of(instance.difficulty.name()).chance()) {
+            NamedTrinkets.dungeonDrop(instance.contentId, RANDOM).ifPresent(design -> {
+                ItemStack trinket = ArmoryStacks.reward(player, design, floor, RANDOM);
+                ArmoryStacks.announce(player, trinket, design);
+                given.add(trinket.copy());
+                Inventories.give(player, trinket);
             });
         }
         if (RANDOM.nextDouble() < odds.bossWeaponChance()) {

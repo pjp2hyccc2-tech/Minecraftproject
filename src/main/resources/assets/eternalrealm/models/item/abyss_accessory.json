@@ -369,6 +369,36 @@
         "custom_model_data": 5354
       },
       "model": "eternalrealm:item/trinket/trinket_eternal_luk_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5416
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_peak_sniper"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5418
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_xenos"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5420
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_nihil"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5444
+      },
+      "model": "eternalrealm:item/trinket/trinket_dungeon_d8_accessory"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5446
+      },
+      "model": "eternalrealm:item/trinket/trinket_dungeon_final_accessory"
     }
   ]
 }

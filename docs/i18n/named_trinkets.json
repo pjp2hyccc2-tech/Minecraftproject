@@ -1,0 +1,422 @@
+{
+  "design.eternalrealm.trinket_lord_garm": {
+    "ja": "餓狼の勲章",
+    "en": "Medal of the Hungry Wolf"
+  },
+  "design.eternalrealm.trinket_lord_garm.lore": {
+    "ja": "街道を荒らす獣を討った者に、宿場の人々が贈った粗い勲章。牙の跡が残る。",
+    "en": "A rough medal the waystation folk gave whoever brought down the highway beast. It still bears tooth marks."
+  },
+  "design.eternalrealm.trinket_lord_hook": {
+    "ja": "赤目の護り鏡",
+    "en": "Red-Eye Ward Mirror"
+  },
+  "design.eternalrealm.trinket_lord_hook.lore": {
+    "ja": "射手の赤い眼光を映し返したという小鏡。覗くと狙いが澄む。",
+    "en": "A little mirror said to have thrown back the archer's red glare. Looking into it steadies the aim."
+  },
+  "design.eternalrealm.trinket_lord_durn": {
+    "ja": "猪突の足環",
+    "en": "Anklet of the Charging Boar"
+  },
+  "design.eternalrealm.trinket_lord_durn.lore": {
+    "ja": "大猪の牙を削って編んだ足環。追い詰められるほど足が前へ出る。",
+    "en": "An anklet of carved boar tusk. The more you are cornered, the harder your feet push forward."
+  },
+  "design.eternalrealm.trinket_lord_nebula": {
+    "ja": "月影の守り羽",
+    "en": "Moonshade Ward Feather"
+  },
+  "design.eternalrealm.trinket_lord_nebula.lore": {
+    "ja": "月夜にだけ落ちる古老の羽。倒した命の名残をそっと持ち主に渡す。",
+    "en": "A feather the elder sheds only on moonlit nights. It passes a little of each fallen life to its bearer."
+  },
+  "design.eternalrealm.trinket_lord_belladonna": {
+    "ja": "宵闇のブローチ",
+    "en": "Dusk Brooch"
+  },
+  "design.eternalrealm.trinket_lord_belladonna.lore": {
+    "ja": "魔女の胸元を飾っていた紫水晶。触れた刃に宵の毒が宿る。",
+    "en": "The violet stone that once sat at the witch's breast. Any blade it touches carries the dusk's venom."
+  },
+  "design.eternalrealm.trinket_lord_lunar": {
+    "ja": "白銀の牙の数珠",
+    "en": "Silver Fang Prayer Beads"
+  },
+  "design.eternalrealm.trinket_lord_lunar.lore": {
+    "ja": "狼王の抜け落ちた牙を連ねた数珠。身を翻す一瞬が見えるようになる。",
+    "en": "Beads strung from the wolf king's shed fangs. You begin to see the instant to twist aside."
+  },
+  "design.eternalrealm.trinket_lord_dolga": {
+    "ja": "墓守の額冠",
+    "en": "Gravewarden's Circlet"
+  },
+  "design.eternalrealm.trinket_lord_dolga.lore": {
+    "ja": "坑道の死者を守り続けた墓守の冠。触れる者には痛みを返す。",
+    "en": "The crown of the warden who kept watch over the dead of the shafts. It returns pain to those who touch it."
+  },
+  "design.eternalrealm.trinket_lord_rustbone": {
+    "ja": "錆骨の身代わり人形",
+    "en": "Rustbone Ward Doll"
+  },
+  "design.eternalrealm.trinket_lord_rustbone.lore": {
+    "ja": "錆びた骨で組まれた人形。矢を受けた敵の足を重くする。",
+    "en": "A doll pieced together from rusted bones. Foes it marks walk as if their feet were lead."
+  },
+  "design.eternalrealm.trinket_lord_vein_eater": {
+    "ja": "鉱晶のブローチ",
+    "en": "Ore-Crystal Brooch"
+  },
+  "design.eternalrealm.trinket_lord_vein_eater.lore": {
+    "ja": "大ムカデの腹から出た青い鉱晶。急所を穿つ一撃が深くなる。",
+    "en": "A blue ore crystal found in the great centipede's belly. Blows that find a weak spot bite deeper."
+  },
+  "design.eternalrealm.trinket_lord_goura": {
+    "ja": "滝壺の護り鏡",
+    "en": "Plunge Pool Ward Mirror"
+  },
+  "design.eternalrealm.trinket_lord_goura.lore": {
+    "ja": "滝壺の底で磨かれた鏡。水の重みが身体を太くする。",
+    "en": "A mirror polished at the bottom of the plunge pool. The weight of the water thickens the body."
+  },
+  "design.eternalrealm.trinket_lord_mistweaver": {
+    "ja": "霧糸の額冠",
+    "en": "Mistsilk Circlet"
+  },
+  "design.eternalrealm.trinket_lord_mistweaver.lore": {
+    "ja": "霧の糸を編んだ額冠。腕が糸のように軽くなる。",
+    "en": "A circlet woven from threads of mist. Your arms grow as light as silk."
+  },
+  "design.eternalrealm.trinket_lord_ord": {
+    "ja": "甲羅の数珠",
+    "en": "Shellback Prayer Beads"
+  },
+  "design.eternalrealm.trinket_lord_ord.lore": {
+    "ja": "大亀の甲羅を削った数珠。身にまとうと背に甲羅を負うようだ。",
+    "en": "Beads carved from the great tortoise's shell. Wearing them is like carrying its shell on your back."
+  },
+  "design.eternalrealm.trinket_lord_valka": {
+    "ja": "狂戦士の勲章",
+    "en": "Berserker's Medal"
+  },
+  "design.eternalrealm.trinket_lord_valka.lore": {
+    "ja": "倒れるまで戦い続けた狂戦士の勲章。傷が深いほど腕が冴える。",
+    "en": "The medal of a berserker who fought until she fell. The deeper the wound, the keener the arm."
+  },
+  "design.eternalrealm.trinket_lord_scorch_eye": {
+    "ja": "灼眼の守り羽",
+    "en": "Scorch-Eye Ward Feather"
+  },
+  "design.eternalrealm.trinket_lord_scorch_eye.lore": {
+    "ja": "燃える眼の主が残した火の羽。放つ一撃に火が移る。",
+    "en": "A burning feather left by the scorching eye. Every strike you loose catches its flame."
+  },
+  "design.eternalrealm.trinket_lord_agnis": {
+    "ja": "神像の額冠",
+    "en": "Idol's Circlet"
+  },
+  "design.eternalrealm.trinket_lord_agnis.lore": {
+    "ja": "遺跡の神像の額にはめられていた冠。技に古い神の力が宿る。",
+    "en": "The circlet set on the ruin idol's brow. An old god's strength flows into your arts."
+  },
+  "design.eternalrealm.trinket_lord_alvin": {
+    "ja": "聖騎士の数珠",
+    "en": "Paladin's Prayer Beads"
+  },
+  "design.eternalrealm.trinket_lord_alvin.lore": {
+    "ja": "天翔ける聖騎士が祈りに使った数珠。癒しの手が温かくなる。",
+    "en": "The beads the paladin of the peaks prayed with. Healing hands grow warm."
+  },
+  "design.eternalrealm.trinket_lord_peak_sniper": {
+    "ja": "狙撃手の勲章",
+    "en": "Marksman's Medal"
+  },
+  "design.eternalrealm.trinket_lord_peak_sniper.lore": {
+    "ja": "峰の狙撃手が誇りにしていた勲章。外さない一射が致命になる。",
+    "en": "The medal the peak sniper took pride in. The shot that does not miss becomes the fatal one."
+  },
+  "design.eternalrealm.trinket_lord_zephyr": {
+    "ja": "雷翼の守り羽",
+    "en": "Thunderwing Ward Feather"
+  },
+  "design.eternalrealm.trinket_lord_zephyr.lore": {
+    "ja": "雷を纏う翼から抜けた羽。打たれた敵が一瞬しびれる。",
+    "en": "A feather torn from the thunder-clad wing. Foes it strikes freeze for a heartbeat."
+  },
+  "design.eternalrealm.trinket_lord_xenos": {
+    "ja": "先触れの額冠",
+    "en": "Herald's Circlet"
+  },
+  "design.eternalrealm.trinket_lord_xenos.lore": {
+    "ja": "破滅を告げに来た者の冠。唱える言葉に終わりの響きが混じる。",
+    "en": "The crown of the one who came to announce ruin. Your words carry an echo of the end."
+  },
+  "design.eternalrealm.trinket_lord_black_knight": {
+    "ja": "黒鉄の護り鏡",
+    "en": "Black Iron Ward Mirror"
+  },
+  "design.eternalrealm.trinket_lord_black_knight.lore": {
+    "ja": "黒騎士の盾から削り出された鏡。刃を向けた者が自らを斬る。",
+    "en": "A mirror cut from the black knight's shield. Whoever raises a blade against you cuts themselves."
+  },
+  "design.eternalrealm.trinket_lord_nihil": {
+    "ja": "虚無竜のブローチ",
+    "en": "Void Drake Brooch"
+  },
+  "design.eternalrealm.trinket_lord_nihil.lore": {
+    "ja": "虚無を喰む竜の鱗を留めたブローチ。斬った傷から命を吸う。",
+    "en": "A brooch holding a scale of the void-gnawing drake. It drinks life from every cut."
+  },
+  "design.eternalrealm.trinket_lord_brutus": {
+    "ja": "牛角の数珠",
+    "en": "Bullhorn Prayer Beads"
+  },
+  "design.eternalrealm.trinket_lord_brutus.lore": {
+    "ja": "暴れ牛の角を連ねた数珠。重い一撃が相手を揺さぶる。",
+    "en": "Beads strung from the rampaging bull's horns. Heavy blows leave the foe reeling."
+  },
+  "design.eternalrealm.trinket_lord_harvest_boss": {
+    "ja": "盗人の足環",
+    "en": "Thief's Anklet"
+  },
+  "design.eternalrealm.trinket_lord_harvest_boss.lore": {
+    "ja": "収穫泥棒の頭目が逃げ足自慢に着けていた足環。足取りが軽くなる。",
+    "en": "The anklet the harvest thieves' chief boasted his quick feet with. Your step grows light."
+  },
+  "design.eternalrealm.trinket_lord_strom": {
+    "ja": "案山子の身代わり人形",
+    "en": "Scarecrow Ward Doll"
+  },
+  "design.eternalrealm.trinket_lord_strom.lore": {
+    "ja": "案山子の王が畑に立てていた人形。近づく者の足を止める。",
+    "en": "One of the dolls the scarecrow king set up in his fields. It stops whoever comes near."
+  },
+  "design.eternalrealm.trinket_lord_melusine": {
+    "ja": "湖光のブローチ",
+    "en": "Lakelight Brooch"
+  },
+  "design.eternalrealm.trinket_lord_melusine.lore": {
+    "ja": "湖の魔女が水面の光を閉じ込めた宝石。魔法が澄んで鋭くなる。",
+    "en": "A gem in which the lake witch caught the light on the water. Spells grow clear and sharp."
+  },
+  "design.eternalrealm.trinket_lord_drowned_fisher": {
+    "ja": "水底の護り鏡",
+    "en": "Depths Ward Mirror"
+  },
+  "design.eternalrealm.trinket_lord_drowned_fisher.lore": {
+    "ja": "沈んだ漁師の網に絡んでいた鏡。銛のような傷を残す。",
+    "en": "A mirror tangled in the drowned fisher's net. It leaves wounds like a harpoon's."
+  },
+  "design.eternalrealm.trinket_lord_numel": {
+    "ja": "湖底の足環",
+    "en": "Lakebed Anklet"
+  },
+  "design.eternalrealm.trinket_lord_numel.lore": {
+    "ja": "湖底の主のぬめりを帯びた足環。攻撃がつるりと滑っていく。",
+    "en": "An anklet slick with the lakebed lord's slime. Attacks slide right off you."
+  },
+  "design.eternalrealm.trinket_lord_barbas": {
+    "ja": "海鷗の守り羽",
+    "en": "Seagull Ward Feather"
+  },
+  "design.eternalrealm.trinket_lord_barbas.lore": {
+    "ja": "隻眼の船長の帽子に挿してあった羽。運のいい一撃が増える。",
+    "en": "The feather from the one-eyed captain's hat. Lucky blows come more often."
+  },
+  "design.eternalrealm.trinket_lord_dock_brawler": {
+    "ja": "喧嘩屋の勲章",
+    "en": "Brawler's Medal"
+  },
+  "design.eternalrealm.trinket_lord_dock_brawler.lore": {
+    "ja": "港の喧嘩で負け知らずだった男の勲章。拳が速くなる。",
+    "en": "The medal of a man who never lost a fight on the docks. Your fists move faster."
+  },
+  "design.eternalrealm.trinket_lord_ankara": {
+    "ja": "甲殻の身代わり人形",
+    "en": "Carapace Ward Doll"
+  },
+  "design.eternalrealm.trinket_lord_ankara.lore": {
+    "ja": "大ガニの甲殻で作られた人形。代わりに打撃を受け止める。",
+    "en": "A doll made from the great crab's shell. It takes the blows meant for you."
+  },
+  "design.eternalrealm.trinket_dungeon_d1_accessory": {
+    "ja": "古都の銀ブローチ",
+    "en": "Old City Silver Brooch"
+  },
+  "design.eternalrealm.trinket_dungeon_d1_accessory.lore": {
+    "ja": "失われた地下都市の貴族が着けていた銀細工。盗賊たちも手を出さなかった。",
+    "en": "Silverwork worn by a noble of the lost undercity. Even the bandits left it alone."
+  },
+  "design.eternalrealm.trinket_dungeon_d1_charm": {
+    "ja": "水路の身代わり人形",
+    "en": "Canal Ward Doll"
+  },
+  "design.eternalrealm.trinket_dungeon_d1_charm.lore": {
+    "ja": "地下水路に流された人形。拾った者の身代わりに危機をかわす。",
+    "en": "A doll set adrift in the undercity canals. It dodges danger in its finder's place."
+  },
+  "design.eternalrealm.trinket_dungeon_d2_accessory": {
+    "ja": "若葉の額冠",
+    "en": "Sprout Circlet"
+  },
+  "design.eternalrealm.trinket_dungeon_d2_accessory.lore": {
+    "ja": "古代樹の若枝で編まれた冠。癒しの力が芽吹く。",
+    "en": "A circlet woven from the ancient tree's young twigs. Healing power sprouts within."
+  },
+  "design.eternalrealm.trinket_dungeon_d2_charm": {
+    "ja": "樹精の守り羽",
+    "en": "Dryad Ward Feather"
+  },
+  "design.eternalrealm.trinket_dungeon_d2_charm.lore": {
+    "ja": "迷宮の樹精が落とした緑の羽。命が巡るのを感じる。",
+    "en": "A green feather dropped by the labyrinth's dryad. You feel life flowing around you."
+  },
+  "design.eternalrealm.trinket_dungeon_d3_accessory": {
+    "ja": "太陽神の勲章",
+    "en": "Sun God's Medal"
+  },
+  "design.eternalrealm.trinket_dungeon_d3_accessory.lore": {
+    "ja": "砂塵の神殿の神官が授けられた勲章。太陽の熱が腕に宿る。",
+    "en": "A medal granted to the priests of the sandstorm temple. The sun's heat dwells in your arms."
+  },
+  "design.eternalrealm.trinket_dungeon_d3_charm": {
+    "ja": "砂金の数珠",
+    "en": "Gold-Dust Prayer Beads"
+  },
+  "design.eternalrealm.trinket_dungeon_d3_charm.lore": {
+    "ja": "神殿の砂金を固めた数珠。窮地でこそ輝く。",
+    "en": "Beads pressed from the temple's gold dust. They shine brightest in a tight spot."
+  },
+  "design.eternalrealm.trinket_dungeon_d4_accessory": {
+    "ja": "鎖の足環",
+    "en": "Chain Anklet"
+  },
+  "design.eternalrealm.trinket_dungeon_d4_accessory.lore": {
+    "ja": "凍てつく地下牢の囚人を繋いでいた鎖。その恨みが刃を研ぐ。",
+    "en": "The chain that bound the prisoners of the frozen dungeon. Their grudge hones your blade."
+  },
+  "design.eternalrealm.trinket_dungeon_d4_charm": {
+    "ja": "氷牢の護り鏡",
+    "en": "Ice Cell Ward Mirror"
+  },
+  "design.eternalrealm.trinket_dungeon_d4_charm.lore": {
+    "ja": "氷の牢の壁から切り出した鏡。打ちかかる者を凍える痛みが襲う。",
+    "en": "A mirror cut from the wall of an ice cell. Freezing pain answers anyone who strikes."
+  },
+  "design.eternalrealm.trinket_dungeon_d5_accessory": {
+    "ja": "氷華の額冠",
+    "en": "Frostflower Circlet"
+  },
+  "design.eternalrealm.trinket_dungeon_d5_accessory.lore": {
+    "ja": "氷結の城の庭に咲く氷の花の冠。触れたものを凍らせる。",
+    "en": "A crown of the ice flowers in the frozen castle's garden. Whatever it touches freezes."
+  },
+  "design.eternalrealm.trinket_dungeon_d5_charm": {
+    "ja": "白鳥の守り羽",
+    "en": "Swan Ward Feather"
+  },
+  "design.eternalrealm.trinket_dungeon_d5_charm.lore": {
+    "ja": "女王の白鳥が残した羽。舞うように攻撃をかわす。",
+    "en": "A feather the queen's swan left behind. You slip past attacks as if dancing."
+  },
+  "design.eternalrealm.trinket_dungeon_d6_accessory": {
+    "ja": "溶岩石のブローチ",
+    "en": "Lavastone Brooch"
+  },
+  "design.eternalrealm.trinket_dungeon_d6_accessory.lore": {
+    "ja": "火山洞窟の溶岩が冷え固まった石。今もかすかに熱を放つ。",
+    "en": "Stone formed where the volcano's lava cooled. It still gives off a faint heat."
+  },
+  "design.eternalrealm.trinket_dungeon_d6_charm": {
+    "ja": "竜鱗の身代わり人形",
+    "en": "Dragonscale Ward Doll"
+  },
+  "design.eternalrealm.trinket_dungeon_d6_charm.lore": {
+    "ja": "竜王の鱗を縫い付けた人形。持ち主の身体を頑丈にする。",
+    "en": "A doll stitched with the dragon king's scales. It makes its owner sturdy."
+  },
+  "design.eternalrealm.trinket_dungeon_d7_accessory": {
+    "ja": "天空機関の勲章",
+    "en": "Sky Engine Medal"
+  },
+  "design.eternalrealm.trinket_dungeon_d7_accessory.lore": {
+    "ja": "古代遺跡の機関から外された歯車の勲章。技の回転が上がる。",
+    "en": "A medal made from a gear taken out of the ancient ruins' engine. Your arts spin faster."
+  },
+  "design.eternalrealm.trinket_dungeon_d7_charm": {
+    "ja": "雲海の護り鏡",
+    "en": "Cloud Sea Ward Mirror"
+  },
+  "design.eternalrealm.trinket_dungeon_d7_charm.lore": {
+    "ja": "雲海を映す鏡。放つ雷光が敵を縫い止める。",
+    "en": "A mirror that shows the sea of clouds. Your lightning pins foes in place."
+  },
+  "design.eternalrealm.trinket_dungeon_d8_accessory": {
+    "ja": "黒曜の額冠",
+    "en": "Obsidian Circlet"
+  },
+  "design.eternalrealm.trinket_dungeon_d8_accessory.lore": {
+    "ja": "終焉の塔の門番が戴いていた黒い冠。致命の一撃を研ぎ澄ます。",
+    "en": "The black crown the tower's gatekeeper wore. It sharpens the killing blow."
+  },
+  "design.eternalrealm.trinket_dungeon_d8_charm": {
+    "ja": "虚ろの数珠",
+    "en": "Hollow Prayer Beads"
+  },
+  "design.eternalrealm.trinket_dungeon_d8_charm.lore": {
+    "ja": "塔の虚ろから拾い集めた珠。斬るたびに命が戻る。",
+    "en": "Pearls gathered from the tower's hollows. Life returns with every cut."
+  },
+  "design.eternalrealm.trinket_dungeon_final_accessory": {
+    "ja": "玉座のブローチ",
+    "en": "Throne Brooch"
+  },
+  "design.eternalrealm.trinket_dungeon_final_accessory.lore": {
+    "ja": "終焉の王の外套を留めていた紅玉。王の一撃の重さを知る。",
+    "en": "The ruby that fastened the King of the End's mantle. It knows the weight of a king's blow."
+  },
+  "design.eternalrealm.trinket_dungeon_final_charm": {
+    "ja": "黄昏の護り鏡",
+    "en": "Twilight Ward Mirror"
+  },
+  "design.eternalrealm.trinket_dungeon_final_charm.lore": {
+    "ja": "玉座の間に掛けられていた鏡。追い詰められた者に最後の力を貸す。",
+    "en": "The mirror that hung in the throne room. It lends one last strength to the cornered."
+  },
+  "trinket_kind.eternalrealm.brooch": {
+    "ja": "ブローチ",
+    "en": "Brooch"
+  },
+  "trinket_kind.eternalrealm.circlet": {
+    "ja": "額冠",
+    "en": "Circlet"
+  },
+  "trinket_kind.eternalrealm.anklet": {
+    "ja": "足環",
+    "en": "Anklet"
+  },
+  "trinket_kind.eternalrealm.medal": {
+    "ja": "勲章",
+    "en": "Medal"
+  },
+  "trinket_kind.eternalrealm.mirror": {
+    "ja": "護り鏡",
+    "en": "Ward Mirror"
+  },
+  "trinket_kind.eternalrealm.feather": {
+    "ja": "守り羽",
+    "en": "Ward Feather"
+  },
+  "trinket_kind.eternalrealm.beads": {
+    "ja": "数珠",
+    "en": "Prayer Beads"
+  },
+  "trinket_kind.eternalrealm.doll": {
+    "ja": "身代わり人形",
+    "en": "Ward Doll"
+  },
+  "dungeon.eternalrealm.final": {
+    "ja": "終焉の玉座",
+    "en": "Throne of the End"
+  }
+}

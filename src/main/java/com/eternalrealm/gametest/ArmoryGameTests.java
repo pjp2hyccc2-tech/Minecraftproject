@@ -52,12 +52,13 @@ public final class ArmoryGameTests {
 
     /**
      * Every design survives the trip into a stack: design tag, custom model data and the design's own profile; the
-     * smithy's catalogue trinkets too.
+     * smithy's catalogue trinkets and the named trinkets of the lords and dungeons too.
      */
     @GameTest(template = ARENA)
     public static void designStacksCarryTheirDesign(GameTestHelper helper) {
         java.util.List<Design> all = new java.util.ArrayList<>(Armory.designs());
         all.addAll(com.eternalrealm.item.Trinkets.all());
+        all.addAll(com.eternalrealm.item.NamedTrinkets.all());
         for (Design design : all) {
             ItemStack stack = EquipmentStacks.ofDesign(design);
             Optional<Design> read = EquipmentStacks.designOf(stack);

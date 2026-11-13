@@ -295,7 +295,9 @@ public final class SmithScreen extends Screen {
             }
         }
         for (int field : FIELD_ORDER) {
-            List<Recipe> recipes = Recipes.forField(field);
+            // the field's named weapons and armor, then its lords' and dungeons' trinkets (名品の装身具)
+            List<Recipe> recipes = new ArrayList<>(Recipes.forField(field));
+            recipes.addAll(Recipes.namedTrinketRecipes(field));
             if (recipes.isEmpty()) {
                 continue;
             }

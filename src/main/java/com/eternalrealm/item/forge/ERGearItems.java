@@ -80,6 +80,9 @@ public final class ERGearItems {
                 for (com.eternalrealm.item.Design trinket : com.eternalrealm.item.Trinkets.all()) {
                     output.accept(EquipmentStacks.ofDesign(trinket));
                 }
+                for (com.eternalrealm.item.Design trinket : com.eternalrealm.item.NamedTrinkets.all()) {
+                    output.accept(EquipmentStacks.ofDesign(trinket));
+                }
                 for (RegistryObject<MaterialItem> material : MATERIALS.values()) {
                     output.accept(material.get());
                 }

@@ -96,8 +96,8 @@ def armor_models(assets: str, piece_id: str) -> None:
 
 
 def design_overrides():
-    """item path of the base -> [(model number, model id)] of every design made on it (the relics and the catalogue
-    trinkets included)."""
+    """item path of the base -> [(model number, model id)] of every design made on it (the relics, the catalogue
+    trinkets and the named trinkets included)."""
     weapons, sets = armory_data.load()
     by_item: dict[str, list] = {}
     for w in weapons:
@@ -112,6 +112,9 @@ def design_overrides():
         by_item.setdefault(item, []).extend(entries)
     import trinkets
     for item, entries in trinkets.overrides().items():
+        by_item.setdefault(item, []).extend(entries)
+    import named_trinkets
+    for item, entries in named_trinkets.overrides().items():
         by_item.setdefault(item, []).extend(entries)
     return by_item
 

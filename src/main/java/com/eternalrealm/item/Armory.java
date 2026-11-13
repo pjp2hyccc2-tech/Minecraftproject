@@ -164,7 +164,10 @@ public final class Armory {
         return DESIGNS;
     }
 
-    /** A design of the catalogue, a relic ({@link Relics}) or a catalogue trinket ({@link Trinkets}) by id. */
+    /**
+     * A design of the catalogue, a relic ({@link Relics}), a catalogue trinket ({@link Trinkets}) or a named trinket
+     * ({@link NamedTrinkets}) by id.
+     */
     public static Optional<Design> design(String id) {
         if (id == null) {
             return Optional.empty();
@@ -175,6 +178,9 @@ public final class Armory {
         }
         if (id.startsWith("relic_")) {
             return Relics.design(id);
+        }
+        if (NamedTrinkets.isNamedId(id)) {
+            return NamedTrinkets.design(id).map(Design.class::cast);
         }
         return id.startsWith(Trinkets.PREFIX) ? Trinkets.design(id).map(Design.class::cast) : Optional.empty();
     }
@@ -187,11 +193,14 @@ public final class Armory {
         return Optional.ofNullable(id == null ? null : SETS_BY_ID.get(id));
     }
 
-    /** A design of the catalogue, a relic or a catalogue trinket by its model number. */
+    /** A design of the catalogue, a relic, a catalogue trinket or a named trinket by its model number. */
     public static Optional<Design> byModel(int model) {
         Design design = BY_MODEL.get(model);
         if (design != null) {
             return Optional.of(design);
+        }
+        if (model >= NamedTrinkets.MODELS) {
+            return NamedTrinkets.byModel(model).map(Design.class::cast);
         }
         return model >= Trinkets.MODELS ? Trinkets.byModel(model).map(Design.class::cast) : Relics.byModel(model);
     }

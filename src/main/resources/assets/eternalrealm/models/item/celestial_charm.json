@@ -57,6 +57,18 @@
         "custom_model_data": 5271
       },
       "model": "eternalrealm:item/trinket/trinket_elite_luk_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5413
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_scorch_eye"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5443
+      },
+      "model": "eternalrealm:item/trinket/trinket_dungeon_d7_charm"
     }
   ]
 }

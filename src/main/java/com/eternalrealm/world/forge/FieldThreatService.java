@@ -675,6 +675,15 @@ public final class FieldThreatService {
                     com.eternalrealm.item.forge.ArmoryStacks.announce(player, weapon, design);
                 });
             }
+            // the lord's own trinket (名品の装身具)
+            if (RANDOM.nextDouble() < com.eternalrealm.item.NamedTrinkets.lordDropChance(isHero)) {
+                com.eternalrealm.item.NamedTrinkets.forLord(state.lord.id()).ifPresent(design -> {
+                    ItemStack trinket = com.eternalrealm.item.forge.ArmoryStacks.reward(player, design,
+                            ItemRarity.UNCOMMON, RANDOM);
+                    items.add(trinket);
+                    com.eternalrealm.item.forge.ArmoryStacks.announce(player, trinket, design);
+                });
+            }
             if (RANDOM.nextDouble() < 0.15) {
                 items.add(new ItemStack(ERGearItems.consumable(Consumable.EVERBLOOM_PETAL)));
             }
@@ -1296,6 +1305,12 @@ public final class FieldThreatService {
             if (candidate.number() <= tierNumber && candidate.number() >= tier.number()) {
                 tier = candidate;
             }
+        }
+        // now and then an accessory or a charm of the tier's grade instead (装身具)
+        if (RANDOM.nextDouble() < com.eternalrealm.item.Trinkets.REWARD_SHARE) {
+            int level = context.playerData().snapshot(player.getUUID()).map(CharacterSnapshot::level).orElse(1);
+            return EquipmentStacks.create(EquipmentGenerator.roll(com.eternalrealm.item.Trinkets.forDrop(tier, level,
+                    LootDrops.jobStats(player), RANDOM), rarity, RANDOM));
         }
         return EquipmentStacks.create(EquipmentGenerator.roll(LootDrops.baseFor(player, tier), rarity, RANDOM));
     }

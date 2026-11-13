@@ -39,6 +39,12 @@
         "custom_model_data": 5211
       },
       "model": "eternalrealm:item/trinket/trinket_novice_luk_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5431
+      },
+      "model": "eternalrealm:item/trinket/trinket_dungeon_d1_charm"
     }
   ]
 }

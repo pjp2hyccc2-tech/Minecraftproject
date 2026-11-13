@@ -117,6 +117,54 @@
         "custom_model_data": 5246
       },
       "model": "eternalrealm:item/trinket/trinket_veteran_luk_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5404
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_belladonna"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5406
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_dolga"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5408
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_vein_eater"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5422
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_harvest_boss"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5424
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_melusine"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5426
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_numel"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5436
+      },
+      "model": "eternalrealm:item/trinket/trinket_dungeon_d4_accessory"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5438
+      },
+      "model": "eternalrealm:item/trinket/trinket_dungeon_d5_accessory"
     }
   ]
 }

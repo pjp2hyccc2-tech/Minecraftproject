@@ -113,7 +113,7 @@ public final class LootDrops {
     }
 
     /** The stats the killer's job grows (a dropped trinket's focus leans towards them); none without a job. */
-    private static java.util.Set<com.eternalrealm.character.StatType> jobStats(ServerPlayer killer) {
+    public static java.util.Set<com.eternalrealm.character.StatType> jobStats(ServerPlayer killer) {
         JobType job = ServerContext.current().flatMap(context -> context.playerData().snapshot(killer.getUUID()))
                 .map(CharacterSnapshot::jobId).map(JobType::fromStored).orElse(JobType.NONE);
         java.util.Set<com.eternalrealm.character.StatType> stats =

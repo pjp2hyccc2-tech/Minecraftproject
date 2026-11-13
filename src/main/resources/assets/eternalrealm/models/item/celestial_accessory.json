@@ -57,6 +57,24 @@
         "custom_model_data": 5270
       },
       "model": "eternalrealm:item/trinket/trinket_elite_luk_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5412
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_valka"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5414
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_agnis"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5442
+      },
+      "model": "eternalrealm:item/trinket/trinket_dungeon_d7_accessory"
     }
   ]
 }

@@ -45,6 +45,12 @@
         "custom_model_data": 5222
       },
       "model": "eternalrealm:item/trinket/trinket_wayfarer_luk_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5432
+      },
+      "model": "eternalrealm:item/trinket/trinket_dungeon_d2_accessory"
     }
   ]
 }

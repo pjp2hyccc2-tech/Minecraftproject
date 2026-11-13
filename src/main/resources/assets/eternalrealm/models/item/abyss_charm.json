@@ -369,6 +369,36 @@
         "custom_model_data": 5355
       },
       "model": "eternalrealm:item/trinket/trinket_eternal_luk_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5415
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_alvin"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5417
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_zephyr"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5419
+      },
+      "model": "eternalrealm:item/trinket/trinket_lord_black_knight"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5445
+      },
+      "model": "eternalrealm:item/trinket/trinket_dungeon_d8_charm"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5447
+      },
+      "model": "eternalrealm:item/trinket/trinket_dungeon_final_charm"
     }
   ]
 }
