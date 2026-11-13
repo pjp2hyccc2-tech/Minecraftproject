@@ -144,6 +144,7 @@ public final class ClientForgeEvents {
         SkillFx.clear();
         com.eternalrealm.client.boss.BossBodyEffects.clear();
         com.eternalrealm.ui.dialogue.ClientDialogue.clear();
+        com.eternalrealm.ui.gate.ReadyCheckClient.clear();
         com.eternalrealm.client.telegraph.ClientTelegraphs.clear();
         com.eternalrealm.client.block.ClientLightShafts.clear();
     }

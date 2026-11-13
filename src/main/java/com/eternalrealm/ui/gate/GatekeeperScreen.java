@@ -1,7 +1,6 @@
 package com.eternalrealm.ui.gate;
 
 import com.eternalrealm.client.ClientUiState;
-import com.eternalrealm.core.ModInfo;
 import com.eternalrealm.dungeon.forge.GatekeeperService;
 import com.eternalrealm.network.forge.ERNetwork;
 import com.eternalrealm.network.forge.UiActionPacket;
@@ -12,7 +11,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -28,10 +26,8 @@ import net.minecraft.util.Mth;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * 転移門: the gatekeeper's screen. The eight dungeons and the final raid on the left (emblem, name, level, sealed or
@@ -68,41 +64,33 @@ public final class GatekeeperScreen extends Screen {
     private static final int DETAIL_Y = 205;
     private static final int BUTTON_Y = 216;
 
-    // textures (tools/art/gate_screen.py ATLAS)
-    private static final ResourceLocation ATLAS = new ResourceLocation(ModInfo.MOD_ID, "textures/gui/gate/atlas.png");
-    private static final ResourceLocation CIRCLE = new ResourceLocation(ModInfo.MOD_ID, "textures/gui/gate/circle.png");
-    private static final ResourceLocation SEALED = new ResourceLocation(ModInfo.MOD_ID, "textures/gui/gate/sealed.png");
-    private static final Map<String, ResourceLocation> PICTURES = new HashMap<>();
-    private static final int TEX = 256;
-    private static final int PIC_TEX_W = 472;
-    private static final int PIC_TEX_H = 200;
+    // textures and colours (GateArt, tools/art/gate_screen.py)
+    private static final ResourceLocation SEALED = GateArt.SEALED;
+    private static final int PIC_TEX_W = GateArt.PIC_TEX_W;
+    private static final int PIC_TEX_H = GateArt.PIC_TEX_H;
     private static final int PIC_SAMPLE_W = 456;
     private static final int PIC_SAMPLE_H = 178;
-    private static final int CORNER_V = 0;
-    private static final int GEM_U = 96;
-    private static final int HALO_U = 216;
-    private static final int EMBLEM_V = 24;
-    private static final int LOCK_U = 144;
-    private static final int LAUREL_U = 156;
-    private static final int POINTER_U = 172;
-    private static final int ICON_U = 180;
-    private static final int MEDAL_V = 40;
-    private static final int BADGE_U = 80;
-    private static final int STUD_U = 114;
-    private static final int DIVIDER_U = 121;
-    private static final int RIBBON_V = 60;
-    private static final int BUTTON_V = 90;
-    private static final int PILL_U = 96;
-    private static final int ROW_V = 162;
+    private static final int GEM_U = GateArt.GEM_U;
+    private static final int HALO_U = GateArt.HALO_U;
+    private static final int EMBLEM_V = GateArt.EMBLEM_V;
+    private static final int LOCK_U = GateArt.LOCK_U;
+    private static final int LAUREL_U = GateArt.LAUREL_U;
+    private static final int POINTER_U = GateArt.POINTER_U;
+    private static final int ICON_U = GateArt.ICON_U;
+    private static final int MEDAL_V = GateArt.MEDAL_V;
+    private static final int BADGE_U = GateArt.BADGE_U;
+    private static final int DIVIDER_U = GateArt.DIVIDER_U;
+    private static final int BUTTON_V = GateArt.BUTTON_V;
+    private static final int PILL_U = GateArt.PILL_U;
+    private static final int ROW_V = GateArt.ROW_V;
     private static final String[] EMBLEM_ORDER = {"d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8", "final"};
 
-    // colours
-    private static final int TEXT = 0xFFEDE3CC;
-    private static final int MUTED = 0xFFA89A86;
-    private static final int GOLD = 0xFFFFD866;
-    private static final int GOLD_DIM = 0xFFD2AE5A;
+    private static final int TEXT = GateArt.TEXT;
+    private static final int MUTED = GateArt.MUTED;
+    private static final int GOLD = GateArt.GOLD;
+    private static final int GOLD_DIM = GateArt.GOLD_DIM;
     private static final int SEALED_TEXT = 0xFF7E7470;
-    private static final int WARN = 0xFFFF8A6A;
+    private static final int WARN = GateArt.WARN;
     private static final int LORE = 0xFFC4B69C;
     private static final int[] DIFF_TEXT = {0xFF8CE08C, 0xFFFF8A6A, 0xFFD6A0FF};
     private static final float[][] DIFF_GLOW = {{0.45F, 1.0F, 0.55F}, {1.0F, 0.45F, 0.35F}, {0.78F, 0.48F, 1.0F}};
@@ -479,109 +467,46 @@ public final class GatekeeperScreen extends Screen {
     }
 
     private void atlas(GuiGraphics graphics, int x, int y, int u, int v, int w, int h) {
-        graphics.blit(ATLAS, x, y, u, v, w, h, TEX, TEX);
+        GateArt.atlas(graphics, x, y, u, v, w, h);
     }
 
     private void text(GuiGraphics graphics, Component text, float x, float y, int color, float size) {
-        PoseStack pose = graphics.pose();
-        pose.pushPose();
-        pose.translate(x, y, 0.0F);
-        pose.scale(size, size, 1.0F);
-        graphics.drawString(font, text, 0, 0, color, true);
-        pose.popPose();
+        GateArt.text(graphics, font, text, x, y, color, size);
     }
 
     private void textSeq(GuiGraphics graphics, FormattedCharSequence text, float x, float y, int color, float size) {
-        PoseStack pose = graphics.pose();
-        pose.pushPose();
-        pose.translate(x, y, 0.0F);
-        pose.scale(size, size, 1.0F);
-        graphics.drawString(font, text, 0, 0, color, true);
-        pose.popPose();
+        GateArt.textSeq(graphics, font, text, x, y, color, size);
     }
 
     /** Draws {@code text} at up to {@code size}, shrunk (down to {@code min}) or shortened to fit {@code maxWidth}. */
     private float fitted(GuiGraphics graphics, Component text, float x, float y, float maxWidth, int color, float size,
                          float min) {
-        int width = font.width(text);
-        float s = width <= 0 ? size : Math.min(size, maxWidth / width);
-        if (s >= min) {
-            text(graphics, text, x, y, color, s);
-            return width * s;
-        }
-        String plain = text.getString();
-        String cut = font.plainSubstrByWidth(plain, Math.max(0, (int) (maxWidth / min) - font.width("…"))) + "…";
-        text(graphics, Component.literal(cut).withStyle(text.getStyle()), x, y, color, min);
-        return font.width(cut) * min;
+        return GateArt.fitted(graphics, font, text, x, y, maxWidth, color, size, min);
     }
 
     private void centered(GuiGraphics graphics, Component text, float cx, float y, int color, float size) {
-        text(graphics, text, cx - font.width(text) * size / 2.0F, y, color, size);
+        GateArt.centered(graphics, font, text, cx, y, color, size);
     }
 
     private static float rand(int seed) {
-        int h = seed * 0x9E3779B1;
-        h ^= h >>> 15;
-        h *= 0x85EBCA77;
-        h ^= h >>> 13;
-        h *= 0xC2B2AE3D;
-        h ^= h >>> 16;
-        return (h & 0xFFFFFF) / (float) 0x1000000;
+        return GateArt.rand(seed);
     }
 
     private static int argb(int rgb, float alpha) {
-        return (Mth.clamp((int) (alpha * 255.0F), 0, 255) << 24) | (rgb & 0xFFFFFF);
+        return GateArt.argb(rgb, alpha);
     }
 
     private void dot(GuiGraphics graphics, float x, float y, int rgb, float alpha, boolean glow) {
-        PoseStack pose = graphics.pose();
-        pose.pushPose();
-        pose.translate(x, y, 0.0F);
-        if (glow) {
-            graphics.fill(-1, -1, 2, 2, argb(rgb, alpha * 0.22F));
-        }
-        graphics.fill(0, 0, 1, 1, argb(rgb, alpha));
-        pose.popPose();
+        GateArt.dot(graphics, x, y, rgb, alpha, glow);
     }
 
     private void drawPanel(GuiGraphics graphics, float t) {
-        graphics.fill(-3, -1, W + 5, H + 5, 0x70000000);
-        graphics.fillGradient(0, 0, W, H, 0xF4161C34, 0xF40A0C1A);
-        // the night inside the frame
-        for (int i = 0; i < 46; i++) {
-            float x = 6 + rand(i * 7 + 1) * (W - 12);
-            float y = 6 + rand(i * 7 + 2) * (H - 12);
-            float twinkle = 0.5F + 0.5F * Mth.sin(t * (0.8F + rand(i * 7 + 3) * 1.6F) + i);
-            dot(graphics, x, y, 0xE8E4FF, 0.12F + 0.4F * twinkle * rand(i * 7 + 4), false);
-        }
-        // the magic circle, turning slowly, and a smaller one against it
-        circle(graphics, W / 2.0F, H / 2.0F + 6, 236, t * 5.0F, 0.95F, 0.78F, 0.4F, 0.085F);
-        circle(graphics, W / 2.0F, H / 2.0F + 6, 150, -t * 8.0F, 0.95F, 0.78F, 0.4F, 0.06F);
-        // motes rising through the panel
-        for (int i = 0; i < 22; i++) {
-            float speed = 4.0F + rand(i * 11 + 1) * 7.0F;
-            float x = 10 + rand(i * 11 + 2) * (W - 20) + Mth.sin(t * 0.7F + i) * 4.0F;
-            float y = H - 6 - ((rand(i * 11 + 3) * H + t * speed) % (H - 12));
-            float edge = Math.min(1.0F, Math.min((y - 6) / 24.0F, (H - 6 - y) / 24.0F));
-            dot(graphics, x, y, 0xFFD866, 0.45F * edge * (0.6F + 0.4F * Mth.sin(t * 2.0F + i)), true);
-        }
-        // the frame
-        graphics.renderOutline(-1, -1, W + 2, H + 2, 0xFF2A1606);
-        GoldFrame.draw(graphics, 1, 1, W - 2, H - 2, (long) (t * 20.0F));
-        graphics.renderOutline(4, 4, W - 8, H - 8, 0x8A8A6420);
-        atlas(graphics, -1, -1, 0, CORNER_V, 24, 24);
-        atlas(graphics, W - 23, -1, 24, CORNER_V, 24, 24);
-        atlas(graphics, -1, H - 23, 48, CORNER_V, 24, 24);
-        atlas(graphics, W - 23, H - 23, 72, CORNER_V, 24, 24);
-        atlas(graphics, -3, H / 2 - 3, STUD_U, MEDAL_V, 7, 7);
-        atlas(graphics, W - 4, H / 2 - 3, STUD_U, MEDAL_V, 7, 7);
-        atlas(graphics, W / 2 - 3, H - 4, STUD_U, MEDAL_V, 7, 7);
+        GateArt.panel(graphics, W, H, t, 236);
         // a rule between the list and the picture
         graphics.fillGradient(PANE_X - 5, LIST_Y, PANE_X - 4, LIST_Y + 100, 0x00D8A84A, 0x80D8A84A);
         graphics.fillGradient(PANE_X - 5, LIST_Y + 100, PANE_X - 4, H - 8, 0x80D8A84A, 0x00D8A84A);
         // the title ribbon
-        atlas(graphics, W / 2 - 100, RIBBON_TOP, 0, RIBBON_V, 200, 30);
-        centered(graphics, title, W / 2.0F, RIBBON_TOP + 9.5F, 0xFFFFE9B0, 1.25F);
+        GateArt.ribbon(graphics, font, title, W, RIBBON_TOP);
         // conquered dungeons (left) and the party (right)
         atlas(graphics, 12, 5, LAUREL_U, EMBLEM_V, 16, 16);
         text(graphics, Component.translatable("screen.eternalrealm.gate.conquered_count", conquered, dungeons), 30, 9,
@@ -597,17 +522,7 @@ public final class GatekeeperScreen extends Screen {
         atlas(graphics, Math.round(W - 14 - pw - 12), 9, ICON_U + 9, EMBLEM_V, 9, 9);
     }
 
-    private void circle(GuiGraphics graphics, float cx, float cy, int size, float degrees, float r, float g, float b,
-                        float alpha) {
-        PoseStack pose = graphics.pose();
-        pose.pushPose();
-        pose.translate(cx, cy, 0.0F);
-        pose.mulPose(Axis.ZP.rotationDegrees(degrees));
-        graphics.setColor(r, g, b, alpha);
-        graphics.blit(CIRCLE, -size / 2, -size / 2, size, size, 0.0F, 0.0F, 256, 256, 256, 256);
-        graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
-        pose.popPose();
-    }
+
 
     private void drawList(GuiGraphics graphics, double mx, double my, float t) {
         int hover = rowAt(mx, my);
@@ -666,8 +581,7 @@ public final class GatekeeperScreen extends Screen {
     }
 
     private static ResourceLocation picture(String id) {
-        return PICTURES.computeIfAbsent(id, key -> new ResourceLocation(ModInfo.MOD_ID,
-                "textures/gui/gate/" + key + ".png"));
+        return GateArt.picture(id);
     }
 
     private void drawPicture(GuiGraphics graphics, Entry entry, float t, float alpha) {

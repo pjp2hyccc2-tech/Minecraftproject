@@ -32,7 +32,7 @@
   "screen.eternalrealm.gate.best_none": {"ja": "自己ベスト ―", "en": "Personal best —"},
   "screen.eternalrealm.gate.departing": {"ja": "転移中…", "en": "Opening…"},
   "screen.eternalrealm.gate.depart": {"ja": "出発する", "en": "Set out"},
-  "screen.eternalrealm.gate.depart_help": {"ja": "パーティ全員で出発する（Enterキーでも出発）", "en": "Take the whole party in (or press Enter)"},
+  "screen.eternalrealm.gate.depart_help": {"ja": "出発する。パーティなら先に全員の準備を確かめる（Enterキーでも）", "en": "Set out. A party is first asked whether everyone is ready (Enter works too)"},
   "screen.eternalrealm.gate.refusal.sealed.short": {"ja": "封印中", "en": "Sealed"},
   "screen.eternalrealm.gate.refusal.sealed.long": {"ja": "まだ封印されている。先の迷宮の主を倒そう", "en": "Still sealed. Defeat the master of an earlier dungeon first"},
   "screen.eternalrealm.gate.refusal.leader.short": {"ja": "リーダーのみ", "en": "Leader only"},

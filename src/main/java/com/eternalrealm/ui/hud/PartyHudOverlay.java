@@ -63,6 +63,20 @@ public final class PartyHudOverlay implements IGuiOverlay {
             net.minecraft.network.chat.Component downLabel = net.minecraft.network.chat.Component.translatable(
                     "revival.eternalrealm.party_down");
             int nameWidth = down ? width - 6 - font.width(downLabel) : width - 4;
+            // during a ready check (出発の準備): each member's 準備OK / 準備中 at the end of the name line
+            java.util.Optional<Boolean> readiness = java.util.Optional.empty();
+            if (com.eternalrealm.ui.gate.ReadyCheckClient.active() && member.has("id") && !down) {
+                try {
+                    readiness = com.eternalrealm.ui.gate.ReadyCheckClient.readyOf(
+                            java.util.UUID.fromString(ClientUiState.stringOr(member, "id", "")));
+                } catch (IllegalArgumentException e) {
+                    readiness = java.util.Optional.empty();
+                }
+            }
+            if (readiness.isPresent()) {
+                nameWidth -= 11;
+                com.eternalrealm.ui.gate.ReadyCheckClient.drawMark(graphics, x + width - 11, y, readiness.get());
+            }
             graphics.drawString(font, font.plainSubstrByWidth(label, nameWidth), x + 2, y + 1,
                     down ? 0x9A8A8A : nameColor);
             int barTop = compact ? y + 9 : y + 11;

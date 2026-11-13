@@ -57,6 +57,8 @@ public final class ClientModEvents {
                 ClientUiState.get(channel).ifPresent(com.eternalrealm.ui.gate.GatekeeperScreen::open);
             } else if (com.eternalrealm.dungeon.forge.GatekeeperService.RESULT_CHANNEL.equals(channel)) {
                 ClientUiState.get(channel).ifPresent(com.eternalrealm.ui.gate.GatekeeperScreen::onResult);
+            } else if (com.eternalrealm.dungeon.forge.ReadyChecks.CHANNEL.equals(channel)) {
+                ClientUiState.get(channel).ifPresent(com.eternalrealm.ui.gate.ReadyCheckClient::accept);
             } else if (com.eternalrealm.world.field.Waystones.UI_CHANNEL.equals(channel)) {
                 ClientUiState.get(channel).ifPresent(com.eternalrealm.ui.map.WorldMapScreen::openTravel);
             } else if (com.eternalrealm.world.field.Waystones.ARRIVE_CHANNEL.equals(channel)) {
@@ -122,6 +124,8 @@ public final class ClientModEvents {
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "hud_icons", new com.eternalrealm.ui.hud.HudIconsOverlay());
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "pickup_feed", new com.eternalrealm.ui.hud.PickupFeedOverlay());
         event.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(), "combat_hud", new CombatHudOverlay());
+        event.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(), "ready_check",
+                new com.eternalrealm.ui.gate.ReadyCheckOverlay());
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "party_hud", new com.eternalrealm.ui.hud.PartyHudOverlay());
         event.registerAbove(VanillaGuiOverlay.CHAT_PANEL.id(), "dialogue_box", new com.eternalrealm.ui.dialogue.DialogueOverlay());
         event.registerAbove(VanillaGuiOverlay.VIGNETTE.id(), "danger_warning",
