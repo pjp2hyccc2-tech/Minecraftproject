@@ -56,6 +56,9 @@ ATLAS = {
     "button": (0, 90, 96, 24),           # three, stacked: normal, hover, disabled
     "pill": (96, 90, 74, 20),            # three, stacked: normal, hover, selected
     "row": (0, 162, 152, 20),            # two, stacked: selected, hover
+    "mark": (121, 50, 9, 9),             # three: ready (check), waiting (dots), leader (crown)
+    "ok_button": (0, 202, 96, 24),       # two, stacked: normal, hover (出発の準備: 準備OK)
+    "wait_button": (96, 202, 96, 24),    # two, stacked: normal, hover (back to 準備中)
 }
 
 GOLD = {"o": hexa("#2a1606"), "d": hexa("#6e4410"), "m": hexa("#b07c24"), "l": hexa("#e6bc58"),
@@ -434,6 +437,36 @@ POINTER = ["l.......",
            "ld......",
            "d......."]
 
+MARKS = {
+    "ready": (["........G",
+               ".......GG",
+               "......GG.",
+               "G....GG..",
+               "GG..GG...",
+               ".GGGG....",
+               "..GG.....",
+               ".........",
+               "........."], {"G": hexa("#7ee08a")}),
+    "waiting": ([".........",
+                 ".........",
+                 ".........",
+                 ".........",
+                 "A..A..A..",
+                 "A..A..A..",
+                 ".........",
+                 ".........",
+                 "........."], {"A": hexa("#ffc266")}),
+    "leader": ([".........",
+                "Y...Y...Y",
+                "YY.YYY.YY",
+                "YYYYRYYYY",
+                "YYYYYYYYY",
+                "ddddddddd",
+                ".........",
+                ".........",
+                "........."], {"Y": hexa("#f0c048"), "R": hexa("#e83a4a"), "d": hexa("#a06a18")}),
+}
+
 ICONS = {
     "boss": [".wwwww.",
              "wwwwwww",
@@ -695,6 +728,20 @@ def build_atlas():
                                                                        "m": hexa("#e0aa3a"), "l": hexa("#ffe08a"),
                                                                        "h": hexa("#ffffff")}, hexa("#ffe8a0", 170),
            studs=False)
+    kx, ky, kw, kh = ATLAS["mark"]
+    for i, name in enumerate(["ready", "waiting", "leader"]):
+        rows, pal = MARKS[name]
+        from_map(px, rows, pal, kx + i * kw, ky, outline=hexa("#141008"))
+    gx2, gy2, gw2, gh2 = ATLAS["ok_button"]
+    plaque(px, gx2, gy2, gw2, gh2, (40, 128, 64), (18, 70, 34), GOLD, hexa("#8ae8a0", 170))
+    plaque(px, gx2, gy2 + gh2, gw2, gh2, (60, 168, 88), (28, 96, 48), {"o": hexa("#3a2006"), "d": hexa("#a06a14"),
+                                                                        "m": hexa("#e0aa3a"), "l": hexa("#ffe08a"),
+                                                                        "h": hexa("#ffffff")}, hexa("#b8ffc8", 190))
+    wx, wy, ww, wh = ATLAS["wait_button"]
+    plaque(px, wx, wy, ww, wh, (150, 104, 30), (88, 56, 14), GOLD, hexa("#ffd890", 160))
+    plaque(px, wx, wy + wh, ww, wh, (186, 132, 44), (112, 72, 20), {"o": hexa("#3a2006"), "d": hexa("#a06a14"),
+                                                                       "m": hexa("#e0aa3a"), "l": hexa("#ffe08a"),
+                                                                       "h": hexa("#ffffff")}, hexa("#ffe8b0", 190))
     rx, ry, rw, rh = ATLAS["row"]
     row_overlay(px, rx, ry, rw, rh, (255, 208, 96), 0.42)
     row_overlay(px, rx, ry + rh, rw, rh, (190, 200, 255), 0.16)
