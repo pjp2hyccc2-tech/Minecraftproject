@@ -3087,7 +3087,7 @@
   "threat.eternalrealm.phase.manifest": "Risen",
   "threat.eternalrealm.phase.purified": "Purified",
   "threat.eternalrealm.omen": "[Omen] The miasma of %s overflows... a calamity is about to rise",
-  "threat.eternalrealm.manifest": "[Calamity] %2$s has risen in %1$s! Check the wanted board for its lair",
+  "threat.eternalrealm.manifest": "[Calamity] %2$s (Lv%3$s) has risen in %1$s! Check the wanted board for its lair",
   "threat.eternalrealm.depart": "The calamity %s has left %s...",
   "threat.eternalrealm.subdued": "[Subdued] The calamity of %1$s, %2$s, has been quelled! Hero: %3$s",
   "threat.eternalrealm.purified": "%s is purified (%s min: +25%% EXP from monsters)",
@@ -7092,5 +7092,7 @@
   "smith.eternalrealm.trinket_grade.celestial": "Celestial",
   "smith.eternalrealm.trinket_grade.divine": "Divine",
   "smith.eternalrealm.trinket_grade.aeon": "Aeon",
-  "smith.eternalrealm.trinket_grade.eternal": "Eternal"
+  "smith.eternalrealm.trinket_grade.eternal": "Eternal",
+  "threat.eternalrealm.grown": "%1$s grows stronger with every defeat... it will return at Lv%2$s",
+  "threat.eternalrealm.grown_max": "%1$s has reached the height of its power (Lv%2$s)"
 }

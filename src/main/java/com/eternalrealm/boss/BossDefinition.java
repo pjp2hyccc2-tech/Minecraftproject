@@ -149,6 +149,21 @@ public record BossDefinition(String id, String entityType, int level, double bas
         };
     }
 
+    /**
+     * The same boss grown to {@code newLevel}: its health and damage multiplied (a field calamity that comes back
+     * stronger after every defeat, {@code world.field.CalamityGrowth}); everything else is unchanged.
+     */
+    public BossDefinition atLevel(int newLevel, double healthFactor, double damageFactor) {
+        Check.range("healthFactor", healthFactor, 0.01, 1_000.0);
+        Check.range("damageFactor", damageFactor, 0.01, 1_000.0);
+        if (newLevel == level && healthFactor == 1.0 && damageFactor == 1.0) {
+            return this;
+        }
+        return new BossDefinition(id, entityType, newLevel, Math.min(10_000_000.0, baseHealth * healthFactor),
+                Math.min(10_000.0, damage * damageFactor), armor, healthPerExtraPlayer, minPlayers, maxPlayers, phases,
+                abilities, enrageAfterTicks, summonTemplateIds, normal, hard, ex);
+    }
+
     /** Maximum health for a party of {@code partySize} (1..{@link BossRules#MAX_PARTY_SIZE}) on a difficulty. */
     public double maxHealth(int partySize, Difficulty difficulty) {
         Check.range("partySize", partySize, 1, BossRules.MAX_PARTY_SIZE);

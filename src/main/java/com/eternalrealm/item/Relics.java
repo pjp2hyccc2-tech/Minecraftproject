@@ -26,7 +26,8 @@ import java.util.random.RandomGenerator;
  * 金枠の遺宝 (relics, owner's request of 2026-11-11): every dungeon boss (b1-b8 and the final raid), calamity (10), lord
  * (ヌシ, 30) and wanderer (15) has a set of its own relics in its motif: a weapon, an armor set (four pieces), an
  * accessory and a charm. About one kill in a thousand ({@link #DROP_CHANCE} per rewarded player, server config
- * {@code relicDropChance}) leaves one of them; the whole server hears of it.
+ * {@code relicDropChance}) leaves one of them, one calamity kill in a hundred ({@link #CALAMITY_DROP_CHANCE}, owner's
+ * request of 2026-11-13, server config {@code calamityRelicDropChance}); the whole server hears of it.
  *
  * <p>Relics are the strongest pieces of their level: they always come as {@link ItemRarity#LEGENDARY} with four
  * affixes, ask for their source's level + {@value #LEVEL_BONUS} (and nothing more for their rarity) and show a gold
@@ -37,8 +38,9 @@ import java.util.random.RandomGenerator;
  *         for elemental feels), damage of its type +8 % × (0.5 + level / 50) and the feel's and element's traits,
  *         a perk by feel and skill power +6 %, and its own weapon art (burst 2.05..2.30 × the type skill)
  * armor   set quality ×1.40 (calamity sets ×1.08), the style's bonuses ×1.5, the theme's perk
- * acc.    main stat 3 + 0.30 × level, second stat 2 + 0.16 × level, one bonus by focus
- * charm   VIT 2 + 0.2 × level, LUK 1 + 0.12 × level, max health 0.6 × level, defense 0.5 × level, a perk by focus
+ * acc.    main stat +1.25 × a(level) %, second stat +0.5 × a(level) % (a: Trinkets#accessoryPercent), a bonus by focus
+ * charm   VIT +1.25 × c(level) %, LUK +0.6 × c(level) % (c: Trinkets#charmPercent), max health 0.6 × level,
+ *         defense 0.5 × level, a perk by focus
  * </pre>
  *
  * Which relic a drop is: the weapon, the accessory, the charm or an armor piece, a quarter each (each piece 1/16).
@@ -47,6 +49,8 @@ import java.util.random.RandomGenerator;
 public final class Relics {
     /** Chance per rewarded player per kill (server config {@code relicDropChance} overrides it). */
     public static final double DROP_CHANCE = 0.001;
+    /** The same for a calamity (server config {@code calamityRelicDropChance} overrides it). */
+    public static final double CALAMITY_DROP_CHANCE = 0.01;
     /** Levels a relic asks for above its source's level. */
     public static final int LEVEL_BONUS = 5;
 
@@ -57,6 +61,11 @@ public final class Relics {
         public String translationKey() {
             return "relic_source." + ModInfo.MOD_ID + "." + name().toLowerCase(Locale.ROOT);
         }
+    }
+
+    /** The default chance of a source kind: calamities 1 %, every other source 0.1 %. */
+    public static double dropChance(SourceKind kind) {
+        return kind == SourceKind.CALAMITY ? CALAMITY_DROP_CHANCE : DROP_CHANCE;
     }
 
     /** The bonus of an accessory beyond its two stats. */

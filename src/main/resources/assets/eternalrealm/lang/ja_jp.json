@@ -3087,7 +3087,7 @@
   "threat.eternalrealm.phase.manifest": "顕現中",
   "threat.eternalrealm.phase.purified": "浄化中",
   "threat.eternalrealm.omen": "【災厄の兆し】%s の瘴気があふれ出した……まもなく災厄が顕現する",
-  "threat.eternalrealm.manifest": "【災厄顕現】%s に災厄「%s」が現れた！ 討伐手配書で居場所を確かめよう",
+  "threat.eternalrealm.manifest": "【災厄顕現】%1$s に災厄「%2$s」（Lv%3$s）が現れた！ 討伐手配書で居場所を確かめよう",
   "threat.eternalrealm.depart": "災厄「%s」は %s から去っていった……",
   "threat.eternalrealm.subdued": "【災厄討伐】%s の災厄「%s」が鎮められた！ 殊勲：%s",
   "threat.eternalrealm.purified": "%s は浄化された（%s分間、魔物の経験値+25%%）",
@@ -7092,5 +7092,7 @@
   "smith.eternalrealm.trinket_grade.celestial": "天穹",
   "smith.eternalrealm.trinket_grade.divine": "神域",
   "smith.eternalrealm.trinket_grade.aeon": "永劫",
-  "smith.eternalrealm.trinket_grade.eternal": "永遠"
+  "smith.eternalrealm.trinket_grade.eternal": "永遠",
+  "threat.eternalrealm.grown": "災厄「%1$s」は討たれるたびに力を増す……次に現れるときは Lv%2$s",
+  "threat.eternalrealm.grown_max": "災厄「%1$s」の力はもう極みに達している（Lv%2$s）"
 }

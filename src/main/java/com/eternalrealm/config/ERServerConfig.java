@@ -36,6 +36,7 @@ public final class ERServerConfig {
     public static final ForgeConfigSpec.DoubleValue AGGRO_RADIUS;
     public static final ForgeConfigSpec.BooleanValue KEEP_INVENTORY;
     public static final ForgeConfigSpec.DoubleValue RELIC_DROP_CHANCE;
+    public static final ForgeConfigSpec.DoubleValue CALAMITY_RELIC_DROP_CHANCE;
     public static final ForgeConfigSpec.BooleanValue NATURAL_REGENERATION;
     public static final ForgeConfigSpec.BooleanValue IGNORE_PARTY_SIZE;
     public static final ForgeConfigSpec.BooleanValue SPECIAL_MOVES;
@@ -145,9 +146,11 @@ public final class ERServerConfig {
                 .define("specialMoves", true);
         DUNGEON_TRAPS = builder.comment("Dungeon instances have telegraphed traps in their corridors and combat rooms.")
                 .define("dungeonTraps", true);
-        RELIC_DROP_CHANCE = builder.comment("Chance per rewarded player that a kill of a dungeon boss, calamity, lord or",
-                        "wanderer leaves one of its relics (gold-framed weapons, armor, accessories and charms).")
+        RELIC_DROP_CHANCE = builder.comment("Chance per rewarded player that a kill of a dungeon boss, lord or wanderer",
+                        "leaves one of its relics (gold-framed weapons, armor, accessories and charms).")
                 .defineInRange("relicDropChance", 0.001, 0.0, 1.0);
+        CALAMITY_RELIC_DROP_CHANCE = builder.comment("The same for a field calamity (災厄): one kill in a hundred.")
+                .defineInRange("calamityRelicDropChance", 0.01, 0.0, 1.0);
         builder.pop();
 
         builder.comment("Health and hunger. There is no hunger: the food bar is hidden and always full.").push("survival");

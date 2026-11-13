@@ -18,8 +18,9 @@ import java.util.random.RandomGenerator;
 
 /**
  * The relic drop (金枠の遺宝): every reward code of a dungeon boss, a calamity, a lord or a wanderer asks once per
- * rewarded player; about one kill in a thousand ({@code relicDropChance}) leaves one of the source's relics, always
- * legendary, and the whole server hears of it ({@link Relics}).
+ * rewarded player; about one kill in a thousand ({@code relicDropChance}), one calamity kill in a hundred
+ * ({@code calamityRelicDropChance}), leaves one of the source's relics, always legendary, and the whole server hears of
+ * it ({@link Relics}).
  */
 public final class RelicDrops {
     /** Set by tests: the chance used instead of the config (negative: none). */
@@ -28,15 +29,24 @@ public final class RelicDrops {
     private RelicDrops() {
     }
 
-    /** The chance per rewarded player (the server config, {@link Relics#DROP_CHANCE} before it is loaded). */
+    /** The chance per rewarded player of a dungeon boss, lord or wanderer (the server config). */
     public static double chance() {
+        return chance(Relics.SourceKind.BOSS);
+    }
+
+    /**
+     * The chance per rewarded player of a source kind: the server config ({@code calamityRelicDropChance} for
+     * calamities, {@code relicDropChance} for the rest), {@link Relics#dropChance} before it is loaded.
+     */
+    public static double chance(Relics.SourceKind kind) {
         if (forced >= 0.0) {
             return forced;
         }
         try {
-            return ERServerConfig.RELIC_DROP_CHANCE.get();
+            return kind == Relics.SourceKind.CALAMITY ? ERServerConfig.CALAMITY_RELIC_DROP_CHANCE.get()
+                    : ERServerConfig.RELIC_DROP_CHANCE.get();
         } catch (IllegalStateException e) {
-            return Relics.DROP_CHANCE;
+            return Relics.dropChance(kind);
         }
     }
 
@@ -52,7 +62,7 @@ public final class RelicDrops {
     public static Optional<ItemStack> roll(ServerPlayer player, Relics.SourceKind kind, String target,
                                            RandomGenerator random) {
         Relics.Source source = Relics.source(kind, target).orElse(null);
-        if (source == null || !Relics.rolls(chance(), random)) {
+        if (source == null || !Relics.rolls(chance(kind), random)) {
             return Optional.empty();
         }
         ItemStack stack = create(Relics.pick(source, random), random);

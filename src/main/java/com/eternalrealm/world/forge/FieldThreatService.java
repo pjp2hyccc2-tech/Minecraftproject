@@ -31,6 +31,7 @@ import com.eternalrealm.monster.forge.MonsterFactory;
 import com.eternalrealm.monster.forge.MonsterTags;
 import com.eternalrealm.server.ServerContext;
 import com.eternalrealm.server.UiData;
+import com.eternalrealm.world.field.CalamityGrowth;
 import com.eternalrealm.world.field.FieldLayout;
 import com.eternalrealm.world.field.FieldThreats;
 import com.eternalrealm.world.field.LordRoster;
@@ -165,6 +166,8 @@ public final class FieldThreatService {
         BossFight fight;
         Scar scar;
         long fightStart;
+        /** The level this appearance fights at (its boss level plus every defeat so far, CalamityGrowth). */
+        int level;
 
         CalamityState(FieldThreats.Calamity calamity) {
             this.calamity = calamity;
@@ -190,6 +193,8 @@ public final class FieldThreatService {
 
     private static MinecraftServer owner;
     private static Miasma miasma = new Miasma();
+    /** How often each field's calamity was subdued: it comes back a level higher every time. */
+    private static CalamityGrowth growth = new CalamityGrowth();
     private static final Map<String, LordState> LORDS = new HashMap<>();
     private static final Map<Integer, CalamityState> CALAMITIES = new HashMap<>();
     private static boolean boardDirty = true;
@@ -245,6 +250,7 @@ public final class FieldThreatService {
             }
             if (now % SAVE_TICKS == 0) {
                 ThreatData.get(astoria).store(miasma.toJson());
+                ThreatData.get(astoria).storeGrowth(growth.toJson());
             }
         } catch (RuntimeException e) {
             LOG.error("Field threats tick failed", e);
@@ -254,6 +260,7 @@ public final class FieldThreatService {
     private static void start(MinecraftServer server, ServerLevel astoria, long now) {
         owner = server;
         miasma = Miasma.fromJson(ThreatData.get(astoria).json());
+        growth = CalamityGrowth.fromJson(ThreatData.get(astoria).growthJson());
         LORDS.clear();
         CALAMITIES.clear();
         for (FieldThreats.Lord lord : FieldThreats.lords()) {
@@ -912,8 +919,8 @@ public final class FieldThreatService {
                 }
                 case MANIFEST -> {
                     calamity.ifPresent(c -> CALAMITIES.put(field, new CalamityState(c)));
-                    broadcast(server, Component.translatable("threat.eternalrealm.manifest", fieldName, calamityName)
-                            .withStyle(ChatFormatting.RED));
+                    broadcast(server, Component.translatable("threat.eternalrealm.manifest", fieldName, calamityName,
+                            calamity.map(c -> calamityLevel(c)).orElse(1)).withStyle(ChatFormatting.RED));
                     for (ServerPlayer player : astoria.players()) {
                         if (fieldOf(player) == field) {
                             player.playNotifySound(SoundEvents.WITHER_SPAWN, SoundSource.HOSTILE, 0.5F, 0.7F);
@@ -1073,7 +1080,7 @@ public final class FieldThreatService {
 
     private static void startFight(ServerLevel astoria, CalamityState state, long now) {
         FieldThreats.Calamity calamity = state.calamity;
-        BossDefinition definition = Bosses.byId(calamity.boss()).orElse(null);
+        BossDefinition definition = grown(calamity).orElse(null);
         if (definition == null) {
             handle(astoria.getServer(), astoria, miasma.departed(calamity.field(), now), now);
             return;
@@ -1103,8 +1110,10 @@ public final class FieldThreatService {
         }
         BossFight fight = started.get();
         Mob body = fight.body();
+        // the boss HUD puts the (grown) level in front of this name, so the nameplate itself carries none
         body.setCustomName(Component.translatable("threat.eternalrealm.calamity.nameplate",
                 Component.translatable(calamity.translationKey())).withStyle(ChatFormatting.DARK_RED));
+        state.level = definition.level();
         body.addTag(CALAMITY_TAG);
         body.getPersistentData().putInt(CALAMITY_TAG, calamity.field());
         state.fight = fight;
@@ -1128,18 +1137,27 @@ public final class FieldThreatService {
         Contributions contributions = fight.contributions();
         Optional<Contributions.Line> hero = contributions.hero();
         Component fieldName = Component.translatable(fieldKey(state.calamity.field())).withStyle(ChatFormatting.AQUA);
-        broadcast(server, Component.translatable("threat.eternalrealm.subdued", fieldName,
-                Component.translatable(state.calamity.translationKey()).withStyle(ChatFormatting.DARK_RED),
+        Component calamityName = Component.translatable(state.calamity.translationKey())
+                .withStyle(ChatFormatting.DARK_RED);
+        broadcast(server, Component.translatable("threat.eternalrealm.subdued", fieldName, calamityName,
                 hero.map(line -> Component.literal(line.name()).withStyle(ChatFormatting.GOLD))
                         .orElse(Component.literal("-"))).withStyle(ChatFormatting.GOLD));
+        // every defeat makes it come back a level higher (saved at once: a crash must not undo a victory)
+        growth.defeated(state.calamity.field());
+        ThreatData.get(astoria).storeGrowth(growth.toJson());
+        int next = calamityLevel(state.calamity);
+        broadcast(server, Component.translatable(next > state.level ? "threat.eternalrealm.grown"
+                : "threat.eternalrealm.grown_max", calamityName, next).withStyle(ChatFormatting.DARK_PURPLE));
         ServerContext context = ServerContext.current().orElse(null);
         if (context == null) {
             return;
         }
         BossDefinition definition = Bosses.byId(state.calamity.boss()).orElse(null);
         MonsterTemplate minion = rewardTemplate(definition, state.calamity.field());
-        MonsterStats stats = minion == null ? null : MonsterScaling.stats(minion, Math.max(minion.levels().min(),
-                Math.min(minion.levels().max(), definition.level())));
+        // the rewards of the level it fought at (a grown calamity pays more)
+        int rewardLevel = Math.max(1, state.level > 0 ? state.level : definition == null ? 1 : definition.level());
+        MonsterStats stats = minion == null ? null : MonsterScaling.stats(minion, Math.min(MonsterScaling.MAX_LEVEL,
+                Math.max(minion.levels().min(), rewardLevel)));
         long durationTicks = Math.max(0L, (fight.killTick() < 0 ? now : fight.killTick()) - state.fightStart);
         int falls = contributions.byDamage().stream().mapToInt(Contributions.Line::falls).sum();
         ClearRank rank = ClearRank.of(durationTicks, 10L * 60L * 20L, falls);
@@ -1193,7 +1211,7 @@ public final class FieldThreatService {
             if (RANDOM.nextDouble() < 0.35) {
                 items.add(new ItemStack(ERGearItems.consumable(Consumable.EVERBLOOM_PETAL)));
             }
-            // about one kill in a thousand: one of the calamity's relics (金枠)
+            // about one kill in a hundred: one of the calamity's relics (金枠)
             com.eternalrealm.item.forge.RelicDrops.roll(player, com.eternalrealm.item.Relics.SourceKind.CALAMITY,
                     calamity, RANDOM).ifPresent(items::add);
             long exp = stats == null ? 0L : stats.exp() * 25L;
@@ -1221,6 +1239,26 @@ public final class FieldThreatService {
             UiData.send(player, com.eternalrealm.dungeon.forge.DungeonResults.CHANNEL, data);
         }
         boardDirty = true;
+    }
+
+    /** The level the calamity of its field fights at now: its boss level plus one for every defeat (at most 100). */
+    static int calamityLevel(FieldThreats.Calamity calamity) {
+        return Bosses.byId(calamity.boss()).map(definition -> growth.level(calamity.field(), definition.level()))
+                .orElse(1);
+    }
+
+    /** The calamity's boss grown to its current level (health and damage, CalamityGrowth). */
+    static Optional<BossDefinition> grown(FieldThreats.Calamity calamity) {
+        return Bosses.byId(calamity.boss()).map(definition -> {
+            int level = growth.level(calamity.field(), definition.level());
+            return definition.atLevel(level, CalamityGrowth.healthFactor(definition.level(), level),
+                    CalamityGrowth.damageFactor(definition.level(), level));
+        });
+    }
+
+    /** How often the calamity of {@code field} was subdued (the board, tests). */
+    public static int calamityDefeats(int field) {
+        return growth.defeats(field);
     }
 
     // ------------------------------------------------------------------ rewards
@@ -1303,7 +1341,8 @@ public final class FieldThreatService {
                     c.addProperty("bx", Math.round(state.fight.body().getX()));
                     c.addProperty("bz", Math.round(state.fight.body().getZ()));
                 }
-                Bosses.byId(calamity.boss()).ifPresent(definition -> c.addProperty("level", definition.level()));
+                c.addProperty("level", calamityLevel(calamity));
+                c.addProperty("defeats", growth.defeats(field));
                 entry.add("calamity", c);
             });
             JsonArray lords = new JsonArray();
@@ -1425,6 +1464,7 @@ public final class FieldThreatService {
         ServerLevel astoria = event.getServer().getLevel(AstoriaDimension.LEVEL);
         if (astoria != null && owner == event.getServer()) {
             ThreatData.get(astoria).store(miasma.toJson());
+            ThreatData.get(astoria).storeGrowth(growth.toJson());
             for (CalamityState state : CALAMITIES.values()) {
                 if (state.fight != null) {
                     state.fight.end();
@@ -1444,10 +1484,14 @@ public final class FieldThreatService {
         owner = null;
     }
 
-    /** The miasma gauges, saved with アストリア ({@code data/eternalrealm_field_threats.dat}). */
+    /**
+     * The miasma gauges and how often each calamity was subdued, saved with アストリア
+     * ({@code data/eternalrealm_field_threats.dat}).
+     */
     public static final class ThreatData extends SavedData {
         private static final String NAME = ModInfo.MOD_ID + "_field_threats";
         private String json = "";
+        private String growthJson = "";
 
         public static ThreatData get(ServerLevel astoria) {
             return astoria.getDataStorage().computeIfAbsent(ThreatData::load, ThreatData::new, NAME);
@@ -1456,11 +1500,16 @@ public final class FieldThreatService {
         static ThreatData load(CompoundTag tag) {
             ThreatData data = new ThreatData();
             data.json = tag.getString("miasma");
+            data.growthJson = tag.getString("calamities");
             return data;
         }
 
         String json() {
             return json;
+        }
+
+        String growthJson() {
+            return growthJson;
         }
 
         void store(String value) {
@@ -1470,9 +1519,17 @@ public final class FieldThreatService {
             }
         }
 
+        void storeGrowth(String value) {
+            if (!value.equals(growthJson)) {
+                growthJson = value;
+                setDirty();
+            }
+        }
+
         @Override
         public CompoundTag save(CompoundTag tag) {
             tag.putString("miasma", json);
+            tag.putString("calamities", growthJson);
             return tag;
         }
     }
@@ -1527,9 +1584,11 @@ public final class FieldThreatService {
                             long now = ctx.getSource().getServer().getTickCount();
                             for (int field = 1; field <= FieldLayout.FIELD_COUNT; field++) {
                                 int f = field;
+                                String level = FieldThreats.calamityOf(f).map(c -> " calamity Lv" + calamityLevel(c)
+                                        + " (" + growth.defeats(f) + " defeats)").orElse("");
                                 ctx.getSource().sendSuccess(() -> Component.literal("field " + f + ": "
                                         + miasma.phase(f).id() + " " + miasma.gauge(f) + "/" + Miasma.MAX + " ("
-                                        + miasma.remaining(f, now) / 20 + "s)"), false);
+                                        + miasma.remaining(f, now) / 20 + "s)" + level), false);
                             }
                             return 1;
                         }))));
