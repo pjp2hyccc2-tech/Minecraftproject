@@ -1075,3 +1075,6 @@ STR+10とかじゃなくてSTR+10%とかにして、強化もできるように�
   キャラクター画面の2行目に「見切り」。戦闘値のパケットに見切りを追加（プロトコル 11→12）。
 - 確認: オフライン1240件成功（`StatGrowthTest.everySpecialisedStatReachesAboutFourThousand`、
   `CombatStatsTest.statsBeyondTheirCapsTurnIntoSomethingElse`、`ItemDefinitionsTest` の防具の6種と固定値の部位数）。
+  CI 実行 43337229794: コンパイル・ユニットテスト・GameTest 165件すべて成功（1回目で通過）。配布した jar はこの実行のもの
+  （PC が未接続のためファイルで送付）。
+- **未確認（実機が必要）**: 見切りで攻撃が「回避」になる頻度の体感、軽減86%の硬さ、会心倍率×10の LUK ビルドの手応え。
