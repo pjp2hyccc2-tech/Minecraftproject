@@ -251,12 +251,21 @@ public class ItemDefinitionsTest {
         double str = expected.get(AffixKind.STR);
         assertEquals(str, expected.get(AffixKind.INT), 0.02);
         assertEquals(str, expected.get(AffixKind.DEX), 0.02);
-        // the stat percentages too, exactly: every armor piece rolls STR %, INT % and DEX % alike
+        // the stat percentages too, exactly: every armor piece rolls all six alike
         for (EquipmentSlot slot : EquipmentSlot.armor()) {
             AffixPool pool = AffixPool.of(slot, null);
-            assertEquals(slot.toString(), pool.weight(AffixKind.STR_PERCENT), pool.weight(AffixKind.INT_PERCENT));
-            assertEquals(slot.toString(), pool.weight(AffixKind.STR_PERCENT), pool.weight(AffixKind.DEX_PERCENT));
-            assertTrue(slot + " rolls percentages", pool.rolls(AffixKind.STR_PERCENT));
+            for (StatType stat : StatType.values()) {
+                assertEquals(slot + " " + stat, 1, pool.weight(AffixKind.percentOf(stat)));
+            }
+        }
+        // every primary stat but VIT sits flat on three armor pieces, VIT on all four: the same number of sources
+        for (StatType stat : StatType.values()) {
+            AffixKind flat = flatOf(stat);
+            int pieces = 0;
+            for (EquipmentSlot slot : EquipmentSlot.armor()) {
+                pieces += AffixPool.of(slot, null).rolls(flat) ? 1 : 0;
+            }
+            assertEquals(stat.toString(), stat == StatType.VIT ? 4 : 3, pieces);
         }
         // weapons keep their flat attack stat and damage percentages
         for (WeaponType type : WeaponType.values()) {
@@ -299,10 +308,10 @@ public class ItemDefinitionsTest {
     @Test
     public void weightedDrawsFollowTheScript() {
         AffixPool pool = AffixPool.of(EquipmentSlot.FEET, null);
-        // FEET in enum order: VIT 1, AGI 3, DEX 1, LUK 1, DEFENSE 2, MAX_HEALTH 2, MOVE_SPEED 3, STR % 1, AGI % 1,
-        // INT % 1, DEX % 1 (total 17)
-        assertEquals(17, pool.totalWeight());
-        // draw 0 → VIT (value index 0), then draw 11 of the remaining 16 → MOVE_SPEED (value index 0)
+        // FEET in enum order: VIT 1, AGI 3, DEX 1, LUK 1, DEFENSE 2, MAX_HEALTH 2, MOVE_SPEED 3, then the six stat
+        // percentages 1 each (total 19)
+        assertEquals(19, pool.totalWeight());
+        // draw 0 → VIT (value index 0), then draw 11 of the remaining 18 → MOVE_SPEED (value index 0)
         List<Affix> affixes = pool.roll(ItemTier.IRON, 2, ScriptedRandom.ofInts(0, 0, 11, 0));
         assertEquals(List.of(new Affix(AffixKind.VIT, 1), new Affix(AffixKind.MOVE_SPEED, 0.02)), affixes);
         // draw 1 → AGI (weight 3 covers 1..3)
@@ -395,6 +404,15 @@ public class ItemDefinitionsTest {
         assertThrows(IllegalArgumentException.class, () -> Materials.forArea(0));
         assertThrows(IllegalArgumentException.class, () -> Materials.forArea(8));
         assertThrows(IllegalArgumentException.class, () -> Materials.translationKey("no namespace"));
+    }
+
+    private static AffixKind flatOf(StatType stat) {
+        for (AffixKind kind : AffixKind.values()) {
+            if (kind.stat().filter(stat::equals).isPresent()) {
+                return kind;
+            }
+        }
+        throw new AssertionError(stat);
     }
 
     private static void assertHighest(AffixPool pool, AffixKind... favourites) {

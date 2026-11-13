@@ -17,9 +17,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * How far the stat percentages push a build (owner's request of 2026-11-13: "工夫しだいでSTRを4000位まで"). A perfect
- * level-100 STR knight — every point in STR, legendary +10 gear with perfect rolls, four different STR accessories and
- * two STR charms of the best grades — lands near STR 4 000; the same flat stats without percentages stay at 485.
+ * How far the stat percentages push a build (owner's requests of 2026-11-13: "工夫しだいでSTRを4000位まで", then
+ * "STRだけじゃなくて、そのステータスに特化したらどれでもそれくらいいくようにして"). A perfect level-100 build of any stat —
+ * every point in it, a job that grows it, legendary +10 gear with perfect rolls, four different accessories and two
+ * charms of its focus from the best grades — lands near 4 000; the same flat stats without percentages stay near 500.
  */
 public class StatGrowthTest {
     private static final UUID WEARER = UUID.nameUUIDFromBytes("growth".getBytes());
@@ -46,6 +47,42 @@ public class StatGrowthTest {
         assertEquals(70, composed.percentBonus().get(StatType.STR));
         assertEquals(10 + 10 + 70, composed.bonus().get(StatType.STR));
         assertEquals(composed.total(), own.plus(composed.bonus()));
+    }
+
+    /** The best job and weapon of a stat: a job that grows it, a weapon that rolls it flat. */
+    private record Build(StatType stat, JobType job, WeaponType weapon) {
+    }
+
+    private static final List<Build> BUILDS = List.of(
+            new Build(StatType.STR, JobType.KNIGHT, WeaponType.ONE_HANDED_SWORD),
+            new Build(StatType.VIT, JobType.PRIEST, WeaponType.STAFF),
+            new Build(StatType.AGI, JobType.ASSASSIN, WeaponType.DUAL_BLADES),
+            new Build(StatType.INT, JobType.MAGE, WeaponType.STAFF),
+            new Build(StatType.DEX, JobType.RANGER, WeaponType.BOW),
+            new Build(StatType.LUK, JobType.ASSASSIN, WeaponType.DUAL_BLADES));
+
+    @Test
+    public void everySpecialisedStatReachesAboutFourThousand() {
+        int lowest = Integer.MAX_VALUE;
+        int highest = 0;
+        StringBuilder report = new StringBuilder();
+        for (Build build : BUILDS) {
+            StatBlock own = StatBlock.uniform(5).with(build.stat(), 5 + 99 * 3);
+            GearBonus bonus = Gear.sum(perfectGear(build.stat(), build.weapon()), 100, WEARER);
+            ComposedStats composed = ComposedStats.compose(own, 100, build.job(), bonus.stats(), bonus.percents(),
+                    bonus.modifiers(), CombatModifiers.NONE);
+            int value = composed.total().get(build.stat());
+            report.append(build.stat()).append(' ').append(value).append(" (+")
+                    .append(Math.round(bonus.percents().get(build.stat()) * 1000) / 10.0).append("%) ");
+            // every stat finds the same percentages: four armor pieces, four accessories, two charms
+            assertEquals(build.stat().toString(), 7.067, bonus.percents().get(build.stat()), 1.0e-6);
+            assertTrue(build.stat() + " " + value, value >= 3_600 && value <= 4_800);
+            lowest = Math.min(lowest, value);
+            highest = Math.max(highest, value);
+        }
+        // the mage, whose job grows INT twice as fast, is the only one far above the rest
+        assertTrue(report.toString(), highest <= lowest * 1.25);
+        assertEquals(report.toString(), 3_912, lowest);
     }
 
     @Test
@@ -85,6 +122,71 @@ public class StatGrowthTest {
                 bonus.modifiers(), CombatModifiers.NONE);
         int str = composed.total().get(StatType.STR);
         assertTrue("mid game STR " + str, str > 300 && str < 1_000);
+    }
+
+    /**
+     * Weapon, head, chest, legs, feet, four accessories, two charms of one stat: legendary, +10, perfect rolls (the
+     * stat flat wherever the piece rolls it, its percentage everywhere, the best fillers).
+     */
+    static List<EquipmentData> perfectGear(StatType stat, WeaponType weaponType) {
+        ItemTier abyss = ItemTier.ABYSS;
+        AffixKind flat = flatOf(stat);
+        AffixKind percent = AffixKind.percentOf(stat);
+        List<EquipmentData> gear = new ArrayList<>();
+        EquipmentBase weapon = EquipmentBase.weapon(weaponType, abyss);
+        gear.add(piece(weapon, fill(AffixPool.of(EquipmentSlot.WEAPON, weaponType), new Affix(flat, flat.max(abyss)),
+                AffixKind.CRIT_CHANCE, AffixKind.CRIT_DAMAGE, AffixKind.PHYSICAL_PERCENT, AffixKind.MAGIC_PERCENT,
+                AffixKind.RANGED_PERCENT, AffixKind.AGI, AffixKind.LUK)));
+        for (EquipmentSlot slot : EquipmentSlot.armor()) {
+            AffixPool pool = AffixPool.of(slot, null);
+            List<Affix> first = new ArrayList<>();
+            if (pool.rolls(flat)) {
+                first.add(new Affix(flat, flat.max(abyss)));
+            }
+            first.add(new Affix(percent, percent.max(abyss)));
+            gear.add(piece(EquipmentBase.armor(slot, abyss), fill(pool, first, AffixKind.DEFENSE,
+                    AffixKind.MAX_HEALTH, AffixKind.CRIT_CHANCE, AffixKind.HEALING_PERCENT, AffixKind.MOVE_SPEED)));
+        }
+        Trinkets.Focus focus = Trinkets.Focus.of(stat);
+        AffixKind other = AffixKind.percentOf(stat == StatType.VIT ? StatType.STR : StatType.VIT);
+        for (Trinkets.Grade grade : List.of(Trinkets.Grade.ETERNAL, Trinkets.Grade.AEON, Trinkets.Grade.DIVINE,
+                Trinkets.Grade.CELESTIAL)) {
+            gear.add(trinket(Trinkets.of(grade, focus, false), new Affix(percent, percent.max(abyss)),
+                    new Affix(AffixKind.CRIT_CHANCE, 0.07), new Affix(AffixKind.CRIT_DAMAGE, 0.3),
+                    new Affix(other, other.max(abyss))));
+        }
+        for (Trinkets.Grade grade : List.of(Trinkets.Grade.ETERNAL, Trinkets.Grade.AEON)) {
+            gear.add(trinket(Trinkets.of(grade, focus, true), new Affix(percent, percent.max(abyss)),
+                    new Affix(AffixKind.MAX_HEALTH, 12), new Affix(AffixKind.DEFENSE, 18),
+                    new Affix(AffixKind.HEALING_PERCENT, 0.14)));
+        }
+        return gear;
+    }
+
+    /** The given affixes, then fillers the pool rolls (at their best value) until there are four distinct kinds. */
+    private static Affix[] fill(AffixPool pool, Affix first, AffixKind... fillers) {
+        return fill(pool, List.of(first), fillers);
+    }
+
+    private static Affix[] fill(AffixPool pool, List<Affix> first, AffixKind... fillers) {
+        List<Affix> out = new ArrayList<>(first);
+        for (AffixKind kind : fillers) {
+            if (out.size() < ItemRarity.MAX_AFFIXES && pool.rolls(kind)
+                    && out.stream().noneMatch(affix -> affix.kind() == kind)) {
+                out.add(new Affix(kind, kind.max(ItemTier.ABYSS)));
+            }
+        }
+        assertEquals(pool.toString(), ItemRarity.MAX_AFFIXES, out.size());
+        return out.toArray(new Affix[0]);
+    }
+
+    private static AffixKind flatOf(StatType stat) {
+        for (AffixKind kind : AffixKind.values()) {
+            if (kind.stat().filter(stat::equals).isPresent()) {
+                return kind;
+            }
+        }
+        throw new AssertionError(stat);
     }
 
     /** Weapon, head, chest, legs, feet, four accessories, two charms: legendary, +10, perfect rolls. */
