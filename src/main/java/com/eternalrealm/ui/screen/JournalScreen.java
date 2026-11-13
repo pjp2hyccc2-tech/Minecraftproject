@@ -104,6 +104,14 @@ public abstract class JournalScreen extends Screen {
             com.eternalrealm.client.estate.EstateInput.recall();
         }).bounds(panelLeft, y + 26, TAB_WIDTH, 18).tooltip(net.minecraft.client.gui.components.Tooltip.create(
                 Component.translatable("screen.eternalrealm.tab.room_tip"))).build());
+        // the 魔導スマホ (P), with what waits for the player
+        int waiting = com.eternalrealm.client.phone.ClientPhone.waiting();
+        addRenderableWidget(Button.builder(waiting > 0
+                        ? Component.translatable("screen.eternalrealm.tab.phone_waiting", waiting)
+                        .withStyle(net.minecraft.ChatFormatting.GOLD)
+                        : Component.translatable("screen.eternalrealm.tab.phone"),
+                b -> com.eternalrealm.ui.phone.PhoneScreen.open("home", ""))
+                .bounds(panelLeft, y + 46, TAB_WIDTH, 18).build());
         initPage();
     }
 

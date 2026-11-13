@@ -628,3 +628,24 @@ The owner asked for the chat to be shown small where it is not in the way, with 
 - **Fantasy, quietly**: a night-blue translucent ground, a gold band with a sapphire at each corner and a jewelled crest on the
   top edge (pixel art by script), the typing line framed in gold. It follows the vanilla chat settings (hidden, opacity, size,
   line spacing), can be switched off, and switches itself off after a rendering error.
+
+## D-PHONE: the 魔導スマホ — friends, messages, photos and a board, on the server, with a phone of its own (2026-11-13)
+
+The owner asked for a fantasy-looking phone to keep in touch with friends, post screenshots and use an in-game social
+network (「ファンタジー風の見た目のスマホをつくってフレンドと連絡を取り合ったり、スクショを投稿したり、ゲーム内SNSも作って」).
+Decisions:
+- **One phone, five apps, no new world objects**: a screen opened with P (vanilla's social interactions moves to F9) or from the
+  journal — Friends, Messages, Camera, Board (つぶやき), News — drawn as an ebony-and-gold phone with a crystal screen and a
+  moonlit wallpaper (original art by script). The game does not pause.
+- **Everything lives on the server, in one document**: friends, requests, blocks, names, conversations, posts and the photo index in
+  `<data>/phone.json` (atomic writes with a previous generation, saved off-thread every minute when changed). A file that cannot be
+  read is never overwritten. The board is server-wide (everyone on the server), messages are between friends only.
+- **Photos are real but small and checked**: the client shrinks a screenshot to 384×216 JPEG (≤ 96 KB) off the render thread and
+  sends it in six 16 KB chunks at most (protocol 13); the server reads the size from the header before decoding, decodes within
+  limits, re-encodes it itself (no metadata survives) and keeps it under a random 16-hex-digit name, never a client-chosen path.
+  A photo can be used once; unused ones go after 15 minutes; at most 400 are kept. Players fetch only photos they may see.
+- **Safety without a moderation team**: text is cleaned (no formatting codes, control or invisible bidi characters), lengths and
+  rates are capped (posts 30 s apart and 40 a day, photos 15 s apart and 30 a day...), blocking hides each other entirely,
+  operators (permission 2) can delete any post or comment in the phone or with `/phone admin delete`.
+- **Live but quiet**: an open phone refreshes when friends write, like or comment; a closed one gets badges and, for messages,
+  friend requests and comments, one line in chat with a button. Likes only change the badge.

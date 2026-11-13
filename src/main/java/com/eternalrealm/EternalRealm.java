@@ -74,6 +74,7 @@ public final class EternalRealm {
         com.eternalrealm.item.forge.SmithService.register();
         com.eternalrealm.dungeon.forge.GatekeeperService.register();
         com.eternalrealm.dungeon.forge.ReadyChecks.register();
+        com.eternalrealm.social.phone.forge.PhoneService.register();
         com.eternalrealm.item.forge.BagService.register();
         com.eternalrealm.revival.forge.RevivalService.register();
         com.eternalrealm.dungeon.forge.DungeonResults.register();

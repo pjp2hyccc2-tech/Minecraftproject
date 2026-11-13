@@ -216,3 +216,27 @@
 - S→C UI データ `quests` に `guided`（案内中のクエスト id、なければ `""`）を追加。
 - C→S UI 操作 `quest.guide`: `{id}`。`""` は既定（メインクエスト）、`"-"` は案内なし、それ以外は `[a-z0-9_]{1,64}` のクエスト
   id。形が違えば違反。受けていないクエストを選んでも違反ではない（既定に戻る）。
+
+## 付録: 魔導スマホ（版 13: `PhotoUploadPacket` と `PhotoDataPacket` を追加）
+
+フレンド・メッセージ・写真・掲示板（[modules/phone.md](modules/phone.md)）。写真だけは JSON に入れず専用のパケットで送る。
+
+- C→S `PhotoUploadPacket`: `{upload: varint, index: varint, total: varint, data: bytes ≤ 16 KB}`。1枚は最大6つに分けて
+  順に送る（最後以外はちょうど 16 KB、合計 96 KB まで）。読む前に全体が 16 KB＋α を超えれば切断。順番違い・大きさ違い
+  の断片は違反。速さの上限は専用（断片12個まで、毎秒2個）と、写真の上限（15秒に1枚・1日30枚。超えたら UI チャンネル
+  `phone.upload` で断る理由）。サーバーは JPEG を確かめて描き直し、`phone.upload` `{upload, ok, id}` で番号を返す。
+- S→C `PhotoDataPacket`: `{id: 16桁の16進, data: bytes ≤ 96 KB}`。データが空なら「ない／見られない」。
+- S→C UI データ `phone`: 画面ごとの文書（`social.phone.PhoneView`）。どれも `view`・`unread`・`requests`・`activity`・`me`・`mod` を持つ。
+  `home` `{friendsOnline, friends}`、`friends` `{friends: [{id, name, online, unread}], incoming: [{…, time}], asked, blocked}`、
+  `messages` `{conversations: [{id, name, online, friend, text(40字), photo, mine, time, unread}]}`、`chat`
+  `{with: {id, name, online, friend, blocked}, messages: [{id, mine, text, photo, time}]}`、`feed` `{feed, before, posts: [post×8],
+  more}`、`post` `{post: {…, commentList: [{id, author, text, time, delete}]}}` か `{gone}`、`activity` `{items: [{id, name, online,
+  kind, post, time}]}`。post = `{id, author: {id, name, online}, mine, text, photo, time, likes, liked, comments, delete}`。時刻は UNIX ミリ秒。
+- S→C UI データ `phone.badges` `{unread, requests, activity}`（スマホが閉じているとき）、`phone.toast` `{message}`（部品の JSON）、
+  `phone.open` `{view, id}`（コマンド・チャットのボタンから）。
+- C→S UI 操作: `phone.view` `{view: home|friends|messages|activity}`／`{view: chat, id: UUID}`／`{view: feed, feed: all|friends|mine,
+  before: ≥0}`／`{view: post, id: ≥1}`、`phone.close` `{}`、`phone.friend` `{op: request, name}`／`{op: accept|decline|remove|block|
+  unblock, id: UUID}`、`phone.send` `{to: UUID, text, photo?}`、`phone.post` `{text, photo?}`、`phone.like` `{id}`、`phone.comment`
+  `{id, text}`、`phone.delete` `{id}`、`phone.uncomment` `{id, comment}`、`phone.photo` `{id}`。知らない画面・操作、UUID でない
+  id、16桁の16進でない写真番号、長すぎる本文（上限の4倍を超える生の文字列）は違反。上限内の長さ超え・速さ・権限・相手の都合は
+  違反ではなく `phone.toast` で理由。

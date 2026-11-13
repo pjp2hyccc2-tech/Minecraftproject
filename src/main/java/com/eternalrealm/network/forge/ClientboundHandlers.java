@@ -34,6 +34,8 @@ public final class ClientboundHandlers {
     };
     private static volatile Consumer<SkillFxPacket> skillFxHandler = fx -> {
     };
+    private static volatile Consumer<PhotoDataPacket> photoHandler = photo -> {
+    };
 
     private ClientboundHandlers() {
     }
@@ -72,6 +74,14 @@ public final class ClientboundHandlers {
 
     static void onHeroFx(HeroFxPacket packet) {
         heroFxHandler.accept(packet);
+    }
+
+    public static void setPhotoHandler(Consumer<PhotoDataPacket> handler) {
+        photoHandler = Objects.requireNonNull(handler, "handler");
+    }
+
+    static void onPhoto(PhotoDataPacket packet) {
+        photoHandler.accept(packet);
     }
 
     public static void setSkillFxHandler(Consumer<SkillFxPacket> handler) {

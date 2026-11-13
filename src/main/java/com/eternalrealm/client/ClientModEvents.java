@@ -74,6 +74,7 @@ public final class ClientModEvents {
         com.eternalrealm.ui.screen.DungeonResultScreen.registerChannels();
         ClientTrinkets.register();
         com.eternalrealm.client.map.ThreatClient.init();
+        com.eternalrealm.client.phone.ClientPhone.init();
         ClientboundHandlers.setPlayerActionHandler(CombatAnimations::onRemoteAction);
         ClientboundHandlers.setTelegraphHandler(com.eternalrealm.client.telegraph.ClientTelegraphs::accept);
         ClientboundHandlers.setHeroFxHandler(HeroFx::accept);
@@ -142,6 +143,7 @@ public final class ClientModEvents {
     public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(ClientKeyMappings.OPEN_CHARACTER);
         event.register(ClientKeyMappings.OPEN_EQUIPMENT);
+        event.register(ClientKeyMappings.OPEN_PHONE);
         event.register(ClientKeyMappings.HEAVY_ATTACK);
         event.register(ClientKeyMappings.DODGE);
         event.register(ClientKeyMappings.WEAPON_SKILL);

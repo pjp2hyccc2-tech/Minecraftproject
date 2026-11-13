@@ -29,6 +29,8 @@ public final class ClientKeyMappings {
     public static final KeyMapping JOB_SKILL_6 = key("job_skill_6", GLFW.GLFW_KEY_J);
     /** Next line of the ambient dialogue box (the dialogue window itself takes clicks, Space and Enter). */
     public static final KeyMapping DIALOGUE_NEXT = key("dialogue_next", GLFW.GLFW_KEY_ENTER);
+    /** The 魔導スマホ (P: vanilla's social interactions key moves off it, see KeyConflicts). */
+    public static final KeyMapping OPEN_PHONE = key("open_phone", GLFW.GLFW_KEY_P);
 
     /** The key of job skill slot {@code 1..6}. */
     public static KeyMapping jobSkill(int slot) {

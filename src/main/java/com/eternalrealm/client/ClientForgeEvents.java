@@ -36,6 +36,11 @@ public final class ClientForgeEvents {
                 JournalScreen.open();
             }
         }
+        while (ClientKeyMappings.OPEN_PHONE.consumeClick()) {
+            if (minecraft.player != null && minecraft.screen == null) {
+                com.eternalrealm.ui.phone.PhoneScreen.open("home", "");
+            }
+        }
         com.eternalrealm.ui.dialogue.ClientDialogue.tick();
         com.eternalrealm.client.telegraph.ClientTelegraphs.tick();
         SkillFx.tick();
@@ -149,6 +154,7 @@ public final class ClientForgeEvents {
         com.eternalrealm.ui.gate.ReadyCheckClient.clear();
         com.eternalrealm.client.guide.GuideClient.clear();
         com.eternalrealm.client.chat.ChatLog.clear();
+        com.eternalrealm.client.phone.ClientPhone.clear();
         com.eternalrealm.client.telegraph.ClientTelegraphs.clear();
         com.eternalrealm.client.block.ClientLightShafts.clear();
     }

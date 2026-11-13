@@ -1200,3 +1200,8 @@ STR+10とかじゃなくてSTR+10%とかにして、強化もできるように�
   囲み入力欄にも枠）、`ChatArt`（九分割の枠・紋章・入力欄）。HUD の配置は小さな枠の分だけ空ける（`HudFrame`）。素材
   `tools/art/chat_frame.py`。設定「ファンタジー風のチャット」と `[chat] lines`。
 - 確認: オフライン1302件成功（新規 `ChatPanelTest` 6件）。見た目は実際の枠の素材と日本語の文字で組んだ見本で確認。
+- **魔導スマホ**（D-PHONE、[phone.md](modules/phone.md)）: 純粋な `social.phone`（`PhoneText`・`FriendBook`・`Messages`・`Timeline`・
+  `PhotoRules`・`PhotoCodec`・`PhotoShelf`・`PhoneData`・`PhoneView`・`PhoneRates`）、サーバーの `PhoneService`（保存・UI 操作 `phone.*`・
+  通知・写真の受け取りと配布）と `/phone`、写真のパケット2つ（版 13）、クライアントの `ClientPhone`・`PhotoCache`・`Camera`・
+  `Uploads`、画面 `PhoneScreen`（ホーム・フレンド・メッセージ・会話・カメラ・つぶやき・投稿・コメント・お知らせ）と `PhoneArt`、
+  素材 `tools/art/phone.py`。P キー（バニラのソーシャル設定は F9 へ）、冒険手帳のボタン。オフラインのテストに `social` を追加。
