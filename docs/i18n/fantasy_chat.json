@@ -1,0 +1,4 @@
+{
+  "screen.eternalrealm.settings.fantasy_chat": {"ja": "ファンタジー風のチャット", "en": "Framed chat"},
+  "screen.eternalrealm.settings.fantasy_chat.tooltip": {"ja": "チャットを左下の小さな金の枠に表示し、しばらく静かだと消える。入力中はいつものチャットを同じ枠で囲む。オフにするとバニラのチャット。表示する行数は設定ファイルの [chat] lines（2〜10、既定5）。", "en": "Shows the chat small in a gold frame bottom left, fading when quiet; while typing, the usual chat in the same frame. Off: the vanilla chat. Lines shown: [chat] lines in the config file (2 to 10, default 5)."}
+}

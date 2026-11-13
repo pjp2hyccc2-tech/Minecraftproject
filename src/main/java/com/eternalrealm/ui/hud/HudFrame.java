@@ -81,6 +81,11 @@ public final class HudFrame {
         int chatWidth = chatShown ? Mth.ceil(chat.getWidth() * scale) + 8 : 0;
         int chatHeight = chatShown
                 ? Mth.ceil(ChatComponent.getHeight(minecraft.options.chatHeightUnfocused().get()) * scale) : 0;
+        int[] small = chatShown ? com.eternalrealm.ui.chat.FantasyChat.reserved(minecraft, width) : null;
+        if (small != null) { // the small framed chat instead of the vanilla one
+            chatWidth = small[0];
+            chatHeight = small[1];
+        }
 
         int minimap = Minimap.visible() ? minimapSize() : 0;
         int field = ThreatClient.currentField();

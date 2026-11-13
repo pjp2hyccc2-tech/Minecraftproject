@@ -65,7 +65,7 @@ public final class KeyConflicts {
             changed = true;
             LOG.info("[{}] Moved key mapping {} off {} (clashed with ETERNAL REALM) to {}", ModInfo.MOD_ID,
                     mapping.getName(), oldName.getString(), newKey.getName());
-            minecraft.gui.getChat().addMessage(Component.translatable("message.eternalrealm.keys.moved",
+            com.eternalrealm.client.chat.ChatLog.local(Component.translatable("message.eternalrealm.keys.moved",
                     Component.translatable(mapping.getName()), oldName,
                     newKey == InputConstants.UNKNOWN ? Component.translatable("message.eternalrealm.keys.unbound")
                             : newKey.getDisplayName()).withStyle(ChatFormatting.GRAY));

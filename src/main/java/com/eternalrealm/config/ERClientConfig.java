@@ -23,6 +23,8 @@ public final class ERClientConfig {
     public static final ForgeConfigSpec.IntValue DIALOGUE_TEXT_SPEED;
     public static final ForgeConfigSpec.BooleanValue FLAG_ANIMATION;
     public static final ForgeConfigSpec.BooleanValue QUEST_PATH;
+    public static final ForgeConfigSpec.BooleanValue FANTASY_CHAT;
+    public static final ForgeConfigSpec.IntValue CHAT_LINES;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -63,6 +65,11 @@ public final class ERClientConfig {
         builder.comment("Quest guide").push("guide");
         QUEST_PATH = builder.comment("Yellow dots on the ground lead to where the guided quest wants you next (pick the quest",
                 "with the 案内 button in the journal)").define("questPath", true);
+        builder.pop();
+        builder.comment("Chat").push("chat");
+        FANTASY_CHAT = builder.comment("A small gold-framed chat bottom left that fades when quiet; while typing, the vanilla chat",
+                "in the same frame (false: the vanilla chat)").define("fantasyChat", true);
+        CHAT_LINES = builder.comment("Lines the small chat shows while you are not typing").defineInRange("lines", 5, 2, 10);
         builder.pop();
         SPEC = builder.build();
     }

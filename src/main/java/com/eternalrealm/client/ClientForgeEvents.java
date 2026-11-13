@@ -148,6 +148,7 @@ public final class ClientForgeEvents {
         com.eternalrealm.ui.dialogue.ClientDialogue.clear();
         com.eternalrealm.ui.gate.ReadyCheckClient.clear();
         com.eternalrealm.client.guide.GuideClient.clear();
+        com.eternalrealm.client.chat.ChatLog.clear();
         com.eternalrealm.client.telegraph.ClientTelegraphs.clear();
         com.eternalrealm.client.block.ClientLightShafts.clear();
     }

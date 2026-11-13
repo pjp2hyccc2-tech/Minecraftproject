@@ -49,5 +49,6 @@ python3 tools/art/generate_all.py --sections /tmp/prev # プレビューの各�
 | `items.py`, `skills.py`, `effects.py` | 素材・消耗品・金貨、スキル/エンブレム、パーティクル/状態異常 |
 | `models.py`, `preview.py`, `quickview.py` | JSON 出力、プレビュー作成、開発用の拡大表示 |
 | `gate_screen.py`（`gate_scenes.py`・`gate_paint.py`） | 転移門の画面の素材。単独で実行: `python3 tools/art/gate_screen.py` → `textures/gui/gate/` と一覧 `tools/art/gate_screen_preview.png`。絵は numpy の小さな描画器（`gate_paint.py`: 形は4倍で描いて縮める、グラデーション・光・ノイズ・光のにじみ）で9つの場面（地下都市の灯籠と運河、古代樹の根のアーチ、夕日の神殿、氷の牢獄の通路、オーロラの氷の城、竜の頭の門と溶岩、雲の上の浮島と遺跡、紫の月と塔、光の環の前の玉座）。アトラスの配置は `ATLAS`（`GatekeeperScreen` の定数と同じ） |
+| `chat_frame.py` | 小さなチャットの枠の素材（`textures/gui/chat/frame.png`、64×64 のピクセルアート）: 金の帯と四隅のサファイアの九分割の枠、上の辺の宝石の紋章（両側に渦巻き）、入力欄の枠（両端にサファイアの留め金）。`gate_screen.py` の金の色と浮き彫りを使う。一覧 `tools/art/chat_frame_preview.png`。配置は `ATLAS`（`ui.chat.ChatArt` の定数と同じ） |
 
 絵を直すときは該当関数や ASCII を編集して `generate_all.py` を再実行し、`preview.png` で確認してください。

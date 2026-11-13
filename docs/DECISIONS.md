@@ -611,3 +611,20 @@ The owner asked for the way to a quest's place to be shown with yellow dots (「
 - **Readable, not loud**: small glowing discs on the ground with a slow wave of light running towards the place, fading out
   past 56 blocks; a pillar of golden light where the route reaches the place; the same dots, a golden star and the distance on
   the minimap. No depth writes, so dots behind walls stay hidden.
+
+## D-FANTASYCHAT: a small gold-framed chat while playing, the vanilla chat in the same frame while typing (2026-11-13)
+
+The owner asked for the chat to be shown small where it is not in the way, with a fantasy frame (「チャットの表示を邪魔に
+ならない場所に小さく表示してそれもファンタジー風のHUDと枠を作って」). Decisions:
+- **Where the chat already is, but smaller**: bottom left, on the vanilla chat's baseline (40 px above the bottom, clear of the
+  skill bar), about a third of the screen wide (170–240 px instead of 320), text at 0.85 of the vanilla size, 5 lines (2–10 in
+  the config) instead of about 10, shrinking to its content and gone 10 s after the last message. The HUD layout reserves only
+  this, so the rest of the HUD gets the room back.
+- **Our own drawing while playing, vanilla's while typing**: the small panel draws the messages itself (Forge's chat-received
+  event, after every other mod), so it can wrap them at its own width and show players' lines as "名前: 本文". While typing the
+  vanilla chat is left to draw itself, framed, so scrolling, clickable links and hover text keep working untouched. No
+  reflection into the vanilla chat and no mixins: lines another mod writes straight into the chat on the client show only in
+  the open chat, and so does the conversation log (it was just read).
+- **Fantasy, quietly**: a night-blue translucent ground, a gold band with a sapphire at each corner and a jewelled crest on the
+  top edge (pixel art by script), the typing line framed in gold. It follows the vanilla chat settings (hidden, opacity, size,
+  line spacing), can be switched off, and switches itself off after a rendering error.

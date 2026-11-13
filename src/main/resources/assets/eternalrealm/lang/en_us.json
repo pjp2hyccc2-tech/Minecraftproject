@@ -7304,5 +7304,7 @@
   "screen.eternalrealm.quest.guide.tooltip": "Yellow dots on the ground lead you to this quest's next place.",
   "screen.eternalrealm.quest.guiding.tooltip": "This quest is being guided. Press to stop guiding.",
   "screen.eternalrealm.settings.quest_path": "Quest path",
-  "screen.eternalrealm.settings.quest_path.tooltip": "Yellow dots on the ground and the minimap show the way to the guided quest's next place. Pick the quest with Guide in the journal's quest page (the main quest at first)."
+  "screen.eternalrealm.settings.quest_path.tooltip": "Yellow dots on the ground and the minimap show the way to the guided quest's next place. Pick the quest with Guide in the journal's quest page (the main quest at first).",
+  "screen.eternalrealm.settings.fantasy_chat": "Framed chat",
+  "screen.eternalrealm.settings.fantasy_chat.tooltip": "Shows the chat small in a gold frame bottom left, fading when quiet; while typing, the usual chat in the same frame. Off: the vanilla chat. Lines shown: [chat] lines in the config file (2 to 10, default 5)."
 }
