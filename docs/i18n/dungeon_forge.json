@@ -10,10 +10,5 @@
   "message.eternalrealm.dungeon.member_down": {"ja": "%s が倒れた（戦闘不能 %s 回）", "en": "%s is down (%s downs)"},
   "message.eternalrealm.dungeon.reward": {"ja": "攻略報酬: %s", "en": "Clear reward: %s"},
   "message.eternalrealm.dungeon.not_inside": {"ja": "ダンジョンの中にいません", "en": "You are not in a dungeon"},
-  "message.eternalrealm.boss.ability": {"ja": "%sの%s！", "en": "%s uses %s!"},
-  "screen.eternalrealm.gate.title": {"ja": "門番 ― ダンジョン", "en": "Gatekeeper - Dungeons"},
-  "screen.eternalrealm.gate.level": {"ja": "推奨レベル %s", "en": "Recommended level %s"},
-  "screen.eternalrealm.gate.party": {"ja": "人数 %s〜%s人", "en": "Party %s-%s players"},
-  "screen.eternalrealm.gate.difficulty": {"ja": "クリック: ノーマル / 右クリック: ハード / Shift+クリック: EX", "en": "Click: normal / right click: hard / shift-click: EX"},
-  "screen.eternalrealm.gate.locked": {"ja": "未解放（前の地域のボスを倒そう）", "en": "Locked (defeat the previous region's boss)"}
+  "message.eternalrealm.boss.ability": {"ja": "%sの%s！", "en": "%s uses %s!"}
 }

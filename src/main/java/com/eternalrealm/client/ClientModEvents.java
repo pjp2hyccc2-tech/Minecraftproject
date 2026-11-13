@@ -53,6 +53,10 @@ public final class ClientModEvents {
                 ClientUiState.get(channel).ifPresent(com.eternalrealm.ui.screen.SmithScreen::open);
             } else if (com.eternalrealm.item.forge.SmithService.RESULT_CHANNEL.equals(channel)) {
                 ClientUiState.get(channel).ifPresent(com.eternalrealm.ui.screen.SmithScreen::onResult);
+            } else if (com.eternalrealm.dungeon.forge.GatekeeperService.CHANNEL.equals(channel)) {
+                ClientUiState.get(channel).ifPresent(com.eternalrealm.ui.gate.GatekeeperScreen::open);
+            } else if (com.eternalrealm.dungeon.forge.GatekeeperService.RESULT_CHANNEL.equals(channel)) {
+                ClientUiState.get(channel).ifPresent(com.eternalrealm.ui.gate.GatekeeperScreen::onResult);
             } else if (com.eternalrealm.world.field.Waystones.UI_CHANNEL.equals(channel)) {
                 ClientUiState.get(channel).ifPresent(com.eternalrealm.ui.map.WorldMapScreen::openTravel);
             } else if (com.eternalrealm.world.field.Waystones.ARRIVE_CHANNEL.equals(channel)) {
