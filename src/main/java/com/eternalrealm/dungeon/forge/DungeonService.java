@@ -7,6 +7,7 @@ import com.eternalrealm.character.CharacterSnapshot;
 import com.eternalrealm.character.ExperienceSource;
 import com.eternalrealm.combat.CombatStats;
 import com.eternalrealm.combat.Combatant;
+import com.eternalrealm.core.ModInfo;
 import com.eternalrealm.dungeon.DungeonDefinition;
 import com.eternalrealm.dungeon.DungeonLayout;
 import com.eternalrealm.dungeon.DungeonLayoutGenerator;
@@ -42,6 +43,7 @@ import com.eternalrealm.ranking.TimeAttackMember;
 import com.eternalrealm.ranking.TimeAttackRun;
 import com.eternalrealm.server.ServerContext;
 import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -49,6 +51,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.saveddata.SavedData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,6 +60,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.SplittableRandom;
 import java.util.UUID;
 
@@ -93,6 +97,10 @@ public final class DungeonService {
     private final List<DungeonSite> clearing = new ArrayList<>();
     /** The last dungeon each player ran (prepared again when they ask a gatekeeper). */
     private final Map<UUID, String> lastRun = new HashMap<>();
+    /** Slots holding blocks, saved with the dungeon level (null until first needed). */
+    private SlotLedger ledger;
+    /** Whether the slots left holding blocks by the last session were handed to the clearing. */
+    private boolean restored;
 
     public DungeonService(MinecraftServer server) {
         this.server = server;
@@ -228,7 +236,7 @@ public final class DungeonService {
             }
         }
         if (site == null) {
-            site = new DungeonSite(contentId, layout, slot.get(), DungeonLevels.level(server));
+            site = newSite(contentId, layout, slot.get());
         }
         Map<UUID, DungeonInstance.Origin> returns = new HashMap<>();
         for (ServerPlayer member : members) {
@@ -254,6 +262,9 @@ public final class DungeonService {
     // ------------------------------------------------------------------ tick and events
 
     public void tick(long now) {
+        if (!restored) {
+            restoreLeftovers();
+        }
         long buildDeadline = System.nanoTime() + ACTIVE_BUILD_NANOS;
         for (DungeonInstance instance : List.copyOf(instances)) {
             try {
@@ -299,6 +310,7 @@ public final class DungeonService {
         for (DungeonSite site : List.copyOf(clearing)) {
             if (site.clear(deadline, now)) {
                 clearing.remove(site);
+                ledger().free(site.slot.index());
                 allocator.release(site.slot);
             }
             if (System.nanoTime() >= deadline) {
@@ -388,9 +400,107 @@ public final class DungeonService {
         if (slot.isEmpty()) {
             return;
         }
-        DungeonSite site = new DungeonSite(contentId, layout, slot.get(), DungeonLevels.level(server));
+        DungeonSite site = newSite(contentId, layout, slot.get());
         site.lastWanted = now;
         prepared.put(contentId, site);
+    }
+
+    /** A site that writes its slot down as holding blocks when it sets the first one. */
+    private DungeonSite newSite(String contentId, DungeonLayout layout, InstanceSlot slot) {
+        DungeonSite site = new DungeonSite(contentId, layout, slot, DungeonLevels.level(server));
+        site.onTouched = touched -> ledger().hold(touched.slot.index(), touched.contentId, touched.layout.seed());
+        return site;
+    }
+
+    private SlotLedger ledger() {
+        if (ledger == null) {
+            ledger = SlotLedger.get(DungeonLevels.level(server));
+        }
+        return ledger;
+    }
+
+    /**
+     * Slots the last session left holding blocks (a run or a prepared site when the server stopped) are taken and
+     * cleared in the background before anything is built there again: their layouts come back from dungeon and seed.
+     */
+    private void restoreLeftovers() {
+        restored = true;
+        if (server instanceof net.minecraft.gametest.framework.GameTestServer) {
+            return;
+        }
+        for (Map.Entry<Integer, String> entry : List.copyOf(ledger().slots.entrySet())) {
+            int index = entry.getKey();
+            String record = entry.getValue();
+            int bar = record.lastIndexOf('|');
+            DungeonLayout layout = null;
+            String contentId = bar > 0 ? record.substring(0, bar) : "";
+            try {
+                long seed = Long.parseLong(record.substring(bar + 1));
+                if (Dungeons.FINAL_RAID.id().equals(contentId)) {
+                    layout = DungeonLayoutGenerator.raidArena(Dungeons.FINAL_RAID);
+                } else {
+                    layout = Dungeons.byId(contentId).map(dungeon -> DungeonLayoutGenerator.generate(dungeon, seed))
+                            .orElse(null);
+                }
+            } catch (RuntimeException e) {
+                // a broken record: forget it
+            }
+            if (layout == null || index < 0 || index >= InstanceAllocator.HARD_LIMIT) {
+                ledger().free(index);
+                continue;
+            }
+            InstanceSlot slot = new InstanceSlot(index);
+            if (!allocator.reserve(slot)) {
+                continue;
+            }
+            DungeonSite site = newSite(contentId, layout, slot);
+            site.markTouched();
+            site.startClearing();
+            clearing.add(site);
+        }
+    }
+
+    /**
+     * The slots holding blocks of a site ({@code data/eternalrealm_dungeon_slots.dat} of the dungeon level): written
+     * when a site sets its first block, crossed out when it has been cleared.
+     */
+    static final class SlotLedger extends SavedData {
+        private static final String NAME = ModInfo.MOD_ID + "_dungeon_slots";
+        /** slot index -> "dungeon|seed" */
+        final Map<Integer, String> slots = new TreeMap<>();
+
+        static SlotLedger get(ServerLevel level) {
+            return level.getDataStorage().computeIfAbsent(SlotLedger::load, SlotLedger::new, NAME);
+        }
+
+        static SlotLedger load(CompoundTag tag) {
+            SlotLedger ledger = new SlotLedger();
+            for (String key : tag.getAllKeys()) {
+                try {
+                    ledger.slots.put(Integer.parseInt(key), tag.getString(key));
+                } catch (NumberFormatException e) {
+                    // not ours
+                }
+            }
+            return ledger;
+        }
+
+        @Override
+        public CompoundTag save(CompoundTag tag) {
+            slots.forEach((slot, record) -> tag.putString(String.valueOf(slot), record));
+            return tag;
+        }
+
+        void hold(int slot, String contentId, long seed) {
+            slots.put(slot, contentId + "|" + seed);
+            setDirty();
+        }
+
+        void free(int slot) {
+            if (slots.remove(slot) != null) {
+                setDirty();
+            }
+        }
     }
 
     private static boolean prebuildEnabled() {

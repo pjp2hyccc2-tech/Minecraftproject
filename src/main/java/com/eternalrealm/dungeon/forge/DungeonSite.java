@@ -54,6 +54,8 @@ public final class DungeonSite {
     public final DecorBuilder decor;
     /** Prepared sites: the last tick someone was near the gate (or asked the gatekeeper). */
     long lastWanted;
+    /** Told once, when the first block is set (the service writes the slot down as holding blocks). */
+    java.util.function.Consumer<DungeonSite> onTouched;
     private final List<BlockFill> plan;
     private final List<ChunkPos> chunks = new ArrayList<>();
     private final LongArrayList shaped = new LongArrayList();
@@ -102,6 +104,20 @@ public final class DungeonSite {
         return touched;
     }
 
+    private void touch() {
+        if (!touched) {
+            touched = true;
+            if (onTouched != null) {
+                onTouched.accept(this);
+            }
+        }
+    }
+
+    /** A site found holding blocks after a restart: it is cleared like any other. */
+    void markTouched() {
+        touched = true;
+    }
+
     // ------------------------------------------------------------------ building
 
     /**
@@ -134,7 +150,7 @@ public final class DungeonSite {
                             cursor.getZ());
                     if (level.getBlockState(cursor) != state) {
                         level.setBlock(cursor, state, FLAGS);
-                        touched = true;
+                        touch();
                     }
                     if (needsShape(state)) {
                         shaped.add(cursor.asLong());
@@ -143,6 +159,7 @@ public final class DungeonSite {
                 fillIndex++;
                 fillOffset = 0;
             }
+            touch(); // the slot holds the layout now, set by this site or not
             phase = Phase.SHAPES;
         }
         if (phase == Phase.SHAPES) {
@@ -183,14 +200,15 @@ public final class DungeonSite {
 
     // ------------------------------------------------------------------ clearing
 
-    /** From now on the site is cleared: the layout's boxes and the boxes the decoration built into. */
+    /**
+     * From now on the site is cleared: the layout's boxes and the boxes the decoration built into (known once its
+     * planning is over).
+     */
     public void startClearing() {
         if (phase == Phase.CLEARING || phase == Phase.CLEARED) {
             return;
         }
-        List<BlockBox> boxes = new ArrayList<>(layout.occupiedBoxes());
-        boxes.addAll(decor.extraBoxes());
-        clearBoxes = boxes;
+        clearBoxes = List.of();
         clearIndex = 0;
         clearOffset = 0;
         drained = false;
@@ -207,12 +225,18 @@ public final class DungeonSite {
         }
         holdChunks(now);
         if (!drained) {
+            if (!decor.settled()) {
+                return false; // a site restored after a restart: its decoration is still being planned
+            }
             for (ChunkPos pos : chunks) {
                 if (!level.getChunkSource().hasChunk(pos.x, pos.z)) {
                     return false;
                 }
             }
             decor.drainFluids(); // nothing may flow while the walls around it go
+            List<BlockBox> boxes = new ArrayList<>(layout.occupiedBoxes());
+            boxes.addAll(decor.extraBoxes());
+            clearBoxes = boxes;
             drained = true;
         }
         int count = 0;

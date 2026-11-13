@@ -543,7 +543,9 @@ of the bodies, was left alone). Decisions:
   background), set blocks without shape updates and only where they differ, fit the bars and fences once afterwards (like the
   capital's blueprint) and hold their chunks with tickets so no tick waits for a load. A site is built while a player walks up
   to the gate (or opens a gatekeeper's list after a run), so the run usually starts at once; members are free as soon as a run
-  closes. The forest's leafy floor marks became persistent leaves (they could decay).
+  closes. The forest's leafy floor marks became persistent leaves (they could decay). Slots holding blocks are written
+  down (dungeon and seed) with the dungeon level; what a stopped server left (a run, a prepared site, a half-cleared one)
+  is rebuilt as a layout, reserved and cleared in the background at the next start before the slot is used again.
 - **Idle monsters rest (3)**: the 3.5× habitats stay. A field monster that does nothing and has no player within 32 blocks
   runs one whole tick in four (spread by id); anything that changes — a player near, a hit, a push, a stroll it decides on —
   wakes it on the next tick. Dungeon waves, bosses and levels without players always run every tick (so GameTests are

@@ -44,6 +44,19 @@ public final class InstanceAllocator {
         return Optional.of(new InstanceSlot(index));
     }
 
+    /**
+     * Takes a particular slot (one that still holds blocks from before a restart, to be cleared) whatever the limit.
+     * @return false if it is taken already
+     */
+    public boolean reserve(InstanceSlot slot) {
+        Objects.requireNonNull(slot, "slot");
+        if (used.get(slot.index())) {
+            return false;
+        }
+        used.set(slot.index());
+        return true;
+    }
+
     /** Frees a slot for reuse; returns false if it was not allocated. */
     public boolean release(InstanceSlot slot) {
         Objects.requireNonNull(slot, "slot");

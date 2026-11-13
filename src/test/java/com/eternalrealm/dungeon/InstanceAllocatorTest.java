@@ -67,4 +67,18 @@ public class InstanceAllocatorTest {
         assertThrows(IllegalArgumentException.class, () -> new InstanceSlot(-1));
         assertThrows(NullPointerException.class, () -> new InstanceAllocator().release(null));
     }
+
+    @Test
+    public void aSlotWithLeftoversCanBeReservedAndIsSkippedAfterwards() {
+        InstanceAllocator allocator = new InstanceAllocator(2);
+        assertTrue(allocator.reserve(new InstanceSlot(1)));
+        assertFalse("taken", allocator.reserve(new InstanceSlot(1)));
+        assertEquals(0, allocator.allocate().orElseThrow().index());
+        assertTrue("whatever the limit", allocator.reserve(new InstanceSlot(7)));
+        assertEquals(3, allocator.inUse());
+        assertTrue(allocator.allocate().isEmpty());
+        assertTrue(allocator.release(new InstanceSlot(1)));
+        assertTrue(allocator.release(new InstanceSlot(7)));
+        assertEquals(1, allocator.allocate().orElseThrow().index());
+    }
 }

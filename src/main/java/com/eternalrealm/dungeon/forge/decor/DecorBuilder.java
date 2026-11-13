@@ -58,6 +58,12 @@ public final class DecorBuilder {
         this.planning = CompletableFuture.supplyAsync(() -> DungeonDecor.plan(layout));
     }
 
+    /** Whether the planning is over (a plan, or none because it failed). */
+    public boolean settled() {
+        plan();
+        return plan != null || failed;
+    }
+
     /** The plan once it is ready (empty while planning, or if planning failed). */
     public Optional<DecorPlan> plan() {
         if (plan == null && !failed && planning.isDone()) {
