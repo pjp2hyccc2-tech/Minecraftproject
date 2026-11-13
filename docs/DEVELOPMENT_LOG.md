@@ -1104,3 +1104,29 @@ STR+10とかじゃなくてSTR+10%とかにして、強化もできるように�
   jar に名品の装身具の絵とモデル各48。配布した jar はこの実行のもの（PC が未接続のためファイルで送付）。
 - **未確認（実機が必要）**: 成長した災厄の手応え（HP・攻撃の伸び）、討伐後の告知と手配書のLv、新しい8種類のアイコンの見え方、
   名品の装身具の固有の効果が戦闘で働く様子、ボーナス宝箱に装身具が出る頻度の体感。
+
+### 追加の依頼（同日）: 軽量化 — 調査のあと 1・2・3・5 と旗の揺れの設定
+
+オーナー:「軽量化、どこを改良できるかまず教えて。実際にそれを行うのは許可待って」→ 調査結果（下）を報告 →
+「1と2と3と5を実装して設定で旗の揺れのアニメーションを消せるようにして、4は触らないでいい」。
+
+- **調査**（コードの読み取りと純粋部分の計測）: 地形の計算は1チャンク約0.9ms（`FieldTerrain.heightAt` 1.5µs）で軽いが、初めて行く
+  場所はその場で装飾・建造物まで作る（グリフォンは全力疾走の2倍で飛ぶ）。ダンジョンは入場時に11万〜35万ブロックを1tick 6,000ずつ
+  （隣の形の更新つき）、内装4,000ずつ、終了後12,000ずつ。生息地の近くの魔物はフィールドの35%の場所で0体、42%で40体以下、19%で
+  41〜80体、残りで最大約200体。光る部分のある敵の約7割が体全体をもう一度描く。ミニマップは1ブロック動くたびに256×256を
+  塗り直して送る（最大毎秒10回）。王都はバナー約400・看板約110・動く飾り約200・NPC約140。問題なし: ブロック描画の視錐台カリング、
+  クライアントのマップの掃除、NPCのAIの近さ判定、各サービスの間引き、非同期の保存、王都建築の時間区切り。
+- **1 先読み生成**（D-LIGHTWEIGHT、[worldgen.md](modules/worldgen.md) §1.3）: `ChunkPregenPlan`（純粋）と `ChunkPregen`。
+- **2 ダンジョン**（[boss.md](modules/boss.md) §4）: `DungeonSite`（時間で区切る・形の更新は最後・チャンクはチケット）、下準備、
+  裏での片付け、`DecorBuilder.buildSlice(deadline)`。森の床の葉を消えない葉に。
+- **3 魔物の休み**（[worldgen.md](modules/worldgen.md) §1.2）: `MonsterThrottle`（純粋）と `MonsterEvents.onLivingTick`。
+- **5 ミニマップ**（[map.md](modules/map.md) §2）: `ScrollingWindow`（純粋）、`ChunkColors` の変わったチャンク、部分アップロード。
+- **旗の揺れの設定**（[hud.md](modules/hud.md)「設定画面」、[capital.md](modules/capital.md)）: `scenery.flagAnimation`、
+  設定画面 `SettingsScreen`（ポーズメニュー左上・Mods の Config）、`StillBannerRenderer`、旗の形のキャッシュ、飾り旗の停止。
+- サーバー設定の新しい節 `performance`: `chunkPregen`, `pregenWholeMap`, `pregenMaxChunksInFlight`, `pregenMaxTickMillis`,
+  `dungeonPrebuild`, `monsterAiThrottle`, `monsterAiThrottleRange`。
+- 確認: オフライン1263件成功（新規 `ChunkPregenPlanTest`・`MonsterThrottleTest`・`ScrollingWindowTest`）。GameTest
+  `DungeonSiteGameTests`（森のダンジョンを軽い方法で建てて計画どおり・柵の扉がつながる・葉が消えない・片付け後は空）。
+- **未確認（実機が必要）**: 先読みの速さと体感（飛行中のカクつき）、CPU の使い方、セーブの増え方、ダンジョンの入場・終了時の
+  体感と下準備の当たり方、休む魔物の見え方、ミニマップの見た目（折り返しの継ぎ目がないこと）、旗を止めたときの王都の軽さ。
+

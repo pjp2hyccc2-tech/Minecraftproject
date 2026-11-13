@@ -526,3 +526,33 @@ The owner: 「アクセサリーとお守りの種類を増やして、ダンジ
 - **One data file**: `tools/art/named_trinkets_data.py` generates the Java table, the names and lore in both languages,
   the icons, models and base-item overrides (like the relics), with a `--check` mode; ids `trinket_lord_*` /
   `trinket_dungeon_*` and models 5400+ are fixed so saved stacks stay readable.
+
+## D-LIGHTWEIGHT: lighter without giving anything up — chunks made ahead, dungeons built in slices, idle monsters resting, a scrolling minimap, still flags on request (2026-11-13)
+The owner asked to make the game lighter without dropping a single feature (「12チャンクごとくらいに自動読み込み(通知無し)で
+入れて動作を軽くする…このMODの機能をひとつも捨てずに」), had the places to improve listed first, then approved four of the five
+(「1と2と3と5を実装して設定で旗の揺れのアニメーションを消せるようにして、4は触らないでいい」; 4, drawing only the glowing parts
+of the bodies, was left alone). Decisions:
+- **Chunks made ahead (1)**: the map is fixed, so its ~44,000 chunks (with an 8-chunk margin) can be generated once; a chunk
+  made earlier is only read from disk when a player arrives. First the band from just beyond each player's view out to 12
+  chunks further, nearest first to where the player is heading (the owner's "12 chunks"), then the whole map ring by ring
+  from the capital. Tickets instead of blocking loads; only while the average tick is below 35 ms; 2 chunks at once at first,
+  adapting up to 6; nothing in the first minute, no messages. Chunks made in advance keep the land of the version that made
+  them (as visited chunks always did): a change of the land raises `FieldLayout.VERSION`, which regenerates アストリア.
+- **Dungeons in slices (2)**: building (6,000 blocks a tick, with neighbour shape updates) and clearing (12,000) made a few
+  seconds heavy at every entry and exit. Sites now work until a time limit per tick (12 ms while a party waits, 3 ms in the
+  background), set blocks without shape updates and only where they differ, fit the bars and fences once afterwards (like the
+  capital's blueprint) and hold their chunks with tickets so no tick waits for a load. A site is built while a player walks up
+  to the gate (or opens a gatekeeper's list after a run), so the run usually starts at once; members are free as soon as a run
+  closes. The forest's leafy floor marks became persistent leaves (they could decay).
+- **Idle monsters rest (3)**: the 3.5× habitats stay. A field monster that does nothing and has no player within 32 blocks
+  runs one whole tick in four (spread by id); anything that changes — a player near, a hit, a push, a stroll it decides on —
+  wakes it on the next tick. Dungeon waves, bosses and levels without players always run every tick (so GameTests are
+  unaffected).
+- **Scrolling minimap (5)**: the 256×256 texture wraps around (block (x, z) at texel (x mod 256, z mod 256)); a step paints
+  the strip that comes into view, a new chunk colour just its chunk, and only those rectangles are uploaded (instead of
+  65,536 texels and the whole texture up to ten times a second). Identical picture.
+- **Still flags, on request**: client setting `scenery.flagAnimation` in a new in-game settings screen (pause menu, Mods
+  list), which also switches every other on/off client option. Off: cloth flags hang still in a light breeze and keep their
+  shape (no cloth computation), bunting stops swinging, the game's ~400 banners in the capital are held at their time-0
+  angle by the game's own renderer (a partial tick that cancels the game time). On by default; nothing else changes.
+

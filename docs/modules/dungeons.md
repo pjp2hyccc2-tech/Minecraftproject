@@ -13,7 +13,7 @@
 | 純粋 | `Style` と9つのテーマ（`CityStyle` … `ThroneStyle`） | 共通の建築（壁の帯・付け柱・コーニス・扉枠・梁/ヴォールト・床のメダリオン・アーチ・前室・アリーナの縁・入口の広間）と、テーマ独自の小物・像・灯り・セットピース |
 | 純粋 | `DecorBlocks` | 使うブロックの当たり判定（無し/薄い/部分/全体）・光の量・光を通すか・液体か |
 | 純粋 | `DungeonAmbience` | テーマごとの漂う粒子と時々の環境音 |
-| Forge | `forge.decor.DecorBuilder` | 計画を別スレッドで立て、建築計画のあとに1tick 4000ブロックずつ置く。片付けの前に液体を抜く |
+| Forge | `forge.decor.DecorBuilder` | 計画を別スレッドで立て、建築計画のあとに1tickの持ち時間まで置く（今と違う所だけ、`DungeonSite`）。片付けの前に液体を抜く |
 | Forge | `DungeonInstance`（小さなフックのみ） | 建築計画 → 内装 → 開始。片付けは内装の追加の箱も。`revivalPoint()` / `revivalYaw()` |
 | クライアント | `client.DungeonAmbienceClient` | 地図データ（`MapView.Dungeon`）でインスタンス内にいると分かったら、そのテーマの粒子と音を自分の周りにだけ出す |
 

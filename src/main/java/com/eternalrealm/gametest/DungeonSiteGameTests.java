@@ -39,7 +39,8 @@ import java.util.concurrent.atomic.AtomicReference;
  * A dungeon site (docs/modules/boss.md §4) built and cleared the light way — a slice per tick within a time limit,
  * blocks set without neighbour updates and the bars and fences fitted afterwards — ends up exactly as planned: every
  * planned block in place (the decoration's own blocks aside), the sealed doors' bars and fences joined to their
- * neighbours, the forest's leafy floor marks kept from decaying, and afterwards every box empty again.
+ * neighbours, no leaves that could decay (the forest's floor marks are persistent), and afterwards every box empty
+ * again.
  */
 @GameTestHolder(ModInfo.MOD_ID)
 @PrefixGameTestTemplate(false)
@@ -111,7 +112,6 @@ public final class DungeonSiteGameTests {
         }
         List<String> problems = new ArrayList<>();
         int doors = 0;
-        int leaves = 0;
         for (Map.Entry<Long, BlockRole> entry : planned.entrySet()) {
             if (decorated.contains(entry.getKey())) {
                 continue;
@@ -134,11 +134,8 @@ public final class DungeonSiteGameTests {
                     problems.add(pos.toShortString() + ": " + got + " is not joined to its neighbours");
                 }
             }
-            if (got.hasProperty(LeavesBlock.PERSISTENT)) {
-                leaves++;
-                if (!got.getValue(LeavesBlock.PERSISTENT)) {
-                    problems.add(pos.toShortString() + ": leaves that would decay");
-                }
+            if (got.hasProperty(LeavesBlock.PERSISTENT) && !got.getValue(LeavesBlock.PERSISTENT)) {
+                problems.add(pos.toShortString() + ": leaves that would decay");
             }
         }
         if (!problems.isEmpty()) {
@@ -146,7 +143,10 @@ public final class DungeonSiteGameTests {
                     + String.join("; ", problems));
         }
         check(doors > 0, "the forest dungeon has fenced doors");
-        check(leaves > 0, "the forest dungeon has leafy floor marks");
+        // the leafy floor marks (where the decoration leaves them showing) never decay
+        BlockState mark = DungeonPalette.block(com.eternalrealm.dungeon.DungeonTheme.FOREST, BlockRole.ACCENT, 0, 0, 0);
+        check(mark.hasProperty(LeavesBlock.PERSISTENT) && mark.getValue(LeavesBlock.PERSISTENT),
+                "the forest's floor marks are persistent leaves: " + mark);
     }
 
     private static void checkCleared(ServerLevel level, DungeonSite site) {

@@ -111,6 +111,13 @@
 
 キー割り当てはオプション → 操作設定 → ETERNAL REALM で変更できます。
 
+**ゲームの設定**: ポーズメニュー左上の「ETERNAL REALM の設定」（または Mods 一覧の Config）で、旗のはためき・HUD・ミニマップ・
+ダメージの数字・画面の揺れ・スキルの光などをオン／オフできます（旗を止めると旗の多い王都が軽くなります）。
+
+**軽さのための仕組み**（2026-11-13、機能はそのまま）: アストリアのチャンクを、まず見えている範囲の12チャンク先まで（進む方向から）、
+次に地図全体を、サーバーに余裕があるときだけ裏で作っておく（通知なし）。ダンジョンは門に近づくと裏で組み立て始め、組み立て・
+片付けは1tickの持ち時間で区切る。だれも近くにいない何もしていない魔物は4tickに1回だけ動く。ミニマップは新しく見えた所だけ塗る。
+
 ## 主なコマンド
 
 - `/party invite|accept|leave|raid|...`, `/p <メッセージ>` — パーティー
@@ -132,7 +139,8 @@
 1. Minecraft 1.20.1 + Forge 47.x（CurseForge のプロファイルなど）
 2. `eternalrealm-<版>.jar` を `mods` フォルダへ
 3. （任意）影MOD: CurseForge で **Oculus** と **Embeddium** を追加し、シェーダーパック（例: Complementary Shaders、BSL）を `shaderpacks` に入れる
-4. サーバー設定: `config/eternalrealm-server.toml`（シーズン、モンスター出現、`keepInventory`、少人数でのダンジョン `ignorePartySize` など）
+4. サーバー設定: `config/eternalrealm-server.toml`（シーズン、モンスター出現、`keepInventory`、少人数でのダンジョン `ignorePartySize`、
+   軽さの仕組み `[performance]`（チャンクの先読み・ダンジョンの下準備・魔物の休み）など）
 
 ## ビルド
 

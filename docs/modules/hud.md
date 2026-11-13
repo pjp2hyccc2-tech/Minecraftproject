@@ -36,6 +36,14 @@
 - データは今までの地図の文書（`MapView.Npc` の役目と名前、96ブロック以内の64人まで）。通信の変更なし。
 - テスト: `NpcMarkersTest`（役目ごとのアイコンとラベル、アイコン画像の並び、ラベルの重なりと範囲）、`FieldMapTranslationsTest`（文言）。
 
+## 設定画面（`ui.settings.SettingsScreen`）
+
+2026-11-13 のオーナーの依頼「設定で旗の揺れのアニメーションを消せるようにして」。クライアント設定
+（`config/eternalrealm-client.toml`）のオン／オフをボタンで切り替え、すぐ保存する: 旗のはためき（`scenery.flagAnimation`）、
+ゲームのHUD、ミニマップ・回転・座標、ダメージの数字、戦闘の表示、画面の揺れ、武器の動き、スキルの光、会話の自動送り。
+ボタンにカーソルを当てると説明。開き方: ポーズメニュー左上の「ETERNAL REALM の設定」、または Mods 一覧の Config ボタン
+（`ui.settings.SettingsAccess`）。翻訳は `docs/i18n/settings.json`。
+
 ## 操作
 
 - **手に持つのは常にインベントリの1枠目（装備中の武器）**。数字キーとホイールでは持ち替えない。ドロップキーで武器を捨てない

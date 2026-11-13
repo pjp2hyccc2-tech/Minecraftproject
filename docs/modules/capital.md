@@ -110,6 +110,11 @@ renderers in `client/block`, the pure maths (cloth waves, wind, clock angles, je
 layouts and sway, secret door timing, sign swing, lantern bobbing) in `world/town` (unit-tested), art in
 `tools/art/town_gimmicks.py` and `tools/art/canal_gimmicks.py` (preview `canal_gimmicks_preview.png`).
 
+Players can stop the waving (client setting `scenery.flagAnimation`, in the game's settings screen; 2026-11-13,
+D-LIGHTWEIGHT): flags then hang still in a light breeze (`TownWind.STILL`, the cloth shaped once and kept), bunting
+stops swinging and fluttering (paper lanterns still flicker), and the game's banners are held at the angle they have at
+time 0 (`client/block/StillBannerRenderer`).
+
 ## 4. Master plan (`layout.py`)
 
 Anchors: plaza disc r = 22 (+ ring road to r = 26, fountain reserved r ≤ 10, spawn (0, 1, 13) facing north);
