@@ -27,6 +27,7 @@ public final class ClientModEvents {
     public static void onClientSetup(FMLClientSetupEvent event) {
         // Extensible-enum values must be created on the main thread before the first model is posed.
         event.enqueueWork(WeaponAnimations::init);
+        event.enqueueWork(com.eternalrealm.ui.settings.SettingsAccess::registerConfigScreen);
         ClientboundHandlers.setCharacterSnapshotHandler(ClientCharacterState::apply);
         ClientboundHandlers.setCombatStatsHandler(ClientCombatState::onStats);
         ClientboundHandlers.setCombatStatusHandler(ClientCombatState::onStatus);

@@ -3,6 +3,7 @@ package com.eternalrealm.client.block;
 import com.eternalrealm.block.forge.TownGimmickBlocks;
 import com.eternalrealm.core.ModInfo;
 import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -22,6 +23,8 @@ public final class TownGimmicksClient {
         event.registerBlockEntityRenderer(TownGimmickBlocks.SHOP_SIGN_ENTITY.get(), ShopSignRenderer::new);
         event.registerBlockEntityRenderer(TownGimmickBlocks.FLOATING_LANTERN_ENTITY.get(),
                 FloatingLanternRenderer::new);
+        // the game's banners, held still when the waving of flags is switched off
+        event.registerBlockEntityRenderer(BlockEntityType.BANNER, StillBannerRenderer::new);
     }
 
     @SubscribeEvent

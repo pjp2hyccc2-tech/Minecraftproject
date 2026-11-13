@@ -29,7 +29,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Strings of bunting. The cord is a catenary ({@link BuntingLine}) drawn as a thin ribbon turned towards the camera; the
+ * Strings of bunting (held still when the waving of flags is switched off, {@link Scenery#flagsWave()}). The cord is
+ * a catenary ({@link BuntingLine}) drawn as a thin ribbon turned towards the camera; the
  * whole string swings about its chord and the pieces flutter about the cord in waves that run along it
  * ({@link BuntingSway}, in the town wind). Pennants, flags and laundry are cutout cloths bent in two rows, paper
  * lanterns are small ribbed lanterns that light up after dusk and under roofs (with a soft additive halo), garlands are
@@ -102,12 +103,20 @@ public class BuntingRenderer implements BlockEntityRenderer<BuntingBlockEntity> 
 
         double seconds = (tick + partialTick) / 20.0;
         long seed = pos.asLong();
-        wind = TownWind.strength(seconds, seed, level.getRainLevel(partialTick), level.getThunderLevel(partialTick))
-                * bunting.wind();
-        advanceFlutter(bunting, seconds, BuntingSway.flutterSpeed(wind));
-        flutter = bunting.clientPhase;
         double cross = line.crossWind(BuntingSway.WIND_X, BuntingSway.WIND_Z);
-        double swing = BuntingSway.swingAngle(seconds, seed, wind, cross, line.sag());
+        double swing;
+        if (Scenery.flagsWave()) {
+            wind = TownWind.strength(seconds, seed, level.getRainLevel(partialTick),
+                    level.getThunderLevel(partialTick)) * bunting.wind();
+            advanceFlutter(bunting, seconds, BuntingSway.flutterSpeed(wind));
+            flutter = bunting.clientPhase;
+            swing = BuntingSway.swingAngle(seconds, seed, wind, cross, line.sag());
+        } else {
+            // held still: the steady lean of a light breeze, every piece at its own fixed angle
+            wind = TownWind.STILL * bunting.wind();
+            flutter = TownWind.phase(seed) * 3.0;
+            swing = BuntingSway.meanSwing(wind, cross);
+        }
         double cos = Math.cos(swing);
         double sin = Math.sin(swing);
 

@@ -55,6 +55,12 @@ public class FlagBlockEntity extends SyncedBlockEntity {
     /** Client-side animation state (wave phase accumulated per frame). */
     public double clientPhase;
     public double clientLastSeconds = Double.NaN;
+    /** The client's still cloth (waving switched off): the shape of {@link #clientStillCols} x {@link #clientStillRows}. */
+    public double[] clientStillGrid;
+    public float[] clientStillNormals;
+    public float[] clientStillShade;
+    public int clientStillCols = -1;
+    public int clientStillRows = -1;
 
     public FlagBlockEntity(BlockPos pos, BlockState state) {
         super(ERBlocks.FLAG_ENTITY.get(), pos, state);

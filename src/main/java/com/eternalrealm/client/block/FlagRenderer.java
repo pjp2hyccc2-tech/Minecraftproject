@@ -28,7 +28,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 /**
- * Waving cloth flags. The cloth is a grid (finer up close) shaped every frame by {@link FlagCloth} in the town's wind
+ * Waving cloth flags (held still when the waving is switched off, {@link Scenery#flagsWave()}). The cloth is a grid (finer up close) shaped every frame by {@link FlagCloth} in the town's wind
  * ({@link TownWind}: gusts, stronger in rain and storms), lit with per-vertex normals so every ripple catches the
  * light, darkened in its folds, and drawn on both sides (the back shows the mirrored design, like real cloth).
  */
@@ -61,12 +61,15 @@ public class FlagRenderer implements BlockEntityRenderer<FlagBlockEntity> {
         BlockPos pos = flag.getBlockPos();
         double seconds = (level.getGameTime() + partialTick) / 20.0;
         long seed = pos.asLong();
-        double wind = TownWind.strength(seconds, seed, level.getRainLevel(partialTick),
-                level.getThunderLevel(partialTick)) * flag.wind();
+        boolean waving = Scenery.flagsWave();
+        double wind = waving ? TownWind.strength(seconds, seed, level.getRainLevel(partialTick),
+                level.getThunderLevel(partialTick)) * flag.wind() : TownWind.STILL * flag.wind();
         wind = Mth.clamp(wind, 0.05, 1.6);
         double width = flag.width();
         double height = flag.height();
-        advancePhase(flag, seconds, FlagCloth.angularSpeed(width, wind));
+        if (waving) {
+            advancePhase(flag, seconds, FlagCloth.angularSpeed(width, wind));
+        }
 
         Vec3 camera = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
         double distance = Math.sqrt(camera.distanceToSqr(Vec3.atCenterOf(pos)));
@@ -74,8 +77,12 @@ public class FlagRenderer implements BlockEntityRenderer<FlagBlockEntity> {
         int cols = Mth.clamp((int) Math.round(width * 6.0 * detail), 4, MAX_COLS);
         int rows = Mth.clamp((int) Math.round(height * 4.0 * detail), 2, MAX_ROWS);
         FlagCloth.Shape shape = flag.design().shape();
-        FlagCloth.compute(width, height, cols, rows, shape, flag.clientPhase, wind, grid);
-        computeNormals(cols, rows);
+        if (waving) {
+            FlagCloth.compute(width, height, cols, rows, shape, flag.clientPhase, wind, grid);
+            computeNormals(cols, rows);
+        } else {
+            still(flag, width, height, cols, rows, shape, TownWind.phase(seed) * 4.0, wind);
+        }
 
         Direction facing = flag.getBlockState().getValue(FlagBlock.FACING);
         double fx = facing.getStepX();
@@ -112,6 +119,28 @@ public class FlagRenderer implements BlockEntityRenderer<FlagBlockEntity> {
                 put(out, matrix, normalMatrix, b, u0, v1, ox, oy, oz, fx, fz, lx, lz, light, -1.0F);
             }
         }
+    }
+
+    /**
+     * The cloth held still (waving switched off): shaped once per detail level at a fixed phase in a light breeze and
+     * kept with the flag, so a still flag costs no cloth computation at all.
+     */
+    private void still(FlagBlockEntity flag, double width, double height, int cols, int rows, FlagCloth.Shape shape,
+                       double phase, double wind) {
+        int points = (cols + 1) * (rows + 1);
+        if (flag.clientStillCols != cols || flag.clientStillRows != rows || flag.clientStillGrid == null) {
+            FlagCloth.compute(width, height, cols, rows, shape, phase, wind, grid);
+            computeNormals(cols, rows);
+            flag.clientStillGrid = java.util.Arrays.copyOf(grid, points * 3);
+            flag.clientStillNormals = java.util.Arrays.copyOf(normals, points * 3);
+            flag.clientStillShade = java.util.Arrays.copyOf(shade, points);
+            flag.clientStillCols = cols;
+            flag.clientStillRows = rows;
+            return;
+        }
+        System.arraycopy(flag.clientStillGrid, 0, grid, 0, points * 3);
+        System.arraycopy(flag.clientStillNormals, 0, normals, 0, points * 3);
+        System.arraycopy(flag.clientStillShade, 0, shade, 0, points);
     }
 
     private void put(VertexConsumer out, Matrix4f matrix, Matrix3f normalMatrix, int index, float u, float v,

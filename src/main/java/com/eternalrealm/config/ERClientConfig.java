@@ -21,6 +21,7 @@ public final class ERClientConfig {
     public static final ForgeConfigSpec.BooleanValue SKILL_EFFECTS;
     public static final ForgeConfigSpec.BooleanValue DIALOGUE_AUTO_ADVANCE;
     public static final ForgeConfigSpec.IntValue DIALOGUE_TEXT_SPEED;
+    public static final ForgeConfigSpec.BooleanValue FLAG_ANIMATION;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -53,6 +54,10 @@ public final class ERClientConfig {
                 .define("autoAdvanceAmbient", false);
         DIALOGUE_TEXT_SPEED = builder.comment("Characters per second while a line is being written out (0 = show at once)")
                 .defineInRange("textSpeed", 40, 0, 400);
+        builder.pop();
+        builder.comment("Scenery").push("scenery");
+        FLAG_ANIMATION = builder.comment("Flags, banners and bunting wave in the wind (false: they hang still in a light breeze,",
+                "which is lighter in the capital with its hundreds of flags)").define("flagAnimation", true);
         builder.pop();
         SPEC = builder.build();
     }

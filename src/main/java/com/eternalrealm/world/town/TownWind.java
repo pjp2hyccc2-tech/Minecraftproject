@@ -8,6 +8,11 @@ package com.eternalrealm.world.town;
 public final class TownWind {
     public static final double MIN = 0.2;
     public static final double MAX = 1.4;
+    /**
+     * The wind flags, banners and bunting hang in when their waving is switched off (client setting
+     * {@code scenery.flagAnimation}): a light breeze, steady.
+     */
+    public static final double STILL = 0.35;
 
     private TownWind() {
     }
