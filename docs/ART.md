@@ -26,6 +26,7 @@ python3 tools/art/generate_all.py --sections /tmp/prev # プレビューの各�
 | 職業エンブレム 16x16 | `textures/gui/job/<job>.png` | — |
 | パーティクル | `textures/particle/<name>_<frame>.png` | `particles/<name>.json` |
 | 状態異常アイコン 18x18 | `textures/mob_effect/{guard_up,haste,frozen,cursed}.png` | — |
+| 転移門の画面（門番） | `textures/gui/gate/atlas.png`（256x256 のピクセルアート: 四隅の飾り・宝石・紋章9・錠前・月桂冠・メダル・札・リボン・ボタン・難易度の札・行の光）、`circle.png`（魔法陣 256x256）、`sealed.png`（鎖と錠前）、`d1`〜`d8.png`・`final.png`（472x200 の絵） | 絵・魔法陣・鎖は `.png.mcmeta` で `blur`（滑らかに拡大縮小） |
 
 - family: `longsword` `greatsword` `twin_blades` `spear` `staff` `longbow`。item_id は `iron_longsword` `iron_greatsword` `iron_twin_blades` `iron_spear` `staff` `longbow`。
 - tier n: 1 鉄 / 2 鋼 / 3 砂漠 / 4 氷 / 5 炎竜 / 6 天界 / 7 深淵。形 (シルエット) と装飾も tier ごとに変えています。
@@ -47,5 +48,6 @@ python3 tools/art/generate_all.py --sections /tmp/prev # プレビューの各�
 | `armor_icons.py`, `armor_worn.py` | 防具アイコンと装着テクスチャ (面ごとの ASCII をキューブの UV 位置へ配置) |
 | `items.py`, `skills.py`, `effects.py` | 素材・消耗品・金貨、スキル/エンブレム、パーティクル/状態異常 |
 | `models.py`, `preview.py`, `quickview.py` | JSON 出力、プレビュー作成、開発用の拡大表示 |
+| `gate_screen.py`（`gate_scenes.py`・`gate_paint.py`） | 転移門の画面の素材。単独で実行: `python3 tools/art/gate_screen.py` → `textures/gui/gate/` と一覧 `tools/art/gate_screen_preview.png`。絵は numpy の小さな描画器（`gate_paint.py`: 形は4倍で描いて縮める、グラデーション・光・ノイズ・光のにじみ）で9つの場面（地下都市の灯籠と運河、古代樹の根のアーチ、夕日の神殿、氷の牢獄の通路、オーロラの氷の城、竜の頭の門と溶岩、雲の上の浮島と遺跡、紫の月と塔、光の環の前の玉座）。アトラスの配置は `ATLAS`（`GatekeeperScreen` の定数と同じ） |
 
 絵を直すときは該当関数や ASCII を編集して `generate_all.py` を再実行し、`preview.png` で確認してください。
