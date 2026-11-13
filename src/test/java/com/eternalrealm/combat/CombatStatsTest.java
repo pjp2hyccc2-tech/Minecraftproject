@@ -119,10 +119,53 @@ public class CombatStatsTest {
     @Test
     public void extremeStatsAreCapped() {
         CombatStats maxed = CombatStats.derive(StatBlock.uniform(StatBlock.MAX_VALUE), 100, TUNING);
-        assertEquals(TUNING.maxDamageReduction(), maxed.damageReduction(), EPS);
+        // what lies beyond a cap turns into something else, which has its own cap
+        assertTrue(maxed.damageReduction() > TUNING.maxDamageReduction());
+        assertTrue(maxed.damageReduction() <= TUNING.maxDamageReduction() + CombatStats.MAX_OVERFLOW_REDUCTION);
         assertEquals(TUNING.minActionTimeFactor(), maxed.actionSpeedFactor(), EPS);
+        assertTrue(maxed.evasion() > 0.0 && maxed.evasion() <= CombatStats.MAX_OVERFLOW_EVASION);
         assertEquals(TUNING.maxCritChance(), maxed.critChance(), EPS);
+        assertEquals(10.0, maxed.critMultiplier(), EPS);
         assertEquals(CombatStats.MAX_HEALTH_BONUS, maxed.maxHealthBonus(), EPS);
+    }
+
+    /**
+     * Owner's request of 2026-11-13: every stat a build specialises in keeps paying off. LUK past the critical chance
+     * cap raises critical damage 1 : 1, AGI past the attack speed cap gives evasion, VIT past the max health cap adds
+     * damage reduction on top of its cap; below the caps nothing changes.
+     */
+    @Test
+    public void statsBeyondTheirCapsTurnIntoSomethingElse() {
+        StatBlock base = StatBlock.uniform(5);
+        CombatStats plain = CombatStats.derive(base, 100, TUNING);
+        assertEquals(0.0, plain.evasion(), 0.0);
+        assertEquals(1.5 + 5 * 0.003, plain.critMultiplier(), EPS);
+
+        CombatStats lucky = CombatStats.derive(base.with(StatType.LUK, 2000), 100, TUNING);
+        assertEquals(TUNING.maxCritChance(), lucky.critChance(), EPS);
+        double excess = 0.05 + 2000 * 0.002 - TUNING.maxCritChance();
+        assertEquals(1.5 + 5 * 0.003 + excess, lucky.critMultiplier(), EPS);
+        // just at the cap: no overflow yet
+        CombatStats atCap = CombatStats.derive(base.with(StatType.LUK, 350), 100, TUNING);
+        assertEquals(1.5 + 5 * 0.003, atCap.critMultiplier(), EPS);
+
+        CombatStats swift = CombatStats.derive(base.with(StatType.AGI, 1000), 100, TUNING);
+        assertEquals(TUNING.minActionTimeFactor(), swift.actionSpeedFactor(), EPS);
+        double speedExcess = 1000 * 0.003 - (1.0 / TUNING.minActionTimeFactor() - 1.0);
+        assertEquals(CombatStats.MAX_OVERFLOW_EVASION * speedExcess / (speedExcess + CombatStats.OVERFLOW_EVASION_HALF),
+                swift.evasion(), EPS);
+        CombatStats swifter = CombatStats.derive(base.with(StatType.AGI, 4000), 100, TUNING);
+        assertTrue(swifter.evasion() > swift.evasion() && swifter.evasion() < CombatStats.MAX_OVERFLOW_EVASION);
+        assertEquals(0.0, CombatStats.derive(base.with(StatType.AGI, 200), 100, TUNING).evasion(), 0.0);
+
+        CombatStats sturdy = CombatStats.derive(base.with(StatType.VIT, 5000), 100, TUNING);
+        assertEquals(CombatStats.MAX_HEALTH_BONUS, sturdy.maxHealthBonus(), EPS);
+        double healthExcess = 5000 * 0.4 + 99 * 0.5 - CombatStats.MAX_HEALTH_BONUS;
+        assertEquals(TUNING.maxDamageReduction() + CombatStats.MAX_OVERFLOW_REDUCTION * healthExcess
+                / (healthExcess + CombatStats.OVERFLOW_REDUCTION_HALF), sturdy.damageReduction(), EPS);
+        CombatStats tough = CombatStats.derive(base.with(StatType.VIT, 2000), 100, TUNING);
+        assertEquals(TUNING.maxDamageReduction(), tough.damageReduction(), EPS); // health not capped yet
+        assertTrue(sturdy.damageReduction() > tough.damageReduction());
     }
 
     @Test

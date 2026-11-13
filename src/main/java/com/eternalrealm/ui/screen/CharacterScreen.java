@@ -152,7 +152,7 @@ public final class CharacterScreen extends JournalScreen {
             line(graphics, rowY, 1, "screen.eternalrealm.character.combat2",
                     pct(1.0 / combat.actionSpeedFactor() - 1.0), pct(combat.critChance()),
                     pct(combat.critMultiplier()), String.format(Locale.ROOT, "%.0f", combat.maxStamina()),
-                    pct(combat.moveSpeedBonus()));
+                    pct(combat.moveSpeedBonus()), pct(combat.evasion()));
             line(graphics, rowY, 2, "screen.eternalrealm.character.combat3",
                     pct(1.0 - combat.cooldownFactor()), pct(1.0 - combat.chargeTimeFactor()),
                     pct(combat.dodgeDistanceFactor() - 1.0), pct(combat.knockbackResistance()),

@@ -1,6 +1,6 @@
 {
   "screen.eternalrealm.character.combat1": {"ja": "物理+%s%% 魔法+%s%% 射撃+%s%% HP+%s 軽減%s%%", "en": "Phys+%s%% Mag+%s%% Rng+%s%% HP+%s Def%s%%"},
-  "screen.eternalrealm.character.combat2": {"ja": "攻速+%s%% 会心%s%% 会心倍%s%% ST%s 移動+%s%%", "en": "AtkSpd+%s%% Crit%s%% CritDmg%s%% ST%s Move+%s%%"},
+  "screen.eternalrealm.character.combat2": {"ja": "攻速+%s%% 会心%s%% 会心倍%s%% ST%s 移動+%s%% 見切り%s%%", "en": "Spd+%s%% Crit%s%% CDmg%s%% ST%s Move+%s%% Evade%s%%"},
   "screen.eternalrealm.character.combat3": {"ja": "CT-%s%% 溜め-%s%% 回避+%s%% 耐KB%s%% 回復薬+%s%%", "en": "CD-%s%% Charge-%s%% Dodge+%s%% KBres%s%% Potions+%s%%"},
   "screen.eternalrealm.character.combat4": {"ja": "回復+%s%% 弾速+%s%% ドロップ運+%s%% 金+%s%%", "en": "Heal+%s%% ProjSpd+%s%% Loot+%s%% Gold+%s%%"},
   "stat.eternalrealm.str.desc": {"ja": "物理攻撃・溜め速度", "en": "Physical attack, charge speed"},

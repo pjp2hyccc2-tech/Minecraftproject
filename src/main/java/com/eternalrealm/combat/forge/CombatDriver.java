@@ -516,8 +516,9 @@ public final class CombatDriver {
                 || source.is(DamageTypeTags.IS_EXPLOSION) || source.is(DamageTypeTags.IS_PROJECTILE);
         AvoidOutcome outcome = combatant.checkAvoid(now(), evadable, isGuardable(player, combatant, source));
         if (outcome == AvoidOutcome.NONE && evadable && source.getEntity() != null && source.getEntity() != player) {
+            // perks, the evasion effect and attack speed beyond its cap (AGI, CombatStats#evasion)
             double evasion = Math.min(PassiveTotals.MAX_EVASION + 0.25, passives(player).evasion()
-                    + ERMobEffects.magnitude(player, ERMobEffects.EVASION.get()));
+                    + combatant.stats().evasion() + ERMobEffects.magnitude(player, ERMobEffects.EVASION.get()));
             if (evasion > 0.0 && player.getRandom().nextDouble() < evasion) {
                 outcome = AvoidOutcome.DODGED;
             }

@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  * exactly like the server's.
  */
 public record CombatStatsPacket(CombatStats stats) {
-    static final int MAX_BYTES = 22 * 8;
+    static final int MAX_BYTES = 23 * 8;
 
     public CombatStatsPacket {
         Objects.requireNonNull(stats, "stats");
@@ -42,6 +42,7 @@ public record CombatStatsPacket(CombatStats stats) {
         buffer.writeDouble(stats.projectileSpeedFactor());
         buffer.writeDouble(stats.lootBonus());
         buffer.writeDouble(stats.goldBonus());
+        buffer.writeDouble(stats.evasion());
     }
 
     public static CombatStatsPacket decode(FriendlyByteBuf buffer) {
@@ -52,7 +53,7 @@ public record CombatStatsPacket(CombatStats stats) {
                     buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble(),
                     buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble(),
                     buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble(),
-                    buffer.readDouble(), buffer.readDouble(), buffer.readDouble()));
+                    buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble()));
         } catch (IllegalArgumentException e) {
             throw new DecoderException("Invalid CombatStatsPacket: " + e.getMessage(), e);
         }

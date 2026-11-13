@@ -85,7 +85,7 @@
   "hud.eternalrealm.combat.guarded": "ガード",
   "hud.eternalrealm.combat.guard_broken": "ガードブレイク！",
   "screen.eternalrealm.character.combat1": "物理+%s%% 魔法+%s%% 射撃+%s%% HP+%s 軽減%s%%",
-  "screen.eternalrealm.character.combat2": "攻速+%s%% 会心%s%% 会心倍%s%% ST%s 移動+%s%%",
+  "screen.eternalrealm.character.combat2": "攻速+%s%% 会心%s%% 会心倍%s%% ST%s 移動+%s%% 見切り%s%%",
   "commands.eternalrealm.character.combat": "戦闘: 攻撃 ×%s / 最大HP +%s / 被ダメージ軽減 %s%% / 攻撃速度 +%s%% / クリティカル %s%% / スタミナ %s",
   "weapon_type.eternalrealm.staff": "杖",
   "weapon_type.eternalrealm.bow": "弓",

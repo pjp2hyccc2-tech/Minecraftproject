@@ -32,6 +32,16 @@ import java.util.Objects;
  * @param projectileSpeedFactor multiplies projectile speed, {@code >= 1} (DEX)
  * @param lootBonus           luck bonus of loot rolls (LUK)
  * @param goldBonus           +fraction of gold found (LUK)
+ * @param evasion             chance to slip an attacker's hit, from attack speed beyond its cap (AGI)
+ *
+ * <p><b>Beyond the caps</b> (owner's request of 2026-11-13: every stat a build specialises in should keep paying off up
+ * to about 4 000): what a stat would add past its cap turns into something else instead of being lost —</p>
+ * <pre>
+ * LUK  critical chance above the cap (75 %)   → critical damage, 1 : 1        (within the ×10 cap)
+ * AGI  attack speed above the cap (×0.6 time) → evasion, 30 % × e / (e + 4)    (e = the speed beyond the cap)
+ * VIT  max health above the cap (+1 000)      → damage reduction on top of the 75 % cap, 15 % × h / (h + 600)
+ * </pre>
+ * <p>Below the caps nothing changes.</p>
  */
 public record CombatStats(double attackMultiplier, double maxHealthBonus, double damageReduction,
                           double actionSpeedFactor, double critChance, double critMultiplier, double maxStamina,
@@ -39,9 +49,17 @@ public record CombatStats(double attackMultiplier, double maxHealthBonus, double
                           double healingMultiplier, double guardBonus, double dodgeCostFactor, double moveSpeedBonus,
                           double chargeTimeFactor, double cooldownFactor, double dodgeDistanceFactor,
                           double knockbackResistance, double potionBonus, double projectileSpeedFactor,
-                          double lootBonus, double goldBonus) {
+                          double lootBonus, double goldBonus, double evasion) {
     public static final double MAX_HEALTH_BONUS = 1000.0;
     public static final double MAX_GUARD_BONUS = 0.3;
+    /** Most evasion attack speed beyond its cap can give (AGI). */
+    public static final double MAX_OVERFLOW_EVASION = 0.30;
+    /** Attack speed beyond the cap that gives half of {@link #MAX_OVERFLOW_EVASION} (about 1 333 AGI). */
+    public static final double OVERFLOW_EVASION_HALF = 4.0;
+    /** Most damage reduction max health beyond its cap can add on top of the tuning's cap (VIT). */
+    public static final double MAX_OVERFLOW_REDUCTION = 0.15;
+    /** Max health beyond the cap that gives half of {@link #MAX_OVERFLOW_REDUCTION} (about 1 500 VIT). */
+    public static final double OVERFLOW_REDUCTION_HALF = 600.0;
 
     public CombatStats {
         Check.range("attackMultiplier", attackMultiplier, 0.0, 10_000.0);
@@ -66,6 +84,21 @@ public record CombatStats(double attackMultiplier, double maxHealthBonus, double
         Check.range("projectileSpeedFactor", projectileSpeedFactor, 1.0, 3.0);
         Check.range("lootBonus", lootBonus, 0.0, 5.0);
         Check.range("goldBonus", goldBonus, 0.0, 10.0);
+        Check.range("evasion", evasion, 0.0, MAX_OVERFLOW_EVASION);
+    }
+
+    /** Values without evasion (the form before the overflow of 2026-11-13). */
+    public CombatStats(double attackMultiplier, double maxHealthBonus, double damageReduction,
+                       double actionSpeedFactor, double critChance, double critMultiplier, double maxStamina,
+                       double staminaRegenPerTick, double rangedMultiplier, double magicMultiplier,
+                       double healingMultiplier, double guardBonus, double dodgeCostFactor, double moveSpeedBonus,
+                       double chargeTimeFactor, double cooldownFactor, double dodgeDistanceFactor,
+                       double knockbackResistance, double potionBonus, double projectileSpeedFactor,
+                       double lootBonus, double goldBonus) {
+        this(attackMultiplier, maxHealthBonus, damageReduction, actionSpeedFactor, critChance, critMultiplier,
+                maxStamina, staminaRegenPerTick, rangedMultiplier, magicMultiplier, healingMultiplier, guardBonus,
+                dodgeCostFactor, moveSpeedBonus, chargeTimeFactor, cooldownFactor, dodgeDistanceFactor,
+                knockbackResistance, potionBonus, projectileSpeedFactor, lootBonus, goldBonus, 0.0);
     }
 
     /** Values without the finer stat effects (Phase 3 form). */
@@ -122,16 +155,22 @@ public record CombatStats(double attackMultiplier, double maxHealthBonus, double
 
         double flatHealth = vit * tuning.healthPerVit() + (level - 1) * tuning.healthPerLevel()
                 + modifiers.maxHealthFlat();
-        double health = (20.0 + Math.max(0.0, flatHealth)) * (1.0 + modifiers.maxHealthPercent()) - 20.0;
-        health = Math.max(0.0, Math.min(MAX_HEALTH_BONUS, health));
+        double rawHealth = (20.0 + Math.max(0.0, flatHealth)) * (1.0 + modifiers.maxHealthPercent()) - 20.0;
+        double health = Math.max(0.0, Math.min(MAX_HEALTH_BONUS, rawHealth));
         double defense = Math.max(0.0, vit * tuning.defensePerVit() + modifiers.defenseFlat());
-        double reduction = Math.min(tuning.maxDamageReduction(), defense / (defense + tuning.defenseConstant()));
-        double speed = Math.max(tuning.minActionTimeFactor(),
-                1.0 / (1.0 + agi * tuning.speedPerAgi() + modifiers.attackSpeed()));
-        double crit = clamp(tuning.baseCritChance() + luk * tuning.critPerLuk() + modifiers.critChance(),
-                0.0, tuning.maxCritChance());
+        // max health beyond its cap toughens instead (VIT)
+        double reduction = Math.min(tuning.maxDamageReduction(), defense / (defense + tuning.defenseConstant()))
+                + overflow(rawHealth - MAX_HEALTH_BONUS, MAX_OVERFLOW_REDUCTION, OVERFLOW_REDUCTION_HALF);
+        double rawSpeed = agi * tuning.speedPerAgi() + modifiers.attackSpeed();
+        double speed = Math.max(tuning.minActionTimeFactor(), 1.0 / (1.0 + rawSpeed));
+        // attack speed beyond its cap becomes evasion (AGI)
+        double evasion = overflow(rawSpeed - (1.0 / tuning.minActionTimeFactor() - 1.0), MAX_OVERFLOW_EVASION,
+                OVERFLOW_EVASION_HALF);
+        double rawCrit = tuning.baseCritChance() + luk * tuning.critPerLuk() + modifiers.critChance();
+        double crit = clamp(rawCrit, 0.0, tuning.maxCritChance());
+        // critical chance beyond its cap becomes critical damage, 1 : 1 (LUK)
         double critMultiplier = clamp(tuning.critMultiplier() + modifiers.critDamage()
-                + dex * scaling.critDamagePerDex(), 1.0, 10.0);
+                + dex * scaling.critDamagePerDex() + Math.max(0.0, rawCrit - tuning.maxCritChance()), 1.0, 10.0);
         double stamina = clamp(tuning.baseStamina() + agi * tuning.staminaPerAgi() + modifiers.staminaBonus(),
                 10.0, 1_000_000.0);
         double regen = Math.min(10_000.0, tuning.baseStaminaRegen() + agi * tuning.staminaRegenPerAgi());
@@ -147,7 +186,12 @@ public record CombatStats(double attackMultiplier, double maxHealthBonus, double
         return new CombatStats(attack, health, reduction, speed, crit, critMultiplier, stamina, regen, ranged, magic,
                 healing, clamp(modifiers.guardBonus(), 0.0, MAX_GUARD_BONUS),
                 clamp(modifiers.dodgeCostFactor(), 0.2, 2.0), clamp(moveSpeed, -0.5, 1.0),
-                chargeTime, cooldown, dodgeDistance, knockbackResist, potion, projectileSpeed, loot, gold);
+                chargeTime, cooldown, dodgeDistance, knockbackResist, potion, projectileSpeed, loot, gold, evasion);
+    }
+
+    /** What an excess beyond a cap turns into: {@code max × excess / (excess + half)}, 0 without an excess. */
+    static double overflow(double excess, double max, double half) {
+        return excess > 0.0 ? max * excess / (excess + half) : 0.0;
     }
 
     private static double scaled(double stat, CombatTuning tuning) {

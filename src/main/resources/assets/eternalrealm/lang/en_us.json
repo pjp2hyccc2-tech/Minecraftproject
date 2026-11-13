@@ -85,7 +85,7 @@
   "hud.eternalrealm.combat.guarded": "Guard",
   "hud.eternalrealm.combat.guard_broken": "Guard broken!",
   "screen.eternalrealm.character.combat1": "Phys+%s%% Mag+%s%% Rng+%s%% HP+%s Def%s%%",
-  "screen.eternalrealm.character.combat2": "AtkSpd+%s%% Crit%s%% CritDmg%s%% ST%s Move+%s%%",
+  "screen.eternalrealm.character.combat2": "Spd+%s%% Crit%s%% CDmg%s%% ST%s Move+%s%% Evade%s%%",
   "commands.eternalrealm.character.combat": "Combat: attack x%s / max HP +%s / damage taken -%s%% / attack speed +%s%% / critical %s%% / stamina %s",
   "weapon_type.eternalrealm.staff": "Staff",
   "weapon_type.eternalrealm.bow": "Bow",
