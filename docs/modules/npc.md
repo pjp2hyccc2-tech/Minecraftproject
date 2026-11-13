@@ -82,6 +82,8 @@ python3 tools/art_entities/generate_npc.py mina lilia   # 指定したアピア�
 
 - **窓口NPC・物語キャラ・クエストNPC**: 従来どおり `Npcs.ensure` / `StoryNpcs.ensure`（`RealmSetup`、`TownSetup`）。見た目は役割／キャラIDの話者ID
   （`NpcLooks`）、ダンジョン入口の門番（`Npcs.ENTRANCE` キー付き。名前は「転移門の番人」）はその地域の `warden_<dungeon>`（`NpcLooks.forEntrance`）。
+  門番（王都のガントと入口の番人）に話しかけると転移門の画面が開き、入口の番人ならそのダンジョンが選ばれた状態で開く
+  （`GatekeeperService.open`、[boss.md](boss.md) §4）。
 - **旧バージョンの村人**: `TAG`（`eternalrealm_npc`）付きの村人が見つかると、その永続データ（ForgeData 全体）を引き継いだ `NpcEntity` に置き換える。
 - **町の人と衛兵**（`RealmSetup.populateCapital` の最後、王都が完成しているとき）:
   - 王都ビルドの名前付きスポット `crowd.<area>.<n>` に町の人を1人、`guard.<post>.<n>` に衛兵を1人（スポットの yaw を向く）。

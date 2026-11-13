@@ -558,3 +558,22 @@ of the bodies, was left alone). Decisions:
   shape (no cloth computation), bunting stops swinging, the game's ~400 banners in the capital are held at their time-0
   angle by the game's own renderer (a partial tick that cancels the game time). On by default; nothing else changes.
 
+## D-GATESCREEN: the gatekeeper opens a screen of its own (転移門) instead of a chest menu (2026-11-13)
+
+The owner found the dungeon selection bland (「ダンジョンの選択画面のHUDをファンタジーなものに変更して、マイクラ本来のままだから
+味気ない」): it was a vanilla chest with item icons, where the click type chose the difficulty. Decisions:
+- **A screen of its own**, drawn from textures made by script (no vanilla widgets): a night-blue panel in a gold frame with jewelled
+  corners and a red title ribbon, turning magic circles and rising motes behind; the list with gold medallion emblems; a painted
+  picture per dungeon (nine, original, at two texels per GUI unit with smooth filtering) that drifts slowly, with the theme's
+  motes over it and chains while sealed; gems for the difficulties; a crimson button. Everything the chest showed is kept
+  (level, party size, sealed or not, the three difficulties) and more is shown: the boss, time limit, rooms, a few lines about
+  the dungeon, what breaks a seal, what each difficulty does to the boss and pays, the player's best time, whether the
+  dungeon's master has fallen this season, and why the player cannot set out. It shrinks to fit small windows.
+- **The server decides, the screen asks**: the board comes from a pure `GateBoard`; setting out is a UI action that is only
+  accepted from a screen a gatekeeper opened within 5 minutes, 8 blocks away at most (the chest menu was bound to the open
+  container in the same way); `DungeonService.start` now returns its refusal so the screen can show it. The reward table
+  (rarity floor, stones) moved to `DungeonRewards` so the reward and the screen read one table.
+- **Opens where it makes sense**: an entrance's gatekeeper opens on its own dungeon; otherwise the last run, otherwise the
+  hardest open dungeon the player's level is ready for. The difficulty chosen last stays chosen. The screen does not pause
+  the game, so the dungeon prepared for the player keeps building while they read.
+

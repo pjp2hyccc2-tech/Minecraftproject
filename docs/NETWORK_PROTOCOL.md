@@ -181,3 +181,17 @@
 
 - `CombatStatsPacket`: 22個の double の後に **evasion**（double、0〜0.30。攻撃速度の上限を超えた分から。`CombatStats.evasion`）。
   最大 23×8 = 184 B。
+
+## 付録: 転移門の画面（2026-11-13・パケット追加なし・版は変えない）
+
+門番のチェストのメニュー（バニラのコンテナ）をやめ、既存の `UiDataPacket` / `UiActionPacket` で専用の画面にした
+（[modules/boss.md](modules/boss.md) §4「門番の画面」）。
+
+- S→C UI データ `gatekeeper`（門番に話しかけたとき）: `{focus, level, inParty, leader, partySize, conquered, dungeons,
+  rewards: [{rarity, color, stones} ×3（normal, hard, ex）], entries: [{id, name, area, boss, level, min, max, minutes, rooms,
+  raid, open, conquered, unlock, refusal, hp: [×3], dmg: [×3], best: [×3]} ×9]}`。`name`・`area`・`boss`・`unlock`・`rarity` は
+  翻訳キー、`refusal` は `""`／`sealed`／`leader`／`party_size`、`best` は自己ベストの tick（なければ -1）。約4 KB。
+- C→S UI 操作 `gate.start`: `{id: "d1".."d8"|"final", difficulty: "normal"|"hard"|"ex"}`。どちらも `UiArgs.id` で検証し、
+  ダンジョンでない id・知らない難易度は違反。門番が開いた画面（5分以内・8ブロック以内・同じ次元）からだけ受け付ける。
+- S→C UI データ `gatekeeper.result`: `{ok}`、断ったときは `message`（コンポーネントの JSON）。
+
