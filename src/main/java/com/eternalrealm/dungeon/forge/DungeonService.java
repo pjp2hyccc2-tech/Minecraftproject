@@ -136,34 +136,36 @@ public final class DungeonService {
 
     // ------------------------------------------------------------------ start
 
-    /** The party (or the solo player) enters a dungeon ("d1".."d8") or the final raid ("final"). */
-    public void start(ServerPlayer leader, String contentId, Difficulty difficulty) {
+    /**
+     * The party (or the solo player) enters a dungeon ("d1".."d8") or the final raid ("final").
+     *
+     * @return why the run could not start (the caller shows it: the gatekeeper's screen does), or empty once the run is
+     *         being prepared
+     */
+    public Optional<Component> start(ServerPlayer leader, String contentId, Difficulty difficulty) {
         ServerContext context = ServerContext.current().orElse(null);
         if (context == null) {
-            return;
+            return refusal("message.eternalrealm.gate.unavailable");
         }
         Optional<Party> party = context.game().parties().service().partyOf(leader.getUUID());
         if (party.isPresent() && !party.get().isLeader(leader.getUUID())) {
-            fail(leader, "message.eternalrealm.dungeon.leader_only");
-            return;
+            return refusal("message.eternalrealm.dungeon.leader_only");
         }
         List<ServerPlayer> members = new ArrayList<>();
         for (UUID id : party.map(Party::memberIds).orElse(List.of(leader.getUUID()))) {
             ServerPlayer member = player(id);
             if (member == null) {
-                fail(leader, "message.eternalrealm.dungeon.member_offline");
-                return;
+                return refusal("message.eternalrealm.dungeon.member_offline");
             }
             if (byMember.containsKey(id)) {
-                fail(leader, "message.eternalrealm.dungeon.member_busy");
-                return;
+                return refusal("message.eternalrealm.dungeon.member_busy");
             }
             members.add(member);
         }
         Optional<DungeonDefinition> dungeon = Dungeons.byId(contentId);
         RaidDefinition raid = Dungeons.FINAL_RAID.id().equals(contentId) ? Dungeons.FINAL_RAID : null;
         if (dungeon.isEmpty() && raid == null) {
-            return;
+            return refusal("message.eternalrealm.gate.unavailable");
         }
         int areaId;
         int minSize;
@@ -188,14 +190,12 @@ public final class DungeonService {
             level = raid.recommendedLevel();
         }
         if (!sizeOk && !com.eternalrealm.config.ERServerConfig.IGNORE_PARTY_SIZE.get()) {
-            leader.displayClientMessage(Component.translatable("message.eternalrealm.dungeon.party_size", minSize, maxSize)
-                    .withStyle(ChatFormatting.RED), true);
-            return;
+            return Optional.of(Component.translatable("message.eternalrealm.dungeon.party_size", minSize, maxSize)
+                    .withStyle(ChatFormatting.RED));
         }
         if (!context.game().world().isUnlocked(areaId)
                 || (raid != null && !context.game().world().progress().finalBossUnlocked())) {
-            fail(leader, "message.eternalrealm.dungeon.locked");
-            return;
+            return refusal("message.eternalrealm.dungeon.locked");
         }
         DungeonSite site = prepared.remove(contentId);
         Optional<InstanceSlot> slot = site != null ? Optional.of(site.slot) : allocator.allocate();
@@ -205,9 +205,8 @@ public final class DungeonService {
             slot = allocator.allocate();
         }
         if (slot.isEmpty()) {
-            leader.displayClientMessage(Component.translatable(InstanceAllocator.FULL_MESSAGE_KEY,
-                    allocator.maxInstances()).withStyle(ChatFormatting.RED), true);
-            return;
+            return Optional.of(Component.translatable(InstanceAllocator.FULL_MESSAGE_KEY, allocator.maxInstances())
+                    .withStyle(ChatFormatting.RED));
         }
         List<UUID> ids = members.stream().map(ServerPlayer::getUUID).toList();
         DungeonRun run;
@@ -253,10 +252,16 @@ public final class DungeonService {
         run.startBuilding();
         instance.tellAll(Component.translatable("message.eternalrealm.dungeon.preparing", Component.translatable(nameKey),
                 Component.translatable(difficulty.translationKey())).withStyle(ChatFormatting.YELLOW), false);
+        return Optional.empty();
     }
 
-    private static void fail(ServerPlayer player, String key) {
-        player.displayClientMessage(Component.translatable(key).withStyle(ChatFormatting.RED), true);
+    private static Optional<Component> refusal(String key) {
+        return Optional.of(Component.translatable(key).withStyle(ChatFormatting.RED));
+    }
+
+    /** The dungeon (or "final") the player last set out for since the server started, if any. */
+    public Optional<String> lastRun(UUID playerId) {
+        return Optional.ofNullable(lastRun.get(playerId));
     }
 
     // ------------------------------------------------------------------ tick and events
@@ -722,11 +727,7 @@ public final class DungeonService {
         double luck = context.combat().service().get(player.getUUID()).map(Combatant::stats)
                 .map(CombatStats::lootBonus).orElse(0.0);
         ItemRarity rarity = EquipmentGenerator.rollRarity(luck, RANDOM);
-        ItemRarity floor = switch (instance.difficulty) {
-            case NORMAL -> ItemRarity.UNCOMMON;
-            case HARD -> ItemRarity.RARE;
-            case EX -> ItemRarity.EPIC;
-        };
+        ItemRarity floor = com.eternalrealm.dungeon.DungeonRewards.rarityFloor(instance.difficulty);
         if (rarity.rank() < floor.rank()) {
             rarity = floor;
         }
@@ -740,11 +741,7 @@ public final class DungeonService {
                 .withStyle(ChatFormatting.GOLD));
         given.add(piece.copy());
         Inventories.give(player, piece);
-        int stones = switch (instance.difficulty) {
-            case NORMAL -> 2;
-            case HARD -> 3;
-            case EX -> 5;
-        };
+        int stones = com.eternalrealm.dungeon.DungeonRewards.stones(instance.difficulty);
         net.minecraft.world.item.Item stone = ERGearItems.material(Materials.ENHANCEMENT_STONE);
         if (stone != null) {
             given.add(new ItemStack(stone, stones));

@@ -47,7 +47,7 @@ public final class NpcServices {
         Npcs.onInteract(NpcRole.STORY, StoryNpcs::talk);
         Npcs.onInteract(NpcRole.GATEKEEPER, (player, npc) -> {
             StoryNpcs.serviceTalk(player, NpcRole.GATEKEEPER, () -> {
-                com.eternalrealm.dungeon.forge.GatekeeperMenu.open(player);
+                com.eternalrealm.dungeon.forge.GatekeeperService.open(player, npc);
             });
         });
         Npcs.onInteract(NpcRole.AUCTION, (player, npc) -> {

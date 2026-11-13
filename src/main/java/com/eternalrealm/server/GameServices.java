@@ -103,6 +103,7 @@ public final class GameServices {
         dungeons.onLogout(playerId);
         story.onLogout(playerId);
         com.eternalrealm.sound.forge.MusicContexts.forget(playerId);
+        com.eternalrealm.dungeon.forge.GatekeeperService.forget(playerId);
         quests.onLogout(playerId);
         world.onLogout(playerId);
         rankings.onLogout(playerId);
