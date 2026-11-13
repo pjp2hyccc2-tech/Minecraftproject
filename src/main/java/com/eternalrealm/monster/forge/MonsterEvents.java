@@ -7,14 +7,17 @@ import com.eternalrealm.monster.MonsterRole;
 import com.eternalrealm.monster.MonsterScaling;
 import com.eternalrealm.monster.MonsterStats;
 import com.eternalrealm.monster.MonsterTemplate;
+import com.eternalrealm.monster.MonsterThrottle;
 import com.eternalrealm.server.ServerContext;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.monster.Vex;
@@ -29,6 +32,7 @@ import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.Event;
 
+import java.util.List;
 import java.util.Map;
 import java.util.SplittableRandom;
 import java.util.UUID;
@@ -134,15 +138,71 @@ public final class MonsterEvents {
         }
     }
 
-    /** Before the entity's fire is processed: put out the sun's fire (phantoms, helmets lost). */
+    /**
+     * Before the entity's tick: an idle field monster with no player near skips three ticks in four
+     * ({@link MonsterThrottle}); otherwise the sun's fire is put out (phantoms, helmets lost).
+     */
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         LivingEntity entity = event.getEntity();
+        if (resting(entity)) {
+            event.setCanceled(true);
+            return;
+        }
         if (entity.getRemainingFireTicks() != SUN_FIRE_TICKS || entity.level().isClientSide()
                 || !MonsterTags.isMonster(entity) || entity.isInLava() || !entity.level().isDay()) {
             return;
         }
         if (entity.level().canSeeSky(BlockPos.containing(entity.getX(), entity.getEyeY(), entity.getZ()))) {
             entity.clearFire();
+        }
+    }
+
+    /** Whether this tick of a field monster is skipped: idle, settled, no player near (cheapest tests first). */
+    private static boolean resting(LivingEntity entity) {
+        if (!(entity instanceof Mob mob) || MonsterThrottle.ownTick(mob.tickCount, mob.getId())
+                || mob.tickCount < MonsterThrottle.SETTLE_TICKS || mob.level().isClientSide()
+                || !MonsterTags.isMonster(mob) || !throttleOn()) {
+            return false;
+        }
+        CompoundTag data = mob.getPersistentData();
+        if (data.contains("er_instance") || data.hasUUID("er_fight")) {
+            return false; // dungeon waves and bosses always run
+        }
+        List<? extends Player> players = mob.level().players();
+        if (players.isEmpty() || !idle(mob)) {
+            return false;
+        }
+        double nearest = Double.MAX_VALUE;
+        for (Player player : players) {
+            if (!player.isSpectator()) {
+                nearest = Math.min(nearest, player.distanceToSqr(mob));
+            }
+        }
+        return MonsterThrottle.skips(mob.tickCount, mob.getId(), true, true, nearest, throttleRange());
+    }
+
+    /** Standing still on dry ground with nothing to do: no target, no hurt, no path, no effect, no fire, no attack. */
+    private static boolean idle(Mob mob) {
+        return mob.getTarget() == null && mob.hurtTime == 0 && !mob.isDeadOrDying() && mob.onGround()
+                && !mob.isInWaterOrBubble() && !mob.isInLava() && !mob.isOnFire() && !mob.isPassenger()
+                && !mob.isVehicle() && mob.getNavigation().isDone() && mob.getActiveEffects().isEmpty()
+                && mob.getDeltaMovement().horizontalDistanceSqr() < 1.0E-4
+                && !(mob instanceof com.eternalrealm.entity.ERMonster monster && monster.isActing());
+    }
+
+    private static boolean throttleOn() {
+        try {
+            return com.eternalrealm.config.ERServerConfig.MONSTER_AI_THROTTLE.get();
+        } catch (IllegalStateException e) {
+            return false;
+        }
+    }
+
+    private static double throttleRange() {
+        try {
+            return com.eternalrealm.config.ERServerConfig.MONSTER_AI_THROTTLE_RANGE.get();
+        } catch (IllegalStateException e) {
+            return 32.0;
         }
     }
 
