@@ -45,8 +45,11 @@ import java.util.concurrent.atomic.AtomicReference;
 public final class MarketGameTests {
     private static final String ARENA = "arena";
     private static final Vec3 COUNTER = new Vec3(4.5, 2.0, 4.5);
-    /** Far beyond the clerk's reach (bidding still works from here). */
-    private static final Vec3 FAR = new Vec3(4.5, 2.0, 4.5 + 60.0);
+    /**
+     * Far beyond the clerk's reach (bidding still works from here): high above the test, because the GameTests are
+     * packed side by side and a spot to the side can fall within reach of another test's clerk.
+     */
+    private static final Vec3 FAR = new Vec3(4.5, 2.0 + 80.0, 4.5);
 
     private MarketGameTests() {
     }
