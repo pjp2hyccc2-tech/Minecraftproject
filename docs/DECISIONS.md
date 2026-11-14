@@ -762,3 +762,17 @@ Decisions:
   there, what one does there and which way it is), the town NPCs' quest marks on their places, and 「ここへ案内」 which reuses the quest
   guide's dots (a picked place goes before the quest's until reached). The map key opens it inside the capital, the realm map outside;
   each map has a button to the other.
+
+## D-SHOPSCREEN: the item shop as its own screen in the gate's frame (2026-11-14)
+
+The owner: 「アイテムショップのHUDをファンタジー風にオシャレにして」. The shop was the chest menu every service started from (glass panes,
+icons, shift-click rules in lore lines).
+Decisions:
+- **A screen of its own, the server deciding**: the client draws (`ui.shop.ShopScreen`), the server sends the shelves and what the
+  shop would buy and answers every purchase and sale (`ShopService`); the rules are pure (`item.ShopCatalog`) and tested. The test
+  players keep the chest menu: the same prices, no client.
+- **One look for the town's fantasy screens**: the gate's art (gold frame, jewelled corners, red ribbon, gem tabs, buttons) is
+  shared (`GateArt` is public now) with a warmer, lamplit ground for the shop, so the screens feel like one game.
+- **Kinder rules at the counter**: an amount chooser instead of click = 1 / shift = 10; equipment sells on a second press instead of
+  a shift-click; the back of the bag can be sold from; a purchase the bag cannot hold is refused instead of dropping at the feet.
+

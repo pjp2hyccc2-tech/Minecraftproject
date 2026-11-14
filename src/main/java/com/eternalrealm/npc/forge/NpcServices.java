@@ -1,7 +1,7 @@
 package com.eternalrealm.npc.forge;
 
 import com.eternalrealm.item.forge.SmithService;
-import com.eternalrealm.item.forge.ShopMenu;
+import com.eternalrealm.item.forge.ShopService;
 import com.eternalrealm.server.ServerContext;
 import com.eternalrealm.server.UiData;
 import com.google.gson.JsonObject;
@@ -15,7 +15,7 @@ public final class NpcServices {
     public static void register() {
         Npcs.onInteract(NpcRole.ITEM_SHOP, (player, npc) -> {
             StoryNpcs.serviceTalk(player, NpcRole.ITEM_SHOP, () -> {
-                ShopMenu.open(player);
+                ShopService.open(player);
             });
         });
         Npcs.onInteract(NpcRole.BLACKSMITH, (player, npc) -> {

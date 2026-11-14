@@ -72,6 +72,7 @@ public final class ClientModEvents {
         com.eternalrealm.client.revival.ClientRevival.init();
         com.eternalrealm.client.boss.BossHudOverlay.init();
         com.eternalrealm.ui.screen.DungeonResultScreen.registerChannels();
+        com.eternalrealm.ui.shop.ShopScreen.registerChannels();
         ClientTrinkets.register();
         ClientBagBack.register();
         com.eternalrealm.client.map.ThreatClient.init();

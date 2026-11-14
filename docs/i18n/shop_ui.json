@@ -1,0 +1,206 @@
+{
+ "screen.eternalrealm.shop.sign": {
+  "ja": "道具屋マルコの店",
+  "en": "Marco's Sundries"
+ },
+ "screen.eternalrealm.shop.keeper": {
+  "ja": "道具屋 マルコ",
+  "en": "Marco, shopkeeper"
+ },
+ "screen.eternalrealm.shop.greet.1": {
+  "ja": "いらっしゃい！ 旅の支度ならおまかせを。",
+  "en": "Welcome! Everything a traveller needs, right here."
+ },
+ "screen.eternalrealm.shop.greet.2": {
+  "ja": "おや、冒険者さん。今日は何をお探しで？",
+  "en": "Ah, an adventurer. What are you after today?"
+ },
+ "screen.eternalrealm.shop.greet.3": {
+  "ja": "回復薬は多めに持っていきなよ。ダンジョンは長いからね。",
+  "en": "Take plenty of potions — the dungeons run long."
+ },
+ "screen.eternalrealm.shop.greet.4": {
+  "ja": "掘り出し物があれば買い取るよ。遠慮なく見せておくれ。",
+  "en": "Got something to sell? Show me, don't be shy."
+ },
+ "screen.eternalrealm.shop.thanks.1": {
+  "ja": "まいどあり！",
+  "en": "Much obliged!"
+ },
+ "screen.eternalrealm.shop.thanks.2": {
+  "ja": "またどうぞ！ 道中気をつけてな。",
+  "en": "Come again — and take care out there."
+ },
+ "screen.eternalrealm.shop.thanks.3": {
+  "ja": "いい買い物だ。旅の無事を祈ってるよ。",
+  "en": "A fine purchase. Safe travels!"
+ },
+ "screen.eternalrealm.shop.bought_back.1": {
+  "ja": "いい品だね、たしかに買い取ったよ。",
+  "en": "Good stuff — it's mine now."
+ },
+ "screen.eternalrealm.shop.bought_back.2": {
+  "ja": "こいつは助かる。また持ってきておくれ。",
+  "en": "That helps. Bring me more."
+ },
+ "screen.eternalrealm.shop.bought_back.3": {
+  "ja": "毎度！ 代金はこちらだ。",
+  "en": "Done! Here's your coin."
+ },
+ "screen.eternalrealm.shop.purse": {
+  "ja": "所持金",
+  "en": "Purse"
+ },
+ "screen.eternalrealm.shop.tab.buy": {
+  "ja": "買う",
+  "en": "Buy"
+ },
+ "screen.eternalrealm.shop.tab.sell": {
+  "ja": "売る",
+  "en": "Sell"
+ },
+ "screen.eternalrealm.shop.wares": {
+  "ja": "%s品",
+  "en": "%s wares"
+ },
+ "screen.eternalrealm.shop.sellables": {
+  "ja": "%s点",
+  "en": "%s items"
+ },
+ "screen.eternalrealm.shop.section.potions": {
+  "ja": "回復薬",
+  "en": "Potions"
+ },
+ "screen.eternalrealm.shop.section.travel": {
+  "ja": "旅の道具",
+  "en": "Travel goods"
+ },
+ "screen.eternalrealm.shop.section.elixirs": {
+  "ja": "秘薬",
+  "en": "Elixirs"
+ },
+ "screen.eternalrealm.shop.section.smithing": {
+  "ja": "鍛冶の素材",
+  "en": "Smithing"
+ },
+ "screen.eternalrealm.shop.from_level": {
+  "ja": "Lv%s〜",
+  "en": "From Lv%s"
+ },
+ "screen.eternalrealm.shop.owned": {
+  "ja": "所持 %s",
+  "en": "Owned: %s"
+ },
+ "screen.eternalrealm.shop.kind.equipment": {
+  "ja": "装備",
+  "en": "Equipment"
+ },
+ "screen.eternalrealm.shop.kind.consumable": {
+  "ja": "消耗品",
+  "en": "Consumable"
+ },
+ "screen.eternalrealm.shop.kind.material": {
+  "ja": "素材",
+  "en": "Material"
+ },
+ "screen.eternalrealm.shop.in_back": {
+  "ja": "（カバンの奥）",
+  "en": " (back of the bag)"
+ },
+ "screen.eternalrealm.shop.each_buy": {
+  "ja": "1個 %s G ・ 所持 %s",
+  "en": "%s G each · owned %s"
+ },
+ "screen.eternalrealm.shop.each_sell": {
+  "ja": "売値 1個 %s G ・ 所持 %s",
+  "en": "Sells for %s G each · you have %s"
+ },
+ "screen.eternalrealm.shop.total_buy": {
+  "ja": "合計 %s G",
+  "en": "Total %s G"
+ },
+ "screen.eternalrealm.shop.total_sell": {
+  "ja": "受け取り %s G",
+  "en": "You get %s G"
+ },
+ "screen.eternalrealm.shop.buy": {
+  "ja": "購入する",
+  "en": "Buy"
+ },
+ "screen.eternalrealm.shop.sell": {
+  "ja": "売却する",
+  "en": "Sell"
+ },
+ "screen.eternalrealm.shop.sell_confirm": {
+  "ja": "もう一度で売却",
+  "en": "Press again"
+ },
+ "screen.eternalrealm.shop.sell_confirm_hint": {
+  "ja": "装備は二度押しで売却します（3秒以内）",
+  "en": "Equipment sells on a second press (within 3 s)"
+ },
+ "screen.eternalrealm.shop.pending": {
+  "ja": "取引中…",
+  "en": "Dealing…"
+ },
+ "screen.eternalrealm.shop.choose": {
+  "ja": "左の一覧から選んでください",
+  "en": "Choose something from the list"
+ },
+ "screen.eternalrealm.shop.short": {
+  "ja": "あと %s G 足りません",
+  "en": "%s G short"
+ },
+ "screen.eternalrealm.shop.max": {
+  "ja": "最大",
+  "en": "Max"
+ },
+ "screen.eternalrealm.shop.all": {
+  "ja": "全部",
+  "en": "All"
+ },
+ "screen.eternalrealm.shop.empty": {
+  "ja": "品切れです",
+  "en": "Sold out"
+ },
+ "screen.eternalrealm.shop.nothing_to_sell": {
+  "ja": "売れる物がありません",
+  "en": "Nothing the shop would buy"
+ },
+ "screen.eternalrealm.shop.hint": {
+  "ja": "ホイール：一覧・数量 ・ ↑↓：選ぶ ・ ←→：数量 ・ Enter：決定 ・ Shift+−/+：10ずつ ・ Esc：閉じる",
+  "en": "Wheel: list / amount · ↑↓: choose · ←→: amount · Enter: deal · Shift+−/+: by 10 · Esc: close"
+ },
+ "screen.eternalrealm.shop.buy_tip": {
+  "ja": "選んだ数を買います（カバンの手前へ、いっぱいなら奥へ）",
+  "en": "Buys the amount chosen (into the bag; the back when the front is full)"
+ },
+ "screen.eternalrealm.shop.sell_tip": {
+  "ja": "選んだ数を売ります",
+  "en": "Sells the amount chosen"
+ },
+ "message.eternalrealm.shop.buy.ok": {
+  "ja": "購入しました",
+  "en": "Bought"
+ },
+ "message.eternalrealm.shop.buy.unknown": {
+  "ja": "その品は扱っていません",
+  "en": "That is not sold here"
+ },
+ "message.eternalrealm.shop.buy.bad_count": {
+  "ja": "その数は買えません",
+  "en": "That amount cannot be bought"
+ },
+ "message.eternalrealm.shop.buy.not_enough_gold": {
+  "ja": "ゴールドが足りません（%s G 必要）",
+  "en": "Not enough gold (%s G needed)"
+ },
+ "message.eternalrealm.shop.buy.bag_full": {
+  "ja": "カバンに入りきりません",
+  "en": "Your bag has no room for that"
+ },
+ "message.eternalrealm.shop.sell.moved": {
+  "ja": "持ち物が動いたので、もう一度選んでください",
+  "en": "Your bag changed — please choose again"
+ }
+}

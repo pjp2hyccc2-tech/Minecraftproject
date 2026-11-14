@@ -15,64 +15,64 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The look shared by the gate's screens (転移門, 出発の準備) and the ready check's HUD panel: the textures of
- * tools/art/gate_screen.py (the atlas layout is its {@code ATLAS}), colours, and the night panel in its gold frame.
- * Client only.
+ * The look shared by the gate's screens (転移門, 出発の準備), the ready check's HUD panel and the item shop
+ * ({@code ui.shop.ShopScreen}): the textures of tools/art/gate_screen.py (the atlas layout is its {@code ATLAS}),
+ * colours, and the panel in its gold frame (night blue, or the shop's lamplit brown). Client only.
  */
-final class GateArt {
-    static final ResourceLocation ATLAS = new ResourceLocation(ModInfo.MOD_ID, "textures/gui/gate/atlas.png");
-    static final ResourceLocation CIRCLE = new ResourceLocation(ModInfo.MOD_ID, "textures/gui/gate/circle.png");
-    static final ResourceLocation SEALED = new ResourceLocation(ModInfo.MOD_ID, "textures/gui/gate/sealed.png");
+public final class GateArt {
+    public static final ResourceLocation ATLAS = new ResourceLocation(ModInfo.MOD_ID, "textures/gui/gate/atlas.png");
+    public static final ResourceLocation CIRCLE = new ResourceLocation(ModInfo.MOD_ID, "textures/gui/gate/circle.png");
+    public static final ResourceLocation SEALED = new ResourceLocation(ModInfo.MOD_ID, "textures/gui/gate/sealed.png");
     private static final Map<String, ResourceLocation> PICTURES = new HashMap<>();
-    static final int TEX = 256;
-    static final int PIC_TEX_W = 472;
-    static final int PIC_TEX_H = 200;
+    public static final int TEX = 256;
+    public static final int PIC_TEX_W = 472;
+    public static final int PIC_TEX_H = 200;
 
     // the atlas
-    static final int CORNER_V = 0;
-    static final int GEM_U = 96;
-    static final int HALO_U = 216;
-    static final int EMBLEM_V = 24;
-    static final int LOCK_U = 144;
-    static final int LAUREL_U = 156;
-    static final int POINTER_U = 172;
-    static final int ICON_U = 180;
-    static final int MEDAL_V = 40;
-    static final int BADGE_U = 80;
-    static final int STUD_U = 114;
-    static final int DIVIDER_U = 121;
-    static final int MARK_U = 121;
-    static final int MARK_V = 50;
-    static final int RIBBON_V = 60;
-    static final int BUTTON_V = 90;
-    static final int PILL_U = 96;
-    static final int ROW_V = 162;
-    static final int OK_BUTTON_U = 0;
-    static final int WAIT_BUTTON_U = 96;
-    static final int TOGGLE_V = 202;
+    public static final int CORNER_V = 0;
+    public static final int GEM_U = 96;
+    public static final int HALO_U = 216;
+    public static final int EMBLEM_V = 24;
+    public static final int LOCK_U = 144;
+    public static final int LAUREL_U = 156;
+    public static final int POINTER_U = 172;
+    public static final int ICON_U = 180;
+    public static final int MEDAL_V = 40;
+    public static final int BADGE_U = 80;
+    public static final int STUD_U = 114;
+    public static final int DIVIDER_U = 121;
+    public static final int MARK_U = 121;
+    public static final int MARK_V = 50;
+    public static final int RIBBON_V = 60;
+    public static final int BUTTON_V = 90;
+    public static final int PILL_U = 96;
+    public static final int ROW_V = 162;
+    public static final int OK_BUTTON_U = 0;
+    public static final int WAIT_BUTTON_U = 96;
+    public static final int TOGGLE_V = 202;
 
     // colours
-    static final int TEXT = 0xFFEDE3CC;
-    static final int MUTED = 0xFFA89A86;
-    static final int GOLD = 0xFFFFD866;
-    static final int GOLD_DIM = 0xFFD2AE5A;
-    static final int WARN = 0xFFFF8A6A;
-    static final int READY = 0xFF8CE08C;
-    static final int WAITING = 0xFFFFC266;
+    public static final int TEXT = 0xFFEDE3CC;
+    public static final int MUTED = 0xFFA89A86;
+    public static final int GOLD = 0xFFFFD866;
+    public static final int GOLD_DIM = 0xFFD2AE5A;
+    public static final int WARN = 0xFFFF8A6A;
+    public static final int READY = 0xFF8CE08C;
+    public static final int WAITING = 0xFFFFC266;
 
     private GateArt() {
     }
 
-    static ResourceLocation picture(String id) {
+    public static ResourceLocation picture(String id) {
         return PICTURES.computeIfAbsent(id, key -> new ResourceLocation(ModInfo.MOD_ID,
                 "textures/gui/gate/" + key + ".png"));
     }
 
-    static void atlas(GuiGraphics graphics, int x, int y, int u, int v, int w, int h) {
+    public static void atlas(GuiGraphics graphics, int x, int y, int u, int v, int w, int h) {
         graphics.blit(ATLAS, x, y, u, v, w, h, TEX, TEX);
     }
 
-    static void text(GuiGraphics graphics, Font font, Component text, float x, float y, int color, float size) {
+    public static void text(GuiGraphics graphics, Font font, Component text, float x, float y, int color, float size) {
         PoseStack pose = graphics.pose();
         pose.pushPose();
         pose.translate(x, y, 0.0F);
@@ -81,7 +81,7 @@ final class GateArt {
         pose.popPose();
     }
 
-    static void textSeq(GuiGraphics graphics, Font font, FormattedCharSequence text, float x, float y, int color,
+    public static void textSeq(GuiGraphics graphics, Font font, FormattedCharSequence text, float x, float y, int color,
                         float size) {
         PoseStack pose = graphics.pose();
         pose.pushPose();
@@ -92,7 +92,7 @@ final class GateArt {
     }
 
     /** Draws {@code text} at up to {@code size}, shrunk (down to {@code min}) or shortened to fit {@code maxWidth}. */
-    static float fitted(GuiGraphics graphics, Font font, Component text, float x, float y, float maxWidth, int color,
+    public static float fitted(GuiGraphics graphics, Font font, Component text, float x, float y, float maxWidth, int color,
                         float size, float min) {
         int width = font.width(text);
         float s = width <= 0 ? size : Math.min(size, maxWidth / width);
@@ -106,11 +106,11 @@ final class GateArt {
         return font.width(cut) * min;
     }
 
-    static void centered(GuiGraphics graphics, Font font, Component text, float cx, float y, int color, float size) {
+    public static void centered(GuiGraphics graphics, Font font, Component text, float cx, float y, int color, float size) {
         text(graphics, font, text, cx - font.width(text) * size / 2.0F, y, color, size);
     }
 
-    static float rand(int seed) {
+    public static float rand(int seed) {
         int h = seed * 0x9E3779B1;
         h ^= h >>> 15;
         h *= 0x85EBCA77;
@@ -120,11 +120,11 @@ final class GateArt {
         return (h & 0xFFFFFF) / (float) 0x1000000;
     }
 
-    static int argb(int rgb, float alpha) {
+    public static int argb(int rgb, float alpha) {
         return (Mth.clamp((int) (alpha * 255.0F), 0, 255) << 24) | (rgb & 0xFFFFFF);
     }
 
-    static void dot(GuiGraphics graphics, float x, float y, int rgb, float alpha, boolean glow) {
+    public static void dot(GuiGraphics graphics, float x, float y, int rgb, float alpha, boolean glow) {
         PoseStack pose = graphics.pose();
         pose.pushPose();
         pose.translate(x, y, 0.0F);
@@ -135,7 +135,7 @@ final class GateArt {
         pose.popPose();
     }
 
-    static void circle(GuiGraphics graphics, float cx, float cy, int size, float degrees, float r, float g, float b,
+    public static void circle(GuiGraphics graphics, float cx, float cy, int size, float degrees, float r, float g, float b,
                        float alpha) {
         PoseStack pose = graphics.pose();
         pose.pushPose();
@@ -152,15 +152,21 @@ final class GateArt {
      * other ({@code circles} 0 for none), rising motes, the gold frame with its running glint, jewelled corners and
      * studs.
      */
-    static void panel(GuiGraphics graphics, int w, int h, float t, int circles) {
+    public static void panel(GuiGraphics graphics, int w, int h, float t, int circles) {
+        panel(graphics, w, h, t, circles, 0xF4161C34, 0xF40A0C1A, 0xE8E4FF);
+    }
+
+    /** The panel with its own colours: the gradient from {@code top} to {@code bottom} and the twinkles' colour. */
+    public static void panel(GuiGraphics graphics, int w, int h, float t, int circles, int top, int bottom,
+                             int twinkle) {
         graphics.fill(-3, -1, w + 5, h + 5, 0x70000000);
-        graphics.fillGradient(0, 0, w, h, 0xF4161C34, 0xF40A0C1A);
+        graphics.fillGradient(0, 0, w, h, top, bottom);
         int stars = Math.max(8, w * h / 2200);
         for (int i = 0; i < stars; i++) {
             float x = 6 + rand(i * 7 + 1) * (w - 12);
             float y = 6 + rand(i * 7 + 2) * (h - 12);
-            float twinkle = 0.5F + 0.5F * Mth.sin(t * (0.8F + rand(i * 7 + 3) * 1.6F) + i);
-            dot(graphics, x, y, 0xE8E4FF, 0.12F + 0.4F * twinkle * rand(i * 7 + 4), false);
+            float shine = 0.5F + 0.5F * Mth.sin(t * (0.8F + rand(i * 7 + 3) * 1.6F) + i);
+            dot(graphics, x, y, twinkle, 0.12F + 0.4F * shine * rand(i * 7 + 4), false);
         }
         if (circles > 0) {
             circle(graphics, w / 2.0F, h / 2.0F + 6, circles, t * 5.0F, 0.95F, 0.78F, 0.4F, 0.085F);
@@ -187,7 +193,7 @@ final class GateArt {
     }
 
     /** The red title ribbon hanging over the panel's top edge ({@code top} is its own top, usually -9). */
-    static void ribbon(GuiGraphics graphics, Font font, Component title, int w, int top) {
+    public static void ribbon(GuiGraphics graphics, Font font, Component title, int w, int top) {
         atlas(graphics, w / 2 - 100, top, 0, RIBBON_V, 200, 30);
         centered(graphics, font, title, w / 2.0F, top + 9.5F, 0xFFFFE9B0, 1.25F);
     }
