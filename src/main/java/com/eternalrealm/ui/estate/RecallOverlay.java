@@ -1,5 +1,6 @@
 package com.eternalrealm.ui.estate;
 
+import com.eternalrealm.estate.RecallRules;
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -9,8 +10,9 @@ import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 /**
- * The way home on the HUD: while the cast runs, a brass-framed bar fills above the quick slots with a little key that
- * turns as it goes; a broken cast flashes red for a moment, an arrival lets the bar glow out.
+ * The way home (or to the royal capital) on the HUD: while the cast runs, a brass-framed bar fills above the quick slots
+ * with a little key that turns as it goes (a sky-blue bar for the capital); a broken cast flashes red for a moment, an
+ * arrival lets the bar glow out.
  */
 public final class RecallOverlay implements IGuiOverlay {
     private static final long FLASH_NANOS = 1_400_000_000L;
@@ -22,6 +24,7 @@ public final class RecallOverlay implements IGuiOverlay {
     private static long endedAt = Long.MIN_VALUE / 2;
     private static boolean broken;
     private static String reason = "";
+    private static RecallRules.Destination destination = RecallRules.Destination.ROOM;
 
     /** The server's word about the cast: {@code cast}, {@code broken}, {@code refused} or {@code done}. */
     public static void accept(JsonObject json) {
@@ -29,6 +32,7 @@ public final class RecallOverlay implements IGuiOverlay {
         long now = System.nanoTime();
         switch (state) {
             case "cast" -> {
+                destination = RecallRules.Destination.byId(EstateUi.str(json, "to"));
                 casting = true;
                 startedAt = now;
                 castNanos = Math.max(1L, EstateUi.num(json, "ticks")) * 50_000_000L;
@@ -81,9 +85,10 @@ public final class RecallOverlay implements IGuiOverlay {
         graphics.fill(x - 1, y - 1, x + BAR_W + 1, y + 8, a | (EstateUi.BRASS & 0xFFFFFF));
         graphics.fill(x, y, x + BAR_W, y + 7, a | 0x1A1014);
         int fill = (int) (BAR_W * progress);
-        int color = broken ? 0xC03A2A : 0xF0A830;
+        boolean capital = destination == RecallRules.Destination.CAPITAL;
+        int color = broken ? 0xC03A2A : capital ? 0x4AA8E8 : 0xF0A830;
         graphics.fill(x, y, x + fill, y + 7, a | color);
-        graphics.fill(x, y, x + fill, y + 2, a | (broken ? 0xE06050 : 0xFFE08A));
+        graphics.fill(x, y, x + fill, y + 2, a | (broken ? 0xE06050 : capital ? 0xB8E4FF : 0xFFE08A));
         // a brass key that turns a quarter as the cast completes
         int kx = x - 14;
         int ky = y - 3;
@@ -97,9 +102,9 @@ public final class RecallOverlay implements IGuiOverlay {
             graphics.fill(kx + 8, ky + 4, kx + 14, ky + 6, a | 0xD8A84A);
             graphics.fill(kx + 11, ky + 6, kx + 13, ky + 8, a | 0xD8A84A);
         }
-        Component label = casting ? Component.translatable("hud.eternalrealm.recall.casting")
+        Component label = casting ? Component.translatable(destination.castingKey())
                 : broken ? Component.translatable("message.eternalrealm.recall.broken." + reason)
-                : Component.translatable("hud.eternalrealm.recall.done");
+                : Component.translatable(destination.doneKey());
         graphics.drawCenteredString(font, label, screenWidth / 2, y - 12, a | (broken ? 0xFF8A70 : 0xFFE6B0));
     }
 }

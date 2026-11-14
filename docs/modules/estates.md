@@ -8,10 +8,10 @@
 
 | 場所 | 内容 |
 |---|---|
-| `estate`（純粋） | `EstateKey`、`EstatePlot` / `EstatePlots`（区画と割り当て）、`EstateRecord` / `EstateRegistry`（誰がどの区画）、`EstateData` / `EstateRepository`、`EstateStatus`、`EstateResult`、客室の `RoomDesign`（5室と値段）/ `RoomRules`（借りる・移る・引き払う）、`StorageLabel`（収納の札）/ `DepositPlanner`（しまい方）/ `Ledger`（台帳の集計と検索）、`RecallRules`（帰還の判定）、`Showcase`（テスト用の見学用の屋敷のキー） |
+| `estate`（純粋） | `EstateKey`、`EstatePlot` / `EstatePlots`（区画と割り当て）、`EstateRecord` / `EstateRegistry`（誰がどの区画）、`EstateData` / `EstateRepository`、`EstateStatus`、`EstateResult`、客室の `RoomDesign`（5室と値段）/ `RoomRules`（借りる・移る・引き払う）、`StorageLabel`（収納の札）/ `DepositPlanner`（しまい方）/ `Ledger`（台帳の集計と検索）、`RecallRules`（帰還・王都行きの判定）、`Showcase`（テスト用の見学用の屋敷のキー） |
 | `persistence.file` | `EstateCodec`（`estates.json` schema 1）、`FileEstateRepository` |
-| `estate.forge` | `EstateService`（API と次元の見張り）、`EstateManager`（建築・移転・解体の作業）、`EstateProtection`、`EstateContents`（保管物の移動）、`EstateWorldState`（建っている物と預かり品）、`EstateLevels`、`EstateBlueprints`、`RoomDoorBlock` / `RoomDoors`、`EstateCommands`、宿屋の `InnService`（女将・扉のメニュー）、`LedgerService`（仕分け机）、`RecallService`（帰還）、`Showcases`（見学パスと見学用の屋敷、[testkit.md](testkit.md)）、`StorageChestBlock`（札付き収納箱）/ `SortingDeskBlock`、`EstateItems`（物の種類） |
-| `ui.estate` / `client.estate` | `InnScreen`（女将）、`LedgerScreen`（収納台帳）、`RoomExitScreen`（扉のメニュー）、`RecallOverlay`（帰還の詠唱バー）、`EstateClient` / `EstateInput`（帰還キー Home） |
+| `estate.forge` | `EstateService`（API と次元の見張り）、`EstateManager`（建築・移転・解体の作業）、`EstateProtection`、`EstateContents`（保管物の移動）、`EstateWorldState`（建っている物と預かり品）、`EstateLevels`、`EstateBlueprints`、`RoomDoorBlock` / `RoomDoors`、`EstateCommands`、宿屋の `InnService`（女将・扉のメニュー）、`LedgerService`（仕分け机）、`RecallService`（帰還・王都行き）、`Showcases`（見学パスと見学用の屋敷、[testkit.md](testkit.md)）、`StorageChestBlock`（札付き収納箱）/ `SortingDeskBlock`、`EstateItems`（物の種類） |
+| `ui.estate` / `client.estate` | `InnScreen`（女将）、`LedgerScreen`（収納台帳）、`RoomExitScreen`（扉のメニュー）、`RecallOverlay`（帰還・王都行きの詠唱バー）、`EstateClient` / `EstateInput`（帰還キー Home・王都キー End） |
 | `world.forge.blueprint` | `Blueprint` / `BlueprintPlacer`: 王都と屋敷で共通のブループリント読み込みと段階的な設置（`CapitalBlueprint` / `CapitalBuilder` もこれを使う） |
 | `tools/estates/` | 間取りの Python（王都のキット `tools/capital` を使う）: `kit.py`（保管家具・扉・スポット）、`rooms.py`（屋根裏部屋と共通部品）、`suites.py`（運河・書斎・星見の塔・スイート）、`blocks_ext.py`（収納箱・仕分け机をキットに登録）、`build.py`（`--thumbnails` で女将の画面の部屋の絵）、`check.py`、`views.py`（プレビュー） |
 | `tools/art/estate_blocks.py` | 客室の扉・札付き収納箱（札8種の絵）・仕分け机のテクスチャ・モデル・ブロックステート・ルートテーブル（オリジナルのドット絵） |
@@ -151,11 +151,20 @@ EstateService.keepsafe(owner);  EstateService.claimKeepsafe(player, owner);   //
   「その他」の順（`DepositPlanner`）。回復薬・強壮剤・帰還の巻物は鞄に残す（種類のタブの「…をしまう」なら持っていく）。
   サーバーが毎回部屋を読み直して実行し、鞄に入った分だけ収納から減らす（失わない・増やさない）。物の種類は `EstateItems`。
 
-## 9. 自室への帰還（Home キー・日誌の「自室へ」）
+## 9. 自室への帰還（Home キー・日誌の「自室へ」）と王都への転移（End キー・日誌の「王都へ」・地図の「王都へ転移」）
 
-約3秒の詠唱（`RecallRules.CAST_TICKS` = 60 tick、HUD に真鍮の鍵が回るバー）。動く（0.35 ブロック）・攻撃を受ける・戦闘になると中断、
-もう一度押すとやめる。戦闘中・ダンジョン／レイド・ボス戦・対人戦・倒れている間・部屋がない／準備中・自分の部屋の中では使えず、
-着いてから 60 秒は休み。着くと戻り先が記録され、扉のメニューで元の場所へ戻れる（館の扉から入ったときと同じ）。
+約3秒の詠唱（`RecallRules.CAST_TICKS` = 60 tick、HUD に真鍮の鍵が回るバー。王都行きは空色のバー）。動く（0.35 ブロック）・
+攻撃を受ける・戦闘になると中断、もう一度押すとやめる。戦闘中・ダンジョン／レイド・ボス戦・対人戦・倒れている間・もう着いている
+（自分の部屋の中／王都の到着点から 12 ブロック以内）では使えず、自室は部屋がない／準備中でも使えない。
+着いてから **30 秒** は同じ行き先へは休み（自室と王都は別々に数える）。
+
+- **自室**: 着くと戻り先が記録され、扉のメニューで元の場所へ戻れる（館の扉から入ったときと同じ）。
+- **王都**（2026-11-14「どこからでも王国へテレポートできるようにして」）: フィールド・自室・ギルドハウスのどこからでも、王都の
+  到着点（新しく来た人と同じ所）へ。屋敷の中から使うと屋敷の戻り先は消える（扉から出ても王都に出るため）。ダンジョンの中からは
+  ダンジョンの帰還を使う。
+- **「あと 600 秒」と出ることがあった不具合**（2026-11-14 修正）: 休みはサーバーの tick 数で数えていたが、同じゲームで
+  ワールドを開き直すと tick 数は 0 からやり直すのに、前のワールドで着いた時刻が残っていた。サーバーが止まるときに忘れ、
+  「今より後に着いた」記録は数えず、残りは最大でも 30 秒に収める（`RecallRules.cooldownLeft`）。
 
 ## 10. 管理者コマンド
 
@@ -168,7 +177,7 @@ EstateService.keepsafe(owner);  EstateService.claimKeepsafe(player, owner);   //
 
 - 純粋: `EstatePlotsTest`（地域の分離・距離・位置からの区画・割り当てと再利用）、`EstateRegistryTest`（1種類1つ・模様替えの区画・
   中止・手放し・孤児・整合性）、`EstateCodecTest`（往復・壊れたデータ・新しすぎる schema・前の世代への退避）。
-- 純粋（客室・帰還）: `RoomRulesTest`（借りる・移る・差額と返金・引き払い）、`RecallRulesTest`（判定の順・中断・休み）、
+- 純粋（客室・帰還）: `RoomRulesTest`（借りる・移る・差額と返金・引き払い）、`RecallRulesTest`（判定の順・中断・休み・王都行き・前のワールドの記録を数えない）、
   `DepositPlannerTest`（札・積み増し・本は書棚・あふれ）、`LedgerTest`（集計・検索）。
 - GameTest `EstateGameTests`: 全間取りの妥当性（5室すべて）、借りる → 建つ → 入る（入口・位置から屋敷）→ 出る（元の場所）→ 手放す、
   他人は入れない・中に入れられても外へ出される・壊せない置けない、部屋のない人の扉。

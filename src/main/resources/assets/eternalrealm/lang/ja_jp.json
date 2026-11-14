@@ -7416,5 +7416,14 @@
   "button.eternalrealm.phone.accept": "[承認]",
   "button.eternalrealm.phone.decline": "[拒否]",
   "button.eternalrealm.phone.reply": "[返信]",
-  "button.eternalrealm.phone.see": "[見る]"
+  "button.eternalrealm.phone.see": "[見る]",
+  "message.eternalrealm.recall.already_capital": "もう王都の広場にいます。",
+  "message.eternalrealm.recall.broken.refused_capital": "王都へ転移できませんでした。",
+  "hud.eternalrealm.recall.casting_capital": "王都へ転移中…",
+  "hud.eternalrealm.recall.done_capital": "王都に着きました",
+  "key.eternalrealm.recall_capital": "王都へ転移",
+  "screen.eternalrealm.tab.capital": "王都へ",
+  "screen.eternalrealm.tab.capital_tip": "どこからでも王都の広場へ転移します（約3秒・動くか攻撃を受けると中断／キー: End）",
+  "screen.eternalrealm.map.to_capital": "王都へ転移",
+  "screen.eternalrealm.map.to_capital_tip": "どこからでも王都の広場へ転移します（約3秒の詠唱・キー: End）"
 }

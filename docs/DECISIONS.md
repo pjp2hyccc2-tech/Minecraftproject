@@ -664,3 +664,16 @@ Decisions:
   spills from a block holding things that a player breaks (a chest, a barrel, a furnace) is kept for that tick and the next.
 - **Blocks can still be broken**; they just do not drop vanilla items there. Player rooms and guild houses keep vanilla rules, and no
   collect quest asks for a vanilla item (checked by the quest validation).
+
+## D-TOCAPITAL: to the royal capital from anywhere, and rests of 30 s (2026-11-14)
+
+The owner: 「どこからでも王国へテレポートできるようにして。自室へのテレポートのインターバルが600秒とか書かれてる時があったから最高でも40秒とかにして」.
+Decisions:
+- **The capital is a second destination of the same cast** as the way home (End key, the journal's 「王都へ」, the map's 「王都へ転移」): a
+  3 s cast that moving or a hit breaks, refused in a fight, a dungeon, a boss fight, a PvP match or while fallen — so it is a way home,
+  never an escape. It arrives where new players arrive. Dungeons keep their own way out.
+- **Rests of 30 s, counted per destination**; the remaining time can never show more than that.
+- **The 600 s was a stale clock**: rests were counted in server ticks, and the tick counter starts again at zero when a world is
+  opened again in the same game while the old arrival stayed in memory. Arrivals are now forgotten when the server stops, and an
+  arrival "after now" never counts.
+

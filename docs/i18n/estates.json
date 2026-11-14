@@ -1,146 +1,614 @@
 {
-"block.eternalrealm.room_door": {"ja": "宿屋の客室の扉", "en": "Inn Room Door"},
-"message.eternalrealm.estate.ok": {"ja": "完了しました。", "en": "Done."},
-"message.eternalrealm.estate.already_claimed": {"ja": "すでに持っています。", "en": "You already have one."},
-"message.eternalrealm.estate.not_claimed": {"ja": "まだ持っていません。", "en": "You do not have one yet."},
-"message.eternalrealm.estate.unknown_design": {"ja": "その間取りは用意されていません。", "en": "That design does not exist."},
-"message.eternalrealm.estate.no_plot": {"ja": "空いている区画がありません。しばらくしてからお試しください。", "en": "There is no free plot right now. Please try again later."},
-"message.eternalrealm.estate.building": {"ja": "ただいま準備中です（%s%%）。もう少しお待ちください。", "en": "Still being prepared (%s%%). Please wait a little."},
-"message.eternalrealm.estate.not_allowed": {"ja": "ここに入ることは許されていません。", "en": "You are not allowed in here."},
-"message.eternalrealm.estate.unavailable": {"ja": "今は利用できません。", "en": "Not available right now."},
-"message.eternalrealm.estate.same_design": {"ja": "すでにその間取りです。", "en": "It already has that design."},
-"message.eternalrealm.estate.not_empty": {"ja": "まだ中に荷物が残っています。", "en": "There are still things stored inside."},
-"message.eternalrealm.estate.busy": {"ja": "ただいま模様替えの最中です。", "en": "It is being refurbished right now."},
-"message.eternalrealm.estate.protected": {"ja": "ここでは壊したり置いたりできません。", "en": "You cannot break or place blocks here."},
-"message.eternalrealm.estate.bed": {"ja": "ふかふかのベッドだ。ここでは日が暮れない。", "en": "A soft, well-made bed. The sun never sets here."},
-"message.eternalrealm.estate.door.no_room": {"ja": "鍵がかかっている。部屋を借りるには宿屋の主人に話しかけよう。", "en": "It is locked. Talk to the innkeeper to rent a room."},
-"message.eternalrealm.estate.door.key": {"ja": "カチャリ、と鍵が回った。", "en": "Click — the key turns."},
-"block.eternalrealm.storage_chest": {"ja": "収納箱", "en": "Storage Chest"},
-"block.eternalrealm.sorting_desk": {"ja": "仕分け机", "en": "Sorting Desk"},
-"container.eternalrealm.storage_chest": {"ja": "収納箱", "en": "Storage Chest"},
-"container.eternalrealm.storage_chest.labelled": {"ja": "収納箱 — %s", "en": "Storage Chest — %s"},
-"estate.eternalrealm.label.all": {"ja": "すべて", "en": "All"},
-"estate.eternalrealm.label.none": {"ja": "札なし", "en": "No label"},
-"estate.eternalrealm.label.gear": {"ja": "装備", "en": "Gear"},
-"estate.eternalrealm.label.potion": {"ja": "薬", "en": "Potions"},
-"estate.eternalrealm.label.material": {"ja": "素材", "en": "Materials"},
-"estate.eternalrealm.label.food": {"ja": "食料", "en": "Food"},
-"estate.eternalrealm.label.book": {"ja": "書物", "en": "Books"},
-"estate.eternalrealm.label.treasure": {"ja": "貴重品", "en": "Treasures"},
-"estate.eternalrealm.label.misc": {"ja": "その他", "en": "Other things"},
-"estate.eternalrealm.piece.chest": {"ja": "収納箱 %s", "en": "Chest %s"},
-"estate.eternalrealm.piece.barrel": {"ja": "樽 %s", "en": "Barrel %s"},
-"estate.eternalrealm.piece.shelf": {"ja": "書棚 %s", "en": "Shelf %s"},
-"estate.eternalrealm.piece.stand": {"ja": "防具立て %s", "en": "Stand %s"},
-"estate.eternalrealm.piece.frame": {"ja": "額 %s", "en": "Frame %s"},
-"estate.eternalrealm.piece.other": {"ja": "収納", "en": "Storage"},
-"estate.eternalrealm.room.garret": {"ja": "屋根裏部屋", "en": "The Garret"},
-"estate.eternalrealm.room.garret.description": {"ja": "宿の屋根の下のこぢんまりした部屋。破風窓の机から、夕暮れの王都と遠くの塔が見える。旅の荷物をしまうには十分。", "en": "A snug room under the inn's roof. From the desk at the gable window you see the capital and its far towers in the evening sun. Enough room for a traveller's things."},
-"estate.eternalrealm.room.canal": {"ja": "運河の見える部屋", "en": "The Canal Room"},
-"estate.eternalrealm.room.canal.description": {"ja": "大運河に張り出した出窓のある板張りの部屋。天蓋付きの寝台と暖炉、出窓の仕分け机からは水面に浮かぶ灯籠が見える。", "en": "A panelled room with a bay window over the Grand Canal: a four-poster bed, a fireplace, and the sorting desk in the bay, with candle lanterns floating on the water below."},
-"estate.eternalrealm.room.library": {"ja": "書斎の間", "en": "The Library Room"},
-"estate.eternalrealm.room.library.description": {"ja": "二層吹き抜けの書斎。三方を回廊と書棚が囲み、高窓は館の中庭の泉と花壇に面している。書物の多い冒険者に。", "en": "A two-storey library with a gallery and bookcases on three sides; its tall windows look onto the manor's walled garden and fountain. For adventurers with many books."},
-"estate.eternalrealm.room.tower": {"ja": "星見の塔の部屋", "en": "The Star Tower Room"},
-"estate.eternalrealm.room.tower.description": {"ja": "王都の屋根を見下ろす円塔の二層。下は寝台と暖炉、螺旋階段の上は星空を描いた天井の観測室と望遠鏡、塔をめぐるバルコニー。", "en": "Two floors of a round tower above the capital's roofs: bed and fireplace below; up the spiral stair, the observatory with its telescope under a painted night sky, and a balcony all round."},
-"estate.eternalrealm.room.grand": {"ja": "貴賓のスイート", "en": "The Grand Suite"},
-"estate.eternalrealm.room.grand.description": {"ja": "館で最も格式ある続き部屋。サロン、大きな天蓋の寝室、防具立ての並ぶ武具の間、鉄格子の奥の宝物庫、運河を望むバルコニー。", "en": "The manor's finest rooms: a salon, a bedchamber with a great four-poster, an armoury lined with stands and weapon frames, a vault behind an iron gate, and a balcony over the canal."},
-"message.eternalrealm.estate.label": {"ja": "札: %s", "en": "Label: %s"},
-"message.eternalrealm.inn.ok": {"ja": "%s をお貸しします（%s G）。いま部屋の支度をしています…", "en": "%s is yours (%s G). Your room is being made ready…"},
-"message.eternalrealm.inn.has_room": {"ja": "もう部屋をお持ちですよ。移るなら一覧から選んでくださいな。", "en": "You already have a room: pick another one to move."},
-"message.eternalrealm.inn.no_room": {"ja": "まだ部屋をお借りではありません。", "en": "You have no room yet."},
-"message.eternalrealm.inn.not_enough_gold": {"ja": "ゴールドが足りません（%s G 必要）。", "en": "Not enough gold (%s G needed)."},
-"message.eternalrealm.inn.same_room": {"ja": "そちらは今のお部屋です。", "en": "That is your room already."},
-"message.eternalrealm.inn.busy": {"ja": "お部屋の支度中です。少しお待ちください。", "en": "Your room is still being made ready. A moment, please."},
-"message.eternalrealm.inn.not_empty": {"ja": "お部屋に荷物が残っています。空にしてから引き払ってください。", "en": "There are still things in your room. Empty it first."},
-"message.eternalrealm.inn.changed": {"ja": "荷物はそのままに、%s へお移りいただきます。支度ができたらお知らせしますね。", "en": "Moving you to %s with all your things. You will be told when it is ready."},
-"message.eternalrealm.inn.given_up": {"ja": "お部屋を引き払いました。%s G をお返しします。", "en": "You gave up your room. %s G returned."},
-"message.eternalrealm.inn.keepsafe": {"ja": "お預かりしていた品を %s 点お渡ししました。", "en": "Handed back %s kept items."},
-"message.eternalrealm.inn.keepsafe_partly": {"ja": "お預かり品を %s 点お渡ししました（鞄がいっぱいなので、%s 点はまだお預かりします）。", "en": "Handed back %s kept items (your bag is full; %s more wait here)."},
-"message.eternalrealm.inn.ready": {"ja": "%s の支度ができました。館の客室の扉か、帰還キー（Home）からどうぞ。", "en": "%s is ready: use any room door of the manor, or the room key (Home)."},
-"message.eternalrealm.inn.not_at_inn": {"ja": "宿の女将の前でお話しください。", "en": "Talk to the innkeeper at the front desk."},
-"message.eternalrealm.ledger.not_here": {"ja": "この机は自分の部屋でしか使えません。", "en": "This desk only works in your own room."},
-"message.eternalrealm.ledger.away": {"ja": "仕分け机から離れました。", "en": "You walked away from the sorting desk."},
-"message.eternalrealm.ledger.bag_full": {"ja": "鞄がいっぱいです。", "en": "Your bag is full."},
-"message.eternalrealm.recall.ok": {"ja": "自室へ帰還します。", "en": "Going home to your room."},
-"message.eternalrealm.recall.no_room": {"ja": "帰る部屋がありません。星灯りの館の女将から部屋を借りましょう。", "en": "You have no room to go home to. Rent one from the innkeeper of the Starlight Manor."},
-"message.eternalrealm.recall.not_ready": {"ja": "部屋の支度がまだです。", "en": "Your room is not ready yet."},
-"message.eternalrealm.recall.already_home": {"ja": "もう自分の部屋にいます。", "en": "You are in your room already."},
-"message.eternalrealm.recall.in_combat": {"ja": "戦闘中は帰還できません。", "en": "You cannot go home in a fight."},
-"message.eternalrealm.recall.in_dungeon": {"ja": "ダンジョンやレイドの中からは帰還できません。", "en": "You cannot go home from a dungeon or raid."},
-"message.eternalrealm.recall.in_boss_fight": {"ja": "ボス戦の最中は帰還できません。", "en": "You cannot go home during a boss fight."},
-"message.eternalrealm.recall.in_pvp": {"ja": "対人戦の最中は帰還できません。", "en": "You cannot go home during a PvP match."},
-"message.eternalrealm.recall.down": {"ja": "倒れている間は帰還できません。", "en": "You cannot go home while fallen."},
-"message.eternalrealm.recall.casting": {"ja": "帰還の準備中です。", "en": "You are already on your way home."},
-"message.eternalrealm.recall.cooldown": {"ja": "まだ帰還できません（あと %s 秒）。", "en": "You cannot go home yet (%s s)."},
-"message.eternalrealm.recall.broken.moved": {"ja": "動いたので帰還を中断しました。", "en": "You moved: going home was broken off."},
-"message.eternalrealm.recall.broken.hurt": {"ja": "攻撃を受けて帰還を中断しました。", "en": "You were hurt: going home was broken off."},
-"message.eternalrealm.recall.broken.combat": {"ja": "戦闘になったので帰還を中断しました。", "en": "A fight began: going home was broken off."},
-"message.eternalrealm.recall.broken.cancelled": {"ja": "帰還をやめました。", "en": "You stopped going home."},
-"message.eternalrealm.recall.broken.refused": {"ja": "部屋に入れませんでした。", "en": "Your room could not be entered."},
-"hud.eternalrealm.recall.casting": {"ja": "自室へ帰還中…", "en": "Going home to your room…"},
-"hud.eternalrealm.recall.done": {"ja": "自室に着きました", "en": "Home at last"},
-"key.eternalrealm.recall_room": {"ja": "自室へ帰還", "en": "Go home to my room"},
-"npc.eternalrealm.innkeeper": {"ja": "星灯りの館の女将 ロゼッタ", "en": "Rosetta of the Starlight Manor"},
-"screen.eternalrealm.inn.title": {"ja": "星灯りの館 — 客室のご案内", "en": "The Starlight Manor — Our Rooms"},
-"screen.eternalrealm.inn.rent": {"ja": "借りる（%s G）", "en": "Rent (%s G)"},
-"screen.eternalrealm.inn.confirm": {"ja": "もう一度押して決定", "en": "Click again to confirm"},
-"screen.eternalrealm.inn.short": {"ja": "あと %s G 足りません", "en": "%s G short"},
-"screen.eternalrealm.inn.current": {"ja": "今のお部屋", "en": "Your room"},
-"screen.eternalrealm.inn.move_pay": {"ja": "ここへ移る（%s G）", "en": "Move here (%s G)"},
-"screen.eternalrealm.inn.move_back": {"ja": "ここへ移る（%s G 返金）", "en": "Move here (%s G back)"},
-"screen.eternalrealm.inn.move_keepsafe": {"ja": "この部屋にない収納の中身 %s 点は空いている収納へ移します。入りきらない約 %s 点は女将がお預かりします。", "en": "%s stacks from storage this room lacks go into its free space; about %s that do not fit will be kept by the innkeeper."},
-"screen.eternalrealm.inn.move_all": {"ja": "荷物はすべて同じ名前の収納へ運ばれます（札もそのまま）。", "en": "Everything moves into the storage of the same name (labels too)."},
-"screen.eternalrealm.inn.visit": {"ja": "部屋へ行く", "en": "Go to my room"},
-"screen.eternalrealm.inn.keepsafe": {"ja": "預かり品（%s）", "en": "Kept items (%s)"},
-"screen.eternalrealm.inn.give_up": {"ja": "部屋を引き払う", "en": "Give up room"},
-"screen.eternalrealm.inn.give_up_tip": {"ja": "空のお部屋をお返しいただき、%s G を返金します。", "en": "Return the empty room and get %s G back."},
-"screen.eternalrealm.inn.give_up_full": {"ja": "部屋に荷物が %s 点残っています。空にしてから引き払えます。", "en": "%s stacks are still in your room: empty it first."},
-"screen.eternalrealm.inn.yours": {"ja": "借りています", "en": "Rented"},
-"screen.eternalrealm.inn.piece.chest": {"ja": "収納箱 %s", "en": "Chests %s"},
-"screen.eternalrealm.inn.piece.barrel": {"ja": "樽 %s", "en": "Barrels %s"},
-"screen.eternalrealm.inn.piece.shelf": {"ja": "書棚 %s", "en": "Shelves %s"},
-"screen.eternalrealm.inn.piece.stand": {"ja": "防具立て %s", "en": "Stands %s"},
-"screen.eternalrealm.inn.piece.frame": {"ja": "額 %s", "en": "Frames %s"},
-"screen.eternalrealm.inn.gold": {"ja": "所持金 %s G", "en": "Gold %s G"},
-"screen.eternalrealm.inn.unavailable": {"ja": "客室はいまご利用いただけません", "en": "The rooms are closed right now"},
-"screen.eternalrealm.inn.no_room": {"ja": "まだお部屋はありません", "en": "No room yet"},
-"screen.eternalrealm.inn.status_ready": {"ja": "%s（%s 点保管中）", "en": "%s (%s stacks stored)"},
-"screen.eternalrealm.inn.status_building": {"ja": "お部屋の支度中… %s%%", "en": "Making your room ready… %s%%"},
-"screen.eternalrealm.inn.away": {"ja": "女将から離れています", "en": "You are away from the innkeeper"},
-"screen.eternalrealm.ledger.title": {"ja": "収納台帳", "en": "Storage Ledger"},
-"screen.eternalrealm.ledger.title_room": {"ja": "収納台帳 — %s", "en": "Storage Ledger — %s"},
-"screen.eternalrealm.ledger.search": {"ja": "名前で探す…", "en": "Search by name…"},
-"screen.eternalrealm.ledger.deposit_all": {"ja": "すべてしまう", "en": "Put all away"},
-"screen.eternalrealm.ledger.deposit_all_tip": {"ja": "鞄の中身を収納箱の札に合わせてしまいます（回復薬・強壮剤・帰還の巻物は鞄に残します）。", "en": "Puts the bag away by the chests' labels (potions, tonics and return scrolls stay in the bag)."},
-"screen.eternalrealm.ledger.deposit_kind": {"ja": "%sをしまう", "en": "Put away: %s"},
-"screen.eternalrealm.ledger.nothing": {"ja": "しまう物がありません", "en": "Nothing to put away"},
-"screen.eternalrealm.ledger.deposited": {"ja": "%s 個をしまいました（収納 %s か所）", "en": "Put away %s items (%s pieces)"},
-"screen.eternalrealm.ledger.deposited_some": {"ja": "%s 個をしまいました（収納 %s か所）。入りきらない物が %s 組あります", "en": "Put away %s items (%s pieces); %s stacks did not fit"},
-"screen.eternalrealm.ledger.took": {"ja": "%s 個を取り出しました", "en": "Took out %s"},
-"screen.eternalrealm.ledger.bag_full": {"ja": "鞄がいっぱいです", "en": "Your bag is full"},
-"screen.eternalrealm.ledger.unavailable": {"ja": "お部屋の支度中です", "en": "Your room is being made ready"},
-"screen.eternalrealm.ledger.empty": {"ja": "収納は空です", "en": "Your storage is empty"},
-"screen.eternalrealm.ledger.no_match": {"ja": "見つかりません", "en": "Nothing found"},
-"screen.eternalrealm.ledger.one": {"ja": "1組", "en": "Stack"},
-"screen.eternalrealm.ledger.all": {"ja": "全部", "en": "All"},
-"screen.eternalrealm.ledger.one_tip": {"ja": "1スタック分を鞄へ", "en": "Take one stack into the bag"},
-"screen.eternalrealm.ledger.all_tip": {"ja": "鞄に入るだけ取り出す", "en": "Take as many as the bag holds"},
-"screen.eternalrealm.ledger.usage": {"ja": "%s / %s 枠を使用", "en": "%s / %s slots used"},
-"screen.eternalrealm.ledger.only": {"ja": "%s の中身だけを表示中", "en": "Showing only %s"},
-"screen.eternalrealm.ledger.where": {"ja": "場所: %s", "en": "In: %s"},
-"screen.eternalrealm.ledger.pieces": {"ja": "収納", "en": "Storage"},
-"screen.eternalrealm.ledger.label": {"ja": "札: %s", "en": "Label: %s"},
-"screen.eternalrealm.ledger.fill": {"ja": "%s / %s 枠", "en": "%s / %s slots"},
-"screen.eternalrealm.ledger.filter_tip": {"ja": "クリックでこの収納の中身だけを表示", "en": "Click to show only what is in it"},
-"screen.eternalrealm.exit.title": {"ja": "部屋を出る", "en": "Leave the room"},
-"screen.eternalrealm.exit.back": {"ja": "来た場所へ戻る（%s）", "en": "Back where I came from (%s)"},
-"screen.eternalrealm.exit.capital": {"ja": "王都アストリアへ", "en": "To the capital, Astoria"},
-"screen.eternalrealm.exit.stay": {"ja": "部屋に残る", "en": "Stay"},
-"screen.eternalrealm.exit.nowhere": {"ja": "戻り先なし", "en": "nowhere"},
-"screen.eternalrealm.exit.astoria": {"ja": "王都", "en": "the capital"},
-"screen.eternalrealm.exit.field": {"ja": "フィールド", "en": "the field"},
-"screen.eternalrealm.exit.elsewhere": {"ja": "別の地", "en": "elsewhere"},
-"screen.eternalrealm.tab.room": {"ja": "自室へ", "en": "My room"},
-"screen.eternalrealm.tab.room_tip": {"ja": "宿の自分の部屋へ帰還します（約3秒・動くか攻撃を受けると中断／キー: Home）", "en": "Go home to your inn room (about 3 s; moving or being hurt breaks it; key: Home)"},
-"screen.eternalrealm.inn.move_rehome": {"ja": "この部屋にない収納の中身 %s 点は、空いている収納へ移します。", "en": "%s stacks from storage this room lacks go into its free space."}
+  "block.eternalrealm.room_door": {
+    "ja": "宿屋の客室の扉",
+    "en": "Inn Room Door"
+  },
+  "message.eternalrealm.estate.ok": {
+    "ja": "完了しました。",
+    "en": "Done."
+  },
+  "message.eternalrealm.estate.already_claimed": {
+    "ja": "すでに持っています。",
+    "en": "You already have one."
+  },
+  "message.eternalrealm.estate.not_claimed": {
+    "ja": "まだ持っていません。",
+    "en": "You do not have one yet."
+  },
+  "message.eternalrealm.estate.unknown_design": {
+    "ja": "その間取りは用意されていません。",
+    "en": "That design does not exist."
+  },
+  "message.eternalrealm.estate.no_plot": {
+    "ja": "空いている区画がありません。しばらくしてからお試しください。",
+    "en": "There is no free plot right now. Please try again later."
+  },
+  "message.eternalrealm.estate.building": {
+    "ja": "ただいま準備中です（%s%%）。もう少しお待ちください。",
+    "en": "Still being prepared (%s%%). Please wait a little."
+  },
+  "message.eternalrealm.estate.not_allowed": {
+    "ja": "ここに入ることは許されていません。",
+    "en": "You are not allowed in here."
+  },
+  "message.eternalrealm.estate.unavailable": {
+    "ja": "今は利用できません。",
+    "en": "Not available right now."
+  },
+  "message.eternalrealm.estate.same_design": {
+    "ja": "すでにその間取りです。",
+    "en": "It already has that design."
+  },
+  "message.eternalrealm.estate.not_empty": {
+    "ja": "まだ中に荷物が残っています。",
+    "en": "There are still things stored inside."
+  },
+  "message.eternalrealm.estate.busy": {
+    "ja": "ただいま模様替えの最中です。",
+    "en": "It is being refurbished right now."
+  },
+  "message.eternalrealm.estate.protected": {
+    "ja": "ここでは壊したり置いたりできません。",
+    "en": "You cannot break or place blocks here."
+  },
+  "message.eternalrealm.estate.bed": {
+    "ja": "ふかふかのベッドだ。ここでは日が暮れない。",
+    "en": "A soft, well-made bed. The sun never sets here."
+  },
+  "message.eternalrealm.estate.door.no_room": {
+    "ja": "鍵がかかっている。部屋を借りるには宿屋の主人に話しかけよう。",
+    "en": "It is locked. Talk to the innkeeper to rent a room."
+  },
+  "message.eternalrealm.estate.door.key": {
+    "ja": "カチャリ、と鍵が回った。",
+    "en": "Click — the key turns."
+  },
+  "block.eternalrealm.storage_chest": {
+    "ja": "収納箱",
+    "en": "Storage Chest"
+  },
+  "block.eternalrealm.sorting_desk": {
+    "ja": "仕分け机",
+    "en": "Sorting Desk"
+  },
+  "container.eternalrealm.storage_chest": {
+    "ja": "収納箱",
+    "en": "Storage Chest"
+  },
+  "container.eternalrealm.storage_chest.labelled": {
+    "ja": "収納箱 — %s",
+    "en": "Storage Chest — %s"
+  },
+  "estate.eternalrealm.label.all": {
+    "ja": "すべて",
+    "en": "All"
+  },
+  "estate.eternalrealm.label.none": {
+    "ja": "札なし",
+    "en": "No label"
+  },
+  "estate.eternalrealm.label.gear": {
+    "ja": "装備",
+    "en": "Gear"
+  },
+  "estate.eternalrealm.label.potion": {
+    "ja": "薬",
+    "en": "Potions"
+  },
+  "estate.eternalrealm.label.material": {
+    "ja": "素材",
+    "en": "Materials"
+  },
+  "estate.eternalrealm.label.food": {
+    "ja": "食料",
+    "en": "Food"
+  },
+  "estate.eternalrealm.label.book": {
+    "ja": "書物",
+    "en": "Books"
+  },
+  "estate.eternalrealm.label.treasure": {
+    "ja": "貴重品",
+    "en": "Treasures"
+  },
+  "estate.eternalrealm.label.misc": {
+    "ja": "その他",
+    "en": "Other things"
+  },
+  "estate.eternalrealm.piece.chest": {
+    "ja": "収納箱 %s",
+    "en": "Chest %s"
+  },
+  "estate.eternalrealm.piece.barrel": {
+    "ja": "樽 %s",
+    "en": "Barrel %s"
+  },
+  "estate.eternalrealm.piece.shelf": {
+    "ja": "書棚 %s",
+    "en": "Shelf %s"
+  },
+  "estate.eternalrealm.piece.stand": {
+    "ja": "防具立て %s",
+    "en": "Stand %s"
+  },
+  "estate.eternalrealm.piece.frame": {
+    "ja": "額 %s",
+    "en": "Frame %s"
+  },
+  "estate.eternalrealm.piece.other": {
+    "ja": "収納",
+    "en": "Storage"
+  },
+  "estate.eternalrealm.room.garret": {
+    "ja": "屋根裏部屋",
+    "en": "The Garret"
+  },
+  "estate.eternalrealm.room.garret.description": {
+    "ja": "宿の屋根の下のこぢんまりした部屋。破風窓の机から、夕暮れの王都と遠くの塔が見える。旅の荷物をしまうには十分。",
+    "en": "A snug room under the inn's roof. From the desk at the gable window you see the capital and its far towers in the evening sun. Enough room for a traveller's things."
+  },
+  "estate.eternalrealm.room.canal": {
+    "ja": "運河の見える部屋",
+    "en": "The Canal Room"
+  },
+  "estate.eternalrealm.room.canal.description": {
+    "ja": "大運河に張り出した出窓のある板張りの部屋。天蓋付きの寝台と暖炉、出窓の仕分け机からは水面に浮かぶ灯籠が見える。",
+    "en": "A panelled room with a bay window over the Grand Canal: a four-poster bed, a fireplace, and the sorting desk in the bay, with candle lanterns floating on the water below."
+  },
+  "estate.eternalrealm.room.library": {
+    "ja": "書斎の間",
+    "en": "The Library Room"
+  },
+  "estate.eternalrealm.room.library.description": {
+    "ja": "二層吹き抜けの書斎。三方を回廊と書棚が囲み、高窓は館の中庭の泉と花壇に面している。書物の多い冒険者に。",
+    "en": "A two-storey library with a gallery and bookcases on three sides; its tall windows look onto the manor's walled garden and fountain. For adventurers with many books."
+  },
+  "estate.eternalrealm.room.tower": {
+    "ja": "星見の塔の部屋",
+    "en": "The Star Tower Room"
+  },
+  "estate.eternalrealm.room.tower.description": {
+    "ja": "王都の屋根を見下ろす円塔の二層。下は寝台と暖炉、螺旋階段の上は星空を描いた天井の観測室と望遠鏡、塔をめぐるバルコニー。",
+    "en": "Two floors of a round tower above the capital's roofs: bed and fireplace below; up the spiral stair, the observatory with its telescope under a painted night sky, and a balcony all round."
+  },
+  "estate.eternalrealm.room.grand": {
+    "ja": "貴賓のスイート",
+    "en": "The Grand Suite"
+  },
+  "estate.eternalrealm.room.grand.description": {
+    "ja": "館で最も格式ある続き部屋。サロン、大きな天蓋の寝室、防具立ての並ぶ武具の間、鉄格子の奥の宝物庫、運河を望むバルコニー。",
+    "en": "The manor's finest rooms: a salon, a bedchamber with a great four-poster, an armoury lined with stands and weapon frames, a vault behind an iron gate, and a balcony over the canal."
+  },
+  "message.eternalrealm.estate.label": {
+    "ja": "札: %s",
+    "en": "Label: %s"
+  },
+  "message.eternalrealm.inn.ok": {
+    "ja": "%s をお貸しします（%s G）。いま部屋の支度をしています…",
+    "en": "%s is yours (%s G). Your room is being made ready…"
+  },
+  "message.eternalrealm.inn.has_room": {
+    "ja": "もう部屋をお持ちですよ。移るなら一覧から選んでくださいな。",
+    "en": "You already have a room: pick another one to move."
+  },
+  "message.eternalrealm.inn.no_room": {
+    "ja": "まだ部屋をお借りではありません。",
+    "en": "You have no room yet."
+  },
+  "message.eternalrealm.inn.not_enough_gold": {
+    "ja": "ゴールドが足りません（%s G 必要）。",
+    "en": "Not enough gold (%s G needed)."
+  },
+  "message.eternalrealm.inn.same_room": {
+    "ja": "そちらは今のお部屋です。",
+    "en": "That is your room already."
+  },
+  "message.eternalrealm.inn.busy": {
+    "ja": "お部屋の支度中です。少しお待ちください。",
+    "en": "Your room is still being made ready. A moment, please."
+  },
+  "message.eternalrealm.inn.not_empty": {
+    "ja": "お部屋に荷物が残っています。空にしてから引き払ってください。",
+    "en": "There are still things in your room. Empty it first."
+  },
+  "message.eternalrealm.inn.changed": {
+    "ja": "荷物はそのままに、%s へお移りいただきます。支度ができたらお知らせしますね。",
+    "en": "Moving you to %s with all your things. You will be told when it is ready."
+  },
+  "message.eternalrealm.inn.given_up": {
+    "ja": "お部屋を引き払いました。%s G をお返しします。",
+    "en": "You gave up your room. %s G returned."
+  },
+  "message.eternalrealm.inn.keepsafe": {
+    "ja": "お預かりしていた品を %s 点お渡ししました。",
+    "en": "Handed back %s kept items."
+  },
+  "message.eternalrealm.inn.keepsafe_partly": {
+    "ja": "お預かり品を %s 点お渡ししました（鞄がいっぱいなので、%s 点はまだお預かりします）。",
+    "en": "Handed back %s kept items (your bag is full; %s more wait here)."
+  },
+  "message.eternalrealm.inn.ready": {
+    "ja": "%s の支度ができました。館の客室の扉か、帰還キー（Home）からどうぞ。",
+    "en": "%s is ready: use any room door of the manor, or the room key (Home)."
+  },
+  "message.eternalrealm.inn.not_at_inn": {
+    "ja": "宿の女将の前でお話しください。",
+    "en": "Talk to the innkeeper at the front desk."
+  },
+  "message.eternalrealm.ledger.not_here": {
+    "ja": "この机は自分の部屋でしか使えません。",
+    "en": "This desk only works in your own room."
+  },
+  "message.eternalrealm.ledger.away": {
+    "ja": "仕分け机から離れました。",
+    "en": "You walked away from the sorting desk."
+  },
+  "message.eternalrealm.ledger.bag_full": {
+    "ja": "鞄がいっぱいです。",
+    "en": "Your bag is full."
+  },
+  "message.eternalrealm.recall.ok": {
+    "ja": "自室へ帰還します。",
+    "en": "Going home to your room."
+  },
+  "message.eternalrealm.recall.no_room": {
+    "ja": "帰る部屋がありません。星灯りの館の女将から部屋を借りましょう。",
+    "en": "You have no room to go home to. Rent one from the innkeeper of the Starlight Manor."
+  },
+  "message.eternalrealm.recall.not_ready": {
+    "ja": "部屋の支度がまだです。",
+    "en": "Your room is not ready yet."
+  },
+  "message.eternalrealm.recall.already_home": {
+    "ja": "もう自分の部屋にいます。",
+    "en": "You are in your room already."
+  },
+  "message.eternalrealm.recall.in_combat": {
+    "ja": "戦闘中は帰還できません。",
+    "en": "You cannot go home in a fight."
+  },
+  "message.eternalrealm.recall.in_dungeon": {
+    "ja": "ダンジョンやレイドの中からは帰還できません。",
+    "en": "You cannot go home from a dungeon or raid."
+  },
+  "message.eternalrealm.recall.in_boss_fight": {
+    "ja": "ボス戦の最中は帰還できません。",
+    "en": "You cannot go home during a boss fight."
+  },
+  "message.eternalrealm.recall.in_pvp": {
+    "ja": "対人戦の最中は帰還できません。",
+    "en": "You cannot go home during a PvP match."
+  },
+  "message.eternalrealm.recall.down": {
+    "ja": "倒れている間は帰還できません。",
+    "en": "You cannot go home while fallen."
+  },
+  "message.eternalrealm.recall.casting": {
+    "ja": "帰還の準備中です。",
+    "en": "You are already on your way home."
+  },
+  "message.eternalrealm.recall.cooldown": {
+    "ja": "まだ帰還できません（あと %s 秒）。",
+    "en": "You cannot go home yet (%s s)."
+  },
+  "message.eternalrealm.recall.broken.moved": {
+    "ja": "動いたので帰還を中断しました。",
+    "en": "You moved: going home was broken off."
+  },
+  "message.eternalrealm.recall.broken.hurt": {
+    "ja": "攻撃を受けて帰還を中断しました。",
+    "en": "You were hurt: going home was broken off."
+  },
+  "message.eternalrealm.recall.broken.combat": {
+    "ja": "戦闘になったので帰還を中断しました。",
+    "en": "A fight began: going home was broken off."
+  },
+  "message.eternalrealm.recall.broken.cancelled": {
+    "ja": "帰還をやめました。",
+    "en": "You stopped going home."
+  },
+  "message.eternalrealm.recall.broken.refused": {
+    "ja": "部屋に入れませんでした。",
+    "en": "Your room could not be entered."
+  },
+  "hud.eternalrealm.recall.casting": {
+    "ja": "自室へ帰還中…",
+    "en": "Going home to your room…"
+  },
+  "hud.eternalrealm.recall.done": {
+    "ja": "自室に着きました",
+    "en": "Home at last"
+  },
+  "key.eternalrealm.recall_room": {
+    "ja": "自室へ帰還",
+    "en": "Go home to my room"
+  },
+  "npc.eternalrealm.innkeeper": {
+    "ja": "星灯りの館の女将 ロゼッタ",
+    "en": "Rosetta of the Starlight Manor"
+  },
+  "screen.eternalrealm.inn.title": {
+    "ja": "星灯りの館 — 客室のご案内",
+    "en": "The Starlight Manor — Our Rooms"
+  },
+  "screen.eternalrealm.inn.rent": {
+    "ja": "借りる（%s G）",
+    "en": "Rent (%s G)"
+  },
+  "screen.eternalrealm.inn.confirm": {
+    "ja": "もう一度押して決定",
+    "en": "Click again to confirm"
+  },
+  "screen.eternalrealm.inn.short": {
+    "ja": "あと %s G 足りません",
+    "en": "%s G short"
+  },
+  "screen.eternalrealm.inn.current": {
+    "ja": "今のお部屋",
+    "en": "Your room"
+  },
+  "screen.eternalrealm.inn.move_pay": {
+    "ja": "ここへ移る（%s G）",
+    "en": "Move here (%s G)"
+  },
+  "screen.eternalrealm.inn.move_back": {
+    "ja": "ここへ移る（%s G 返金）",
+    "en": "Move here (%s G back)"
+  },
+  "screen.eternalrealm.inn.move_keepsafe": {
+    "ja": "この部屋にない収納の中身 %s 点は空いている収納へ移します。入りきらない約 %s 点は女将がお預かりします。",
+    "en": "%s stacks from storage this room lacks go into its free space; about %s that do not fit will be kept by the innkeeper."
+  },
+  "screen.eternalrealm.inn.move_all": {
+    "ja": "荷物はすべて同じ名前の収納へ運ばれます（札もそのまま）。",
+    "en": "Everything moves into the storage of the same name (labels too)."
+  },
+  "screen.eternalrealm.inn.visit": {
+    "ja": "部屋へ行く",
+    "en": "Go to my room"
+  },
+  "screen.eternalrealm.inn.keepsafe": {
+    "ja": "預かり品（%s）",
+    "en": "Kept items (%s)"
+  },
+  "screen.eternalrealm.inn.give_up": {
+    "ja": "部屋を引き払う",
+    "en": "Give up room"
+  },
+  "screen.eternalrealm.inn.give_up_tip": {
+    "ja": "空のお部屋をお返しいただき、%s G を返金します。",
+    "en": "Return the empty room and get %s G back."
+  },
+  "screen.eternalrealm.inn.give_up_full": {
+    "ja": "部屋に荷物が %s 点残っています。空にしてから引き払えます。",
+    "en": "%s stacks are still in your room: empty it first."
+  },
+  "screen.eternalrealm.inn.yours": {
+    "ja": "借りています",
+    "en": "Rented"
+  },
+  "screen.eternalrealm.inn.piece.chest": {
+    "ja": "収納箱 %s",
+    "en": "Chests %s"
+  },
+  "screen.eternalrealm.inn.piece.barrel": {
+    "ja": "樽 %s",
+    "en": "Barrels %s"
+  },
+  "screen.eternalrealm.inn.piece.shelf": {
+    "ja": "書棚 %s",
+    "en": "Shelves %s"
+  },
+  "screen.eternalrealm.inn.piece.stand": {
+    "ja": "防具立て %s",
+    "en": "Stands %s"
+  },
+  "screen.eternalrealm.inn.piece.frame": {
+    "ja": "額 %s",
+    "en": "Frames %s"
+  },
+  "screen.eternalrealm.inn.gold": {
+    "ja": "所持金 %s G",
+    "en": "Gold %s G"
+  },
+  "screen.eternalrealm.inn.unavailable": {
+    "ja": "客室はいまご利用いただけません",
+    "en": "The rooms are closed right now"
+  },
+  "screen.eternalrealm.inn.no_room": {
+    "ja": "まだお部屋はありません",
+    "en": "No room yet"
+  },
+  "screen.eternalrealm.inn.status_ready": {
+    "ja": "%s（%s 点保管中）",
+    "en": "%s (%s stacks stored)"
+  },
+  "screen.eternalrealm.inn.status_building": {
+    "ja": "お部屋の支度中… %s%%",
+    "en": "Making your room ready… %s%%"
+  },
+  "screen.eternalrealm.inn.away": {
+    "ja": "女将から離れています",
+    "en": "You are away from the innkeeper"
+  },
+  "screen.eternalrealm.ledger.title": {
+    "ja": "収納台帳",
+    "en": "Storage Ledger"
+  },
+  "screen.eternalrealm.ledger.title_room": {
+    "ja": "収納台帳 — %s",
+    "en": "Storage Ledger — %s"
+  },
+  "screen.eternalrealm.ledger.search": {
+    "ja": "名前で探す…",
+    "en": "Search by name…"
+  },
+  "screen.eternalrealm.ledger.deposit_all": {
+    "ja": "すべてしまう",
+    "en": "Put all away"
+  },
+  "screen.eternalrealm.ledger.deposit_all_tip": {
+    "ja": "鞄の中身を収納箱の札に合わせてしまいます（回復薬・強壮剤・帰還の巻物は鞄に残します）。",
+    "en": "Puts the bag away by the chests' labels (potions, tonics and return scrolls stay in the bag)."
+  },
+  "screen.eternalrealm.ledger.deposit_kind": {
+    "ja": "%sをしまう",
+    "en": "Put away: %s"
+  },
+  "screen.eternalrealm.ledger.nothing": {
+    "ja": "しまう物がありません",
+    "en": "Nothing to put away"
+  },
+  "screen.eternalrealm.ledger.deposited": {
+    "ja": "%s 個をしまいました（収納 %s か所）",
+    "en": "Put away %s items (%s pieces)"
+  },
+  "screen.eternalrealm.ledger.deposited_some": {
+    "ja": "%s 個をしまいました（収納 %s か所）。入りきらない物が %s 組あります",
+    "en": "Put away %s items (%s pieces); %s stacks did not fit"
+  },
+  "screen.eternalrealm.ledger.took": {
+    "ja": "%s 個を取り出しました",
+    "en": "Took out %s"
+  },
+  "screen.eternalrealm.ledger.bag_full": {
+    "ja": "鞄がいっぱいです",
+    "en": "Your bag is full"
+  },
+  "screen.eternalrealm.ledger.unavailable": {
+    "ja": "お部屋の支度中です",
+    "en": "Your room is being made ready"
+  },
+  "screen.eternalrealm.ledger.empty": {
+    "ja": "収納は空です",
+    "en": "Your storage is empty"
+  },
+  "screen.eternalrealm.ledger.no_match": {
+    "ja": "見つかりません",
+    "en": "Nothing found"
+  },
+  "screen.eternalrealm.ledger.one": {
+    "ja": "1組",
+    "en": "Stack"
+  },
+  "screen.eternalrealm.ledger.all": {
+    "ja": "全部",
+    "en": "All"
+  },
+  "screen.eternalrealm.ledger.one_tip": {
+    "ja": "1スタック分を鞄へ",
+    "en": "Take one stack into the bag"
+  },
+  "screen.eternalrealm.ledger.all_tip": {
+    "ja": "鞄に入るだけ取り出す",
+    "en": "Take as many as the bag holds"
+  },
+  "screen.eternalrealm.ledger.usage": {
+    "ja": "%s / %s 枠を使用",
+    "en": "%s / %s slots used"
+  },
+  "screen.eternalrealm.ledger.only": {
+    "ja": "%s の中身だけを表示中",
+    "en": "Showing only %s"
+  },
+  "screen.eternalrealm.ledger.where": {
+    "ja": "場所: %s",
+    "en": "In: %s"
+  },
+  "screen.eternalrealm.ledger.pieces": {
+    "ja": "収納",
+    "en": "Storage"
+  },
+  "screen.eternalrealm.ledger.label": {
+    "ja": "札: %s",
+    "en": "Label: %s"
+  },
+  "screen.eternalrealm.ledger.fill": {
+    "ja": "%s / %s 枠",
+    "en": "%s / %s slots"
+  },
+  "screen.eternalrealm.ledger.filter_tip": {
+    "ja": "クリックでこの収納の中身だけを表示",
+    "en": "Click to show only what is in it"
+  },
+  "screen.eternalrealm.exit.title": {
+    "ja": "部屋を出る",
+    "en": "Leave the room"
+  },
+  "screen.eternalrealm.exit.back": {
+    "ja": "来た場所へ戻る（%s）",
+    "en": "Back where I came from (%s)"
+  },
+  "screen.eternalrealm.exit.capital": {
+    "ja": "王都アストリアへ",
+    "en": "To the capital, Astoria"
+  },
+  "screen.eternalrealm.exit.stay": {
+    "ja": "部屋に残る",
+    "en": "Stay"
+  },
+  "screen.eternalrealm.exit.nowhere": {
+    "ja": "戻り先なし",
+    "en": "nowhere"
+  },
+  "screen.eternalrealm.exit.astoria": {
+    "ja": "王都",
+    "en": "the capital"
+  },
+  "screen.eternalrealm.exit.field": {
+    "ja": "フィールド",
+    "en": "the field"
+  },
+  "screen.eternalrealm.exit.elsewhere": {
+    "ja": "別の地",
+    "en": "elsewhere"
+  },
+  "screen.eternalrealm.tab.room": {
+    "ja": "自室へ",
+    "en": "My room"
+  },
+  "screen.eternalrealm.tab.room_tip": {
+    "ja": "宿の自分の部屋へ帰還します（約3秒・動くか攻撃を受けると中断／キー: Home）",
+    "en": "Go home to your inn room (about 3 s; moving or being hurt breaks it; key: Home)"
+  },
+  "screen.eternalrealm.inn.move_rehome": {
+    "ja": "この部屋にない収納の中身 %s 点は、空いている収納へ移します。",
+    "en": "%s stacks from storage this room lacks go into its free space."
+  },
+  "message.eternalrealm.recall.already_capital": {
+    "ja": "もう王都の広場にいます。",
+    "en": "You are already on the capital's plaza."
+  },
+  "message.eternalrealm.recall.broken.refused_capital": {
+    "ja": "王都へ転移できませんでした。",
+    "en": "Could not reach the capital."
+  },
+  "hud.eternalrealm.recall.casting_capital": {
+    "ja": "王都へ転移中…",
+    "en": "Travelling to the capital…"
+  },
+  "hud.eternalrealm.recall.done_capital": {
+    "ja": "王都に着きました",
+    "en": "Arrived in the capital"
+  },
+  "key.eternalrealm.recall_capital": {
+    "ja": "王都へ転移",
+    "en": "Travel to the capital"
+  },
+  "screen.eternalrealm.tab.capital": {
+    "ja": "王都へ",
+    "en": "To the capital"
+  },
+  "screen.eternalrealm.tab.capital_tip": {
+    "ja": "どこからでも王都の広場へ転移します（約3秒・動くか攻撃を受けると中断／キー: End）",
+    "en": "Travel to the capital's plaza from anywhere (about 3 s; moving or being hit breaks it / key: End)"
+  },
+  "screen.eternalrealm.map.to_capital": {
+    "ja": "王都へ転移",
+    "en": "To the capital"
+  },
+  "screen.eternalrealm.map.to_capital_tip": {
+    "ja": "どこからでも王都の広場へ転移します（約3秒の詠唱・キー: End）",
+    "en": "Travel to the capital's plaza from anywhere (a 3 s cast / key: End)"
+  }
 }

@@ -11,7 +11,10 @@ import com.eternalrealm.server.ServerContext;
 import com.eternalrealm.server.UiActions;
 import com.eternalrealm.server.UiArgs;
 import com.eternalrealm.server.UiData;
+import com.eternalrealm.world.forge.AstoriaTravel;
+import com.eternalrealm.world.forge.Capital;
 import com.google.gson.JsonObject;
+import net.minecraft.core.BlockPos;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -26,7 +29,9 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.server.ServerStoppedEvent;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -34,21 +39,28 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Going home to one's room from anywhere (docs/modules/estates.md, task #42): the journal's button or the room key
- * (Home) starts a cast of {@value RecallRules#CAST_TICKS} ticks; moving, taking damage or getting into a fight
- * breaks it. It is refused in a fight, in a dungeon or raid, in a boss fight, in a PvP match, while fallen, with no
- * room (or one still being prepared), inside one's own room and for {@value RecallRules#COOLDOWN_TICKS} ticks after
- * the last arrival. On arrival the way back is the room's door, as for anyone who came in through the inn. The rules
- * are {@link RecallRules}; this class gathers the facts and moves the player. Server thread.
+ * Going home to one's room, or to the royal capital, from anywhere (docs/modules/estates.md, task #42; the capital
+ * 2026-11-14: 「どこからでも王国へテレポートできるようにして」): the journal's buttons, the map's button or the keys
+ * (Home: the room, End: the capital) start a cast of {@value RecallRules#CAST_TICKS} ticks; moving, taking damage or
+ * getting into a fight breaks it. It is refused in a fight, in a dungeon or raid, in a boss fight, in a PvP match,
+ * while fallen, when already there, for the room with no room (or one still being prepared), and for
+ * {@value RecallRules#COOLDOWN_TICKS} ticks after the last arrival at the same place. On arrival in the room the way
+ * back is the room's door, as for anyone who came in through the inn; the capital is reached at its arrival point.
+ * The rules are {@link RecallRules}; this class gathers the facts and moves the player. Server thread.
  */
 public final class RecallService {
     /** A cast in progress; the player object itself (a player who logs out and in again is a new one). */
-    private record Cast(ServerPlayer player, long started, Vec3 start, float health, ResourceKey<Level> dimension) {
+    private record Cast(ServerPlayer player, RecallRules.Destination to, long started, Vec3 start, float health,
+                        ResourceKey<Level> dimension) {
     }
 
     private static final Map<UUID, Cast> CASTS = new HashMap<>();
-    /** Server tick of each player's last arrival (the cooldown counts from it). */
-    private static final Map<UUID, Long> ARRIVALS = new HashMap<>();
+    /**
+     * Server tick of each player's last arrival at each place (the cooldown counts from it). Forgotten when the
+     * server stops: the tick counter starts again at zero when a world is opened again in the same game.
+     */
+    private static final Map<RecallRules.Destination, Map<UUID, Long>> ARRIVALS =
+            new EnumMap<>(RecallRules.Destination.class);
     /** How far another player who could hurt this one may stand for it to count as a PvP match (blocks). */
     private static final double PVP_RANGE = 48.0;
 
@@ -60,7 +72,7 @@ public final class RecallService {
             if (UiArgs.flag(args, "cancel")) {
                 interrupt(player, RecallRules.Interrupt.CANCELLED);
             } else {
-                start(player);
+                start(player, RecallRules.Destination.byId(args.has("to") ? UiArgs.id(args, "to") : ""));
             }
         });
         MinecraftForge.EVENT_BUS.addListener(RecallService::onServerTick);
@@ -72,17 +84,28 @@ public final class RecallService {
                 interrupt(player, RecallRules.Interrupt.MOVED);
             }
         });
+        MinecraftForge.EVENT_BUS.addListener((ServerStoppedEvent event) -> {
+            CASTS.clear();
+            ARRIVALS.clear();
+        });
     }
 
     private static long now(MinecraftServer server) {
         return server.getTickCount();
     }
 
-    /** What the rules need to know about {@code player} right now. */
+    /** What the rules need to know about the way home to {@code player}'s room right now. */
     public static RecallRules.Situation situation(ServerPlayer player) {
+        return situation(player, RecallRules.Destination.ROOM);
+    }
+
+    /** What the rules need to know about a trip of {@code player}'s to {@code to} right now. */
+    public static RecallRules.Situation situation(ServerPlayer player, RecallRules.Destination to) {
         UUID id = player.getUUID();
         Optional<EstateKey> room = EstateService.estate(EstateKey.ROOM, id);
-        boolean inOwnRoom = room.isPresent() && EstateService.at(player).filter(room.get()::sameEstate).isPresent();
+        boolean there = to == RecallRules.Destination.ROOM
+                ? room.isPresent() && EstateService.at(player).filter(room.get()::sameEstate).isPresent()
+                : nearCapital(player);
         Optional<ServerContext> context = ServerContext.current();
         boolean combat = context.map(c -> c.combat().inCombat(player)).orElse(false);
         boolean dungeon = DungeonLevels.isDungeonLevel(player.level())
@@ -96,26 +119,45 @@ public final class RecallService {
                 break;
             }
         }
-        long cooldown = RecallRules.cooldownLeft(now(player.server), ARRIVALS.getOrDefault(id, -1L));
-        return new RecallRules.Situation(room.isPresent(), room.map(EstateService::ready).orElse(false), inOwnRoom,
+        long cooldown = RecallRules.cooldownLeft(now(player.server), arrivals(to).getOrDefault(id, -1L));
+        return new RecallRules.Situation(to, room.isPresent(), room.map(EstateService::ready).orElse(false), there,
                 combat, dungeon, boss, pvp, RevivalService.isDown(player), CASTS.containsKey(id), cooldown);
     }
 
-    /** Starts the way home (or says why not). */
+    private static Map<UUID, Long> arrivals(RecallRules.Destination to) {
+        return ARRIVALS.computeIfAbsent(to, key -> new HashMap<>());
+    }
+
+    /** Standing on the capital's plaza already (within {@value RecallRules#CAPITAL_NEAR} blocks of its arrival). */
+    private static boolean nearCapital(ServerPlayer player) {
+        if (!AstoriaTravel.isInAstoria(player)) {
+            return false;
+        }
+        BlockPos arrival = Capital.layout(player.serverLevel()).spawnPoint();
+        return player.distanceToSqr(arrival.getX() + 0.5, arrival.getY(), arrival.getZ() + 0.5)
+                < RecallRules.CAPITAL_NEAR * RecallRules.CAPITAL_NEAR;
+    }
+
+    /** Starts the way home to one's room (or says why not). */
     public static RecallRules.Check start(ServerPlayer player) {
-        RecallRules.Situation situation = situation(player);
+        return start(player, RecallRules.Destination.ROOM);
+    }
+
+    /** Starts the trip to {@code to} (or says why not). */
+    public static RecallRules.Check start(ServerPlayer player, RecallRules.Destination to) {
+        RecallRules.Situation situation = situation(player, to);
         RecallRules.Check check = RecallRules.check(situation);
         if (!check.ok()) {
             player.displayClientMessage(Component.translatable(check.messageKey(),
                     (situation.cooldownLeft() + 19) / 20).withStyle(ChatFormatting.RED), true);
-            state(player, "refused", check.id());
+            state(player, to, "refused", check.id());
             return check;
         }
-        CASTS.put(player.getUUID(), new Cast(player, now(player.server), player.position(), player.getHealth(),
+        CASTS.put(player.getUUID(), new Cast(player, to, now(player.server), player.position(), player.getHealth(),
                 player.level().dimension()));
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.AMETHYST_BLOCK_CHIME,
-                SoundSource.PLAYERS, 1.0F, 0.8F);
-        state(player, "cast", "");
+                SoundSource.PLAYERS, 1.0F, to == RecallRules.Destination.ROOM ? 0.8F : 1.1F);
+        state(player, to, "cast", "");
         return check;
     }
 
@@ -126,23 +168,27 @@ public final class RecallService {
 
     /** Breaks the player's cast, if any. */
     public static void interrupt(ServerPlayer player, RecallRules.Interrupt why) {
-        if (CASTS.remove(player.getUUID()) == null) {
+        Cast cast = CASTS.remove(player.getUUID());
+        if (cast == null) {
             return;
         }
         player.displayClientMessage(Component.translatable(why.messageKey()).withStyle(ChatFormatting.RED), true);
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.AMETHYST_BLOCK_BREAK,
                 SoundSource.PLAYERS, 0.7F, 0.7F);
-        state(player, "broken", why.id());
+        state(player, cast.to(), "broken", why.id());
     }
 
-    /** For tests: forgets the player's cooldown. */
+    /** For tests: forgets the player's cooldowns. */
     public static void resetCooldown(UUID player) {
-        ARRIVALS.remove(player);
+        for (Map<UUID, Long> arrivals : ARRIVALS.values()) {
+            arrivals.remove(player);
+        }
     }
 
-    private static void state(ServerPlayer player, String state, String reason) {
+    private static void state(ServerPlayer player, RecallRules.Destination to, String state, String reason) {
         JsonObject data = new JsonObject();
         data.addProperty("state", state);
+        data.addProperty("to", to.id());
         data.addProperty("reason", reason);
         data.addProperty("ticks", RecallRules.CAST_TICKS);
         data.addProperty("nonce", System.nanoTime());
@@ -185,7 +231,7 @@ public final class RecallService {
             }
             if (RecallRules.complete(cast.started(), now)) {
                 it.remove();
-                arrive(player, now);
+                arrive(player, cast.to(), now);
                 return; // entering the room changes the players' levels
             }
         }
@@ -204,10 +250,14 @@ public final class RecallService {
                 0.5, 0.6);
     }
 
-    private static void arrive(ServerPlayer player, long now) {
+    private static void arrive(ServerPlayer player, RecallRules.Destination to, long now) {
+        if (to == RecallRules.Destination.CAPITAL) {
+            arriveInCapital(player, now);
+            return;
+        }
         Optional<EstateKey> room = EstateService.estate(EstateKey.ROOM, player.getUUID());
         if (room.isEmpty() || !EstateService.ready(room.get())) {
-            CASTS.put(player.getUUID(), new Cast(player, now, player.position(), player.getHealth(),
+            CASTS.put(player.getUUID(), new Cast(player, to, now, player.position(), player.getHealth(),
                     player.level().dimension()));
             interrupt(player, RecallRules.Interrupt.REFUSED);
             return;
@@ -216,12 +266,36 @@ public final class RecallService {
         from.sendParticles(ParticleTypes.END_ROD, player.getX(), player.getY() + 1.0, player.getZ(), 24, 0.3, 0.7, 0.3,
                 0.04);
         if (EstateService.enter(player, room.get()) == EstateResult.OK) {
-            ARRIVALS.put(player.getUUID(), now);
+            arrivals(to).put(player.getUUID(), now);
             player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.LODESTONE_COMPASS_LOCK, SoundSource.PLAYERS, 1.0F, 1.3F);
-            state(player, "done", "");
+            state(player, to, "done", "");
         } else {
-            state(player, "broken", RecallRules.Interrupt.REFUSED.id());
+            state(player, to, "broken", RecallRules.Interrupt.REFUSED.id());
         }
+    }
+
+    /** To the capital's arrival point, from the field, a room or a guild house. */
+    private static void arriveInCapital(ServerPlayer player, long now) {
+        ServerLevel from = player.serverLevel();
+        from.sendParticles(ParticleTypes.END_ROD, player.getX(), player.getY() + 1.0, player.getZ(), 24, 0.3, 0.7, 0.3,
+                0.04);
+        if (EstateLevels.isEstateLevel(player.level())) {
+            EstateReturns.clear(player); // the capital is where the door would have led anyway
+        }
+        player.stopRiding();
+        player.closeContainer();
+        if (!AstoriaTravel.sendToHub(player)) {
+            state(player, RecallRules.Destination.CAPITAL, "broken", "refused_capital");
+            return;
+        }
+        player.setDeltaMovement(Vec3.ZERO);
+        arrivals(RecallRules.Destination.CAPITAL).put(player.getUUID(), now);
+        ServerLevel level = player.serverLevel();
+        level.sendParticles(ParticleTypes.END_ROD, player.getX(), player.getY() + 1.0, player.getZ(), 30, 0.4, 0.9,
+                0.4, 0.05);
+        level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BEACON_ACTIVATE,
+                SoundSource.PLAYERS, 0.8F, 1.5F);
+        state(player, RecallRules.Destination.CAPITAL, "done", "");
     }
 }

@@ -64,6 +64,8 @@ public final class WorldMapScreen extends Screen {
     private static final int TRAVEL_PANEL = 168;
     private static final int ROW = 22;
     private static final int CLICK_SLOP = 4;
+    /** Width of the footer's "to the capital" button. */
+    private static final int CAPITAL_BUTTON = 96;
 
     private enum Mode {
         REALM, DUNGEON
@@ -223,11 +225,24 @@ public final class WorldMapScreen extends Screen {
             addRenderableWidget(Button.builder(tabLabel(Tab.WHOLE), b -> showTab(Tab.WHOLE, field))
                     .bounds(mid + 2, 4, 94, 16).build());
         }
+        if (capitalButton()) {
+            addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.map.to_capital"), b -> {
+                onClose();
+                com.eternalrealm.client.estate.EstateInput.toCapital();
+            }).bounds(width - MARGIN - CAPITAL_BUTTON, height - FOOTER + 1, CAPITAL_BUTTON, 14)
+                    .tooltip(net.minecraft.client.gui.components.Tooltip.create(
+                            Component.translatable("screen.eternalrealm.map.to_capital_tip"))).build());
+        }
         if (travel != null) {
             travelButton = addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.waystone.go"),
                     b -> travel()).bounds(panelLeft() + 8, frameBottom() - 22, TRAVEL_PANEL - 16, 18).build());
             travelButton.active = false;
         }
+    }
+
+    /** The footer's "to the capital" button: on the realm map (not at a waystone, not in a dungeon). */
+    private boolean capitalButton() {
+        return mode == Mode.REALM && travel == null;
     }
 
     private Component tabLabel(Tab which) {
@@ -480,7 +495,12 @@ public final class WorldMapScreen extends Screen {
                 ? Component.translatable(travel != null ? "screen.eternalrealm.waystone.hint"
                 : "screen.eternalrealm.map.hint_tabs", MapKeys.WORLD_MAP.getTranslatedKeyMessage())
                 : Component.translatable("screen.eternalrealm.map.hint", MapKeys.WORLD_MAP.getTranslatedKeyMessage());
-        graphics.drawString(font, hint.copy().withStyle(ChatFormatting.GRAY), MARGIN, height - 12, 0xFFFFFF);
+        int hintWidth = width - MARGIN * 2 - (capitalButton() ? CAPITAL_BUTTON + 6 : 0);
+        List<net.minecraft.util.FormattedCharSequence> hintLines = font.split(hint.copy()
+                .withStyle(ChatFormatting.GRAY), Math.max(40, hintWidth));
+        if (!hintLines.isEmpty()) {
+            graphics.drawString(font, hintLines.get(0), MARGIN, height - 12, 0xFFFFFF);
+        }
         super.render(graphics, mouseX, mouseY, partialTick);
         if (insideFrame(mouseX, mouseY) && !dragging) {
             tooltip(graphics, mouseX, mouseY);

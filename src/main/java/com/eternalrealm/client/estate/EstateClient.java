@@ -23,7 +23,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.lwjgl.glfw.GLFW;
 
 /**
- * The inn on the client (mod bus): the room key (Home, in the game's key category) that starts the way home, the
+ * The inn on the client (mod bus): the room key (Home, in the game's key category) that starts the way home and the
+ * capital key (End) that starts the way to the royal capital, the
  * screens that open when the server sends the innkeeper's, the ledger's or the door's document, and the cast bar.
  */
 @Mod.EventBusSubscriber(modid = ModInfo.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -31,6 +32,9 @@ public final class EstateClient {
     /** Goes home to one's room (pressed again while casting: stops). */
     public static final KeyMapping RECALL = new KeyMapping("key." + ModInfo.MOD_ID + ".recall_room",
             KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_HOME, ClientKeyMappings.CATEGORY);
+    /** Goes to the royal capital from anywhere (pressed again while casting: stops). */
+    public static final KeyMapping TO_CAPITAL = new KeyMapping("key." + ModInfo.MOD_ID + ".recall_capital",
+            KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_END, ClientKeyMappings.CATEGORY);
 
     private EstateClient() {
     }
@@ -38,6 +42,7 @@ public final class EstateClient {
     @SubscribeEvent
     public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(RECALL);
+        event.register(TO_CAPITAL);
     }
 
     @SubscribeEvent

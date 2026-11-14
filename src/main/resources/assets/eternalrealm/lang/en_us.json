@@ -7416,5 +7416,14 @@
   "button.eternalrealm.phone.accept": "[Accept]",
   "button.eternalrealm.phone.decline": "[Decline]",
   "button.eternalrealm.phone.reply": "[Reply]",
-  "button.eternalrealm.phone.see": "[See]"
+  "button.eternalrealm.phone.see": "[See]",
+  "message.eternalrealm.recall.already_capital": "You are already on the capital's plaza.",
+  "message.eternalrealm.recall.broken.refused_capital": "Could not reach the capital.",
+  "hud.eternalrealm.recall.casting_capital": "Travelling to the capital…",
+  "hud.eternalrealm.recall.done_capital": "Arrived in the capital",
+  "key.eternalrealm.recall_capital": "Travel to the capital",
+  "screen.eternalrealm.tab.capital": "To the capital",
+  "screen.eternalrealm.tab.capital_tip": "Travel to the capital's plaza from anywhere (about 3 s; moving or being hit breaks it / key: End)",
+  "screen.eternalrealm.map.to_capital": "To the capital",
+  "screen.eternalrealm.map.to_capital_tip": "Travel to the capital's plaza from anywhere (a 3 s cast / key: End)"
 }

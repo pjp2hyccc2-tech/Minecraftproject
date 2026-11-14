@@ -372,7 +372,8 @@ public final class InnGameTests {
                         check(EstateLevels.isEstateLevel(player.level()), "the door opens its menu; the player stays");
                         check(EstateService.leave(player), "leaving by the menu's way back");
                         check(player.level() == home && player.position().distanceTo(start) < 0.01,
-                                "back where the cast began: " + player.position());
+                                "back where the cast began " + start + ": " + player.level().dimension().location()
+                                        + " " + player.position());
                         check(RecallService.start(player) == RecallRules.Check.COOLDOWN, "a minute's rest after arriving");
                         check(EstateService.release(key) == EstateResult.OK, "releasing the room");
                         stage.set(4);
@@ -390,6 +391,66 @@ public final class InnGameTests {
                 throw failure.get();
             }
             check(stage.get() == 4, "stage " + stage.get() + " (" + EstateService.status(key) + ")");
+            cleanUp(player);
+        });
+    }
+
+    /**
+     * The way to the capital from anywhere (2026-11-14): refused in a fight, one cast at a time, a cast that arrives
+     * on the capital's plaza, refused right there, and a rest before the next trip.
+     */
+    @GameTest(template = EMPTY, timeoutTicks = 1200)
+    public static void theWayToTheCapitalArrivesOnThePlaza(GameTestHelper helper) {
+        FakePlayer player = fake(helper, "er_gt_capital_traveller", new Vec3(2.5, 2.0, 2.5));
+        RecallService.resetCooldown(player.getUUID());
+        if (com.eternalrealm.world.forge.AstoriaTravel.astoria(helper.getLevel().getServer()).isEmpty()) {
+            helper.succeed(); // a server without アストリア has no capital to go to
+            return;
+        }
+        RecallRules.Destination capital = RecallRules.Destination.CAPITAL;
+        AtomicInteger stage = new AtomicInteger();
+        AtomicInteger waited = new AtomicInteger();
+        AtomicReference<GameTestAssertException> failure = new AtomicReference<>();
+        helper.onEachTick(() -> {
+            if (failure.get() != null) {
+                return;
+            }
+            try {
+                switch (stage.get()) {
+                    case 0 -> {
+                        player.hurtTime = 10;
+                        check(RecallService.start(player, capital) == RecallRules.Check.IN_COMBAT, "refused in a fight");
+                        player.hurtTime = 0;
+                        check(RecallService.start(player, capital) == RecallRules.Check.OK, "the cast starts");
+                        check(RecallService.start(player, RecallRules.Destination.ROOM) == RecallRules.Check.CASTING,
+                                "one cast at a time, wherever to");
+                        stage.set(1);
+                    }
+                    case 1 -> {
+                        if (!com.eternalrealm.world.forge.AstoriaTravel.isInAstoria(player)) {
+                            check(waited.incrementAndGet() < RecallRules.CAST_TICKS + 40, "the cast never arrived");
+                            return;
+                        }
+                        check(RecallService.start(player, capital) == RecallRules.Check.ALREADY_IN_CAPITAL,
+                                "already on the plaza: " + player.position());
+                        player.moveTo(player.getX() + 40.0, player.getY(), player.getZ(), 0.0F, 0.0F);
+                        check(RecallService.start(player, capital) == RecallRules.Check.COOLDOWN, "a rest after arriving");
+                        RecallService.resetCooldown(player.getUUID());
+                        stage.set(2);
+                    }
+                    default -> {
+                    }
+                }
+            } catch (GameTestAssertException e) {
+                failure.set(e);
+            }
+        });
+        helper.succeedWhen(() -> {
+            if (failure.get() != null) {
+                cleanUp(player);
+                throw failure.get();
+            }
+            check(stage.get() == 2, "stage " + stage.get());
             cleanUp(player);
         });
     }
