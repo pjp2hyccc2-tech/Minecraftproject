@@ -302,6 +302,79 @@ public final class Habitats {
         return true;
     }
 
+    /**
+     * Blocks from (x, z) to the nearest habitat's spawn area (0 or less inside one). Where this is large, no habitat
+     * is near and roaming monsters fill in ({@link #ROAM_GAP}).
+     */
+    public static double nearestSpawnEdge(double x, double z) {
+        double best = Double.MAX_VALUE;
+        for (Habitat habitat : ALL) {
+            best = Math.min(best, habitat.distanceTo(x, z) - habitat.spawnRadius());
+        }
+        return best;
+    }
+
+    /**
+     * Farther than this from every habitat's spawn area, monsters of the field roam around a player (owner,
+     * 2026-11-14: 「たまに敵がわかない…常に湧くようにして」: about half of the fields lay out of every habitat's reach and
+     * nothing ever appeared there).
+     */
+    public static final double ROAM_GAP = 36.0;
+
+    /**
+     * Whether a roaming monster may appear at (x, z): in a field, outside every habitat's spawn area (those have their
+     * own monsters), and clear of the capital, the waystones, the lords' territories, the calamities' lairs and the
+     * dungeon entrances, like a habitat's monsters.
+     */
+    public static boolean roamable(double x, double z) {
+        int field = FieldLayout.areaAt(x, z);
+        if (field < 1 || field > FieldLayout.FIELD_COUNT || FieldLayout.capitalDistance(x, z) < CAPITAL_CLEARANCE) {
+            return false;
+        }
+        for (Habitat habitat : ALL) {
+            if (habitat.distanceTo(x, z) <= habitat.spawnRadius()) {
+                return false;
+            }
+        }
+        for (FieldLayout.Waystone stone : FieldLayout.waystones()) {
+            if (Math.hypot(x - stone.x(), z - stone.z()) < WAYSTONE_CLEARANCE) {
+                return false;
+            }
+        }
+        for (FieldThreats.Lord lord : FieldThreats.lords()) {
+            if (Math.hypot(x - lord.x(), z - lord.z()) < lord.territory() + LORD_CLEARANCE) {
+                return false;
+            }
+        }
+        for (FieldThreats.Calamity calamity : FieldThreats.calamities()) {
+            if (Math.hypot(x - calamity.x(), z - calamity.z()) < FieldThreats.LAIR_RADIUS + LAIR_CLEARANCE) {
+                return false;
+            }
+        }
+        for (com.eternalrealm.world.gen.LandmarkSite site : com.eternalrealm.world.gen.LandmarkSites.all()) {
+            if (Math.hypot(x - site.x(), z - site.z()) < site.padRadius() + ENTRANCE_CLEARANCE) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** How many roaming monsters keep around a player standing at (x, z) (none near a habitat or out of the fields). */
+    public static int roamersWanted(double x, double z) {
+        if (FieldLayout.areaAt(x, z) < 1 || FieldLayout.capitalDistance(x, z) < CAPITAL_CLEARANCE) {
+            return 0;
+        }
+        double edge = nearestSpawnEdge(x, z);
+        if (edge <= ROAM_GAP) {
+            return 0;
+        }
+        // a little at the habitats' fringe, the full number in the open field
+        return edge >= ROAM_GAP + 24.0 ? ROAMERS : Math.max(4, (int) Math.round(ROAMERS * (edge - ROAM_GAP) / 24.0));
+    }
+
+    /** Roaming monsters around a player in the open field (a habitat's own crowd is 21-32). */
+    public static final int ROAMERS = 16;
+
     /** The habitats of {@code monster} (a template id). */
     public static List<Habitat> of(String monster) {
         List<Habitat> out = new ArrayList<>();

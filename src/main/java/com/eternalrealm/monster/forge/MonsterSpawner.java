@@ -36,6 +36,12 @@ import java.util.SplittableRandom;
  * アストリア) monsters of the area's table appear around each player: 14-56 blocks away on solid ground, up to 74 per
  * player and a cap per server. Monsters that ignore players in daylight (spiders, endermen) are pointed at a player in
  * sight once they may fight them.
+ *
+ * <p>Owner, 2026-11-14: 「たまに敵がわかないことがある。原因を突き止めて常に湧くようにして」. Causes found: about half of
+ * the fields lay out of every habitat's reach (nothing ever appeared there; now monsters of the field roam around a
+ * player there, {@link #tickRoamers}); a spot on a snow layer, a carpet or a path was never "solid" ({@link #standY}); monsters were spawned into chunks whose saved monsters had not loaded yet
+ * (then the habitat was over-full for a while); vanilla bodies despawned on their own when the player was 32 blocks
+ * away (now persistent: the habitat or the far-away count decides).</p>
  */
 public final class MonsterSpawner {
     private static final int NEAR_RADIUS = 64;
@@ -130,6 +136,7 @@ public final class MonsterSpawner {
                         MonsterTags::isMonster));
             }
             tickHabitats(level, players, tick, cap);
+            tickRoamers(level, players, tick, cap);
             return;
         }
         java.util.Set<Mob> watched = new java.util.LinkedHashSet<>();
@@ -260,8 +267,9 @@ public final class MonsterSpawner {
                 MonsterTempers.look(level, home, players);
             }
             int missing = habitat.population() - home.size();
-            if (missing <= 0 || levelCount >= cap || tick < nextHabitatSpawn.getOrDefault(habitat.id(), Long.MIN_VALUE)) {
-                continue;
+            if (missing <= 0 || levelCount >= cap || tick < nextHabitatSpawn.getOrDefault(habitat.id(), Long.MIN_VALUE)
+                    || !level.isPositionEntityTicking(new BlockPos(habitat.x(), 64, habitat.z()))) {
+                continue; // (until the centre's chunk ticks, its saved monsters are not counted yet)
             }
             boolean filling = home.size() * 2 < habitat.population();
             int spawns = filling ? Math.min(FILL_BURST, missing) : 1;
@@ -348,26 +356,22 @@ public final class MonsterSpawner {
                     || tooCloseToPlayer(players, x + 0.5, z + 0.5) || !withinReach(players, x + 0.5, z + 0.5)) {
                 continue;
             }
-            int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
-            if (crowded(level, x + 0.5, y, z + 0.5)) {
+            int top = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
+            if (!level.isPositionEntityTicking(new BlockPos(x, top, z)) || crowded(level, x + 0.5, top, z + 0.5)) {
+                continue; // monsters saved in that chunk may not be back yet (they would be counted twice)
+            }
+            double ground = standY(level, type, x, top, z);
+            if (Double.isNaN(ground)) {
                 continue;
             }
-            BlockPos pos = new BlockPos(x, y, z);
-            if (y <= level.getMinBuildHeight() + 1
-                    || !level.getBlockState(pos.below()).isFaceSturdy(level, pos.below(), Direction.UP)
-                    || !level.getFluidState(pos).isEmpty()) {
-                continue;
-            }
-            double spawnY = type == EntityType.PHANTOM ? y + 6.0 : y;
-            if (!level.noCollision(type.getAABB(x + 0.5, spawnY, z + 0.5))) {
-                continue;
-            }
+            double spawnY = type == EntityType.PHANTOM ? ground + 6.0 : ground;
             MonsterSpawn spawn = new MonsterSpawn(template, template.levels().random(random));
             java.util.Optional<Mob> mob = MonsterFactory.spawn(level, spawn, x + 0.5, spawnY, z + 0.5,
                     (float) (random.nextDouble() * 360.0));
             if (mob.isEmpty()) {
                 return false;
             }
+            mob.get().setPersistenceRequired(); // vanilla bodies would despawn on their own: the habitat decides
             mob.get().getPersistentData().putString(HABITAT_TAG, habitat.id());
             mob.get().getPersistentData().putInt(HOME_X_TAG, x);
             mob.get().getPersistentData().putInt(HOME_Z_TAG, z);
@@ -375,6 +379,118 @@ public final class MonsterSpawner {
             return true;
         }
         return false;
+    }
+
+    // ------------------------------------------------------------------ roaming
+
+    /** Persistent tag of a monster roaming the open field around players (not of a habitat). */
+    public static final String ROAMER_TAG = "er_roamer";
+    /** Roaming monsters around a player are counted within this. */
+    private static final double ROAM_COUNT_RADIUS = 64.0;
+    /** ... and appear this far from them (seen, never on top of them). */
+    private static final double ROAM_MIN = 18.0;
+    private static final double ROAM_MAX = 52.0;
+    private static final int ROAM_BURST = 3;
+    private static final int ROAM_TICKS = 40;
+    private final java.util.Map<java.util.UUID, Long> nextRoam = new java.util.HashMap<>();
+
+    /**
+     * Where no habitat is near (about half of the fields), monsters of the field roam around each player: up to
+     * {@link Habitats#roamersWanted} within {@value #ROAM_COUNT_RADIUS} blocks, appearing a few at a time
+     * {@value #ROAM_MIN}-{@value #ROAM_MAX} blocks away, calm until provoked like the habitats' monsters. They go when
+     * nobody is near (the count's discard), so the field around a player is never empty.
+     */
+    private void tickRoamers(ServerLevel level, List<ServerPlayer> players, long tick, int cap) {
+        for (ServerPlayer player : players) {
+            int wanted = Habitats.roamersWanted(player.getX(), player.getZ());
+            if (wanted <= 0 || levelCount >= cap || tick < nextRoam.getOrDefault(player.getUUID(), Long.MIN_VALUE)) {
+                continue;
+            }
+            int around = level.getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(ROAM_COUNT_RADIUS, 32.0,
+                    ROAM_COUNT_RADIUS), mob -> mob.isAlive() && mob.getPersistentData().getBoolean(ROAMER_TAG)).size();
+            int missing = wanted - around;
+            if (missing <= 0) {
+                continue;
+            }
+            int spawns = Math.min(missing, around * 2 < wanted ? ROAM_BURST * 2 : ROAM_BURST);
+            for (int i = 0; i < spawns && levelCount < cap; i++) {
+                if (spawnRoamer(level, player, players)) {
+                    levelCount++;
+                }
+            }
+            nextRoam.put(player.getUUID(), tick + ROAM_TICKS + random.nextInt(20));
+        }
+        if (tick % 1200 == 7) {
+            nextRoam.keySet().removeIf(id -> level.getServer().getPlayerList().getPlayer(id) == null);
+        }
+    }
+
+    private boolean spawnRoamer(ServerLevel level, ServerPlayer player, List<ServerPlayer> players) {
+        for (int attempt = 0; attempt < ATTEMPTS * 2; attempt++) {
+            double angle = random.nextDouble() * Math.PI * 2.0;
+            double distance = ROAM_MIN + random.nextDouble() * (ROAM_MAX - ROAM_MIN);
+            int x = Mth.floor(player.getX() + Math.cos(angle) * distance);
+            int z = Mth.floor(player.getZ() + Math.sin(angle) * distance);
+            if (!Habitats.roamable(x + 0.5, z + 0.5) || tooCloseToPlayer(players, x + 0.5, z + 0.5)) {
+                continue;
+            }
+            int top = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
+            if (Math.abs(top - player.getY()) > MAX_HEIGHT_DIFFERENCE
+                    || !level.isPositionEntityTicking(new BlockPos(x, top, z)) || crowded(level, x + 0.5, top, z + 0.5)) {
+                continue;
+            }
+            AreaDefinition area = Realm.areaAt(level, x + 0.5, z + 0.5);
+            MonsterTable table = Monsters.tableFor(area);
+            MonsterSpawn spawn = table.pick(area.levelRange(), random);
+            EntityType<?> type = EntityType.byString(spawn.template().baseEntityType()).orElse(null);
+            if (type == null) {
+                continue;
+            }
+            double ground = standY(level, type, x, top, z);
+            if (Double.isNaN(ground)) {
+                continue;
+            }
+            double spawnY = type == EntityType.PHANTOM ? ground + 6.0 : ground;
+            java.util.Optional<Mob> mob = MonsterFactory.spawn(level, spawn, x + 0.5, spawnY, z + 0.5,
+                    (float) (random.nextDouble() * 360.0));
+            if (mob.isEmpty()) {
+                return false;
+            }
+            mob.get().setPersistenceRequired();
+            mob.get().getPersistentData().putBoolean(ROAMER_TAG, true);
+            mob.get().getPersistentData().putInt(HOME_X_TAG, x);
+            mob.get().getPersistentData().putInt(HOME_Z_TAG, z);
+            MonsterTempers.makeCalm(mob.get());
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * The height a monster of {@code type} stands at on the surface of column (x, z) ({@code top}: the first block over
+     * the ground), or NaN: on a floor between half a block and a block tall (a path or farmland counts, a fence not),
+     * on a thin layer lying on it (snow, a carpet), never on or in water, with room for its body.
+     */
+    static double standY(ServerLevel level, EntityType<?> type, int x, int top, int z) {
+        BlockPos feet = new BlockPos(x, top, z);
+        BlockPos under = feet.below();
+        if (top <= level.getMinBuildHeight() + 1 || !level.getFluidState(feet).isEmpty()
+                || !level.getFluidState(under).isEmpty()) {
+            return Double.NaN;
+        }
+        net.minecraft.world.phys.shapes.VoxelShape floor = level.getBlockState(under).getCollisionShape(level, under);
+        if (floor.isEmpty() || floor.max(Direction.Axis.Y) < 0.5 || floor.max(Direction.Axis.Y) > 1.0) {
+            return Double.NaN;
+        }
+        double base = top - 1 + floor.max(Direction.Axis.Y);
+        net.minecraft.world.phys.shapes.VoxelShape layer = level.getBlockState(feet).getCollisionShape(level, feet);
+        if (!layer.isEmpty()) {
+            if (layer.min(Direction.Axis.Y) > 0.01 || layer.max(Direction.Axis.Y) > 0.5) {
+                return Double.NaN;
+            }
+            base = top + layer.max(Direction.Axis.Y);
+        }
+        return level.noCollision(type.getAABB(x + 0.5, base + 0.01, z + 0.5)) ? base + 0.01 : Double.NaN;
     }
 
     /** Another monster within {@link #SPACING} blocks of (x, y, z). */
