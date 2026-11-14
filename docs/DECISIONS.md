@@ -677,3 +677,23 @@ Decisions:
   opened again in the same game while the old arrival stayed in memory. Arrivals are now forgotten when the server stops, and an
   arrival "after now" never counts.
 
+## D-BALANCE-1114: tougher monsters and bosses, slower late levels, more gold, fewer weapons (2026-11-14)
+
+The owner's numbers: normal monsters' HP ×2, dungeon bosses' stats ×1.5 and EX ×4, money ×1.2, weapon drops ×0.9, the EXP needed from
+level 40 ×2.5.
+Decisions:
+- **Monsters**: the factor sits in the scaling (`MonsterScaling.DURABILITY`), not in the 130 templates, so the catalog's tuning (4 / 12
+  light hits) stays readable and the tests check 6-12 / 18-36. NORMAL and ELITE both double (the elite gap stays three times); boss
+  summons do not. Elites near level 50 meet the vanilla health limit of 1024 and stop there.
+- **Bosses**: one factor in the dungeon boss factory (`Bosses.STRENGTH`) for health and damage; armor stays (it would make the factor
+  more than 1.5). EX is now four times the health and twice the damage with cooldowns a quarter shorter (it was ×2 / ×1.6 / ×0.8);
+  HARD keeps its numbers. Soft enrages grew with the fights (10 and 17 minutes).
+- **Gold**: `GoldRates.EARNED` = 1.2 on what play earns — monster drops (and through them lords, calamities and dungeon bosses), dungeon
+  bonus cards, quest rewards. Prices, refunds, player sales and the shop's material prices are not earnings.
+- **Weapons**: `ArmoryDrops.WEAPON_DROP_RATE` = 0.9 on monster equipment rolls, wielded weapons, lords' and calamities' weapons. Clear
+  rewards of dungeons keep theirs.
+- **EXP**: two new keys of the experience curve (`lateLevel` 40, `lateMultiplier` 2.5) rather than a new exponent: levels 1-39 stay as
+  they were. New keys reach existing worlds by themselves (Forge adds missing keys with their defaults).
+- **Config migrations**: Forge keeps a file's values, so a changed default never reaches a world made earlier. A `balanceRevision` key
+  (missing = 0) lets the server bring a file up to date once at start, changing only values still at the default of their time.
+

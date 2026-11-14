@@ -395,3 +395,8 @@
 | Unit `KeepZonesTest` | プレイヤーが壊した箱の中身は同じtickと次のtickだけ、その場所の近く・同じディメンションでだけ残す。古い記録は消え、記録は64件まで |
 | Unit `RecallRulesTest`（追加） | 休みは30秒、残りは0〜30秒を超えない、前のワールドの到着記録（今より後）は数えない、王都行きは部屋がなくてよい・もう王都なら断る・戦闘中やダンジョンは断る、行き先のIDと文言 |
 | GameTest `InnGameTests.theWayToTheCapitalArrivesOnThePlaza` | 戦闘中は断る → 詠唱が始まる（同時に別の行き先は不可）→ 王都の到着点に着く → そこでは断る → 離れても30秒の休み |
+| Unit `MonsterScalingTest`（更新） | 通常・エリートの体力は2倍（適正Lvで6〜12発・18〜36発）、取り巻きは据え置き、お金は1.2倍、上限1024 |
+| Unit `BossesContentTest` / `BossDefinitionTest` / `BossBrainTest`（更新） | ダンジョンのボスは1.5倍（3〜6分、最終レイド4.5〜9分、激昂はその後）、EX はHP4倍・ダメージ2倍・CT0.75倍 |
+| Unit `BossFightSimulationTest`（修正の確認） | 予兆を出さない技（バフなど）は、フェーズ変更で止めても「取り消し」を出さない |
+| Unit `ExperienceCurveAndRulesTest`（追加） | Lv39までは従来どおり、Lv40から必要EXPが2.5倍、増え続ける、範囲外の設定は拒否 |
+| Unit `GoldRatesTest` | 稼ぐお金は1.2倍、武器のドロップ率は0.9倍（拾う装備・持っている武器・ヌシと災厄の武器） |

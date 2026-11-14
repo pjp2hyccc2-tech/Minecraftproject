@@ -8,18 +8,23 @@ import java.util.Objects;
  * Level scaling of monster stats (docs/modules/world.md, "モンスターの強さ").
  *
  * <pre>
- * health(L) = baseHealth + healthPerLevel × (L − 1)        (capped at 1024, the vanilla attribute limit)
+ * health(L) = (baseHealth + healthPerLevel × (L − 1)) × durability(role)   (capped at 1024, the vanilla limit)
  * damage(L) = baseDamage + damagePerLevel × (L − 1)
  * armor(L)  = baseArmor  + armorPerLevel  × (L − 1)        (capped at 30, the vanilla attribute limit)
  * speed     = speedMultiplier                               (no growth: high-level monsters stay dodgeable)
  * exp(L)    = round(baseExp × L^1.2)
- * gold(L)   = round(baseGold × (1 + 0.1 × (L − 1)))
+ * gold(L)   = round(baseGold × (1 + 0.1 × (L − 1)) × 1.2)   (GoldRates.EARNED)
  * </pre>
+ *
+ * <p>Durability: NORMAL and ELITE monsters have twice the health the catalog was first tuned for (owner,
+ * 2026-11-14: 「通常モンスターのHPが少なすぎるから今の2倍にして」), so a level-matched player needs about 8 light hits
+ * for a NORMAL monster and about 24 for an ELITE; MINIONs (boss summons) keep theirs. A handful of level-50 elites
+ * reach the vanilla limit of 1024 and stop there.</p>
  *
  * <p>Tuning target: the "reference light hit" of a level-matched player grows linearly from 6.6 (level 1, one-handed
  * sword, all stats 5) to 42 (level 50, high STR and good gear; the expected range there is 30-60). The catalog's NORMAL
- * monsters are tuned to about 4 reference hits at every level, ELITEs to about 12, MINIONs to about 2 (tests check
- * 3-6, 9-18 and 1-4). EXP grows with {@code L^1.2} while the default curve needs {@code 100 × L^1.5} per level, so a
+ * monsters are tuned to about 4 reference hits at every level, ELITEs to about 12, MINIONs to about 2 before the
+ * durability factor (tests check 6-12, 18-36 and 1-4 with it). EXP grows with {@code L^1.2} while the default curve needs {@code 100 × L^1.5} per level, so a
  * level takes about 10 standard kills at level 1 and about 30 at level 50: early levels are quick and later levels lean
  * on quests, dungeons and bosses.</p>
  */
@@ -31,6 +36,8 @@ public final class MonsterScaling {
     public static final double MAX_ARMOR = 30.0;
     public static final double EXP_LEVEL_EXPONENT = 1.2;
     public static final double GOLD_GROWTH_PER_LEVEL = 0.1;
+    /** Health factor of field and dungeon monsters (NORMAL and ELITE) over the catalog's tuning. */
+    public static final double DURABILITY = 2.0;
     /** One-handed sword, first combo step, all stats 5: {@code 6 × (1 + 5 × 0.02)}. */
     public static final double REFERENCE_HIT_LEVEL_1 = 6.6;
     /** Level 50 with high STR and good gear (expected range 30-60). */
@@ -43,14 +50,20 @@ public final class MonsterScaling {
         Objects.requireNonNull(template, "template");
         Check.range("level", level, 1, MAX_LEVEL);
         int steps = level - 1;
-        double health = Math.min(MAX_HEALTH, template.baseHealth() + template.healthPerLevel() * steps);
+        double health = Math.min(MAX_HEALTH,
+                (template.baseHealth() + template.healthPerLevel() * steps) * durability(template.role()));
         double damage = template.baseDamage() + template.damagePerLevel() * steps;
         double armor = Math.min(MAX_ARMOR, template.baseArmor() + template.armorPerLevel() * steps);
         long exp = Math.round(template.baseExp() * StrictMath.pow(level, EXP_LEVEL_EXPONENT));
-        double goldScale = 1.0 + GOLD_GROWTH_PER_LEVEL * steps;
+        double goldScale = com.eternalrealm.economy.GoldRates.earned(1.0 + GOLD_GROWTH_PER_LEVEL * steps);
         long goldMin = Math.round(template.baseGoldMin() * goldScale);
         long goldMax = Math.round(template.baseGoldMax() * goldScale);
         return new MonsterStats(health, damage, armor, template.speedMultiplier(), exp, goldMin, goldMax);
+    }
+
+    /** Health factor of a role: {@link #DURABILITY} for field and dungeon monsters, 1 for boss summons. */
+    public static double durability(MonsterRole role) {
+        return role == MonsterRole.MINION ? 1.0 : DURABILITY;
     }
 
     /** Light-attack damage of a level-matched player, the yardstick of the tuning (linear in level). */

@@ -139,8 +139,8 @@ public class BossDefinitionTest {
         assertEquals(1000.0, boss.maxHealth(1, Difficulty.NORMAL), 1e-9);
         assertEquals(1000.0 * (1 + 0.5 * 4), boss.maxHealth(5, Difficulty.NORMAL), 1e-9);
         assertEquals(1000.0 * 1.4, boss.maxHealth(1, Difficulty.HARD), 1e-9);
-        assertEquals(1000.0 * 2.0 * 2.0, boss.maxHealth(3, Difficulty.EX), 1e-9);
-        assertEquals(10.0 * 1.6, boss.damage(Difficulty.EX), 1e-9);
+        assertEquals("EX: four times the health", 1000.0 * 2.0 * 4.0, boss.maxHealth(3, Difficulty.EX), 1e-9);
+        assertEquals("EX: twice the damage", 10.0 * 2.0, boss.damage(Difficulty.EX), 1e-9);
         assertThrows(IllegalArgumentException.class, () -> boss.maxHealth(0, Difficulty.NORMAL));
         assertThrows(IllegalArgumentException.class, () -> boss.maxHealth(BossRules.MAX_PARTY_SIZE + 1,
                 Difficulty.NORMAL));

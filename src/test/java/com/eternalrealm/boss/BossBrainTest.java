@@ -550,10 +550,10 @@ public class BossBrainTest {
         BossBrain normal = new BossBrain(definition, 3, Difficulty.NORMAL, new Random(1));
         BossBrain ex = new BossBrain(definition, 3, Difficulty.EX, new Random(1));
         assertEquals(1000.0 * 2.0, normal.maxHealth(), EPS);
-        assertEquals(1000.0 * 2.0 * 2.0, ex.maxHealth(), EPS);
+        assertEquals("EX: four times the health", 1000.0 * 2.0 * 4.0, ex.maxHealth(), EPS);
         assertEquals(List.of(SLAM), normal.rotation());
         assertEquals(List.of(SLAM, extra), ex.rotation());
-        assertEquals(16.0, ex.meleeDamage(0), EPS);
+        assertEquals("EX: twice the damage", 20.0, ex.meleeDamage(0), EPS);
         assertEquals(2.0, ex.armor(), EPS);
         assertEquals(3, ex.partySize());
         assertEquals(Difficulty.EX, ex.difficulty());
@@ -561,8 +561,9 @@ public class BossBrainTest {
         FightLog log = new FightLog(ex, List.of(target(1, 2, 0)), 0);
         log.runTo(30);
         BossAbility first = log.all(BossCommand.AbilityStarted.class).get(0).ability();
-        assertEquals("EX cooldowns are shorter", Math.round(first.cooldownTicks() * 0.8),
-                log.brain.cooldownRemaining(first.id(), 24));
+        long started = log.startTicks(first.id()).get(0);
+        assertEquals("EX cooldowns are shorter", Math.round(first.cooldownTicks() * 0.75),
+                log.brain.cooldownRemaining(first.id(), started));
     }
 
     @Test

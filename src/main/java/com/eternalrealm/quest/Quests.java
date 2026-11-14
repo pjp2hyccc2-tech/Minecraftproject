@@ -221,7 +221,7 @@ public final class Quests {
 
     private static QuestReward reward(int level, double fraction, ItemReward... items) {
         long exp = Math.round(100.0 * StrictMath.pow(level, 1.5) * fraction);
-        long gold = Math.max(10L, Math.round(20.0 * level * fraction));
+        long gold = Math.max(10L, Math.round(com.eternalrealm.economy.GoldRates.earned(20.0 * level * fraction)));
         return new QuestReward(exp, gold, List.of(items));
     }
 

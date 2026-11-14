@@ -961,10 +961,14 @@ public final class BossBrain {
             this.transition = transition;
         }
 
-        /** Whether a wave has been placed (its marker is on the ground) and has not hit yet. */
+        /**
+         * Whether a wave has been placed with markers on the ground (shapes or safe spots) and has not hit yet. A buff,
+         * a heal or a teleport is placed too but shows nothing, so calling it off has nothing to take away.
+         */
         boolean markersDown() {
             for (Wave wave : waves) {
-                if (wave.placed != null && !wave.fired) {
+                if (wave.placed != null && !wave.fired
+                        && (!wave.placed.shapes().isEmpty() || !wave.placed.safe().isEmpty())) {
                     return true;
                 }
             }

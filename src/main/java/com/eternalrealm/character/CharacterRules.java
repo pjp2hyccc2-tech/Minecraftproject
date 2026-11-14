@@ -49,8 +49,9 @@ public record CharacterRules(int levelCap, int statPointsPerLevel, int baseStatV
 
     /** Default rules (see docs/GAME_DESIGN.md): level cap 100. */
     public static CharacterRules defaults() {
-        return new CharacterRules(MAX_LEVEL, 3, 5, 10, new PowerExperienceCurve(100, 1.5), DEFAULT_SKILL_POINTS_PER_LEVEL,
-                DEFAULT_SKILL_POINT_MILESTONE_BONUS);
+        return new CharacterRules(MAX_LEVEL, 3, 5, 10, new PowerExperienceCurve(100, 1.5,
+                PowerExperienceCurve.DEFAULT_LATE_LEVEL, PowerExperienceCurve.DEFAULT_LATE_MULTIPLIER),
+                DEFAULT_SKILL_POINTS_PER_LEVEL, DEFAULT_SKILL_POINT_MILESTONE_BONUS);
     }
 
     /**

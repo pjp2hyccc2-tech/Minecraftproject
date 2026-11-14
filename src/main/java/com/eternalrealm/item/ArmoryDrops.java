@@ -18,8 +18,15 @@ import java.util.random.RandomGenerator;
  * dungeon bosses   a design of the dungeon: NORMAL 15 %, HARD 25 %, EX 40 %
  * boss weapon      NORMAL 3 %, HARD 8 %, EX 15 % (final raid: as its difficulty)
  * </pre>
+ *
+ * <p>Weapons that drop in the world — from monsters (also their equipment rolls,
+ * {@code monster.DropTables}), wielders, lords and calamities — come {@value #WEAPON_DROP_RATE} times as often as these
+ * numbers (owner, 2026-11-14: 「武器のドロップ率を今の0.9倍して。少し落ちにくくする」). Clear rewards of the dungeons
+ * keep theirs.</p>
  */
 public final class ArmoryDrops {
+    /** Multiplier of every weapon (and monster equipment) drop chance in the world. */
+    public static final double WEAPON_DROP_RATE = 0.9;
     public static final double FIELD_DESIGN_SHARE = 0.12;
     public static final double FIELD_DESIGN_SHARE_ELITE = 0.25;
     public static final double WIELDED_DROP = 0.02;
@@ -76,15 +83,15 @@ public final class ArmoryDrops {
     }
 
     public static double wieldedDropChance(boolean elite) {
-        return elite ? WIELDED_DROP_ELITE : WIELDED_DROP;
+        return (elite ? WIELDED_DROP_ELITE : WIELDED_DROP) * WEAPON_DROP_RATE;
     }
 
     public static double lordWeaponChance(boolean hero) {
-        return hero ? LORD_WEAPON_HERO : LORD_WEAPON;
+        return (hero ? LORD_WEAPON_HERO : LORD_WEAPON) * WEAPON_DROP_RATE;
     }
 
     public static double calamityWeaponChance(boolean hero) {
-        return hero ? CALAMITY_WEAPON_HERO : CALAMITY_WEAPON;
+        return (hero ? CALAMITY_WEAPON_HERO : CALAMITY_WEAPON) * WEAPON_DROP_RATE;
     }
 
     public static double calamityArmorChance(boolean hero) {

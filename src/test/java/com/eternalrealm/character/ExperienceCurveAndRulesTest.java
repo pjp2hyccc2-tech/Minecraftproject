@@ -27,6 +27,25 @@ public class ExperienceCurveAndRulesTest {
     }
 
     @Test
+    public void fromLevelFortyTheDefaultsAskTwoAndAHalfTimesTheExperience() {
+        PowerExperienceCurve plain = new PowerExperienceCurve(100, 1.5);
+        ExperienceCurve curve = CharacterRules.defaults().experienceCurve();
+        assertEquals(plain.experienceToNext(39), curve.experienceToNext(39));
+        assertEquals(Math.round(100 * Math.pow(40, 1.5) * 2.5), curve.experienceToNext(40));
+        assertEquals(Math.round(100 * Math.pow(55, 1.5) * 2.5), curve.experienceToNext(55));
+        assertEquals("level 40 → 41: 2.5 times 25 298", 63_246, curve.experienceToNext(40));
+        for (int level = 2; level < CharacterRules.MAX_LEVEL; level++) {
+            assertTrue("still increasing at " + level,
+                    curve.experienceToNext(level) > curve.experienceToNext(level - 1));
+        }
+        assertThrows(IllegalArgumentException.class, () -> new PowerExperienceCurve(100, 1.5, 1, 2.5));
+        assertThrows(IllegalArgumentException.class, () -> new PowerExperienceCurve(100, 1.5, 40, 0.5));
+        assertThrows(IllegalArgumentException.class, () -> new PowerExperienceCurve(100, 1.5, 40, 11.0));
+        assertEquals("never", plain.experienceToNext(99),
+                new PowerExperienceCurve(100, 1.5, CharacterRules.MAX_LEVEL, 3.0).experienceToNext(99));
+    }
+
+    @Test
     public void powerCurveRejectsInvalidParameters() {
         assertThrows(IllegalArgumentException.class, () -> new PowerExperienceCurve(0, 1.5));
         assertThrows(IllegalArgumentException.class, () -> new PowerExperienceCurve(100, 0.5));

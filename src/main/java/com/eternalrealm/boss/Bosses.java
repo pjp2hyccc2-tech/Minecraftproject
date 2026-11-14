@@ -14,18 +14,25 @@ import static com.eternalrealm.boss.TargetRule.RANDOM;
  *
  * <p>Balance model (checked by BossesContentTest): a level-matched player deals about 8 (level 1) to 45 (level 50)
  * per light hit and lands 1.5 hits per second on average (dodging and moving included), reduced by the boss's armor
- * with vanilla's formula. Base health is chosen so one player needs about 3 minutes on NORMAL; with +70% health per
+ * with vanilla's formula. Base health was chosen so one player needs about 3 minutes on NORMAL; with +70% health per
  * extra player a party of 5 needs about 2.3 minutes. The final boss is sized for 10-20 players: about 3.6 minutes
- * before its health was raised by half (2026-11-11), about 5.5 minutes now.</p>
+ * before its health was raised by half (2026-11-11), about 5.5 minutes then.</p>
+ *
+ * <p>Every boss here then got half again its health and damage ({@link #STRENGTH}, owner 2026-11-14: 「ダンジョンボスの
+ * ステータスを全体的に1.5倍にして」): about 4.5 minutes solo, 3.5 for five, the raid about 8. Armor is unchanged (it
+ * would make the factor more than 1.5). Soft enrages grew with the fights.</p>
  */
 public final class Bosses {
     private static final double PARTY_SCALING = 0.7;
-    private static final int ENRAGE_TICKS = 20 * 60 * 5;
-    /** The raid's soft enrage: 11¼ minutes, grown with its health (×1.5 on 2026-11-11). */
-    private static final int FINAL_ENRAGE_TICKS = 20 * 60 * 45 / 4;
+    /** Health and damage of every dungeon and raid boss over the numbers below (2026-11-14). */
+    public static final double STRENGTH = 1.5;
+    /** Soft enrage of the dungeon bosses: 10 minutes (5 before the bosses grew by half). */
+    private static final int ENRAGE_TICKS = 20 * 60 * 10;
+    /** The raid's soft enrage: 17 minutes, grown with its health (×1.5 on 2026-11-11 and again on 2026-11-14). */
+    private static final int FINAL_ENRAGE_TICKS = 20 * 60 * 17;
     /**
      * The raid boss's health was raised by half on the owner's request (2026-11-11, 「全レイドボスのHPを今の1.5倍に」):
-     * 18 400 before, 27 600 now.
+     * 18 400 before, 27 600 since; {@link #STRENGTH} applies on top (41 400).
      */
     public static final double FINAL_BASE_HEALTH = 18_400 * 1.5;
 
@@ -497,8 +504,8 @@ public final class Bosses {
                                        double armor, int minPlayers, int maxPlayers, List<BossPhase> phases,
                                        List<BossAbility> abilities, int enrageTicks, List<String> summons,
                                        String exAbility) {
-        return new BossDefinition(id, entityType, level, health, damage, armor, PARTY_SCALING, minPlayers, maxPlayers,
-                phases, abilities, enrageTicks, summons, DifficultyTuning.NORMAL, DifficultyTuning.hard(),
-                DifficultyTuning.ex(exAbility));
+        return new BossDefinition(id, entityType, level, health * STRENGTH, damage * STRENGTH, armor, PARTY_SCALING,
+                minPlayers, maxPlayers, phases, abilities, enrageTicks, summons, DifficultyTuning.NORMAL,
+                DifficultyTuning.hard(), DifficultyTuning.ex(exAbility));
     }
 }

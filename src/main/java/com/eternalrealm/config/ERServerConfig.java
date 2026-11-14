@@ -21,6 +21,10 @@ public final class ERServerConfig {
     public static final ForgeConfigSpec.IntValue MAX_POINTS_PER_REQUEST;
     public static final ForgeConfigSpec.LongValue EXP_CURVE_BASE;
     public static final ForgeConfigSpec.DoubleValue EXP_CURVE_EXPONENT;
+    public static final ForgeConfigSpec.IntValue EXP_LATE_LEVEL;
+    public static final ForgeConfigSpec.DoubleValue EXP_LATE_MULTIPLIER;
+    /** Balance revision of the file; see {@link #migrate()}. */
+    public static final ForgeConfigSpec.IntValue BALANCE_REVISION;
     public static final ForgeConfigSpec.IntValue SKILL_POINTS_PER_LEVEL;
     public static final ForgeConfigSpec.IntValue SKILL_POINT_MILESTONE_BONUS;
     public static final ForgeConfigSpec.DoubleValue DEATH_EXP_PENALTY;
@@ -102,9 +106,16 @@ public final class ERServerConfig {
                 .defineInRange("baseStatValue", 5, 0, CharacterRules.MAX_BASE_STAT);
         MAX_POINTS_PER_REQUEST = builder.comment("Maximum stat points a single allocation request may spend.")
                 .defineInRange("maxPointsPerRequest", 10, 1, CharacterRules.MAX_POINTS_PER_REQUEST);
-        builder.comment("EXP to next level = round(curveBase * level ^ curveExponent)").push("experience");
+        builder.comment("EXP to next level = round(curveBase * level ^ curveExponent), times lateMultiplier from lateLevel on")
+                .push("experience");
         EXP_CURVE_BASE = builder.defineInRange("curveBase", 100L, PowerExperienceCurve.MIN_BASE, PowerExperienceCurve.MAX_BASE);
         EXP_CURVE_EXPONENT = builder.defineInRange("curveExponent", 1.5, PowerExperienceCurve.MIN_EXPONENT, PowerExperienceCurve.MAX_EXPONENT);
+        EXP_LATE_LEVEL = builder.comment("First level whose EXP to the next level is multiplied by lateMultiplier",
+                        "(100: never).")
+                .defineInRange("lateLevel", PowerExperienceCurve.DEFAULT_LATE_LEVEL, 2, CharacterRules.MAX_LEVEL);
+        EXP_LATE_MULTIPLIER = builder.comment("The late game's EXP multiplier (2.5: levels from 40 on take 2.5 times the EXP).")
+                .defineInRange("lateMultiplier", PowerExperienceCurve.DEFAULT_LATE_MULTIPLIER, 1.0,
+                        PowerExperienceCurve.MAX_LATE_MULTIPLIER);
         builder.pop();
         SKILL_POINTS_PER_LEVEL = builder.comment("Skill points earned per level gained.",
                         "points = (level - 1) * skillPointsPerLevel + (level / 10) * skillPointMilestoneBonus")
@@ -113,6 +124,10 @@ public final class ERServerConfig {
         SKILL_POINT_MILESTONE_BONUS = builder.comment("Extra skill points at every 10th level.")
                 .defineInRange("skillPointMilestoneBonus", CharacterRules.DEFAULT_SKILL_POINT_MILESTONE_BONUS, 0,
                         CharacterRules.MAX_SKILL_POINT_MILESTONE_BONUS);
+        BALANCE_REVISION = builder.comment("Balance revision of this file (do not edit). A file of an older revision is",
+                        "brought up to date once when the server starts: only values still at the default of their",
+                        "time change (a value set by hand is kept).")
+                .defineInRange("balanceRevision", 0, 0, 1000);
         DEATH_EXP_PENALTY = builder.comment("Fraction of the EXP needed for the next level lost on death (never costs a level).")
                 .defineInRange("deathExpPenalty", 0.05, 0.0, 1.0);
         builder.comment("Jobs").push("job");
@@ -274,8 +289,29 @@ public final class ERServerConfig {
 
     public static CharacterRules characterRules() {
         return new CharacterRules(LEVEL_CAP.get(), STAT_POINTS_PER_LEVEL.get(), BASE_STAT_VALUE.get(),
-                MAX_POINTS_PER_REQUEST.get(), new PowerExperienceCurve(EXP_CURVE_BASE.get(), EXP_CURVE_EXPONENT.get()),
+                MAX_POINTS_PER_REQUEST.get(), new PowerExperienceCurve(EXP_CURVE_BASE.get(), EXP_CURVE_EXPONENT.get(),
+                        EXP_LATE_LEVEL.get(), EXP_LATE_MULTIPLIER.get()),
                 SKILL_POINTS_PER_LEVEL.get(), SKILL_POINT_MILESTONE_BONUS.get());
+    }
+
+    /** The balance revision this build writes. */
+    public static final int CURRENT_BALANCE_REVISION = 0;
+
+    /**
+     * Brings a server config file of an older balance revision up to date, once (the server's start). Forge adds keys
+     * a file does not have with their defaults, but keeps the values a file has: a world made before a balance change
+     * would never see it. Only values still at the default of their time change. No revision changes values yet.
+     *
+     * @return whether the file was changed
+     */
+    public static boolean migrate() {
+        int from = BALANCE_REVISION.get();
+        if (from >= CURRENT_BALANCE_REVISION) {
+            return false;
+        }
+        BALANCE_REVISION.set(CURRENT_BALANCE_REVISION);
+        BALANCE_REVISION.save();
+        return true;
     }
 
     public static JobRules jobRules() {

@@ -367,7 +367,7 @@ public final class DropTables {
                 new DropEntry(other, 1, otherMax, otherChance),
                 new DropEntry(ENHANCEMENT_STONE, 1, stoneMax, stoneChance),
                 new DropEntry(REROLL_CRYSTAL, 1, 1, crystalChance)),
-                new EquipmentRoll(tier, equipmentChance, weights));
+                new EquipmentRoll(tier, equipmentChance * com.eternalrealm.item.ArmoryDrops.WEAPON_DROP_RATE, weights));
     }
 
     private static List<DropTable> join(List<DropTable> first, List<DropTable> second) {

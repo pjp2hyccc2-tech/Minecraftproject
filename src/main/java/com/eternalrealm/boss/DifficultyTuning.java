@@ -34,8 +34,12 @@ public record DifficultyTuning(double healthMultiplier, double damageMultiplier,
         return new DifficultyTuning(1.4, 1.3, 0.9, List.of());
     }
 
-    /** Standard EX numbers (double health, +60% damage, 20% shorter cooldowns) plus the given extra abilities. */
+    /**
+     * Standard EX numbers plus the given extra abilities: four times the health, twice the damage, cooldowns a quarter
+     * shorter (owner, 2026-11-14: 「EXのボスの倍率を4倍とかにして。弱すぎる」; it was double health, +60 % damage and
+     * 20 % shorter cooldowns).
+     */
     public static DifficultyTuning ex(String... extraAbilityIds) {
-        return new DifficultyTuning(2.0, 1.6, 0.8, List.of(extraAbilityIds));
+        return new DifficultyTuning(4.0, 2.0, 0.75, List.of(extraAbilityIds));
     }
 }

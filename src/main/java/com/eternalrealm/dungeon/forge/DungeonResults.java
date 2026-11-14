@@ -241,7 +241,8 @@ public final class DungeonResults {
                     RANDOM)), 0L);
         }
         long base = Math.max(1, instance.recommendedLevel) * (20L + 15L * tier);
-        long gold = Math.max(10L, Math.round(base * (0.75 + RANDOM.nextDouble() * 0.5)));
+        long gold = Math.max(10L, Math.round(com.eternalrealm.economy.GoldRates.earned(
+                base * (0.75 + RANDOM.nextDouble() * 0.5))));
         return new Card(null, gold);
     }
 

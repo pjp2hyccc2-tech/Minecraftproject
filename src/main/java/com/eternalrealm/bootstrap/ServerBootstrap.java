@@ -65,6 +65,14 @@ public final class ServerBootstrap {
             LOG.warn("A previous server context was still installed; shutting it down first");
             shutdown(stale);
         }
+        try {
+            if (com.eternalrealm.config.ERServerConfig.migrate()) {
+                LOG.info("Brought the server config up to balance revision {}",
+                        com.eternalrealm.config.ERServerConfig.CURRENT_BALANCE_REVISION);
+            }
+        } catch (RuntimeException e) {
+            LOG.warn("Could not bring the server config up to date; keeping its values", e);
+        }
         ServerContext context = create(event.getServer());
         ServerContext.install(context);
         LOG.info("{} server services started: season={}, data={}", ModInfo.DISPLAY_NAME,
