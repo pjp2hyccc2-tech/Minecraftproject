@@ -730,3 +730,16 @@ Decisions:
   破滅の十字, 怒涛の一閃, 暴威の薙ぎ — three by the kind of body) and moves every 4.5 s; every calamity got four new moves (twelve, used 5 / 8 / 12
   by its forms), all from the existing ability kinds so the markers, effects and checks stay the same.
 
+## D-SHORES: mend the shores as chunks load, not the terrain function (2026-11-14)
+
+The owner: 「川に落ちたら登れなくなってるから川沿いのブロックを1段ずつ下げて」. In the owner's world the banks stand one block above the
+water's top block almost everywhere (1169 of 1227 bank columns in one region), two or more at rocks.
+Decisions:
+- **A patch on loaded chunks, not a new terrain**: the owner's world is pregenerated (the whole map), so a change to the terrain function
+  would never reach it; and the set pieces, habitats and waystones were laid out on that terrain (lowering it moved a shrine off its
+  foundation in the tests). Every chunk near water is mended once when it is loaded with its neighbours, in old and new worlds alike,
+  and remembered (a bank a player builds up later stays).
+- **One step, the way the owner asked, plus what keeps it walkable**: natural bank columns one or two blocks above the water go down one;
+  a wall of two right behind a lowered column follows. Rocks higher than that, anything built, the capital, waystones, entrances and
+  set pieces are left as they are.
+
