@@ -23,6 +23,7 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -70,17 +71,20 @@ public class SkillCatalogTest {
             for (Prerequisite prerequisite : skill.prerequisites()) {
                 SkillDefinition parent = Jobs.skill(prerequisite.skillId()).orElseThrow();
                 assertEquals(skill.id(), skill.job(), parent.job());
+                // a class's nodes build on its own tree only (the job's tree is learned before level 40 anyway)
+                assertEquals(skill.id(), skill.jobClass(), parent.jobClass());
                 assertTrue(skill.id() + " after " + parent.id(), parent.tier() < skill.tier());
                 assertTrue(skill.id(), parent.requiredLevel() <= skill.requiredLevel());
                 assertTrue(skill.id(), prerequisite.level() <= parent.maxLevel());
-                if (parent.branch() != skill.branch()) {
+                if (parent.branch() != skill.branch() && !skill.isClassSkill()) {
                     crossBranch++;
                 }
             }
             if (!skill.isInnate() && skill.tier() > 1) {
                 assertFalse(skill.id() + " needs a prerequisite", skill.prerequisites().isEmpty());
             }
-            assertEquals(skill.id(), Tree.TIER_LEVELS[skill.tier() - 1], skill.requiredLevel());
+            int[] gates = skill.isClassSkill() ? Tree.CLASS_TIER_LEVELS : Tree.TIER_LEVELS;
+            assertEquals(skill.id(), gates[skill.tier() - 1], skill.requiredLevel());
         }
         assertTrue("a few nodes join two branches", crossBranch >= 1 && crossBranch <= 12);
     }
@@ -88,6 +92,8 @@ public class SkillCatalogTest {
     @Test
     public void requiredLevelsUseTheTierGates() {
         assertEquals(List.of(1, 8, 18, 24, 30, 40), java.util.Arrays.stream(Tree.TIER_LEVELS).boxed().toList());
+        assertEquals(List.of(40, 44, 48, 54, 60), java.util.Arrays.stream(Tree.CLASS_TIER_LEVELS).boxed().toList());
+        assertEquals(JobClass.LEVEL, Tree.CLASS_TIER_LEVELS[0]);
         for (SkillDefinition skill : Jobs.allSkills().values()) {
             assertTrue(skill.requiredLevel() <= RULES.levelCap());
         }
@@ -97,25 +103,32 @@ public class SkillCatalogTest {
     @Test
     public void everyNodeIsReachableWithinTheLevelCap() {
         for (JobDefinition job : Jobs.selectable()) {
-            Map<String, Integer> investments = new HashMap<>();
-            boolean progress = true;
-            while (progress) {
-                progress = false;
-                for (SkillDefinition skill : job.skills()) {
-                    while (SkillTree.canInvest(job.type(), RULES.levelCap(), investments, 1, skill.id())
-                            == SkillTree.InvestResult.OK) {
-                        investments.merge(skill.id(), 1, Integer::sum);
-                        progress = true;
-                    }
+            reachEverything(JobPath.base(job.type()));
+            for (JobClass jobClass : JobClass.of(job.type())) {
+                reachEverything(JobPath.of(jobClass.id()));
+            }
+        }
+    }
+
+    private static void reachEverything(JobPath path) {
+        Map<String, Integer> investments = new HashMap<>();
+        boolean progress = true;
+        while (progress) {
+            progress = false;
+            for (SkillDefinition skill : path.skills()) {
+                while (SkillTree.canInvest(path, RULES.levelCap(), investments, 1, skill.id())
+                        == SkillTree.InvestResult.OK) {
+                    investments.merge(skill.id(), 1, Integer::sum);
+                    progress = true;
                 }
             }
-            for (SkillDefinition skill : job.skills()) {
-                assertEquals(skill.id(), skill.maxLevel(), SkillTree.levelOf(skill, RULES.levelCap(), investments));
-            }
-            assertTrue(SkillTree.isValid(job.type(), RULES.levelCap(), investments));
-            int spent = investments.values().stream().mapToInt(Integer::intValue).sum();
-            assertEquals(SkillTree.pointsToMaster(job.type()), spent);
         }
+        for (SkillDefinition skill : path.skills()) {
+            assertEquals(skill.id(), skill.maxLevel(), SkillTree.levelOf(skill, RULES.levelCap(), investments));
+        }
+        assertTrue(SkillTree.isValid(path, RULES.levelCap(), investments));
+        int spent = investments.values().stream().mapToInt(Integer::intValue).sum();
+        assertEquals(SkillTree.pointsToMaster(path), spent);
     }
 
     /**
@@ -125,23 +138,80 @@ public class SkillCatalogTest {
      */
     @Test
     public void pointBudget() {
+        int atCap = RULES.earnedSkillPoints(RULES.levelCap());
+        int atFifty = RULES.earnedSkillPoints(50);
         for (JobDefinition job : Jobs.selectable()) {
-            int master = SkillTree.pointsToMaster(job.type());
-            int atCap = RULES.earnedSkillPoints(RULES.levelCap());
-            assertTrue(job.type() + ": " + atCap + " of " + master, atCap < master);
-            int atFifty = RULES.earnedSkillPoints(50);
-            assertTrue(job.type() + ": " + atFifty + " of " + master, atFifty >= master * 0.35);
-            for (SkillDefinition skill : job.skills()) {
+            // a character who never advances could master its job's tree at the cap...
+            assertTrue(job.type() + " alone", atCap >= SkillTree.pointsToMaster(job.type()));
+            for (JobClass jobClass : JobClass.of(job.type())) {
+                // ...but with its class there is always more to learn than points, and a level-50 character has
+                // well over a third of it
+                int master = SkillTree.pointsToMaster(JobPath.of(jobClass.id()));
+                assertTrue(jobClass + ": " + atCap + " of " + master, atCap < master);
+                assertTrue(jobClass + ": " + atFifty + " of " + master, atFifty >= master * 0.35);
+            }
+            for (SkillDefinition skill : Jobs.allSkills().values()) {
+                if (skill.job() != job.type()) {
+                    continue;
+                }
                 // learnable at most one level after its tier opens (level 1 has no points yet)
                 int cost = unlockCost(skill, new HashMap<>());
                 int level = Math.min(RULES.levelCap(), skill.requiredLevel() + 1);
                 assertTrue(skill.id() + " costs " + cost, cost <= RULES.earnedSkillPoints(level));
             }
         }
-        assertEquals(108, RULES.earnedSkillPoints(50));
-        assertEquals(218, RULES.earnedSkillPoints(100));
-        assertEquals(20, RULES.earnedSkillPoints(10));
+        assertEquals(162, RULES.earnedSkillPoints(50));
+        assertEquals(327, RULES.earnedSkillPoints(100));
+        assertEquals(30, RULES.earnedSkillPoints(10));
         assertEquals(0, RULES.earnedSkillPoints(1));
+    }
+
+    /** Every class tree: 40 nodes in two branches of four columns and five tiers, an ultimate in each branch. */
+    @Test
+    public void everyClassTreeFillsItsTwoBranchesOfFiveTiers() {
+        for (JobClass jobClass : JobClass.values()) {
+            List<SkillDefinition> skills = Jobs.classSkills(jobClass);
+            assertEquals(jobClass.toString(), JobClass.SKILLS, skills.size());
+            Set<Integer> cells = new HashSet<>();
+            Map<SkillKind, Integer> kinds = new HashMap<>();
+            for (SkillDefinition skill : skills) {
+                assertTrue(skill.id(), skill.id().startsWith(jobClass.id() + "_"));
+                assertEquals(skill.id(), jobClass, skill.jobClass());
+                assertEquals(skill.id(), jobClass.base(), skill.job());
+                assertTrue(skill.id(), skill.isClassSkill());
+                assertFalse(skill.id() + " is learned with points", skill.isInnate());
+                assertTrue(cells.add(skill.branch() * 100 + skill.column() * 10 + skill.tier()));
+                kinds.merge(skill.kind(), 1, Integer::sum);
+                assertEquals(skill.id(), skill.kind() == SkillKind.ACTIVE ? Jobs.MAX_SKILL_LEVEL : 3, skill.maxLevel());
+            }
+            assertEquals(SkillDefinition.CLASS_BRANCHES * SkillDefinition.CLASS_COLUMNS * SkillDefinition.CLASS_TIERS,
+                    cells.size());
+            assertEquals(jobClass + " " + kinds, 2, (int) kinds.getOrDefault(SkillKind.ULTIMATE, 0));
+            assertTrue(jobClass + " " + kinds, kinds.getOrDefault(SkillKind.ACTIVE, 0) >= 20);
+            assertTrue(jobClass + " " + kinds, kinds.getOrDefault(SkillKind.PASSIVE, 0) >= 14);
+            for (int branch = 0; branch < SkillDefinition.CLASS_BRANCHES; branch++) {
+                int b = branch;
+                assertTrue(jobClass + " branch " + branch + " needs an ultimate",
+                        skills.stream().anyMatch(s -> s.branch() == b && s.kind() == SkillKind.ULTIMATE));
+            }
+        }
+    }
+
+    /** No two actives of a class are the same move, and none repeats a move of its job's tree. */
+    @Test
+    public void classActivesAreDistinctFromEachOtherAndFromTheirJob() {
+        for (JobDefinition job : Jobs.selectable()) {
+            Map<String, String> seen = new HashMap<>();
+            for (SkillDefinition skill : Jobs.allSkills().values()) {
+                if (skill.job() != job.type() || !skill.isUsable()) {
+                    continue;
+                }
+                String move = skill.action().frames() + "|" + skill.effects().stream()
+                        .filter(effect -> !(effect instanceof SkillEffect.Visual)).toList();
+                String other = seen.put(move, skill.id());
+                assertNull(skill.id() + " is the same move as " + other, other);
+            }
+        }
     }
 
     /** Points to learn {@code skill} at level 1 with the cheapest prerequisite levels (shared prerequisites once). */

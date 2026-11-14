@@ -207,18 +207,19 @@ public class PlayerCharacterTest {
         PlayerCharacter character = fresh();
         assertEquals(0, character.unspentSkillPoints(RULES));
         assertFalse(character.investSkillPoint("mage_fireball", RULES));
-        character.setLevel(2, RULES); // (2 - 1) * 2 = 2 points
-        assertEquals(2, character.unspentSkillPoints(RULES));
+        character.setLevel(2, RULES); // (2 - 1) * 3 = 3 points
+        assertEquals(3, character.unspentSkillPoints(RULES));
+        assertTrue(character.investSkillPoint("mage_fireball", RULES));
         assertTrue(character.investSkillPoint("mage_fireball", RULES));
         assertTrue(character.investSkillPoint("mage_fireball", RULES));
         assertFalse(character.investSkillPoint("mage_ice_lance", RULES));
-        assertEquals(2, character.investment("mage_fireball"));
+        assertEquals(3, character.investment("mage_fireball"));
         assertEquals(0, character.unspentSkillPoints(RULES));
         assertTrue(character.resetSkills());
-        assertEquals(2, character.unspentSkillPoints(RULES));
+        assertEquals(3, character.unspentSkillPoints(RULES));
         assertFalse(character.resetSkills());
-        character.setLevel(10, RULES); // 9 * 2 + the level-10 milestone bonus 2
-        assertEquals(20, character.unspentSkillPoints(RULES));
+        character.setLevel(10, RULES); // 9 * 3 + the level-10 milestone bonus 3
+        assertEquals(30, character.unspentSkillPoints(RULES));
     }
 
     @Test

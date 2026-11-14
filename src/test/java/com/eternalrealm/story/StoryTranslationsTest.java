@@ -155,14 +155,23 @@ public class StoryTranslationsTest {
     }
 
     @Test
-    public void jobNamesInTheJobMastersLinesAreTheOfficialOnes() {
+    public void jobNamesInTheJobMastersLinesAreTheOfficialOnes() throws IOException {
+        JsonObject jobs = JsonParser.parseString(Files.readString(Paths.get("docs", "i18n", "job.json"),
+                StandardCharsets.UTF_8)).getAsJsonObject();
         String text = ja(CATALOG.dialogue(new StoryTrigger.NpcTalk("job_master", 0)).orElseThrow().first().textKey());
-        for (String job : List.of("ナイト", "アサシン", "メイジ", "レンジャー", "プリースト", "魔剣士")) {
-            assertTrue(job, text.contains(job));
-        }
         String english = en(CATALOG.dialogue(new StoryTrigger.NpcTalk("job_master", 0)).orElseThrow().first().textKey());
-        for (String job : List.of("Knight", "Assassin", "Mage", "Ranger", "Priest", "Spellblade")) {
-            assertTrue(job, english.contains(job));
+        List<String> names = new ArrayList<>();
+        for (com.eternalrealm.job.JobType type : com.eternalrealm.job.JobType.values()) {
+            if (!type.isChosen()) {
+                continue;
+            }
+            JsonObject name = jobs.getAsJsonObject(type.translationKey());
+            names.add(name.get("ja").getAsString());
+            assertTrue(type + " in " + text, text.contains(name.get("ja").getAsString()));
+            assertTrue(type + " in " + english, english.contains(name.get("en").getAsString()));
         }
+        // the official names are Japanese words in kanji (owner, 2026-11-14: 「職業の名前を全部日本語にして漢字で」)
+        assertEquals(List.of("騎士", "暗殺者", "魔導士", "狩人", "神官", "魔剣士"), names);
+        assertFalse(text.contains("ナイト") || text.contains("プリースト"));
     }
 }

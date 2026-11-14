@@ -8,8 +8,8 @@
     "en": "Weapon Arts"
   },
   "skill_branch.eternalrealm.knight.2": {
-    "ja": "聖騎士",
-    "en": "Paladin"
+    "ja": "聖光",
+    "en": "Radiance"
   },
   "skill_branch.eternalrealm.assassin.0": {
     "ja": "影",
@@ -1504,8 +1504,8 @@
     "en": "Darts between enemies leaving afterimages for four cuts; the last finishes off the wounded."
   },
   "skill.eternalrealm.assassin_blade_saint": {
-    "ja": "剣聖",
-    "en": "Blade Saint"
+    "ja": "刃の極致",
+    "en": "Edge of Perfection"
   },
   "skill.eternalrealm.assassin_blade_saint.desc": {
     "ja": "スキルの威力が上がる。",
@@ -2032,8 +2032,8 @@
     "en": "Draws the bow to its limit for one heavy arrow."
   },
   "skill.eternalrealm.ranger_sniper": {
-    "ja": "狙撃手",
-    "en": "Sniper"
+    "ja": "狙撃の極意",
+    "en": "Sharpshooter"
   },
   "skill.eternalrealm.ranger_sniper.desc": {
     "ja": "スキルの威力が上がる。",

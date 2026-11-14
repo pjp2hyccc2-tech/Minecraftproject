@@ -42,7 +42,7 @@ public class JobsTest {
     @Test
     public void sixJobsWithFiftyFourSkillsEach() {
         assertEquals(6, Jobs.selectable().size());
-        assertEquals(6 * 54, Jobs.allSkills().size());
+        assertEquals(6 * 54 + JobClass.values().length * JobClass.SKILLS, Jobs.allSkills().size());
         Set<String> actionIds = new HashSet<>();
         for (JobDefinition job : Jobs.selectable()) {
             assertEquals(Jobs.SKILLS_PER_JOB, job.skills().size());
@@ -287,7 +287,12 @@ public class JobsTest {
     @Test
     public void storedJobIdsAreTolerant() {
         assertEquals(JobType.PRIEST, JobType.fromStored("priest"));
-        assertEquals(JobType.NONE, JobType.fromStored("necromancer"));
+        assertEquals(JobType.NONE, JobType.fromStored("lich_king"));
+        assertEquals(JobType.NONE, JobType.fromStored(null));
+        // a second class is stored as its own id and still belongs to its job
+        assertEquals(JobType.MAGE, JobType.fromStored("necromancer"));
+        assertEquals(JobType.KNIGHT, JobType.fromStored("guardian"));
+        assertFalse(JobType.byId("guardian").isPresent());
         for (JobType type : JobType.values()) {
             assertEquals(type, JobType.byId(type.id()).orElseThrow());
         }

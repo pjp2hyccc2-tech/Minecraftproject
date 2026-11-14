@@ -499,13 +499,76 @@ public class PlayerDataServiceTest {
                 service.chooseJob(BOB, com.eternalrealm.job.JobType.KNIGHT, rules).result());
     }
 
+    /**
+     * The second class (二次職): from level 40, free the first time; the other class costs gold and refunds the old
+     * class's points while the job's stay; the class is stored as the job id and survives a reload.
+     */
+    @Test
+    public void theJobGrowsIntoASecondClassAtLevelForty() throws Exception {
+        joinAndLoad(ALICE, "Alice");
+        com.eternalrealm.job.JobRules rules = com.eternalrealm.job.JobRules.defaults();
+        assertEquals(PlayerDataService.ClassChangeResult.NO_JOB,
+                service.advanceClass(ALICE, com.eternalrealm.job.JobClass.GUARDIAN, rules).result());
+        service.chooseJob(ALICE, com.eternalrealm.job.JobType.KNIGHT, rules);
+        service.setLevel(ALICE, 39);
+        assertEquals(PlayerDataService.ClassChangeResult.TOO_LOW,
+                service.advanceClass(ALICE, com.eternalrealm.job.JobClass.GUARDIAN, rules).result());
+        service.setLevel(ALICE, 40);
+        assertEquals(PlayerDataService.ClassChangeResult.WRONG_JOB,
+                service.advanceClass(ALICE, com.eternalrealm.job.JobClass.SAGE, rules).result());
+        assertEquals(com.eternalrealm.job.SkillTree.InvestResult.WRONG_JOB,
+                service.investSkill(ALICE, "guardian_titan_stance").orElseThrow());
+        service.investSkill(ALICE, "knight_provoke");
+
+        PlayerDataService.ClassChange first = service.advanceClass(ALICE, com.eternalrealm.job.JobClass.GUARDIAN, rules);
+        assertEquals(PlayerDataService.ClassChangeResult.OK, first.result());
+        assertTrue(first.first());
+        assertEquals("the first advance is free", 0L, first.cost());
+        assertEquals("guardian", service.snapshot(ALICE).orElseThrow().jobId());
+        assertEquals(PlayerDataService.ClassChangeResult.SAME_CLASS,
+                service.advanceClass(ALICE, com.eternalrealm.job.JobClass.GUARDIAN, rules).result());
+        assertEquals(com.eternalrealm.job.SkillTree.InvestResult.OK,
+                service.investSkill(ALICE, "guardian_titan_stance").orElseThrow());
+        assertEquals(com.eternalrealm.job.SkillTree.InvestResult.WRONG_JOB,
+                service.investSkill(ALICE, "paladin_radiant_edge").orElseThrow());
+        int unspent = service.snapshot(ALICE).orElseThrow().unspentSkillPoints();
+
+        PlayerDataService.ClassChange poor = service.advanceClass(ALICE, com.eternalrealm.job.JobClass.PALADIN, rules);
+        assertEquals(PlayerDataService.ClassChangeResult.NOT_ENOUGH_GOLD, poor.result());
+        assertEquals(rules.classChangeCost(40), poor.cost());
+        service.grantGold(ALICE, rules.classChangeCost(40));
+        PlayerDataService.ClassChange changed = service.advanceClass(ALICE, com.eternalrealm.job.JobClass.PALADIN, rules);
+        assertEquals(PlayerDataService.ClassChangeResult.OK, changed.result());
+        assertFalse(changed.first());
+        assertEquals(0L, service.gold(ALICE));
+        CharacterSnapshot paladin = service.snapshot(ALICE).orElseThrow();
+        assertEquals("paladin", paladin.jobId());
+        assertEquals("the job's own points stay", 1, paladin.investment("knight_provoke"));
+        assertEquals("the old class's points come back", 0, paladin.investment("guardian_titan_stance"));
+        assertEquals(unspent + 1, paladin.unspentSkillPoints());
+        assertFalse(paladin.skillLoadout().contains("guardian_titan_stance"));
+
+        service.onPlayerLeave(ALICE);
+        settle();
+        assertEquals("paladin", stored(ALICE).jobId());
+        joinAndLoad(ALICE, "Alice");
+        assertEquals("paladin", service.snapshot(ALICE).orElseThrow().jobId());
+        assertEquals(1, service.snapshot(ALICE).orElseThrow().investment("knight_provoke"));
+        // a new job leaves the class behind
+        service.grantGold(ALICE, 1_000_000L);
+        service.chooseJob(ALICE, com.eternalrealm.job.JobType.MAGE, rules);
+        assertEquals("mage", service.snapshot(ALICE).orElseThrow().jobId());
+        assertEquals(PlayerDataService.JobChangeResult.SAME_JOB,
+                service.chooseJob(ALICE, com.eternalrealm.job.JobType.MAGE, rules).result());
+    }
+
     @Test
     public void skillInvestmentIsValidatedAndPersisted() throws Exception {
         joinAndLoad(ALICE, "Alice");
         service.chooseJob(ALICE, com.eternalrealm.job.JobType.PRIEST, com.eternalrealm.job.JobRules.defaults());
         assertEquals(com.eternalrealm.job.SkillTree.InvestResult.NO_POINTS,
                 service.investSkill(ALICE, "priest_heal").orElseThrow());
-        service.setLevel(ALICE, 10); // 9 * 2 + 2 = 20 points
+        service.setLevel(ALICE, 10); // 9 * 3 + 3 = 30 points
         assertEquals(com.eternalrealm.job.SkillTree.InvestResult.OK, service.investSkill(ALICE, "priest_heal").orElseThrow());
         assertEquals(com.eternalrealm.job.SkillTree.InvestResult.WRONG_JOB,
                 service.investSkill(ALICE, "mage_fireball").orElseThrow());
@@ -514,7 +577,7 @@ public class PlayerDataServiceTest {
         assertEquals(com.eternalrealm.job.SkillTree.InvestResult.PREREQUISITE,
                 service.investSkill(ALICE, "priest_greater_heal").orElseThrow());
         assertEquals(1, service.snapshot(ALICE).orElseThrow().investment("priest_heal"));
-        assertEquals(19, service.snapshot(ALICE).orElseThrow().unspentSkillPoints());
+        assertEquals(29, service.snapshot(ALICE).orElseThrow().unspentSkillPoints());
         service.onPlayerLeave(ALICE);
         settle();
         assertEquals(1, (int) stored(ALICE).skillInvestments().get("priest_heal"));
@@ -588,7 +651,7 @@ public class PlayerDataServiceTest {
         assertEquals(CharacterRecord.MAX_GOLD, maxed.gold());
         assertEquals("every stat point is back in the pool", 0, maxed.allocatedStats().total());
         assertEquals("99 levels x 3 points", 297, maxed.unspentStatPoints());
-        assertEquals("99 x 2 + 10 milestones x 2", 218, maxed.unspentSkillPoints());
+        assertEquals("99 x 3 + 10 milestones x 3", 327, maxed.unspentSkillPoints());
         assertTrue(maxed.skillInvestments().isEmpty());
         assertTrue(maxed.skillLoadout().isEmpty());
         assertEquals("the job stays", "priest", maxed.jobId());
@@ -601,7 +664,7 @@ public class PlayerDataServiceTest {
         CharacterSnapshot capped = service.maxOut(ALICE).orElseThrow();
         assertEquals(50, capped.level());
         assertEquals(147, capped.unspentStatPoints());
-        assertEquals(49 * 2 + 5 * 2, capped.unspentSkillPoints());
+        assertEquals(49 * 3 + 5 * 3, capped.unspentSkillPoints());
 
         service.onPlayerLeave(ALICE);
         settle();

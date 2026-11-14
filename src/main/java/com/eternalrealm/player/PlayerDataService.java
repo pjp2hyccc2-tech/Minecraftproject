@@ -203,7 +203,7 @@ public final class PlayerDataService {
      * refunded (job module rules).
      */
     private boolean resetInvalidSkills(PlayerCharacter character) {
-        JobType job = JobType.fromStored(character.jobId());
+        com.eternalrealm.job.JobPath job = com.eternalrealm.job.JobPath.of(character.jobId());
         if (SkillTree.isValid(job, character.level(), character.skillInvestments())) {
             return false;
         }
@@ -212,7 +212,7 @@ public final class PlayerDataService {
 
     /** Drops loadout entries that are no longer valid (forgotten skills, another job). */
     private boolean sanitizeLoadout(PlayerCharacter character) {
-        JobType job = JobType.fromStored(character.jobId());
+        com.eternalrealm.job.JobPath job = com.eternalrealm.job.JobPath.of(character.jobId());
         java.util.List<String> stored = character.skillLoadout();
         java.util.List<String> clean = SkillTree.sanitize(job, character.level(), character.skillInvestments(), stored);
         return clean != stored && character.setSkillLoadout(clean);
@@ -372,6 +372,63 @@ public final class PlayerDataService {
         return new JobChange(JobChangeResult.OK, cost, !current.isChosen());
     }
 
+    public enum ClassChangeResult {
+        OK,
+        NOT_READY,
+        NO_JOB,
+        /** The class grows from another job. */
+        WRONG_JOB,
+        /** Below level {@value com.eternalrealm.job.JobClass#LEVEL}. */
+        TOO_LOW,
+        SAME_CLASS,
+        NOT_ENOUGH_GOLD
+    }
+
+    /**
+     * @param cost  gold paid (the first advance is free)
+     * @param first whether this was the job's first advance
+     */
+    public record ClassChange(ClassChangeResult result, long cost, boolean first) {
+    }
+
+    /**
+     * Grows the job into the second class {@code target} at level {@value com.eternalrealm.job.JobClass#LEVEL} (free),
+     * or changes to the job's other class (paying {@link JobRules#classChangeCost}; the old class's skill points are
+     * refunded, the job's own stay).
+     */
+    public ClassChange advanceClass(UUID playerId, com.eternalrealm.job.JobClass target, JobRules jobRules) {
+        Objects.requireNonNull(target, "target");
+        PlayerCharacter character = active.get(playerId);
+        if (character == null) {
+            return new ClassChange(ClassChangeResult.NOT_READY, 0L, false);
+        }
+        com.eternalrealm.job.JobPath path = com.eternalrealm.job.JobPath.of(character.jobId());
+        if (!path.job().isChosen()) {
+            return new ClassChange(ClassChangeResult.NO_JOB, 0L, false);
+        }
+        if (target.base() != path.job()) {
+            return new ClassChange(ClassChangeResult.WRONG_JOB, 0L, false);
+        }
+        if (character.level() < com.eternalrealm.job.JobClass.LEVEL) {
+            return new ClassChange(ClassChangeResult.TOO_LOW, 0L, false);
+        }
+        if (path.advanced() == target) {
+            return new ClassChange(ClassChangeResult.SAME_CLASS, 0L, false);
+        }
+        boolean first = !path.isAdvanced();
+        long cost = first ? 0L : jobRules.classChangeCost(character.level());
+        if (!character.spendGold(cost)) {
+            return new ClassChange(ClassChangeResult.NOT_ENOUGH_GOLD, cost, first);
+        }
+        com.eternalrealm.job.JobPath next = new com.eternalrealm.job.JobPath(path.job(), target);
+        character.advanceClass(target.id(), SkillTree.keptInvestments(next, character.skillInvestments()));
+        sanitizeLoadout(character);
+        LOG.info("{} {} {} -> {} (cost {} gold)", playerId, first ? "advanced" : "changed class", path.storedId(),
+                target.id(), cost);
+        listener.onCharacterChanged(playerId);
+        return new ClassChange(ClassChangeResult.OK, cost, first);
+    }
+
     /**
      * Invests one skill point. A newly learned active or ultimate goes into the first free slot that takes it.
      *
@@ -382,7 +439,7 @@ public final class PlayerDataService {
         if (character == null) {
             return Optional.empty();
         }
-        JobType job = JobType.fromStored(character.jobId());
+        com.eternalrealm.job.JobPath job = com.eternalrealm.job.JobPath.of(character.jobId());
         SkillTree.InvestResult result = SkillTree.canInvest(job, character.level(), character.skillInvestments(),
                 character.unspentSkillPoints(rules), skillId);
         if (result == SkillTree.InvestResult.OK) {
@@ -412,7 +469,7 @@ public final class PlayerDataService {
         if (character == null) {
             return Optional.empty();
         }
-        JobType job = JobType.fromStored(character.jobId());
+        com.eternalrealm.job.JobPath job = com.eternalrealm.job.JobPath.of(character.jobId());
         SkillTree.LoadoutResult result = SkillTree.canAssign(job, character.level(), character.skillInvestments(),
                 slot, skillId);
         if (result == SkillTree.LoadoutResult.OK) {

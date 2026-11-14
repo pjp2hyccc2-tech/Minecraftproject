@@ -101,7 +101,8 @@ public final class PartyHudOverlay implements IGuiOverlay {
     }
 
     static int jobColor(String job) {
-        return switch (job) {
+        // a second class has its job's colour
+        return switch (com.eternalrealm.job.JobType.fromStored(job).id()) {
             case "knight" -> 0x7FA8FF;
             case "assassin" -> 0xE05050;
             case "mage" -> 0xD08CFF;

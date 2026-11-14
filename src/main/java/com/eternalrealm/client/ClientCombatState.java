@@ -101,8 +101,8 @@ public final class ClientCombatState {
             return;
         }
         JobType job = JobType.fromStored(character.jobId());
-        SkillBinding[] bindings = SkillTree.bindings(job, character.level(), character.skillInvestments(),
-                character.skillLoadout());
+        SkillBinding[] bindings = SkillTree.bindings(com.eternalrealm.job.JobPath.of(character.jobId()),
+                character.level(), character.skillInvestments(), character.skillLoadout());
         for (int slot = 1; slot < Combatant.SKILL_SLOTS; slot++) {
             combatant.setJobSkill(slot, bindings[slot]);
         }

@@ -3,7 +3,6 @@ package com.eternalrealm.ui.screen;
 import com.eternalrealm.character.CharacterSnapshot;
 import com.eternalrealm.character.StatBlock;
 import com.eternalrealm.character.StatType;
-import com.eternalrealm.job.JobType;
 import com.eternalrealm.client.ClientCharacterState;
 import com.eternalrealm.client.ClientCombatState;
 import com.eternalrealm.combat.CombatStats;
@@ -110,7 +109,8 @@ public final class CharacterScreen extends JournalScreen {
         graphics.drawString(font, exp, left, top + 26, 0xD0D0D0);
         graphics.drawString(font, Component.translatable("screen.eternalrealm.character.points",
                 snapshot.unspentStatPoints()), left, top + 38, snapshot.unspentStatPoints() > 0 ? 0xFFFF55 : 0xA0A0A0);
-        JobType job = JobType.fromStored(snapshot.jobId());
+        // the class's name once the job has grown into one (守護士), else the job's (騎士)
+        com.eternalrealm.job.JobPath job = com.eternalrealm.job.JobPath.of(snapshot.jobId());
         graphics.drawString(font, Component.translatable("screen.eternalrealm.character.job_gold",
                 Component.translatable(job.translationKey()), format(snapshot.gold())), left + 150, top + 14, 0xE8C66A);
         StatBlock bonus = ClientCharacterState.bonusStats();

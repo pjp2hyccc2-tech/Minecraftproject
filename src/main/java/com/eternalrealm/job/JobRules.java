@@ -40,6 +40,14 @@ public record JobRules(int freeChangeBelowLevel, long goldPerLevel, long skillRe
         return goldPerLevel * level;
     }
 
+    /**
+     * Gold needed to change from one second class to the other at {@code level} (the first advance is free): what a
+     * job change costs; the class's skill points are refunded.
+     */
+    public long classChangeCost(int level) {
+        return goldPerLevel * level;
+    }
+
     /** Gold needed to refund every skill point at {@code level} (job master). */
     public long skillResetCost(int level) {
         return level < freeChangeBelowLevel ? 0L : skillResetGoldPerLevel * level;

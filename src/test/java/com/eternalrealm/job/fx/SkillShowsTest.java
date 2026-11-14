@@ -1,6 +1,7 @@
 package com.eternalrealm.job.fx;
 
 import com.eternalrealm.combat.HitFrame;
+import com.eternalrealm.job.JobClass;
 import com.eternalrealm.job.JobType;
 import com.eternalrealm.job.Jobs;
 import com.eternalrealm.job.SkillDefinition;
@@ -68,7 +69,7 @@ public class SkillShowsTest {
                 ultimates++;
             }
         }
-        assertEquals(33, ultimates);
+        assertEquals("33 of the six jobs, two of every second class", 33 + 2 * JobClass.values().length, ultimates);
         assertTrue(SkillShows.forAction("no_such_skill").isEmpty());
         assertTrue(SkillShows.forAction(null).isEmpty());
     }

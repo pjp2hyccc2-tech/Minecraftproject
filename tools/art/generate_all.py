@@ -112,6 +112,10 @@ def main() -> int:
     tree_icons = {}
     for sid in skill_tree.new_skills():
         tree_icons[sid] = save(skill_tree.icon(sid), "gui", "skill", f"{sid}.png")
+    # the second classes' icons and emblems (their own tool: recipes come from tools/jobs/class_trees.py)
+    import class_skill_icons  # noqa: E402
+    if class_skill_icons.generate(not args.no_preview):
+        return 1
     emblem_imgs = []
     for job in skills.JOBS:
         c = skills.emblem(job)
@@ -321,6 +325,15 @@ def check() -> list[str]:
     missing = sorted(i for i in ids if i not in skills.ALL_SKILLS + skill_tree.new_skills())
     if missing:
         bad.append(f"skills in Java without an icon: {missing}")
+    # the second classes' trees (GuardianSkills.java ...): every node has its icon, every class its emblem
+    import class_skill_icons  # noqa: E402
+    for cls in class_skill_icons.CLASSES:
+        java = os.path.join(src, "job", "".join(w.capitalize() for w in cls.split("_")) + "Skills.java")
+        if os.path.exists(java):
+            with open(java, encoding="utf-8") as f:
+                for n in re.findall(r'\.(?:active|passive|ultimate)\("([a-z_]+)"', f.read()):
+                    png(f"textures/gui/skill/{cls}_{n}.png", (16, 16))
+        png(f"textures/gui/job/{cls}.png", (16, 16))
     return bad
 
 

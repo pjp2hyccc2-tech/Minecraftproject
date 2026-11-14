@@ -10,15 +10,15 @@ import java.util.Optional;
  */
 public enum JobType {
     NONE("none"),
-    /** ナイト: tank, guards and protects the party. */
+    /** 騎士: tank, guards and protects the party. */
     KNIGHT("knight"),
-    /** アサシン: fast critical melee damage. */
+    /** 暗殺者: fast critical melee damage. */
     ASSASSIN("assassin"),
-    /** メイジ: ranged magic damage. */
+    /** 魔導士: ranged magic damage. */
     MAGE("mage"),
-    /** レンジャー: bows, mobility. */
+    /** 狩人: bows, mobility. */
     RANGER("ranger"),
-    /** プリースト: healing and support. */
+    /** 神官: healing and support. */
     PRIEST("priest"),
     /** 魔剣士: swords empowered by magic. */
     SPELLBLADE("spellblade");
@@ -54,8 +54,11 @@ public enum JobType {
         return Optional.empty();
     }
 
-    /** The job of a stored id; unknown ids (e.g. a job removed by an update) count as {@link #NONE}. */
+    /**
+     * The job of a stored id: a job's own id, or a second class's ({@link JobClass}: its job, so weapons, outfits and
+     * the job's tree stay); unknown ids (e.g. a job removed by an update) count as {@link #NONE}.
+     */
     public static JobType fromStored(String id) {
-        return byId(id).orElse(NONE);
+        return byId(id).or(() -> JobClass.byId(id).map(JobClass::base)).orElse(NONE);
     }
 }

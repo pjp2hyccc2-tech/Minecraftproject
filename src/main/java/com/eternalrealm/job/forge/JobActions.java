@@ -29,10 +29,10 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
- * Job selection, skill learning, the skill loadout and the paid skill reset, from the journal ({@code job.choose},
- * {@code skill.invest}, {@code skill.slot}, {@code skill.reset}) or by command ({@code /er job <job>},
- * {@code /er skill <id>}); plus {@code /er admin gold <player> <amount>}. Every request is validated by the job
- * module's rules on the server.
+ * Job selection, the second class at level 40, skill learning, the skill loadout and the paid skill reset, from the
+ * journal ({@code job.choose}, {@code job.advance}, {@code skill.invest}, {@code skill.slot}, {@code skill.reset}) or
+ * by command ({@code /er job <job or class>}, {@code /er skill <id>}); plus {@code /er admin gold <player> <amount>}.
+ * Every request is validated by the job module's rules on the server.
  */
 public final class JobActions {
     private static final long MAX_ADMIN_GOLD = 1_000_000_000L;
@@ -48,6 +48,12 @@ public final class JobActions {
             JobType job = JobType.byId(id).filter(JobType::isChosen)
                     .orElseThrow(() -> new UiArgs.InvalidArgumentException("unknown job " + id));
             chooseJob(player, context, job);
+        });
+        UiActions.register("job.advance", (player, context, args) -> {
+            String id = UiArgs.id(args, "class");
+            com.eternalrealm.job.JobClass target = com.eternalrealm.job.JobClass.byId(id)
+                    .orElseThrow(() -> new UiArgs.InvalidArgumentException("unknown class " + id));
+            advance(player, context, target);
         });
         UiActions.register("skill.invest", JobActions::investFromUi);
         UiActions.register("skill.slot", (player, context, args) -> {
@@ -103,6 +109,48 @@ public final class JobActions {
         return false;
     }
 
+    /**
+     * Grows the player's job into the second class {@code target} at level 40 (or changes to the other class, for a
+     * fee): the second class's tree opens in the skill screen.
+     */
+    public static boolean advance(ServerPlayer player, ServerContext context,
+                                  com.eternalrealm.job.JobClass target) {
+        PlayerDataService.ClassChange change = context.playerData().advanceClass(player.getUUID(), target,
+                context.game().jobRules());
+        Component name = Component.translatable(target.translationKey());
+        switch (change.result()) {
+            case OK -> {
+                player.displayClientMessage(Component.translatable(change.first()
+                        ? "message.eternalrealm.job.advanced" : "message.eternalrealm.job.class_changed", name)
+                        .withStyle(ChatFormatting.GOLD), false);
+                if (change.cost() > 0) {
+                    player.displayClientMessage(Component.translatable("message.eternalrealm.job.class_paid",
+                            change.cost()).withStyle(ChatFormatting.YELLOW), false);
+                }
+                player.displayClientMessage(Component.translatable("message.eternalrealm.job.class_tree", name)
+                        .withStyle(ChatFormatting.AQUA), false);
+                player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
+                        SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundSource.PLAYERS, 0.7F, 1.0F);
+                player.refreshDisplayName();
+                player.refreshTabListName();
+                return true;
+            }
+            case TOO_LOW -> player.displayClientMessage(Component.translatable("message.eternalrealm.job.class.too_low",
+                    com.eternalrealm.job.JobClass.LEVEL).withStyle(ChatFormatting.RED), true);
+            case SAME_CLASS -> player.displayClientMessage(Component.translatable("message.eternalrealm.job.class.same",
+                    name), true);
+            case WRONG_JOB, NO_JOB -> player.displayClientMessage(Component.translatable(
+                    "message.eternalrealm.job.class.wrong_job", name,
+                    Component.translatable(target.base().translationKey())).withStyle(ChatFormatting.RED), true);
+            case NOT_ENOUGH_GOLD -> player.displayClientMessage(Component.translatable(
+                    "message.eternalrealm.job.not_enough_gold", change.cost()).withStyle(ChatFormatting.RED), true);
+            case NOT_READY -> {
+                // data still loading: nothing to say
+            }
+        }
+        return false;
+    }
+
     public static boolean invest(ServerPlayer player, ServerContext context, String skillId) {
         java.util.List<String> before = context.playerData().snapshot(player.getUUID())
                 .map(com.eternalrealm.character.CharacterSnapshot::skillLoadout).orElse(java.util.List.of());
@@ -120,7 +168,7 @@ public final class JobActions {
                     ? Component.translatable("message.eternalrealm.skill.acquired", name).withStyle(ChatFormatting.GOLD)
                     : Component.translatable("message.eternalrealm.skill.learned", name, level), true);
             if (!before.equals(snapshot.skillLoadout())) {
-                int slot = SkillTree.effectiveLoadout(JobType.fromStored(snapshot.jobId()), snapshot.level(),
+                int slot = SkillTree.effectiveLoadout(com.eternalrealm.job.JobPath.of(snapshot.jobId()), snapshot.level(),
                         snapshot.skillInvestments(), snapshot.skillLoadout()).indexOf(skillId) + 1;
                 if (slot > 0) {
                     player.sendSystemMessage(Component.translatable("message.eternalrealm.skill.auto_slot", name, slot)
@@ -250,7 +298,10 @@ public final class JobActions {
 
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
-        String[] jobIds = Arrays.stream(JobType.values()).filter(JobType::isChosen).map(JobType::id).toArray(String[]::new);
+        String[] jobIds = java.util.stream.Stream.concat(
+                Arrays.stream(JobType.values()).filter(JobType::isChosen).map(JobType::id),
+                Arrays.stream(com.eternalrealm.job.JobClass.values()).map(com.eternalrealm.job.JobClass::id))
+                .toArray(String[]::new);
         dispatcher.register(Commands.literal("eternalrealm")
                 .then(Commands.literal("setup").requires(source -> source.hasPermission(2))
                         .then(Commands.literal("town").executes(ctx -> {
@@ -272,6 +323,11 @@ public final class JobActions {
                                     String id = StringArgumentType.getString(ctx, "job");
                                     Optional<JobType> job = JobType.byId(id).filter(JobType::isChosen);
                                     Optional<ServerContext> context = ServerContext.current();
+                                    Optional<com.eternalrealm.job.JobClass> jobClass =
+                                            com.eternalrealm.job.JobClass.byId(id);
+                                    if (jobClass.isPresent() && context.isPresent()) {
+                                        return advance(player, context.get(), jobClass.get()) ? 1 : 0; // a class
+                                    }
                                     if (job.isEmpty() || context.isEmpty()) {
                                         ctx.getSource().sendFailure(Component.translatable("commands.eternalrealm.job.unknown", id));
                                         return 0;

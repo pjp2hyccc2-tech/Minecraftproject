@@ -4,7 +4,9 @@ import com.eternalrealm.character.CharacterSnapshot;
 import com.eternalrealm.client.ClientCharacterState;
 import com.eternalrealm.client.ClientKeyMappings;
 import com.eternalrealm.client.ClientUiState;
+import com.eternalrealm.job.JobClass;
 import com.eternalrealm.job.JobDefinition;
+import com.eternalrealm.job.JobPath;
 import com.eternalrealm.job.JobRules;
 import com.eternalrealm.job.JobType;
 import com.eternalrealm.job.Jobs;
@@ -29,19 +31,21 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * The job's skill tree: three branches side by side, six tiers deep. Nodes are connected to their prerequisites; their
- * frame shows the state (locked, learnable, learned x/max, maxed) and the kind (actives square, passives with cut
- * corners, ultimates in gold). Hovering shows the numbers, what the next level adds and what the node opens; the
- * button below learns the selected node. The loadout bar puts learned actives into the six skill slots (drag a node
- * onto a slot, or select it and click the slot; right click empties a slot). Everything is checked again by the
- * server, which answers with a new character snapshot.
+ * The skill trees: the job's (three branches side by side, six tiers deep) and, on its own page, its second class's
+ * (two branches of four columns, five tiers from level 40). Nodes are connected to their prerequisites; their frame
+ * shows the state (locked, learnable, learned x/max, maxed) and the kind (actives square, passives with cut corners,
+ * ultimates in gold). Hovering shows the numbers, what the next level adds and what the node opens; the button below
+ * learns the selected node. The loadout bar puts learned actives (the job's and the class's) into the six skill slots
+ * (drag a node onto a slot, or select it and click the slot; right click empties a slot). A class tree the character
+ * has not grown into can be looked at (from the job page) but not learned. Everything is checked again by the server,
+ * which answers with a new character snapshot.
  */
 public final class SkillScreen extends JournalScreen {
     private static final int NODE = 22;
     private static final int ROW = 32;
     private static final int GUTTER = 26;
     private static final int BRANCH_GAP = 8;
-    private static final int HEADER = 40;
+    private static final int HEADER = 54;
     private static final int FOOTER = 46;
     private static final int SLOT = 22;
     private static final int GOLD = 0xFFE8C66A;
@@ -49,8 +53,15 @@ public final class SkillScreen extends JournalScreen {
     private static final int LINE_UNMET = 0xFF4A4A52;
     private static final int[] SLOT_ORDER = {1, 2, 3, 5, 6, 4};
 
+    /** The class tree shown when the screen opens next (null: the job's tree). */
+    private static JobClass rememberedPage;
+
     private Button investButton;
     private Button resetButton;
+    private Button jobTab;
+    private Button classTab;
+    /** The class whose tree is shown, or null for the job's own tree. */
+    private JobClass page;
     private String selected;
     private String dragging;
     private boolean dragMoved;
@@ -71,13 +82,45 @@ public final class SkillScreen extends JournalScreen {
         return Math.max(PANEL_HEIGHT, Math.min(300, height - 16));
     }
 
+    /** Opens the skills page on {@code jobClass}'s tree (to learn it, or to look at it before advancing). */
+    public static void openClassTree(JobClass jobClass) {
+        rememberedPage = jobClass;
+        net.minecraft.client.Minecraft.getInstance().setScreen(new SkillScreen());
+    }
+
     @Override
     protected void initPage() {
+        JobPath path = path();
+        page = rememberedPage != null && rememberedPage.base() == path.job() ? rememberedPage : null;
         investButton = addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.skill.learn"),
                 b -> invest()).bounds(left + contentWidth() - 66, bottom() - 20, 66, 18).build());
         resetButton = addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.skill.reset"),
                 b -> reset()).bounds(left + contentWidth() - 52, top + 11, 52, 14).build());
+        jobTab = addRenderableWidget(Button.builder(Component.empty(), b -> showPage(null))
+                .bounds(left, top + 26, 78, 13).build());
+        classTab = addRenderableWidget(Button.builder(Component.empty(), b -> classTabClicked())
+                .bounds(left + 80, top + 26, 96, 13).build());
         updateButtons();
+    }
+
+    private void showPage(JobClass value) {
+        if (page != value) {
+            page = value;
+            rememberedPage = value;
+            selected = null;
+            scroll = 0;
+            updateButtons();
+        }
+    }
+
+    /** The class tab: the character's class tree, or (before advancing) the job page's class cards. */
+    private void classTabClicked() {
+        JobPath path = path();
+        if (path.isAdvanced()) {
+            showPage(path.advanced());
+        } else {
+            JobScreen.openClasses();
+        }
     }
 
     // ------------------------------------------------------------------ data
@@ -90,6 +133,24 @@ public final class SkillScreen extends JournalScreen {
         return state().map(s -> JobType.fromStored(s.jobId())).filter(JobType::isChosen).map(Jobs::get);
     }
 
+    /** The character's job and class. */
+    private JobPath path() {
+        return state().map(s -> JobPath.of(s.jobId())).orElse(JobPath.NONE);
+    }
+
+    /** The nodes of the tree on the page. */
+    private List<SkillDefinition> pageSkills() {
+        if (page != null) {
+            return Jobs.classSkills(page);
+        }
+        return job().map(JobDefinition::skills).orElse(List.of());
+    }
+
+    /** Whether the page shows a class tree the character cannot learn (another class, or before advancing). */
+    private boolean previewing() {
+        return page != null && path().advanced() != page;
+    }
+
     private int level(SkillDefinition skill) {
         return state().map(s -> SkillTree.levelOf(skill, s.level(), s.skillInvestments())).orElse(0);
     }
@@ -99,7 +160,7 @@ public final class SkillScreen extends JournalScreen {
         if (s == null) {
             return SkillTree.InvestResult.NO_JOB;
         }
-        return SkillTree.canInvest(JobType.fromStored(s.jobId()), s.level(), s.skillInvestments(),
+        return SkillTree.canInvest(JobPath.of(s.jobId()), s.level(), s.skillInvestments(),
                 s.unspentSkillPoints(), skill.id());
     }
 
@@ -108,12 +169,12 @@ public final class SkillScreen extends JournalScreen {
         if (s == null) {
             return List.of();
         }
-        return SkillTree.effectiveLoadout(JobType.fromStored(s.jobId()), s.level(), s.skillInvestments(),
+        return SkillTree.effectiveLoadout(JobPath.of(s.jobId()), s.level(), s.skillInvestments(),
                 s.skillLoadout());
     }
 
     private PassiveTotals passives() {
-        return state().map(s -> SkillTree.passives(JobType.fromStored(s.jobId()), s.level(), s.skillInvestments()))
+        return state().map(s -> SkillTree.passives(JobPath.of(s.jobId()), s.level(), s.skillInvestments()))
                 .orElse(PassiveTotals.NONE);
     }
 
@@ -123,8 +184,25 @@ public final class SkillScreen extends JournalScreen {
         return top + panelHeight();
     }
 
+    private int branches() {
+        return page != null ? SkillDefinition.CLASS_BRANCHES : SkillDefinition.BRANCHES;
+    }
+
+    /** Node columns of one branch. */
+    private int columns() {
+        return page != null ? SkillDefinition.CLASS_COLUMNS : SkillDefinition.COLUMNS;
+    }
+
+    private int tiers() {
+        return page != null ? SkillDefinition.CLASS_TIERS : SkillDefinition.TIERS;
+    }
+
     private int pitch() {
-        return (contentWidth() - GUTTER - 2 * BRANCH_GAP) / 9;
+        return (contentWidth() - GUTTER - (branches() - 1) * BRANCH_GAP) / (branches() * columns());
+    }
+
+    private int branchLeft(int branch) {
+        return left + GUTTER + branch * (columns() * pitch() + BRANCH_GAP);
     }
 
     private int treeTop() {
@@ -148,7 +226,7 @@ public final class SkillScreen extends JournalScreen {
     }
 
     private double maxScroll() {
-        return Math.max(0, SkillDefinition.TIERS * ROW + 4 - (treeBottom() - treeTop()));
+        return Math.max(0, tiers() * ROW + 4 - (treeBottom() - treeTop()));
     }
 
     private boolean insideTree(double mouseX, double mouseY) {
@@ -159,7 +237,7 @@ public final class SkillScreen extends JournalScreen {
         if (!insideTree(mouseX, mouseY)) {
             return Optional.empty();
         }
-        for (SkillDefinition skill : job().map(JobDefinition::skills).orElse(List.of())) {
+        for (SkillDefinition skill : pageSkills()) {
             int x = nodeX(skill);
             int y = nodeY(skill);
             if (Math.abs(mouseX - x) <= NODE / 2.0 && Math.abs(mouseY - y) <= NODE / 2.0) {
@@ -248,9 +326,24 @@ public final class SkillScreen extends JournalScreen {
         }
         boolean hasJob = job().isPresent();
         SkillDefinition skill = selected == null ? null : Jobs.skill(selected).orElse(null);
-        investButton.visible = hasJob;
+        investButton.visible = hasJob && !previewing();
         resetButton.visible = hasJob;
         investButton.active = skill != null && investResult(skill) == SkillTree.InvestResult.OK;
+        JobPath path = path();
+        jobTab.visible = hasJob;
+        classTab.visible = hasJob;
+        jobTab.active = page != null;
+        jobTab.setMessage(Component.translatable(path.job().translationKey()));
+        if (path.isAdvanced()) {
+            classTab.active = page != path.advanced();
+            classTab.setMessage(Component.translatable(path.advanced().translationKey()));
+        } else {
+            classTab.active = true;
+            int level = state().map(CharacterSnapshot::level).orElse(1);
+            classTab.setMessage(level < JobClass.LEVEL
+                    ? Component.translatable("screen.eternalrealm.skill.tab_class_locked", JobClass.LEVEL)
+                    : Component.translatable("screen.eternalrealm.skill.tab_class_pick"));
+        }
         investButton.setMessage(Component.translatable(skill != null && level(skill) > 0
                 ? "screen.eternalrealm.skill.upgrade" : "screen.eternalrealm.skill.learn"));
         CharacterSnapshot s = state().orElse(null);
@@ -344,15 +437,19 @@ public final class SkillScreen extends JournalScreen {
         }
         CharacterSnapshot snapshot = state.get();
         JobDefinition definition = job.get();
+        if (page != null && page.base() != definition.type()) {
+            showPage(null); // the job changed while the page was open
+        }
         scroll = Math.min(scroll, maxScroll());
         drawHeader(graphics, snapshot, definition);
         graphics.enableScissor(left, treeTop(), left + contentWidth(), treeBottom());
         drawRows(graphics, snapshot);
-        for (SkillDefinition skill : definition.skills()) {
+        List<SkillDefinition> skills = pageSkills();
+        for (SkillDefinition skill : skills) {
             drawLines(graphics, skill, snapshot);
         }
         List<String> loadout = loadout();
-        for (SkillDefinition skill : definition.skills()) {
+        for (SkillDefinition skill : skills) {
             drawNode(graphics, skill, snapshot, loadout, mouseX, mouseY);
         }
         graphics.disableScissor();
@@ -370,34 +467,46 @@ public final class SkillScreen extends JournalScreen {
 
     private void drawHeader(GuiGraphics graphics, CharacterSnapshot snapshot, JobDefinition definition) {
         int y = top + 13;
-        graphics.blit(JobScreen.emblem(definition.type()), left, y - 4, 0, 0, 16, 16, 16, 16);
-        graphics.drawString(font, Component.translatable(definition.type().translationKey()), left + 19, y, TITLE_COLOR);
+        Component name = Component.translatable(page != null ? page.translationKey()
+                : definition.type().translationKey());
+        graphics.blit(page != null ? JobScreen.emblem(page) : JobScreen.emblem(definition.type()), left, y - 4, 0, 0,
+                16, 16, 16, 16);
+        graphics.drawString(font, name, left + 19, y, TITLE_COLOR);
+        List<SkillDefinition> skills = pageSkills();
         int learned = 0;
-        for (SkillDefinition skill : definition.skills()) {
+        for (SkillDefinition skill : skills) {
             if (level(skill) > 0) {
                 learned++;
             }
         }
         Component points = Component.translatable("screen.eternalrealm.skill.points_header",
-                snapshot.unspentSkillPoints(), learned, definition.skills().size());
-        graphics.drawString(font, points, left + 19 + font.width(Component.translatable(
-                definition.type().translationKey())) + 8, y, snapshot.unspentSkillPoints() > 0 ? 0xFFFF55 : MUTED);
+                snapshot.unspentSkillPoints(), learned, skills.size());
+        int pointsX = left + 19 + font.width(name) + 8;
+        graphics.drawString(font, font.plainSubstrByWidth(points.getString(), left + contentWidth() - 56 - pointsX),
+                pointsX, y, snapshot.unspentSkillPoints() > 0 ? 0xFFFF55 : MUTED);
+        if (previewing()) {
+            int x = left + 180;
+            graphics.drawString(font, font.plainSubstrByWidth(Component.translatable("screen.eternalrealm.skill.preview",
+                    Component.translatable(page.translationKey())).getString(), left + contentWidth() - x), x, top + 29,
+                    0xFFCC8866);
+        }
         int titleY = treeTop() - 10;
-        for (int branch = 0; branch < SkillDefinition.BRANCHES; branch++) {
-            int x0 = left + GUTTER + branch * (3 * pitch() + BRANCH_GAP);
-            int x1 = x0 + 3 * pitch();
+        for (int branch = 0; branch < branches(); branch++) {
+            int x0 = branchLeft(branch);
+            int x1 = x0 + columns() * pitch();
             graphics.fill(x0 + 2, titleY + 9, x1 - 2, titleY + 10, 0x60E8C66A);
-            graphics.drawCenteredString(font, Component.translatable(definition.branchKey(branch)), (x0 + x1) / 2,
-                    titleY, 0xFFD8C8A0);
+            graphics.drawCenteredString(font, Component.translatable(page != null ? page.branchKey(branch)
+                    : definition.branchKey(branch)), (x0 + x1) / 2, titleY, 0xFFD8C8A0);
         }
     }
 
     private void drawRows(GuiGraphics graphics, CharacterSnapshot snapshot) {
-        for (int branch = 0; branch < SkillDefinition.BRANCHES; branch++) {
-            int x0 = left + GUTTER + branch * (3 * pitch() + BRANCH_GAP);
-            graphics.fill(x0, treeTop(), x0 + 3 * pitch(), treeBottom(), branch % 2 == 0 ? 0x14FFFFFF : 0x0AFFFFFF);
+        for (int branch = 0; branch < branches(); branch++) {
+            int x0 = branchLeft(branch);
+            graphics.fill(x0, treeTop(), x0 + columns() * pitch(), treeBottom(),
+                    branch % 2 == 0 ? 0x14FFFFFF : 0x0AFFFFFF);
         }
-        for (int tier = 1; tier <= SkillDefinition.TIERS; tier++) {
+        for (int tier = 1; tier <= tiers(); tier++) {
             int y = rowY(tier);
             int required = tierLevel(tier);
             boolean reached = snapshot.level() >= required;
@@ -412,7 +521,7 @@ public final class SkillScreen extends JournalScreen {
     /** The lowest required level of the tier's nodes (the tier's gate). */
     private int tierLevel(int tier) {
         int lowest = 100;
-        for (SkillDefinition skill : job().map(JobDefinition::skills).orElse(List.of())) {
+        for (SkillDefinition skill : pageSkills()) {
             if (skill.tier() == tier) {
                 lowest = Math.min(lowest, skill.requiredLevel());
             }
@@ -633,6 +742,12 @@ public final class SkillScreen extends JournalScreen {
                 : Component.translatable(skill.isInnate() ? "skill_info.eternalrealm.innate"
                 : "skill_info.eternalrealm.unlearned", skill.isInnate() ? skill.requiredLevel() : skill.maxLevel())
                 .withStyle(ChatFormatting.GRAY));
+        if (skill.isClassSkill()) {
+            boolean own = path().advanced() == skill.jobClass();
+            lines.add(Component.translatable(own ? "screen.eternalrealm.skill.class_tag"
+                    : "skill_info.eternalrealm.other_class", Component.translatable(skill.jobClass().translationKey()))
+                    .withStyle(own ? ChatFormatting.AQUA : ChatFormatting.RED));
+        }
         lines.addAll(wrap(Component.translatable(skill.descriptionKey()).withStyle(ChatFormatting.WHITE)));
         PassiveTotals passive = passives();
         if (skill.isPassive()) {
@@ -660,7 +775,7 @@ public final class SkillScreen extends JournalScreen {
                             Component.translatable(parent.translationKey()), prerequisite.level())
                     .append(met ? " ✔" : " ✘").withStyle(met ? ChatFormatting.GREEN : ChatFormatting.RED));
         }
-        List<SkillDefinition> opens = Jobs.get(skill.job()).unlockedBy(skill.id());
+        List<SkillDefinition> opens = Jobs.unlockedBy(skill.id());
         if (!opens.isEmpty()) {
             MutableComponent names = Component.empty();
             for (int i = 0; i < opens.size(); i++) {

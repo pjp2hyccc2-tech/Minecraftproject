@@ -214,12 +214,13 @@ public final class CombatDriver {
             try {
                 CharacterSnapshot character = snapshot.get();
                 JobType job = JobType.fromStored(character.jobId());
-                skills.put(playerId, skillsOf(job, character).withGear(PlayerStats.perks(player)));
+                com.eternalrealm.job.JobPath path = com.eternalrealm.job.JobPath.of(character.jobId());
+                skills.put(playerId, skillsOf(path, character).withGear(PlayerStats.perks(player)));
                 ComposedStats composed = PlayerStats.compose(player, character);
                 CombatStats stats = CombatStats.derive(composed.total(), character.level(), tuning,
                         composed.modifiers());
                 Combatant combatant = service.register(playerId, stats, now());
-                SkillBinding[] bindings = SkillTree.bindings(job, character.level(), character.skillInvestments(),
+                SkillBinding[] bindings = SkillTree.bindings(path, character.level(), character.skillInvestments(),
                         character.skillLoadout());
                 for (int slot = 1; slot < Combatant.SKILL_SLOTS; slot++) {
                     combatant.setJobSkill(slot, bindings[slot]);
@@ -237,12 +238,12 @@ public final class CombatDriver {
         }
     }
 
-    private static PlayerSkills skillsOf(JobType job, CharacterSnapshot character) {
-        if (!job.isChosen()) {
+    private static PlayerSkills skillsOf(com.eternalrealm.job.JobPath job, CharacterSnapshot character) {
+        if (!job.job().isChosen()) {
             return PlayerSkills.NONE;
         }
         Map<String, Integer> levels = new HashMap<>();
-        for (SkillDefinition skill : Jobs.get(job).skills()) {
+        for (SkillDefinition skill : job.skills()) {
             int level = SkillTree.levelOf(skill, character.level(), character.skillInvestments());
             if (level > 0) {
                 levels.put(skill.id(), level);

@@ -1,7 +1,6 @@
 package com.eternalrealm.social.forge;
 
 import com.eternalrealm.character.CharacterSnapshot;
-import com.eternalrealm.job.JobType;
 import com.eternalrealm.party.ExperienceShare;
 import com.eternalrealm.party.ExperienceSplit;
 import com.eternalrealm.party.Party;
@@ -302,7 +301,9 @@ public final class PartyManager {
             member.addProperty("down", com.eternalrealm.revival.forge.RevivalService.isDown(id));
             Optional<CharacterSnapshot> snapshot = playerData.snapshot(id);
             member.addProperty("level", snapshot.map(CharacterSnapshot::level).orElse(1));
-            member.addProperty("job", snapshot.map(s -> JobType.fromStored(s.jobId()).id()).orElse("none"));
+            // the class's id once advanced (the party screen names it, the HUD colours it by its job)
+            member.addProperty("job", snapshot.map(s -> com.eternalrealm.job.JobPath.of(s.jobId()).storedId())
+                    .orElse("none"));
         }
         return member;
     }

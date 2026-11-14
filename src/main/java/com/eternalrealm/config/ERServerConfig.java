@@ -295,12 +295,12 @@ public final class ERServerConfig {
     }
 
     /** The balance revision this build writes. */
-    public static final int CURRENT_BALANCE_REVISION = 0;
+    public static final int CURRENT_BALANCE_REVISION = com.eternalrealm.character.BalanceRevisions.CURRENT;
 
     /**
      * Brings a server config file of an older balance revision up to date, once (the server's start). Forge adds keys
      * a file does not have with their defaults, but keeps the values a file has: a world made before a balance change
-     * would never see it. Only values still at the default of their time change. No revision changes values yet.
+     * would never see it. Only values still at the default of their time change ({@code BalanceRevisions}).
      *
      * @return whether the file was changed
      */
@@ -309,6 +309,10 @@ public final class ERServerConfig {
         if (from >= CURRENT_BALANCE_REVISION) {
             return false;
         }
+        SKILL_POINTS_PER_LEVEL.set(com.eternalrealm.character.BalanceRevisions.skillPointsPerLevel(from,
+                SKILL_POINTS_PER_LEVEL.get()));
+        SKILL_POINT_MILESTONE_BONUS.set(com.eternalrealm.character.BalanceRevisions.skillPointMilestoneBonus(from,
+                SKILL_POINT_MILESTONE_BONUS.get()));
         BALANCE_REVISION.set(CURRENT_BALANCE_REVISION);
         BALANCE_REVISION.save();
         return true;

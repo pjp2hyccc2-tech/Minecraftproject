@@ -776,3 +776,31 @@ Decisions:
 - **Kinder rules at the counter**: an amount chooser instead of click = 1 / shift = 10; equipment sells on a second press instead of
   a shift-click; the back of the bag can be sold from; a purchase the bag cannot hold is refused instead of dropping at the feet.
 
+
+## D-CLASSES: second classes at level 40, two per job, forty skills each (2026-11-14)
+
+The owner: 「職業をレベル40でニ次職に進化できるようにして2つ枝分かれをつくって、ナイトなら守護士か聖騎士、みたいなのをそれぞれに作って。
+職業の名前を全部日本語にして漢字で 新しいスキルを高クオリティで40個ずつ増やして 枝分かれの場合、枝分かれで選んだ方のスキルとナイトの
+本来のスキルしか使えなくする。スキルポイント獲得率をともう少し上げて」.
+Decisions:
+- **Forty per class**: 「40個ずつ」 read as forty new skills for each of the twelve classes (480), since every class is a branch of
+  its own; one new tree per class beside the job's tree, not more nodes in the job's tree.
+- **A class is a step on the job's road, stored as the job id**: the character keeps its job (weapons, outfits, the job's tree,
+  innate skills, the nameplate's emblem); the stored job id becomes the class's id (`guardian`) and `JobType.fromStored` maps it
+  back to the job, so every system that only cares about the job keeps working unchanged and old characters need no migration.
+  `JobPath` (job + class) is the one place that says which skills a character owns: its job's and its own class's
+  (「選んだ方のスキルとナイトの本来のスキルしか使えなくする」), used by learning, the loadout, combat bindings and passives alike.
+- **Advancing is free, changing class is not**: the first advance at level 40 costs nothing; moving to the other class costs
+  100 G × level and refunds the old class's points while the job's stay (a choice that matters, but not a trap).
+- **The trees in data, generated**: each class's 40 nodes (place, DSL, icon recipe, names and descriptions in both languages) live
+  in one spec (`tools/jobs/specs/<class>.py`); `tools/jobs/class_trees.py` writes the Java tree, the translations, the icon
+  recipes and the tables of `docs/modules/classes.md`, and checks the shape, the prerequisites and that no skill name is used
+  twice. The rules the Java checks again at start-up (40 nodes, cells, weapons, prerequisites inside the class).
+- **Only existing effects**: the class skills are built from the same `SkillEffect` / `PassiveEffect` kinds and the same light
+  (`SkillShows`), so no new server behaviour went in untested; each class ultimate has its own finale in `Ultimates`.
+  Class tiers open at 40/44/48/54/60; class passives and ultimates have three levels, actives five.
+- **Kanji names**: the jobs became 騎士・暗殺者・魔導士・狩人・神官 (魔剣士 already was); skill names that would now read like a class
+  were renamed (knight branch 「聖騎士」→「聖光」, the assassin's 「剣聖」→「刃の極致」, the ranger's 「狙撃手」→「狙撃の極意」).
+- **More skill points, also in old worlds**: 2 → 3 per level and per tenth level (×1.5). Forge keeps the values a config file
+  has, so a world's file of balance revision 0 still at the old default 2 is moved to 3 once (`BalanceRevisions`, revision 1);
+  a value set by hand stays.

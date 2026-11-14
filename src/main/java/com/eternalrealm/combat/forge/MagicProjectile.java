@@ -80,6 +80,7 @@ public final class MagicProjectile extends ThrowableItemProjectile {
             case "magic_orb", "spark", "thunder", "thunder_orb" -> Items.HEART_OF_THE_SEA;
             case "poison_dart", "poison_flask" -> Items.SLIME_BALL;
             case "knife" -> Items.IRON_NUGGET;
+            case "bone" -> Items.BONE;
             case "crescent" -> Items.AMETHYST_CLUSTER;
             case com.eternalrealm.combat.WeaponProfiles.STAR_SIGIL -> Items.END_CRYSTAL;
             default -> Items.AMETHYST_SHARD;
@@ -107,6 +108,9 @@ public final class MagicProjectile extends ThrowableItemProjectile {
         }
         if (item == Items.IRON_NUGGET) {
             return net.minecraft.core.particles.ParticleTypes.CRIT;
+        }
+        if (item == Items.BONE) {
+            return net.minecraft.core.particles.ParticleTypes.WHITE_ASH;
         }
         if (item == Items.END_CRYSTAL) {
             return net.minecraft.core.particles.ParticleTypes.END_ROD;

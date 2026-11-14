@@ -332,6 +332,274 @@ final class Ultimates {
                 g.put(g.cue(Kind.FLASH, blast - 1, blast, blast + 8).at(Anchor.AIM).a(7.0));
                 g.shake(blast, 2.0F, 12, 1.6F);
             }
+            // ------------------------------------------------------------ second classes (二次職)
+            case "guardian_eternal_fortress" -> {
+                int f = t[1];
+                g.put(g.cue(Kind.WALLS, t[0], f, f + 40).at(Anchor.ORIGIN).a(5.0).b(4.0).n(12));
+                g.put(g.cue(Kind.DOME, t[0], t[0] + 6, f + 30).a(2.6));
+                g.put(g.cue(Kind.QUAKE, f, f, f + 26).frame(1).a(7.0).n(16));
+                g.put(g.cue(Kind.SHOCKWAVE, f, f, f + 18).frame(1).a(7.5).b(1.4).n(3));
+                g.put(g.cue(Kind.FLASH, f - 1, f, f + 8).frame(1).a(4.5));
+                g.shake(f, 2.0F, 12, 1.8F);
+            }
+            case "guardian_oath_of_the_wall" -> {
+                int f = t[0];
+                g.put(g.cue(Kind.SKY_SIGIL, 0, f, f + 30).at(Anchor.ORIGIN).a(5.0).c(10.0).n(6).variant(g.style));
+                g.put(g.cue(Kind.WALLS, f - 2, f + 2, f + 36).at(Anchor.ORIGIN).a(6.0).b(3.0).n(10)
+                        .palette(SkillTheme.HOLY));
+                g.put(g.cue(Kind.TAUNT, f, f + 2, f + 20).a(8.0));
+                g.put(g.cue(Kind.GLYPH, f, f + 4, f + 34).variant(2).a(1.4).c(1.4));
+                g.put(g.cue(Kind.FLASH, f - 1, f, f + 8).a(4.0));
+                g.shake(f, 1.2F, 8, 0.8F);
+            }
+            case "paladin_divine_judgment" -> {
+                int f = t[1];
+                g.put(g.cue(Kind.SKY_SIGIL, 0, f - 2, f + 22).at(Anchor.ORIGIN).a(6.5).c(15.0).n(8).variant(g.style));
+                g.put(g.cue(Kind.WINGS, t[0], t[0] + 6, f + 18).a(3.0));
+                g.put(g.cue(Kind.PILLAR, f - 3, f, f + 20).frame(1).a(2.2).b(18.0));
+                g.put(g.cue(Kind.CROSS, f - 4, f, f + 24).frame(1).a(9.0));
+                g.put(g.cue(Kind.NOVA, f, f, f + 16).frame(1).a(7.0).n(24));
+                g.put(g.cue(Kind.FLASH, f - 1, f, f + 8).frame(1).a(6.0));
+                g.shake(f, 2.2F, 12, 1.8F);
+            }
+            case "paladin_sanctum_of_light" -> {
+                int f = t[0];
+                g.put(g.cue(Kind.SIGIL, 0, f, f + 44).at(Anchor.ORIGIN).a(8.0).n(8).variant(g.style));
+                g.put(g.cue(Kind.PILLAR, f - 2, f + 2, f + 30).at(Anchor.ORIGIN).a(0.5).b(9.0).n(6).c(6.0));
+                g.put(g.cue(Kind.DOME, f, f + 6, f + 40).at(Anchor.ORIGIN).a(8.0));
+                g.put(g.cue(Kind.HEAL, f, f + 4, f + 30).a(8.0));
+                g.put(g.cue(Kind.RAIN, f, f + 6, f + 40).at(Anchor.ORIGIN).a(8.0).n(2).c(10.0).variant(5));
+                g.put(g.cue(Kind.FLASH, f - 1, f, f + 8).a(4.5));
+                g.shake(f, 1.2F, 8, 0.8F);
+            }
+            case "shinobi_all_creation" -> {
+                int last = t[4];
+                g.put(g.cue(Kind.SIGIL, 0, t[0], last + 16).at(Anchor.ORIGIN).a(6.0).n(5).variant(g.style));
+                g.put(g.cue(Kind.BREATH, t[0] - 1, t[0], t[0] + 10).frame(0).a(6.0).b(40.0).n(9)
+                        .palette(SkillTheme.FIRE));
+                g.put(g.cue(Kind.FOG, t[1] - 2, t[1], t[1] + 14).frame(1).a(5.0).n(10).palette(SkillTheme.FROST));
+                g.put(g.cue(Kind.BOLTS, t[2] - 2, t[2], t[2] + 10).frame(2).a(5.5).n(8).c(9.0));
+                g.put(g.cue(Kind.VORTEX, t[3] - 2, t[3], t[3] + 12).frame(3).a(5.0).b(5.0).palette(SkillTheme.WIND));
+                g.put(g.cue(Kind.SPIKES, last, last, last + 18).frame(4).a(6.5).b(2.6).n(20).palette(SkillTheme.EARTH));
+                g.put(g.cue(Kind.QUAKE, last, last, last + 22).frame(4).a(7.0).n(14));
+                g.put(g.cue(Kind.FLASH, last - 1, last, last + 8).frame(4).a(5.0));
+                g.shake(t[2], 0.8F, 6, 0.5F);
+                g.shake(last, 2.0F, 12, 1.6F);
+            }
+            case "shinobi_shadow_moon_dance" -> {
+                int lastFrame = t.length - 1;
+                int last = t[lastFrame];
+                g.put(g.cue(Kind.GLYPH, 0, t[1], last + 16).variant(6).a(3.2).c(6.0));
+                g.put(g.cue(Kind.FOG, 0, t[0], last + 12).a(5.0).n(12));
+                for (int i = 1; i < lastFrame; i++) {
+                    g.put(g.cue(Kind.SLASH, t[i] - 1, t[i], t[i] + 6).frame(i).a(4.8).b(70.0)
+                            .c(i * 47.0 % 140.0 - 70.0).variant(i % 2));
+                }
+                g.put(g.cue(Kind.SPIN, last - 2, last, last + 8).frame(lastFrame).a(6.0).b(1.0).d(0.6).variant(1));
+                g.put(g.cue(Kind.BURST, last, last, last + 12).frame(lastFrame).a(6.0).n(24));
+                g.put(g.cue(Kind.FLASH, last - 1, last, last + 8).frame(lastFrame).a(4.5));
+                g.shake(last, 1.8F, 10, 1.4F);
+            }
+            case "reaper_crimson_harvest" -> {
+                g.put(g.cue(Kind.GLYPH, 0, t[1], t[2] + 18).variant(9).a(3.0).c(6.5).palette(SkillTheme.BLOOD));
+                g.put(g.cue(Kind.VORTEX, t[0], t[1], t[2]).at(Anchor.ORIGIN).a(6.0).b(3.0).palette(SkillTheme.BLOOD));
+                g.put(g.cue(Kind.SPIN, t[1] - 2, t[1], t[1] + 8).frame(1).a(7.0).b(1.0).d(0.8));
+                g.put(g.cue(Kind.SPIN, t[2] - 2, t[2], t[2] + 9).frame(2).a(7.5).b(1.2).d(1.0).variant(1));
+                g.put(g.cue(Kind.SIPHON, t[2], t[2] + 2, t[2] + 16).frame(2).a(6.0));
+                g.put(g.cue(Kind.NOVA, t[2], t[2], t[2] + 14).frame(2).a(7.5).n(22));
+                g.put(g.cue(Kind.FLASH, t[2] - 1, t[2], t[2] + 8).frame(2).a(5.0));
+                g.shake(t[1], 0.8F, 6, 0.5F);
+                g.shake(t[2], 2.0F, 12, 1.6F);
+            }
+            case "reaper_sending_to_yomi" -> {
+                g.put(g.cue(Kind.RIFT, t[0], t[1], t[2] + 6).at(Anchor.ORIGIN).a(8.0));
+                g.put(g.cue(Kind.ECLIPSE, 0, t[1], t[2] + 16).at(Anchor.ORIGIN).a(2.6).c(9.0));
+                g.put(g.cue(Kind.FOG, t[0], t[1], t[2] + 14).at(Anchor.ORIGIN).a(7.0).n(12));
+                g.put(g.cue(Kind.NOVA, t[2], t[2], t[2] + 16).frame(2).a(8.0).n(26));
+                g.put(g.cue(Kind.FLASH, t[2] - 1, t[2], t[2] + 8).frame(2).a(5.0));
+                g.shake(t[1], 0.8F, 6, 0.6F);
+                g.shake(t[2], 2.2F, 12, 1.8F);
+            }
+            case "sage_genesis" -> {
+                int last = t[5];
+                g.put(g.cue(Kind.SKY_SIGIL, 0, t[1], last + 18).at(Anchor.ORIGIN).a(8.0).c(16.0).n(9).variant(g.style));
+                g.put(g.cue(Kind.ORBIT, 0, t[0], last).a(3.0).n(4));
+                g.put(g.cue(Kind.METEOR, t[1] - 8, t[1], t[1] + 10).frame(1).a(1.6));
+                g.put(g.cue(Kind.SPIKES, t[2], t[2], t[2] + 14).frame(2).a(6.0).b(2.4).n(18).palette(SkillTheme.FROST));
+                g.put(g.cue(Kind.BOLTS, t[3] - 2, t[3], t[3] + 10).frame(3).a(6.0).n(9).c(10.0));
+                g.put(g.cue(Kind.VORTEX, t[4] - 2, t[4], t[4] + 12).frame(4).a(6.0).b(5.0).palette(SkillTheme.WIND));
+                g.put(g.cue(Kind.NOVA, last, last, last + 18).frame(5).a(8.0).n(28));
+                g.put(g.cue(Kind.FLASH, last - 1, last, last + 9).frame(5).a(7.0));
+                g.shake(t[1], 1.0F, 8, 0.8F);
+                g.shake(last, 2.4F, 14, 2.0F);
+            }
+            case "sage_eternal_wisdom" -> {
+                g.put(g.cue(Kind.CLOCK, 0, t[0], t[1] + 20).at(Anchor.ORIGIN).a(4.0));
+                g.put(g.cue(Kind.SKY_SIGIL, 0, t[0], t[1] + 22).at(Anchor.ORIGIN).a(6.0).c(12.0).n(6).variant(g.style));
+                g.put(g.cue(Kind.ORBIT, t[0], t[0] + 4, t[1] + 16).a(2.4).n(6));
+                g.put(g.cue(Kind.DOME, t[0], t[0] + 6, t[1] + 24).a(6.0));
+                g.put(g.cue(Kind.NOVA, t[1], t[1], t[1] + 16).frame(1).a(6.5).n(24));
+                g.put(g.cue(Kind.FLASH, t[1] - 1, t[1], t[1] + 8).frame(1).a(5.0));
+                g.shake(t[1], 1.4F, 10, 1.0F);
+            }
+            case "necromancer_curse_of_myriad_demons" -> {
+                g.put(g.cue(Kind.HYDRA, 0, t[1], t[2] + 16).n(4).a(1.8));
+                g.put(g.cue(Kind.SIGIL, 0, t[0], t[2] + 14).at(Anchor.ORIGIN).a(8.0).n(6).variant(g.style));
+                g.put(g.cue(Kind.FOG, t[0], t[1], t[2] + 16).at(Anchor.ORIGIN).a(8.0).n(12).palette(SkillTheme.VENOM));
+                g.put(g.cue(Kind.NOVA, t[2], t[2], t[2] + 16).frame(2).a(8.0).n(26));
+                g.put(g.cue(Kind.FLASH, t[2] - 1, t[2], t[2] + 8).frame(2).a(5.0));
+                g.shake(t[2], 2.0F, 12, 1.6F);
+            }
+            case "necromancer_march_of_the_dead" -> {
+                int lastFrame = t.length - 1;
+                int last = t[lastFrame];
+                g.put(g.cue(Kind.SIGIL, 0, t[0], last + 14).at(Anchor.ORIGIN).a(7.0).n(5).variant(g.style));
+                g.put(g.cue(Kind.FOG, 0, t[1], last + 14).at(Anchor.ORIGIN).a(7.0).n(14));
+                for (int i = 1; i < lastFrame; i++) {
+                    g.put(g.cue(Kind.SPIKES, t[i], t[i], t[i] + 10).frame(i).a(3.5 + i * 0.5).b(1.6).n(10)
+                            .palette(SkillTheme.EARTH));
+                }
+                g.put(g.cue(Kind.SPIKES, last, last, last + 18).frame(lastFrame).a(8.0).b(3.0).n(26));
+                g.put(g.cue(Kind.QUAKE, last, last, last + 22).frame(lastFrame).a(8.0).n(16));
+                g.put(g.cue(Kind.SIPHON, last, last + 2, last + 16).frame(lastFrame).a(7.0));
+                g.put(g.cue(Kind.FLASH, last - 1, last, last + 8).frame(lastFrame).a(5.0));
+                g.shake(last, 2.2F, 14, 1.8F);
+            }
+            case "sniper_one_shot_one_kill" -> {
+                int f = t[1];
+                g.put(g.cue(Kind.RETICLE, 0, t[0], f + 4).at(Anchor.AIM).a(2.2));
+                g.put(g.cue(Kind.CHARGE, t[0], f - 2, f + 2).a(1.2));
+                g.put(g.cue(Kind.SKY_SIGIL, 0, f - 4, f + 18).at(Anchor.AIM).a(4.0).c(8.0).n(5).variant(g.style));
+                g.put(g.cue(Kind.BEAM, f - 1, f, f + 12).frame(1).a(24.0).b(0.6));
+                g.put(g.cue(Kind.IMPACT, f, f + 1, f + 10).at(Anchor.AIM).a(2.6));
+                g.put(g.cue(Kind.FLASH, f - 1, f, f + 8).frame(1).a(5.0));
+                g.shake(f, 2.0F, 10, 2.2F);
+            }
+            case "sniper_annihilation_field" -> {
+                int last = t[t.length - 1];
+                g.put(g.cue(Kind.RETICLE, 0, t[0], last + 6).at(Anchor.AIM).a(6.0));
+                g.put(g.cue(Kind.SKY_SIGIL, 0, t[1], last + 16).at(Anchor.AIM).a(6.5).c(14.0).n(7).variant(g.style));
+                g.put(g.cue(Kind.RAIN, t[1] - 2, t[1], last + 10).at(Anchor.AIM).a(6.0).n(3).c(14.0).variant(1));
+                for (int i = 2; i < t.length; i += 2) {
+                    g.shake(t[i] + 6, 0.6F, 4, 0.3F); // the volleys landing
+                }
+                g.put(g.cue(Kind.NOVA, last + 6, last + 8, last + 22).at(Anchor.AIM).a(7.0).n(24));
+                g.put(g.cue(Kind.FLASH, last + 7, last + 8, last + 14).at(Anchor.AIM).a(5.0));
+                g.shake(last + 8, 1.8F, 12, 1.4F);
+            }
+            case "spirit_archer_arrow_of_the_spirit_king" -> {
+                int f = t[1];
+                g.put(g.cue(Kind.SKY_SIGIL, 0, f - 4, f + 18).at(Anchor.ORIGIN).a(5.5).c(10.0).n(8).variant(g.style));
+                g.put(g.cue(Kind.ORBIT, 0, t[0], f).a(1.8).n(4));
+                g.put(g.cue(Kind.WINGS, t[0], t[0] + 6, f + 12).a(2.4).palette(SkillTheme.WIND));
+                g.put(g.cue(Kind.CHARGE, t[0], f - 2, f + 2).a(1.4));
+                g.put(g.cue(Kind.BEAM, f - 1, f, f + 14).frame(1).a(20.0).b(1.2));
+                g.put(g.cue(Kind.FLASH, f - 1, f, f + 8).frame(1).a(5.5));
+                g.shake(f, 1.8F, 10, 1.6F);
+            }
+            case "spirit_archer_world_tree_awakening" -> {
+                int f = t[1];
+                g.put(g.cue(Kind.PILLAR, t[0] - 2, t[0] + 4, f + 30).at(Anchor.ORIGIN).a(1.8).b(16.0)
+                        .palette(SkillTheme.LIFE));
+                g.put(g.cue(Kind.HELIX, t[0], t[0] + 6, f + 26).at(Anchor.ORIGIN).a(2.0).b(14.0).n(5));
+                g.put(g.cue(Kind.RAIN, t[0], t[0] + 8, f + 36).at(Anchor.ORIGIN).a(8.0).n(2).c(12.0).variant(6));
+                g.put(g.cue(Kind.SPIKES, f, f, f + 18).frame(1).a(7.0).b(2.6).n(18).palette(SkillTheme.EARTH));
+                g.put(g.cue(Kind.HEAL, t[0], t[0] + 4, f + 24).a(8.0));
+                g.put(g.cue(Kind.FLASH, f - 1, f, f + 8).frame(1).a(5.0));
+                g.shake(f, 1.6F, 10, 1.2F);
+            }
+            case "bishop_grand_benediction" -> {
+                int f = t[1];
+                g.put(g.cue(Kind.SKY_SIGIL, 0, t[0], f + 24).at(Anchor.ORIGIN).a(8.0).c(14.0).n(8).variant(g.style));
+                g.put(g.cue(Kind.WINGS, t[0], t[0] + 6, f + 22).a(3.2));
+                g.put(g.cue(Kind.HALO, t[0], t[0] + 4, f + 22).a(0.6));
+                g.put(g.cue(Kind.RAIN, t[0], f, f + 30).at(Anchor.ORIGIN).a(8.0).n(2).c(12.0).variant(5));
+                g.put(g.cue(Kind.PILLAR, f - 2, f, f + 20).at(Anchor.ORIGIN).a(0.6).b(12.0).n(4).c(7.0));
+                g.put(g.cue(Kind.FLASH, f - 1, f, f + 8).frame(1).a(5.5));
+                g.shake(f, 1.4F, 10, 1.0F);
+            }
+            case "bishop_heavenly_ward" -> {
+                int f = t[1];
+                g.put(g.cue(Kind.SKY_SIGIL, 0, t[0], f + 26).at(Anchor.ORIGIN).a(7.0).c(12.0).n(6).variant(g.style));
+                g.put(g.cue(Kind.DOME, t[0], f, f + 36).at(Anchor.ORIGIN).a(8.0));
+                g.put(g.cue(Kind.WALLS, t[0], f, f + 36).at(Anchor.ORIGIN).a(8.5).b(4.0).n(12)
+                        .palette(SkillTheme.HOLY));
+                g.put(g.cue(Kind.SHOCKWAVE, f, f, f + 16).frame(1).a(8.0).b(1.2).n(3));
+                g.put(g.cue(Kind.GLYPH, t[0], t[0] + 4, f + 30).variant(2).a(1.6).c(1.5));
+                g.put(g.cue(Kind.FLASH, f - 1, f, f + 8).frame(1).a(5.0));
+                g.shake(f, 1.6F, 10, 1.2F);
+            }
+            case "inquisitor_divine_execution" -> {
+                int f = t[2];
+                g.put(g.cue(Kind.SKY_SIGIL, 0, t[1], f + 20).at(Anchor.ORIGIN).a(6.0).c(14.0).n(8).variant(g.style));
+                g.put(g.cue(Kind.GLYPH, t[0], t[1], f + 8).variant(1).a(2.6).c(4.0));
+                g.put(g.cue(Kind.GIANT_SWORD, f - 14, f, f + 24).frame(2).a(10.0).b(1.0).palette(SkillTheme.HOLY));
+                g.put(g.cue(Kind.CROSS, f, f + 2, f + 22).frame(2).a(8.0));
+                g.put(g.cue(Kind.FLASH, f - 1, f, f + 8).frame(2).a(6.0));
+                g.shake(t[1], 0.8F, 6, 0.6F);
+                g.shake(f, 2.4F, 14, 2.0F);
+            }
+            case "inquisitor_heavenly_wildfire" -> {
+                int lastFrame = t.length - 1;
+                int last = t[lastFrame];
+                g.put(g.cue(Kind.SKY_SIGIL, 0, t[1], last + 18).at(Anchor.ORIGIN).a(7.0).c(14.0).n(7).variant(g.style));
+                g.put(g.cue(Kind.RAIN, t[1] - 4, t[1], last + 12).at(Anchor.ORIGIN).a(7.0).n(3).c(12.0).variant(3));
+                for (int i = 1; i < lastFrame; i++) {
+                    g.put(g.cue(Kind.SHOCKWAVE, t[i], t[i], t[i] + 10).frame(i).a(3.0 + i).b(1.0).n(1)
+                            .palette(SkillTheme.FIRE));
+                }
+                g.put(g.cue(Kind.PILLAR, last - 2, last, last + 18).frame(lastFrame).a(1.0).b(12.0).n(6).c(5.0));
+                g.put(g.cue(Kind.NOVA, last, last, last + 16).frame(lastFrame).a(8.0).n(26));
+                g.put(g.cue(Kind.FLASH, last - 1, last, last + 8).frame(lastFrame).a(5.5));
+                g.shake(last, 2.0F, 12, 1.6F);
+            }
+            case "sword_saint_infinite_stroke" -> {
+                int lastFrame = t.length - 1;
+                int last = t[lastFrame];
+                g.put(g.cue(Kind.BLADES, 0, t[1], last + 4).a(3.2).n(12));
+                for (int i = 1; i < lastFrame; i++) {
+                    double tilt = 80.0 * Math.sin(i * 1.9);
+                    g.put(g.cue(Kind.SLASH, t[i] - 1, t[i], t[i] + 5).frame(i).a(6.0).b(85.0).c(tilt).variant(i % 2 | 4));
+                }
+                g.put(g.cue(Kind.SLASH, last - 3, last, last + 12).frame(lastFrame).a(9.0).b(120.0).d(1.4).variant(6));
+                g.put(g.cue(Kind.SHOCKWAVE, last, last, last + 16).frame(lastFrame).a(8.5).b(1.0).n(2));
+                g.put(g.cue(Kind.FLASH, last - 1, last, last + 8).frame(lastFrame).a(5.0));
+                g.shake(last, 2.0F, 12, 1.8F);
+            }
+            case "sword_saint_myriad_swords" -> {
+                int lastFrame = t.length - 1;
+                int last = t[lastFrame];
+                g.put(g.cue(Kind.BLADES, 0, t[0], t[lastFrame - 1] + 4).a(3.6).n(16));
+                g.put(g.cue(Kind.SKY_SIGIL, 0, t[1], last + 16).at(Anchor.ORIGIN).a(6.0).c(12.0).n(8).variant(g.style));
+                g.put(g.cue(Kind.GIANT_SWORD, last - 12, last, last + 20).frame(lastFrame).a(10.0)
+                        .palette(SkillTheme.ARCANE));
+                g.put(g.cue(Kind.NOVA, last, last, last + 16).frame(lastFrame).a(8.0).n(26));
+                g.put(g.cue(Kind.FLASH, last - 1, last, last + 8).frame(lastFrame).a(5.5));
+                g.shake(last, 2.2F, 12, 1.8F);
+            }
+            case "hexblade_curse_of_the_red_moon" -> {
+                g.put(g.cue(Kind.GLYPH, 0, t[1], t[2] + 18).variant(6).a(3.4).c(7.0).palette(SkillTheme.BLOOD));
+                g.put(g.cue(Kind.SKY_SIGIL, 0, t[0], t[2] + 16).at(Anchor.ORIGIN).a(6.0).c(12.0).n(5).variant(g.style));
+                g.put(g.cue(Kind.RAIN, t[0], t[1], t[2] + 12).at(Anchor.ORIGIN).a(7.0).n(2).c(10.0)
+                        .palette(SkillTheme.BLOOD));
+                g.put(g.cue(Kind.SIPHON, t[2], t[2] + 2, t[2] + 18).frame(2).a(7.0));
+                g.put(g.cue(Kind.NOVA, t[2], t[2], t[2] + 16).frame(2).a(8.0).n(24));
+                g.put(g.cue(Kind.FLASH, t[2] - 1, t[2], t[2] + 8).frame(2).a(5.0));
+                g.shake(t[1], 0.8F, 6, 0.5F);
+                g.shake(t[2], 2.0F, 12, 1.6F);
+            }
+            case "hexblade_sword_of_the_netherlord" -> {
+                g.put(g.cue(Kind.RIFT, t[0], t[1] - 4, t[2] + 8).a(6.0).c(90.0));
+                g.put(g.cue(Kind.ECLIPSE, 0, t[1], t[2] + 18).a(2.8).c(9.0));
+                g.put(g.cue(Kind.GIANT_SWORD, t[1] - 10, t[1], t[1] + 16).frame(1).a(14.0).b(1.0).variant(1)
+                        .palette(SkillTheme.SHADOW));
+                g.put(g.cue(Kind.BEAM, t[1] - 1, t[1], t[1] + 10).frame(1).a(14.0).b(1.4));
+                g.put(g.cue(Kind.SPIN, t[2] - 2, t[2], t[2] + 10).frame(2).a(8.0).b(1.0).d(1.2).variant(1));
+                g.put(g.cue(Kind.NOVA, t[2], t[2], t[2] + 16).frame(2).a(8.0).n(24));
+                g.put(g.cue(Kind.FLASH, t[2] - 1, t[2], t[2] + 8).frame(2).a(5.5));
+                g.shake(t[1], 1.4F, 8, 1.4F);
+                g.shake(t[2], 2.2F, 12, 1.8F);
+            }
             default -> {
                 // a new ultimate without its own finale still gets a great circle in the sky and a flash
                 int last = t.length == 0 ? g.action.durationTicks() / 2 : t[t.length - 1];

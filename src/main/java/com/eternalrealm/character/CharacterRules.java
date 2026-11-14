@@ -24,8 +24,10 @@ public record CharacterRules(int levelCap, int statPointsPerLevel, int baseStatV
      * Skill points per level: a level-50 character (108 points) masters about 40 % of a job's tree, a level-100
      * character (218 points) about 80 % — never all of it.
      */
-    public static final int DEFAULT_SKILL_POINTS_PER_LEVEL = 2;
-    public static final int DEFAULT_SKILL_POINT_MILESTONE_BONUS = 2;
+    /** Skill points per level (3 since 2026-11-14: 「スキルポイント獲得率をもう少し上げて」; 2 before). */
+    public static final int DEFAULT_SKILL_POINTS_PER_LEVEL = 3;
+    /** Extra skill points at every 10th level (3 since 2026-11-14; 2 before). */
+    public static final int DEFAULT_SKILL_POINT_MILESTONE_BONUS = 3;
     public static final int SKILL_POINT_MILESTONE = 10;
     public static final int MAX_SKILL_POINTS_PER_LEVEL = 10;
     public static final int MAX_SKILL_POINT_MILESTONE_BONUS = 20;
@@ -56,8 +58,8 @@ public record CharacterRules(int levelCap, int statPointsPerLevel, int baseStatV
 
     /**
      * Total skill points a character of {@code level} has earned:
-     * {@code (level − 1) × perLevel + ⌊level / 10⌋ × milestoneBonus} (defaults: 20 at level 10, 64 at 30, 108 at 50,
-     * 218 at 100).
+     * {@code (level − 1) × perLevel + ⌊level / 10⌋ × milestoneBonus} (defaults: 30 at level 10, 96 at 30, 162 at 50,
+     * 327 at 100).
      */
     public int earnedSkillPoints(int level) {
         checkRange("level", level, 1, MAX_LEVEL);

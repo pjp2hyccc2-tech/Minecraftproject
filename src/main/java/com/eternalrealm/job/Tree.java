@@ -20,14 +20,32 @@ import java.util.Set;
 final class Tree {
     /** Character level needed for each tier (index tier − 1). The innate skills sit on tiers 1, 2, 3 and 5. */
     static final int[] TIER_LEVELS = {1, 8, 18, 24, 30, 40};
+    /** Character level needed for each tier of a second class's tree (it opens at {@value JobClass#LEVEL}). */
+    static final int[] CLASS_TIER_LEVELS = {40, 44, 48, 54, 60};
+    /** Most levels of a class's passives and ultimates (its actives have {@link Jobs#MAX_SKILL_LEVEL}). */
+    static final int CLASS_SMALL_MAX = 3;
 
     private final JobType job;
+    private final JobClass jobClass;
     private final DamageType defaultType;
     private final List<Node> nodes = new ArrayList<>();
 
     Tree(JobType job, DamageType defaultType) {
         this.job = job;
+        this.jobClass = null;
         this.defaultType = defaultType;
+    }
+
+    /** The tree of a second class: its ids start with the class's id, its tiers open from level 40. */
+    Tree(JobClass jobClass, DamageType defaultType) {
+        this.job = jobClass.base();
+        this.jobClass = jobClass;
+        this.defaultType = defaultType;
+    }
+
+    /** The level a tier opens at. */
+    int tierLevel(int tier) {
+        return (jobClass == null ? TIER_LEVELS : CLASS_TIER_LEVELS)[tier - 1];
     }
 
     Node active(String name, int branch, int column, int tier) {
@@ -59,7 +77,7 @@ final class Tree {
     }
 
     String id(String name) {
-        return job.id() + "_" + name;
+        return (jobClass == null ? job.id() : jobClass.id()) + "_" + name;
     }
 
     /** One node under construction. */
@@ -87,7 +105,10 @@ final class Tree {
             this.branch = branch;
             this.column = column;
             this.tier = tier;
-            this.requiredLevel = TIER_LEVELS[tier - 1];
+            this.requiredLevel = tierLevel(tier);
+            if (jobClass != null && kind != SkillKind.ACTIVE) {
+                this.maxLevel = CLASS_SMALL_MAX; // a class's passives and ultimates: three levels
+            }
         }
 
         /** An innate skill: learned for free at {@code level}, placed in {@code slot} by default. */
@@ -158,7 +179,7 @@ final class Tree {
         private SkillDefinition build() {
             return new SkillDefinition(id, job, kind, theme, branch, column, tier, requiredLevel, innateSlot, maxLevel,
                     action, kind == SkillKind.PASSIVE ? 0 : cooldownTicks, type, weapons, effects, prerequisites,
-                    passives);
+                    passives, jobClass);
         }
     }
 }

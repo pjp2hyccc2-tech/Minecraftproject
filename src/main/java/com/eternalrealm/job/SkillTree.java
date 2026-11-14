@@ -85,19 +85,25 @@ public final class SkillTree {
         return true;
     }
 
-    /** Whether one more point may go into {@code skillId}. */
+    /** Whether one more point may go into {@code skillId} (a job without its class). */
     public static InvestResult canInvest(JobType job, int characterLevel, Map<String, Integer> investments,
                                          int unspentPoints, String skillId) {
-        Objects.requireNonNull(job, "job");
+        return canInvest(JobPath.base(job), characterLevel, investments, unspentPoints, skillId);
+    }
+
+    /** Whether one more point may go into {@code skillId}: a skill of the job or of its own class. */
+    public static InvestResult canInvest(JobPath path, int characterLevel, Map<String, Integer> investments,
+                                         int unspentPoints, String skillId) {
+        Objects.requireNonNull(path, "path");
         Objects.requireNonNull(investments, "investments");
-        if (!job.isChosen()) {
+        if (!path.job().isChosen()) {
             return InvestResult.NO_JOB;
         }
         SkillDefinition skill = Jobs.skill(skillId).orElse(null);
         if (skill == null) {
             return InvestResult.UNKNOWN_SKILL;
         }
-        if (skill.job() != job) {
+        if (!path.owns(skill)) {
             return InvestResult.WRONG_JOB;
         }
         if (characterLevel < skill.requiredLevel()) {
@@ -117,9 +123,14 @@ public final class SkillTree {
      * belongs to the job, has its required level and prerequisites and stays within its maximum level.
      */
     public static boolean isValid(JobType job, int characterLevel, Map<String, Integer> investments) {
+        return isValid(JobPath.base(job), characterLevel, investments);
+    }
+
+    /** {@link #isValid(JobType, int, Map)} for a job and its class: the class's skills count as its own. */
+    public static boolean isValid(JobPath path, int characterLevel, Map<String, Integer> investments) {
         for (Map.Entry<String, Integer> entry : investments.entrySet()) {
             SkillDefinition skill = Jobs.skill(entry.getKey()).orElse(null);
-            if (skill == null || skill.job() != job || characterLevel < skill.requiredLevel()
+            if (skill == null || !path.owns(skill) || characterLevel < skill.requiredLevel()
                     || entry.getValue() < 1 || skill.pointsFor(skill.maxLevel()) < entry.getValue()
                     || !prerequisitesMet(skill, characterLevel, investments)) {
                 return false;
@@ -130,23 +141,48 @@ public final class SkillTree {
 
     /** Skill points needed to max out every node of {@code job}. */
     public static int pointsToMaster(JobType job) {
+        return pointsToMaster(JobPath.base(job));
+    }
+
+    /** Skill points needed to max out every node of the job and its class. */
+    public static int pointsToMaster(JobPath path) {
         int total = 0;
-        for (SkillDefinition skill : Jobs.get(job).skills()) {
+        for (SkillDefinition skill : path.skills()) {
             total += skill.pointsFor(skill.maxLevel());
         }
         return total;
+    }
+
+    /**
+     * The investments a character keeps when it grows into (or changes to) {@code path}: those in skills the path
+     * owns; the rest (another class's tree) are refunded.
+     */
+    public static Map<String, Integer> keptInvestments(JobPath path, Map<String, Integer> investments) {
+        Map<String, Integer> kept = new java.util.TreeMap<>();
+        for (Map.Entry<String, Integer> entry : investments.entrySet()) {
+            SkillDefinition skill = Jobs.skill(entry.getKey()).orElse(null);
+            if (skill != null && path.owns(skill)) {
+                kept.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return kept;
     }
 
     // ------------------------------------------------------------------ passives
 
     /** What the character's learned passive skills add up to. */
     public static PassiveTotals passives(JobType job, int characterLevel, Map<String, Integer> investments) {
-        if (!job.isChosen()) {
+        return passives(JobPath.base(job), characterLevel, investments);
+    }
+
+    /** What the learned passive skills of the job and its class add up to. */
+    public static PassiveTotals passives(JobPath path, int characterLevel, Map<String, Integer> investments) {
+        if (!path.job().isChosen()) {
             return PassiveTotals.NONE;
         }
         List<SkillDefinition> learned = new ArrayList<>();
         List<Integer> levels = new ArrayList<>();
-        for (SkillDefinition skill : Jobs.get(job).skills()) {
+        for (SkillDefinition skill : path.skills()) {
             if (skill.isPassive()) {
                 int level = levelOf(skill, characterLevel, investments);
                 if (level > 0) {
@@ -186,7 +222,14 @@ public final class SkillTree {
      */
     public static List<String> effectiveLoadout(JobType job, int characterLevel, Map<String, Integer> investments,
                                                 List<String> stored) {
+        return effectiveLoadout(JobPath.base(job), characterLevel, investments, stored);
+    }
+
+    /** {@link #effectiveLoadout(JobType, int, Map, List)} for a job and its class. */
+    public static List<String> effectiveLoadout(JobPath path, int characterLevel, Map<String, Integer> investments,
+                                                List<String> stored) {
         Objects.requireNonNull(stored, "stored");
+        JobType job = path.job();
         if (!job.isChosen()) {
             return Collections.nCopies(LOADOUT_SLOTS, EMPTY);
         }
@@ -201,7 +244,7 @@ public final class SkillTree {
                 continue;
             }
             SkillDefinition skill = Jobs.skill(id).orElse(null);
-            if (skill != null && skill.job() == job && fitsSlot(skill, i + 1)
+            if (skill != null && path.owns(skill) && fitsSlot(skill, i + 1)
                     && (skill.isInnate() || levelOf(skill, characterLevel, investments) > 0)) {
                 loadout.set(i, id);
             }
@@ -215,10 +258,16 @@ public final class SkillTree {
      */
     public static List<String> sanitize(JobType job, int characterLevel, Map<String, Integer> investments,
                                         List<String> stored) {
+        return sanitize(JobPath.base(job), characterLevel, investments, stored);
+    }
+
+    /** {@link #sanitize(JobType, int, Map, List)} for a job and its class. */
+    public static List<String> sanitize(JobPath path, int characterLevel, Map<String, Integer> investments,
+                                        List<String> stored) {
         if (stored.isEmpty()) {
             return stored;
         }
-        List<String> effective = effectiveLoadout(job, characterLevel, investments, stored);
+        List<String> effective = effectiveLoadout(path, characterLevel, investments, stored);
         List<String> padded = new ArrayList<>(stored);
         while (padded.size() < LOADOUT_SLOTS) {
             padded.add(EMPTY);
@@ -229,7 +278,13 @@ public final class SkillTree {
     /** Whether {@code skillId} may be put into {@code slot} ({@link #EMPTY} clears a slot and is always fine). */
     public static LoadoutResult canAssign(JobType job, int characterLevel, Map<String, Integer> investments, int slot,
                                           String skillId) {
-        if (!job.isChosen()) {
+        return canAssign(JobPath.base(job), characterLevel, investments, slot, skillId);
+    }
+
+    /** {@link #canAssign(JobType, int, Map, int, String)} for a job and its class. */
+    public static LoadoutResult canAssign(JobPath path, int characterLevel, Map<String, Integer> investments, int slot,
+                                          String skillId) {
+        if (!path.job().isChosen()) {
             return LoadoutResult.NO_JOB;
         }
         if (slot < 1 || slot > LOADOUT_SLOTS) {
@@ -242,7 +297,7 @@ public final class SkillTree {
         if (skill == null) {
             return LoadoutResult.UNKNOWN_SKILL;
         }
-        if (skill.job() != job) {
+        if (!path.owns(skill)) {
             return LoadoutResult.WRONG_JOB;
         }
         if (!skill.isUsable()) {
@@ -311,12 +366,18 @@ public final class SkillTree {
      */
     public static SkillBinding[] bindings(JobType job, int characterLevel, Map<String, Integer> investments,
                                           List<String> storedLoadout) {
+        return bindings(JobPath.base(job), characterLevel, investments, storedLoadout);
+    }
+
+    /** {@link #bindings(JobType, int, Map, List)} for a job and its class. */
+    public static SkillBinding[] bindings(JobPath path, int characterLevel, Map<String, Integer> investments,
+                                          List<String> storedLoadout) {
         SkillBinding[] bindings = new SkillBinding[Combatant.SKILL_SLOTS];
-        if (!job.isChosen()) {
+        if (!path.job().isChosen()) {
             return bindings;
         }
-        PassiveTotals passive = passives(job, characterLevel, investments);
-        List<String> loadout = effectiveLoadout(job, characterLevel, investments, storedLoadout);
+        PassiveTotals passive = passives(path, characterLevel, investments);
+        List<String> loadout = effectiveLoadout(path, characterLevel, investments, storedLoadout);
         for (int slot = 1; slot <= LOADOUT_SLOTS; slot++) {
             String id = loadout.get(slot - 1);
             if (id.isEmpty()) {

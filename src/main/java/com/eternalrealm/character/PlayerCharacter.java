@@ -246,6 +246,24 @@ public final class PlayerCharacter {
         return true;
     }
 
+    /**
+     * Grows into a second class (or changes to the other one): the stored job id becomes the class's, only the
+     * investments in {@code kept} remain (the job's tree, and the class's if it stays the same); the loadout is checked
+     * again by the job module.
+     *
+     * @return {@code false} if it was already the class
+     */
+    public boolean advanceClass(String classId, Map<String, Integer> kept) {
+        CharacterRecord.checkJobId(classId);
+        if (classId.equals(jobId)) {
+            return false;
+        }
+        jobId = classId;
+        skillInvestments = CharacterRecord.copySkills(kept);
+        revision++;
+        return true;
+    }
+
     /** The stored skill loadout (empty = the job's default slots). */
     public List<String> skillLoadout() {
         return skillLoadout;

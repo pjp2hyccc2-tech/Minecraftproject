@@ -40,12 +40,15 @@ import java.util.Set;
  * @param weapons           weapon types an active can be used with; empty = every weapon of the job
  * @param prerequisites     nodes that must be learned first (same job)
  * @param passives          per-level bonuses of a passive (empty for actives)
+ * @param jobClass          the second class whose tree holds the node ({@code null}: the job's own tree). A class's
+ *                          tree has {@value #CLASS_BRANCHES} branches of {@value #CLASS_COLUMNS} columns and
+ *                          {@value #CLASS_TIERS} tiers and no innate skills
  */
 public record SkillDefinition(String id, JobType job, SkillKind kind, SkillTheme theme, int branch, int column,
                               int tier, int requiredLevel, int innateSlot, int maxLevel, ActionDefinition action,
                               int baseCooldownTicks, DamageType damageType, Set<WeaponType> weapons,
                               List<SkillEffect> effects, List<Prerequisite> prerequisites,
-                              List<PassiveEffect> passives) {
+                              List<PassiveEffect> passives, JobClass jobClass) {
     public static final double DAMAGE_PER_LEVEL = 0.10;
     public static final double COOLDOWN_PER_LEVEL = 0.05;
     public static final double EFFECT_PER_LEVEL = 0.10;
@@ -54,6 +57,10 @@ public record SkillDefinition(String id, JobType job, SkillKind kind, SkillTheme
     public static final int BRANCHES = 3;
     public static final int COLUMNS = 3;
     public static final int TIERS = 6;
+    /** The shape of a second class's tree (40 nodes). */
+    public static final int CLASS_BRANCHES = 2;
+    public static final int CLASS_COLUMNS = 4;
+    public static final int CLASS_TIERS = 5;
 
     public SkillDefinition {
         Checks.id("id", id);
@@ -63,9 +70,15 @@ public record SkillDefinition(String id, JobType job, SkillKind kind, SkillTheme
         if (!job.isChosen()) {
             throw new IllegalArgumentException(id + ": skills belong to a real job");
         }
-        Checks.range("branch", branch, 0, BRANCHES - 1);
-        Checks.range("column", column, 0, COLUMNS - 1);
-        Checks.range("tier", tier, 1, TIERS);
+        if (jobClass != null && jobClass.base() != job) {
+            throw new IllegalArgumentException(id + ": " + jobClass + " is not a class of " + job);
+        }
+        Checks.range("branch", branch, 0, (jobClass == null ? BRANCHES : CLASS_BRANCHES) - 1);
+        Checks.range("column", column, 0, (jobClass == null ? COLUMNS : CLASS_COLUMNS) - 1);
+        Checks.range("tier", tier, 1, jobClass == null ? TIERS : CLASS_TIERS);
+        if (jobClass != null && innateSlot != 0) {
+            throw new IllegalArgumentException(id + ": a class's skills are learned with points");
+        }
         Checks.range("requiredLevel", requiredLevel, 1, 100);
         Checks.range("innateSlot", innateSlot, 0, 4);
         Checks.range("maxLevel", maxLevel, 1, MAX_SKILL_LEVEL);
@@ -135,9 +148,14 @@ public record SkillDefinition(String id, JobType job, SkillKind kind, SkillTheme
         return kind.usable();
     }
 
-    /** Column of the whole tree ({@code 0..8}): branches side by side. */
+    /** Column of the whole tree ({@code 0..8}, a class's {@code 0..7}): branches side by side. */
     public int gridColumn() {
-        return branch * COLUMNS + column;
+        return branch * (jobClass == null ? COLUMNS : CLASS_COLUMNS) + column;
+    }
+
+    /** A node of a second class's tree. */
+    public boolean isClassSkill() {
+        return jobClass != null;
     }
 
     /**

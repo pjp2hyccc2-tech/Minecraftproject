@@ -37,7 +37,8 @@ public final class PlayerStats {
         JobType job = JobType.fromStored(snapshot.jobId());
         return ComposedStats.compose(snapshot.totalStats(), snapshot.level(), job, gear.stats(), gear.percents(),
                 gear.modifiers(),
-                com.eternalrealm.job.SkillTree.passives(job, snapshot.level(), snapshot.skillInvestments()).modifiers());
+                com.eternalrealm.job.SkillTree.passives(com.eternalrealm.job.JobPath.of(snapshot.jobId()),
+                        snapshot.level(), snapshot.skillInvestments()).modifiers());
     }
 
     public static void setGearReader(Function<ServerPlayer, Gear> reader) {

@@ -233,9 +233,40 @@ public class ResourcesTest {
             Path icon = RESOURCES.resolve("assets/eternalrealm/textures/mob_effect/" + effect + ".png");
             assertTrue("missing effect icon " + icon, Files.isRegularFile(icon));
         }
+        for (com.eternalrealm.job.JobClass jobClass : com.eternalrealm.job.JobClass.values()) {
+            required.add(jobClass.translationKey());
+            required.add(jobClass.descriptionKey());
+            required.add(jobClass.branchKey(0));
+            required.add(jobClass.branchKey(1));
+            Path emblem = RESOURCES.resolve("assets/eternalrealm/textures/gui/job/" + jobClass.id() + ".png");
+            assertTrue("missing class emblem " + emblem, Files.isRegularFile(emblem));
+        }
         for (String key : required) {
             assertTrue("en: " + key, english.contains(key));
             assertTrue("ja: " + key, japanese.contains(key));
+        }
+    }
+
+    /** Job and class names are Japanese words in kanji (owner, 2026-11-14: 「職業の名前を全部日本語にして漢字で」). */
+    @Test
+    public void jobAndClassNamesAreWrittenInKanji() throws IOException {
+        JsonObject japanese = JsonParser.parseString(Files.readString(
+                RESOURCES.resolve("assets/eternalrealm/lang/ja_jp.json"), StandardCharsets.UTF_8)).getAsJsonObject();
+        java.util.regex.Pattern kanji = java.util.regex.Pattern.compile("[\\u4e00-\\u9fff]+");
+        List<String> keys = new java.util.ArrayList<>();
+        for (com.eternalrealm.job.JobType job : com.eternalrealm.job.JobType.values()) {
+            if (job.isChosen()) {
+                keys.add(job.translationKey());
+            }
+        }
+        for (com.eternalrealm.job.JobClass jobClass : com.eternalrealm.job.JobClass.values()) {
+            keys.add(jobClass.translationKey());
+        }
+        java.util.Set<String> names = new java.util.HashSet<>();
+        for (String key : keys) {
+            String name = japanese.get(key).getAsString();
+            assertTrue(key + " = " + name, kanji.matcher(name).matches());
+            assertTrue(key + " is named like another job", names.add(name));
         }
     }
 }
