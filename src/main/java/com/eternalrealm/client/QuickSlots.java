@@ -79,6 +79,9 @@ public final class QuickSlots {
                 break;
             }
         }
+        if (slot < 0) {
+            slot = ClientBagBack.find(item); // waiting in the bag's back: the server brings it forward
+        }
         return new Pick(slot, new ItemStack(item, count(player, chosen)));
     }
 
@@ -101,6 +104,7 @@ public final class QuickSlots {
     }
 
     private static int count(LocalPlayer player, Consumable kind) {
-        return player.getInventory().countItem(ERGearItems.consumable(kind));
+        Item item = ERGearItems.consumable(kind);
+        return player.getInventory().countItem(item) + ClientBagBack.count(item);
     }
 }

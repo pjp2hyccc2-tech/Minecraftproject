@@ -7425,5 +7425,8 @@
   "screen.eternalrealm.tab.capital": "To the capital",
   "screen.eternalrealm.tab.capital_tip": "Travel to the capital's plaza from anywhere (about 3 s; moving or being hit breaks it / key: End)",
   "screen.eternalrealm.map.to_capital": "To the capital",
-  "screen.eternalrealm.map.to_capital_tip": "Travel to the capital's plaza from anywhere (a 3 s cast / key: End)"
+  "screen.eternalrealm.map.to_capital_tip": "Travel to the capital's plaza from anywhere (a 3 s cast / key: End)",
+  "screen.eternalrealm.bag.forward": "Forward",
+  "screen.eternalrealm.bag.forward_tip": "Bring it from the back of the bag to the front (where the smithy, the market and the shop see it). With the front full it changes places with the last thing there",
+  "screen.eternalrealm.bag.back": "Back of the bag"
 }

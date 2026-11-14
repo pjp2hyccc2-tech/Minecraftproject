@@ -11,9 +11,24 @@ public final class QuickUse {
     private QuickUse() {
     }
 
-    /** @return whether something happened or started (the return scroll's channel) */
+    /**
+     * Uses the item in inventory slot {@code slot}, or in a slot of the bag's back (brought forward first, so the item
+     * is used as from the front: a return scroll's channel finds it there).
+     *
+     * @return whether something happened or started (the return scroll's channel)
+     */
     public static boolean useSlot(ServerPlayer player, int slot) {
-        if (slot < 0 || slot >= player.getInventory().items.size() || !player.isAlive() || player.isSpectator()) {
+        if (!player.isAlive() || player.isSpectator()) {
+            return false;
+        }
+        if (com.eternalrealm.item.bag.Bag.isBackSlot(slot)) {
+            ItemStack waiting = BagBack.get(player, com.eternalrealm.item.bag.Bag.backIndex(slot));
+            if (!(waiting.getItem() instanceof ConsumableItem)) {
+                return false;
+            }
+            slot = BagBack.frontSlot(player, slot);
+        }
+        if (slot < 0 || slot >= player.getInventory().items.size()) {
             return false;
         }
         ItemStack stack = player.getInventory().items.get(slot);

@@ -73,6 +73,7 @@ public final class ClientModEvents {
         com.eternalrealm.client.boss.BossHudOverlay.init();
         com.eternalrealm.ui.screen.DungeonResultScreen.registerChannels();
         ClientTrinkets.register();
+        ClientBagBack.register();
         com.eternalrealm.client.map.ThreatClient.init();
         com.eternalrealm.client.phone.ClientPhone.init();
         ClientboundHandlers.setPlayerActionHandler(CombatAnimations::onRemoteAction);

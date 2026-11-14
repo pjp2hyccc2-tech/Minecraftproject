@@ -697,3 +697,17 @@ Decisions:
 - **Config migrations**: Forge keeps a file's values, so a changed default never reaches a world made earlier. A `balanceRevision` key
   (missing = 0) lets the server bring a file up to date once at start, changing only values still at the default of their time.
 
+## D-BAGBACK: a bag 1.8 times as big through a back of 28 slots (2026-11-14)
+
+The owner: 「バッグパックに入る荷物の量を1.8倍ほどにして」. The bag was the vanilla inventory's slots 1-35, and vanilla has no more slots
+(stacks also stop at 64 in a player's inventory), with no mixins or access transformers in this project.
+Decisions:
+- **A back of 28 slots kept by the server** (35 + 28 = 63 = 1.8 × 35), in the player's persistent data like the trinkets, shown to the
+  owner over a UI channel. The screens name its slots 100-127, far from every vanilla index.
+- **Overflow only, and it flows forward by itself**: things go to the back only when the front is full, and come forward every half
+  second as soon as the front has room. Every system that works with the front (smithy, market, shop, quick-use keys, storage) needed
+  no change to see them; the few where the back must count at once were taught it: the smithy's material counts and costs, equipping,
+  using and discarding from the bag screen, the quick-use keys, the room's storage both ways, market deliveries, picking things up.
+- **One bag to the player**: the bag screen shows the 63 places in one scrolling grid (the back darker under a gold line), the sort
+  orders front and back as one bag (equipment and consumables to the front), and a 「前へ」 button brings a thing of the back forward.
+

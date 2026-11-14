@@ -212,9 +212,18 @@ public final class SmithScreen extends Screen {
         return ClientCharacterState.snapshot().map(CharacterSnapshot::level).orElse(1);
     }
 
+    /** Materials in the bag's front and back (the server counts both). */
     private static Map<String, Integer> counts() {
         LocalPlayer player = player();
-        return player == null ? Map.of() : Inventories.counts(player);
+        if (player == null) {
+            return Map.of();
+        }
+        Map<String, Integer> counts = new java.util.HashMap<>(Inventories.counts(player));
+        for (int slot = com.eternalrealm.item.bag.Bag.BACK_FIRST; slot <= com.eternalrealm.item.bag.Bag.BACK_LAST;
+             slot++) {
+            Inventories.add(counts, com.eternalrealm.client.ClientBagBack.at(slot));
+        }
+        return counts;
     }
 
     /** The gear the player carries: held and worn pieces first, then the inventory in slot order. */

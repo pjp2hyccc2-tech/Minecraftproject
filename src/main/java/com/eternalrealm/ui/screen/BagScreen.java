@@ -26,10 +26,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The bag (カバン): the 35 bag slots in five tabs (全て / 装備 / 消耗品 / 素材 / その他) with rarity frames (relics: the
- * gold frame) and counts,
- * the selected item's details, and its actions: use a consumable, equip a piece, discard (after a confirmation), sort the
- * bag. Every action is a request; the server checks and moves the items ({@link BagService}, {@code UseItemPacket}).
+ * The bag (カバン): its 63 places — the 35 of the front and the 28 of the back (カバンの奥, a darker shelf under a gold
+ * line) — in five tabs (全て / 装備 / 消耗品 / 素材 / その他), five rows at a time (the mouse wheel scrolls), with rarity
+ * frames (relics: the gold frame) and counts, the selected item's details, and its actions: use a consumable, equip a
+ * piece, discard (after a confirmation), bring a thing from the back to the front, sort the bag. Every action is a
+ * request; the server checks and moves the items ({@link BagService}, {@code UseItemPacket}).
  */
 public final class BagScreen extends Screen {
     private static final int WIDTH = 296;
@@ -37,6 +38,8 @@ public final class BagScreen extends Screen {
     private static final int COLUMNS = 7;
     private static final int ROWS = 5;
     private static final int CELL = 20;
+    private static final int BACK_CELL = 0xFF1C1826;
+    private static final int BACK_LINE = 0xFF8A6A30;
     private static final int PANEL = 0xF0141018;
     private static final int PANEL_INNER = 0xFF1E1A26;
     private static final int RIM = 0xFFC9A55A;
@@ -54,6 +57,9 @@ public final class BagScreen extends Screen {
     private Button discard;
     private Button confirm;
     private Button cancel;
+    private Button forward;
+    /** First visible row of the grid. */
+    private int scroll;
 
     public BagScreen() {
         super(Component.translatable("screen.eternalrealm.bag.title"));
@@ -67,6 +73,10 @@ public final class BagScreen extends Screen {
         int buttonsY = top + HEIGHT - 24;
         addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.bag.sort"), button -> send(
                 BagService.SORT, new JsonObject())).bounds(left + 8, buttonsY, 44, 16).build());
+        forward = addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.bag.forward"),
+                button -> bringForward()).bounds(left + 54, buttonsY, 44, 16)
+                .tooltip(net.minecraft.client.gui.components.Tooltip.create(
+                        Component.translatable("screen.eternalrealm.bag.forward_tip"))).build());
         primary = addRenderableWidget(Button.builder(Component.empty(), button -> primaryAction())
                 .bounds(detailX, buttonsY, 62, 16).build());
         discard = addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.bag.discard"),
@@ -114,7 +124,7 @@ public final class BagScreen extends Screen {
             graphics.drawString(font, gold, left + WIDTH - 8 - font.width(gold), top + 7, 0xFFFFD866, true);
         }
         drawTabs(graphics, mouseX, mouseY);
-        List<BagEntry> entries = Bags.entries(player);
+        List<BagEntry> entries = entries(player);
         drawGrid(graphics, player, entries, mouseX, mouseY);
         Component capacity = Component.translatable("screen.eternalrealm.bag.capacity", Bag.used(entries), Bag.CAPACITY);
         int capacityColor = Bag.used(entries) >= Bag.CAPACITY ? 0xFFFF6A50 : MUTED;
@@ -122,10 +132,30 @@ public final class BagScreen extends Screen {
                 capacityColor, false);
         drawDetail(graphics, player);
         super.render(graphics, mouseX, mouseY, partialTick);
-        int hovered = slotAt(player, entries, mouseX, mouseY);
-        if (hovered >= 0 && !player.getInventory().items.get(hovered).isEmpty()) {
-            graphics.renderTooltip(font, player.getInventory().items.get(hovered), mouseX, mouseY);
+        int hovered = slotAt(entries, mouseX, mouseY);
+        if (hovered >= 0 && !stackAt(player, hovered).isEmpty()) {
+            graphics.renderTooltip(font, stackAt(player, hovered), mouseX, mouseY);
         }
+    }
+
+    /** Front and back as one list of entries (the back's slots {@value Bag#BACK_FIRST}..). */
+    private static List<BagEntry> entries(Player player) {
+        List<BagEntry> entries = Bags.entries(player);
+        for (int slot = Bag.BACK_FIRST; slot <= Bag.BACK_LAST; slot++) {
+            ItemStack stack = com.eternalrealm.client.ClientBagBack.at(slot);
+            if (!stack.isEmpty()) {
+                entries.add(Bags.entry(slot, stack));
+            }
+        }
+        return entries;
+    }
+
+    /** The stack of a front or back slot. */
+    private static ItemStack stackAt(Player player, int slot) {
+        if (Bag.isBagSlot(slot)) {
+            return player.getInventory().items.get(slot);
+        }
+        return com.eternalrealm.client.ClientBagBack.at(slot);
     }
 
     private void drawTabs(GuiGraphics graphics, int mouseX, int mouseY) {
@@ -145,15 +175,18 @@ public final class BagScreen extends Screen {
 
     private void drawGrid(GuiGraphics graphics, Player player, List<BagEntry> entries, int mouseX, int mouseY) {
         List<Integer> slots = visibleSlots(entries);
+        clampScroll(slots.size());
         int gx = left + 8;
         int gy = top + 38;
         for (int i = 0; i < COLUMNS * ROWS; i++) {
             int x = gx + (i % COLUMNS) * CELL;
             int y = gy + (i / COLUMNS) * CELL;
-            graphics.fill(x, y, x + CELL - 2, y + CELL - 2, CELL_BACK);
-            int slot = i < slots.size() ? slots.get(i) : -1;
-            ItemStack stack = slot < 0 ? ItemStack.EMPTY : player.getInventory().items.get(slot);
-            int rim = RIM_DARK;
+            int index = scroll * COLUMNS + i;
+            int slot = index < slots.size() ? slots.get(index) : -1;
+            boolean back = Bag.isBackSlot(slot);
+            graphics.fill(x, y, x + CELL - 2, y + CELL - 2, back ? BACK_CELL : CELL_BACK);
+            ItemStack stack = slot < 0 ? ItemStack.EMPTY : stackAt(player, slot);
+            int rim = back ? 0xFF2A2236 : RIM_DARK;
             if (!stack.isEmpty()) {
                 ItemRarity rarity = Bags.rarity(stack);
                 if (Bags.category(stack) == BagCategory.EQUIPMENT) {
@@ -171,7 +204,54 @@ public final class BagScreen extends Screen {
                 graphics.renderOutline(x - 1, y - 1, CELL, CELL, slot >= 0 && slot == selected ? RIM
                         : hover ? 0xFF8A7A50 : rim);
             }
+            // the back begins: a gold line over its first row (tab 全て, where the places keep their order)
+            if (tab == BagTab.ALL && back && Bag.backIndex(slot) < COLUMNS) {
+                graphics.fill(x - 1, y - 2, x + CELL - 1, y - 1, BACK_LINE);
+            }
         }
+        drawScrollbar(graphics, slots.size(), gx + COLUMNS * CELL, gy);
+        if (tab == BagTab.ALL) {
+            int backRow = Bag.FRONT_CAPACITY / COLUMNS - scroll;
+            if (backRow >= 0 && backRow < ROWS) {
+                Component label = Component.translatable("screen.eternalrealm.bag.back");
+                int lx = gx + COLUMNS * CELL - font.width(label) - 2;
+                int ly = gy + backRow * CELL - 6;
+                graphics.fill(lx - 2, ly - 1, lx + font.width(label) + 1, ly + 8, 0xE0141018);
+                graphics.drawString(font, label, lx, ly, 0xFFC9A55A, false);
+            }
+        }
+    }
+
+    /** A slim brass bar right of the grid when there is more than five rows' worth. */
+    private void drawScrollbar(GuiGraphics graphics, int count, int x, int y) {
+        int rows = rows(count);
+        if (rows <= ROWS) {
+            return;
+        }
+        int height = ROWS * CELL - 2;
+        graphics.fill(x, y, x + 3, y + height, 0xFF1A1622);
+        int knob = Math.max(10, height * ROWS / rows);
+        int knobTop = y + (height - knob) * scroll / Math.max(1, rows - ROWS);
+        graphics.fill(x, knobTop, x + 3, knobTop + knob, RIM);
+    }
+
+    private static int rows(int count) {
+        return (count + COLUMNS - 1) / COLUMNS;
+    }
+
+    private void clampScroll(int count) {
+        scroll = Math.max(0, Math.min(scroll, rows(count) - ROWS));
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        Player player = player();
+        if (player != null && mouseX < left + 158) {
+            scroll -= (int) Math.signum(delta);
+            clampScroll(visibleSlots(entries(player)).size());
+            return true;
+        }
+        return super.mouseScrolled(mouseX, mouseY, delta);
     }
 
     private void drawDetail(GuiGraphics graphics, Player player) {
@@ -229,15 +309,16 @@ public final class BagScreen extends Screen {
                 if (mouseX >= x && mouseX < x + w && mouseY >= y && mouseY < y + 13) {
                     tab = each;
                     selected = -1;
+                    scroll = 0;
                     confirmDiscard = false;
                     click();
                     return true;
                 }
                 x += w + 2;
             }
-            int slot = slotAt(player, Bags.entries(player), mouseX, mouseY);
+            int slot = slotAt(entries(player), mouseX, mouseY);
             if (slot >= 0) {
-                selected = player.getInventory().items.get(slot).isEmpty() ? -1 : slot;
+                selected = stackAt(player, slot).isEmpty() ? -1 : slot;
                 confirmDiscard = false;
                 if (button == 1 && selected >= 0) {
                     primaryAction(); // right click: use or equip at once
@@ -263,6 +344,16 @@ public final class BagScreen extends Screen {
             JsonObject args = new JsonObject();
             args.addProperty("slot", selected);
             send(BagService.EQUIP, args);
+        }
+    }
+
+    /** The selected thing of the back to the front (where the smithy, the market and the shop see it). */
+    private void bringForward() {
+        if (Bag.isBackSlot(selected)) {
+            JsonObject args = new JsonObject();
+            args.addProperty("slot", selected);
+            send(BagService.FORWARD, args);
+            selected = -1;
         }
     }
 
@@ -294,6 +385,7 @@ public final class BagScreen extends Screen {
             discard.active = !stack.isEmpty();
             confirm.visible = confirmDiscard;
             cancel.visible = confirmDiscard;
+            forward.visible = Bag.isBackSlot(selected) && !confirmDiscard;
         }
     }
 
@@ -308,24 +400,27 @@ public final class BagScreen extends Screen {
         }
     }
 
-    /** The inventory slot under the mouse in the grid, or -1. */
-    private int slotAt(Player player, List<BagEntry> entries, double mouseX, double mouseY) {
+    /** The front or back slot under the mouse in the grid, or -1. */
+    private int slotAt(List<BagEntry> entries, double mouseX, double mouseY) {
         int gx = left + 8;
         int gy = top + 38;
         if (mouseX < gx || mouseY < gy || mouseX >= gx + COLUMNS * CELL || mouseY >= gy + ROWS * CELL) {
             return -1;
         }
-        int index = (int) ((mouseY - gy) / CELL) * COLUMNS + (int) ((mouseX - gx) / CELL);
+        int index = (scroll + (int) ((mouseY - gy) / CELL)) * COLUMNS + (int) ((mouseX - gx) / CELL);
         List<Integer> slots = visibleSlots(entries);
         return index < slots.size() ? slots.get(index) : -1;
     }
 
-    /** Tab 全て: every bag slot in place (empty ones too); the other tabs: their items packed together. */
+    /**
+     * Tab 全て: every place in order (empty ones too), the front's 35 and then the back's 28; the other tabs: their
+     * items packed together, the front's first.
+     */
     private List<Integer> visibleSlots(List<BagEntry> entries) {
         List<Integer> slots = new ArrayList<>();
         if (tab == BagTab.ALL) {
-            for (int slot = Bag.FIRST_SLOT; slot <= Bag.LAST_SLOT; slot++) {
-                slots.add(slot);
+            for (int position = 0; position < Bag.CAPACITY; position++) {
+                slots.add(Bag.slotAt(position));
             }
             return slots;
         }
@@ -336,7 +431,7 @@ public final class BagScreen extends Screen {
     }
 
     private ItemStack selectedStack(Player player) {
-        return Bag.isBagSlot(selected) ? player.getInventory().items.get(selected) : ItemStack.EMPTY;
+        return Bag.inBag(selected) ? stackAt(player, selected) : ItemStack.EMPTY;
     }
 
     private Player player() {

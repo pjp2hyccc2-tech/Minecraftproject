@@ -146,6 +146,7 @@ public final class ClientForgeEvents {
         ClientCombatState.clear();
         ClientUiState.clear();
         ClientTrinkets.clear();
+        ClientBagBack.clear();
         CombatAnimations.clear();
         CameraShake.clear();
         SkillFx.clear();

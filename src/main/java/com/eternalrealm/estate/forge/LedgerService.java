@@ -332,13 +332,16 @@ public final class LedgerService {
                     budget = all ? Integer.MAX_VALUE : stack.getMaxStackSize();
                 }
                 int want = Math.min(budget - taken, stack.getCount());
-                int room = roomFor(inventory, stack);
+                int room = roomFor(inventory, stack) + com.eternalrealm.item.forge.BagBack.roomFor(player, stack);
                 int moving = Math.min(want, room);
                 if (moving <= 0) {
                     return finishTake(player, taken, touched);
                 }
                 ItemStack part = box.container().removeItem(i, moving);
                 int put = insert(inventory, part);
+                if (!part.isEmpty()) {
+                    put += com.eternalrealm.item.forge.BagBack.insert(player, part); // the front was full: the back
+                }
                 if (!part.isEmpty()) {
                     // cannot happen (room was counted); never lose it
                     box.insert(part);
@@ -407,9 +410,24 @@ public final class LedgerService {
     /**
      * Empties the bag into the room by the chests' labels: everything ({@code only} empty; the field kit of potions,
      * tonics and scrolls stays in the bag) or one kind of thing (all of it). Slot 0, the weapon in hand, is never
-     * touched. @return what happened
+     * touched. What waits in the bag's back comes forward into the room's way as the front empties (a few rounds).
+     * @return what happened
      */
     public static Deposit deposit(ServerPlayer player, EstateKey key, Optional<StorageLabel> only) {
+        Deposit total = depositFront(player, key, only);
+        for (int round = 0; round < 4 && total.items() > 0 && com.eternalrealm.item.forge.BagBack.refill(player);
+             round++) {
+            Deposit more = depositFront(player, key, only);
+            total = new Deposit(total.items() + more.items(), total.stacks() + more.stacks(), more.left(),
+                    Math.max(total.boxes(), more.boxes()));
+            if (more.items() == 0) {
+                break;
+            }
+        }
+        return total;
+    }
+
+    private static Deposit depositFront(ServerPlayer player, EstateKey key, Optional<StorageLabel> only) {
         Optional<EstateContents.Found> found = EstateService.contents(key);
         if (found.isEmpty()) {
             return new Deposit(0, 0, 0, 0);

@@ -38,10 +38,31 @@ public class BagTest {
         // helmet (rare, 15), spear (rare, 10), sword (common), potion, fang, torch
         assertEquals(List.of(7, 9, 1, 2, 5, 35), Bag.sortedSlots(ENTRIES));
         assertEquals(6, Bag.used(ENTRIES));
-        assertEquals(35, Bag.CAPACITY);
         assertFalse(Bag.isBagSlot(0));
         assertTrue(Bag.isBagSlot(35));
         assertFalse(Bag.isBagSlot(36));
+    }
+
+    @Test
+    public void theBackMakesTheBagOnePointEightTimesAsBig() {
+        assertEquals(35, Bag.FRONT_CAPACITY);
+        assertEquals(28, Bag.BACK_SIZE);
+        assertEquals(63, Bag.CAPACITY);
+        assertEquals(1.8, (double) Bag.CAPACITY / Bag.FRONT_CAPACITY, 1e-9);
+        assertTrue(Bag.isBackSlot(100) && Bag.isBackSlot(127));
+        assertFalse(Bag.isBackSlot(99) || Bag.isBackSlot(128) || Bag.isBagSlot(100));
+        assertTrue(Bag.inBag(1) && Bag.inBag(35) && Bag.inBag(100) && Bag.inBag(127));
+        assertFalse(Bag.inBag(0) || Bag.inBag(36) || Bag.inBag(40));
+        assertEquals(3, Bag.backIndex(103));
+        assertEquals(1, Bag.slotAt(0));
+        assertEquals(35, Bag.slotAt(34));
+        assertEquals("the 36th place is the back's first", 100, Bag.slotAt(35));
+        assertEquals(127, Bag.slotAt(62));
+        // a back entry sorts with the rest and counts
+        List<BagEntry> withBack = new java.util.ArrayList<>(ENTRIES);
+        withBack.add(new BagEntry(104, "eternalrealm:wolf_fang", 3, BagCategory.MATERIAL, ItemRarity.COMMON, 0));
+        assertEquals(7, Bag.used(withBack));
+        assertTrue(Bag.sortedSlots(withBack).contains(104));
     }
 
     @Test(expected = IllegalArgumentException.class)

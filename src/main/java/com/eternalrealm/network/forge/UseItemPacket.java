@@ -8,8 +8,9 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 /**
- * C2S: "use the item in my inventory slot {@code slot}" (quick-use keys, the bag's use button). Only an intent: the
- * server checks the slot, the item, the level and the cooldown ({@link QuickUse#useSlot}).
+ * C2S: "use the item in my inventory slot {@code slot}" (quick-use keys, the bag's use button; a slot of the bag's back
+ * too, {@code Bag.BACK_FIRST}..). Only an intent: the server checks the slot, the item, the level and the cooldown
+ * ({@link QuickUse#useSlot}).
  */
 public record UseItemPacket(int slot) {
     /** One VarInt. */
@@ -27,7 +28,8 @@ public record UseItemPacket(int slot) {
     /** Server thread (via consumerMainThread). */
     public static void handle(UseItemPacket packet, Supplier<NetworkEvent.Context> contextSupplier) {
         ServerPacketGuard.accept(contextSupplier, "use_item", ServerContext::uiLimiter).ifPresent(accepted -> {
-            if (packet.slot() < 0 || packet.slot() >= accepted.player().getInventory().items.size()) {
+            boolean back = com.eternalrealm.item.bag.Bag.isBackSlot(packet.slot());
+            if (!back && (packet.slot() < 0 || packet.slot() >= accepted.player().getInventory().items.size())) {
                 ServerPacketGuard.violation(accepted.context(), accepted.player(), "use_item: slot " + packet.slot());
                 return;
             }

@@ -7425,5 +7425,8 @@
   "screen.eternalrealm.tab.capital": "王都へ",
   "screen.eternalrealm.tab.capital_tip": "どこからでも王都の広場へ転移します（約3秒・動くか攻撃を受けると中断／キー: End）",
   "screen.eternalrealm.map.to_capital": "王都へ転移",
-  "screen.eternalrealm.map.to_capital_tip": "どこからでも王都の広場へ転移します（約3秒の詠唱・キー: End）"
+  "screen.eternalrealm.map.to_capital_tip": "どこからでも王都の広場へ転移します（約3秒の詠唱・キー: End）",
+  "screen.eternalrealm.bag.forward": "前へ",
+  "screen.eternalrealm.bag.forward_tip": "カバンの奥から手前に出します（鍛冶屋・取引所・お店でも見えるように）。手前がいっぱいなら一番最後の物と入れ替わります",
+  "screen.eternalrealm.bag.back": "カバンの奥"
 }

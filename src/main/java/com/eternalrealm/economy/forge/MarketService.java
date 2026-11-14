@@ -183,7 +183,7 @@ public final class MarketService {
     private boolean deliver(UUID player, String itemData, ItemInfo item, MailReason reason) {
         ServerPlayer online = server.getPlayerList().getPlayer(player);
         ItemStack stack = restore(itemData);
-        if (online != null && !stack.isEmpty() && fitsInBag(online.getInventory(), stack)) {
+        if (online != null && !stack.isEmpty() && com.eternalrealm.item.forge.Bags.fits(online, stack)) {
             com.eternalrealm.item.forge.Bags.give(online, stack);
             return true;
         }
@@ -657,7 +657,7 @@ public final class MarketService {
         }
     }
 
-    /** Whether the whole stack fits into the bag slots (1-35; slot 0 is the equipped weapon). */
+    /** Whether the whole stack fits into the bag's front (slots 1-35; slot 0 is the equipped weapon). */
     static boolean fitsInBag(net.minecraft.world.entity.player.Inventory inventory, ItemStack stack) {
         int room = 0;
         for (int slot = Bag.FIRST_SLOT; slot <= Bag.LAST_SLOT; slot++) {

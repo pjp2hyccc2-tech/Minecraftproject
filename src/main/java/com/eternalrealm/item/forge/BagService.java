@@ -30,9 +30,15 @@ import java.util.Optional;
  *     weapons, the level and (trinkets) one copy of each named trinket count.</li>
  *     <li>{@value #UNEQUIP} {@code {target: weapon|head|chest|legs|feet|accessory_1..4|charm|charm_2}}: into the
  *     first free bag slot.</li>
- *     <li>{@value #SORT}: equipment, consumables, materials, the rest; matching stacks merged.</li>
+ *     <li>{@value #SORT}: equipment, consumables, materials, the rest, over the front and the back as one bag (the
+ *     front first); matching stacks merged.</li>
  *     <li>{@value #DISCARD} {@code {slot}}: the stack is destroyed (the client asked for a confirmation).</li>
+ *     <li>{@value #FORWARD} {@code {slot}}: a stack of the back comes to the front (changing places with the front's
+ *     last stack when it is full).</li>
  * </ul>
+ * A slot is a front slot ({@value Bag#FIRST_SLOT}..{@value Bag#LAST_SLOT}) or a back slot
+ * ({@value Bag#BACK_FIRST}..{@value Bag#BACK_LAST}, {@link BagBack}); equipping from the back brings the piece forward
+ * first.
  * Using a consumable goes through {@code UseItemPacket} ({@link QuickUse}).
  */
 public final class BagService {
@@ -40,6 +46,7 @@ public final class BagService {
     public static final String UNEQUIP = "bag.unequip";
     public static final String SORT = "bag.sort";
     public static final String DISCARD = "bag.discard";
+    public static final String FORWARD = "bag.forward";
 
     /** Why an equip was refused (also the message key suffix). */
     public enum EquipResult {
@@ -56,9 +63,17 @@ public final class BagService {
 
     public static void register() {
         UiActions.register(EQUIP, (player, context, args) -> {
-            int slot = bagSlot(args);
+            int requested = bagSlot(args);
             TrinketSlots.Slot wanted = args.has("target")
                     ? TrinketSlots.Slot.byId(UiArgs.id(args, "target")).orElse(null) : null;
+            if (Bag.isBackSlot(requested) && EquipmentStacks.read(BagBack.get(player,
+                    Bag.backIndex(requested))).isEmpty()) {
+                return; // nothing to wear there (the client's view was old)
+            }
+            int slot = BagBack.frontSlot(player, requested);
+            if (slot < 0) {
+                return;
+            }
             EquipResult result = equip(player, slot, wanted);
             if (result != EquipResult.OK) {
                 tellRefusal(player, result, player.getInventory().items.get(slot));
@@ -74,6 +89,12 @@ public final class BagService {
         });
         UiActions.register(SORT, (player, context, args) -> sort(player));
         UiActions.register(DISCARD, (player, context, args) -> discard(player, bagSlot(args)));
+        UiActions.register(FORWARD, (player, context, args) -> {
+            int slot = bagSlot(args);
+            if (Bag.isBackSlot(slot)) {
+                BagBack.bringForward(player, Bag.backIndex(slot));
+            }
+        });
     }
 
     /** Equips the piece in bag slot {@code slot}. */
@@ -135,9 +156,13 @@ public final class BagService {
         }
         int free = Bags.firstFree(inventory);
         if (free < 0) {
-            return false;
+            if (BagBack.roomFor(player, worn) <= 0) {
+                return false;
+            }
+            BagBack.insert(player, worn.copy());
+        } else {
+            inventory.items.set(free, worn.copy());
         }
-        inventory.items.set(free, worn.copy());
         if (target == EquipmentSlot.WEAPON) {
             inventory.items.set(MainHand.SLOT, ItemStack.EMPTY);
         } else {
@@ -157,9 +182,13 @@ public final class BagService {
         Inventory inventory = player.getInventory();
         int free = Bags.firstFree(inventory);
         if (free < 0) {
-            return false;
+            if (BagBack.roomFor(player, worn) <= 0) {
+                return false;
+            }
+            BagBack.insert(player, worn.copy());
+        } else {
+            inventory.items.set(free, worn.copy());
         }
-        inventory.items.set(free, worn.copy());
         TrinketSlots.set(player, target, ItemStack.EMPTY);
         inventory.setChanged();
         player.inventoryMenu.broadcastChanges();
@@ -178,35 +207,57 @@ public final class BagService {
         tell(player, key);
     }
 
-    /** Merges matching stacks, then orders the bag ({@link Bag#ORDER}). */
+    /**
+     * Merges matching stacks, then orders the front and the back as one bag ({@link Bag#ORDER}, {@link Bag#slotAt}):
+     * nothing is lost, nothing is made.
+     */
     public static void sort(ServerPlayer player) {
         Inventory inventory = player.getInventory();
-        List<ItemStack> stacks = new ArrayList<>();
+        List<ItemStack> merged = new ArrayList<>();
         for (int slot = Bag.FIRST_SLOT; slot <= Bag.LAST_SLOT; slot++) {
             ItemStack stack = inventory.items.get(slot);
             if (!stack.isEmpty()) {
-                stacks.add(stack.copy());
+                BagBack.merge(merged, stack.copy(), true);
             }
             inventory.items.set(slot, ItemStack.EMPTY);
         }
-        for (ItemStack stack : stacks) {
-            Bags.insert(inventory, stack); // merges into matching stacks first
+        for (ItemStack stack : BagBack.stacks(player)) {
+            if (!stack.isEmpty()) {
+                BagBack.merge(merged, stack, true);
+            }
         }
-        List<BagEntry> entries = Bags.entries(player);
+        List<BagEntry> entries = new ArrayList<>(merged.size());
+        for (int i = 0; i < merged.size(); i++) {
+            entries.add(Bags.entry(Bag.slotAt(i), merged.get(i)));
+        }
         List<Integer> order = Bag.sortedSlots(entries);
-        List<ItemStack> sorted = new ArrayList<>(order.size());
-        for (int slot : order) {
-            sorted.add(inventory.items.get(slot));
+        List<ItemStack> back = new ArrayList<>(Bag.BACK_SIZE);
+        for (int i = 0; i < Bag.BACK_SIZE; i++) {
+            back.add(ItemStack.EMPTY);
         }
-        for (int slot = Bag.FIRST_SLOT; slot <= Bag.LAST_SLOT; slot++) {
-            int index = slot - Bag.FIRST_SLOT;
-            inventory.items.set(slot, index < sorted.size() ? sorted.get(index) : ItemStack.EMPTY);
+        for (int position = 0; position < order.size(); position++) {
+            int from = order.get(position);
+            ItemStack stack = merged.get(Bag.isBagSlot(from) ? from - Bag.FIRST_SLOT
+                    : Bag.FRONT_CAPACITY + Bag.backIndex(from));
+            int to = Bag.slotAt(position);
+            if (Bag.isBagSlot(to)) {
+                inventory.items.set(to, stack);
+            } else {
+                back.set(Bag.backIndex(to), stack);
+            }
         }
+        BagBack.write(player, back);
         inventory.setChanged();
         player.inventoryMenu.broadcastChanges();
     }
 
     public static void discard(ServerPlayer player, int slot) {
+        if (Bag.isBackSlot(slot)) {
+            if (!BagBack.get(player, Bag.backIndex(slot)).isEmpty()) {
+                BagBack.set(player, Bag.backIndex(slot), ItemStack.EMPTY);
+            }
+            return;
+        }
         Inventory inventory = player.getInventory();
         if (!inventory.items.get(slot).isEmpty()) {
             inventory.items.set(slot, ItemStack.EMPTY);
@@ -215,8 +266,13 @@ public final class BagService {
         }
     }
 
+    /** A front or back slot from the client (anything else is a violation). */
     private static int bagSlot(JsonObject args) {
-        return (int) UiArgs.number(args, "slot", Bag.FIRST_SLOT, Bag.LAST_SLOT);
+        int slot = (int) UiArgs.number(args, "slot", Bag.FIRST_SLOT, Bag.BACK_LAST);
+        if (!Bag.inBag(slot)) {
+            throw new UiArgs.InvalidArgumentException("not a bag slot: " + slot);
+        }
+        return slot;
     }
 
     private static EquipmentSlot target(String id) {

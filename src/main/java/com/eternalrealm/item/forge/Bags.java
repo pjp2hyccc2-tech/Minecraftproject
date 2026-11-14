@@ -19,9 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The bag (inventory slots 1..35; slot 0 is the equipped weapon): what the game gives a player goes straight into it,
- * first onto matching stacks, then into free slots. What does not fit drops at the player's feet for them alone. Every
- * acquisition, and every item picked up from the ground, shows in the player's pickup feed.
+ * The bag (its front: inventory slots 1..35, slot 0 is the equipped weapon; its back: {@link BagBack}): what the game
+ * gives a player goes straight into it, first onto matching stacks, then into free slots of the front, then into the
+ * back. What does not fit drops at the player's feet for them alone. Every acquisition, and every item picked up from
+ * the ground, shows in the player's pickup feed.
  */
 public final class Bags {
     private Bags() {
@@ -39,6 +40,9 @@ public final class Bags {
         ItemStack shown = stack.copyWithCount(1);
         int before = stack.getCount();
         insert(player.getInventory(), stack);
+        if (!stack.isEmpty()) {
+            BagBack.insert(player, stack);
+        }
         int added = before - stack.getCount();
         if (added > 0) {
             feed(player, shown, added, 0);
@@ -90,7 +94,27 @@ public final class Bags {
         inventory.setChanged();
     }
 
-    /** The first empty bag slot, or -1. */
+    /** How many of {@code stack} the front (slots 1..35) can still take. */
+    public static int roomFor(Inventory inventory, ItemStack stack) {
+        int room = 0;
+        for (int slot = Bag.FIRST_SLOT; slot <= Bag.LAST_SLOT; slot++) {
+            ItemStack held = inventory.items.get(slot);
+            if (held.isEmpty()) {
+                room += stack.getMaxStackSize();
+            } else if (held.isStackable() && ItemStack.isSameItemSameTags(held, stack)) {
+                room += Math.max(0, held.getMaxStackSize() - held.getCount());
+            }
+        }
+        return room;
+    }
+
+    /** Whether the whole of {@code stack} fits into the front and the back together. */
+    public static boolean fits(ServerPlayer player, ItemStack stack) {
+        int room = roomFor(player.getInventory(), stack);
+        return room >= stack.getCount() || room + BagBack.roomFor(player, stack) >= stack.getCount();
+    }
+
+    /** The first empty slot of the front, or -1. */
     public static int firstFree(Inventory inventory) {
         for (int slot = Bag.FIRST_SLOT; slot <= Bag.LAST_SLOT; slot++) {
             if (inventory.items.get(slot).isEmpty()) {
@@ -100,7 +124,19 @@ public final class Bags {
         return -1;
     }
 
-    /** The occupied bag slots as the pure bag model sees them (tabs, sort). */
+    /** The occupied slots of the front and the back (server: the back is read from the player's data). */
+    public static List<BagEntry> allEntries(Player player) {
+        List<BagEntry> out = entries(player);
+        List<ItemStack> back = BagBack.stacks(player);
+        for (int i = 0; i < back.size(); i++) {
+            if (!back.get(i).isEmpty()) {
+                out.add(entry(Bag.BACK_FIRST + i, back.get(i)));
+            }
+        }
+        return out;
+    }
+
+    /** The occupied slots of the front as the pure bag model sees them (tabs, sort). */
     public static List<BagEntry> entries(Player player) {
         List<BagEntry> out = new ArrayList<>();
         Inventory inventory = player.getInventory();

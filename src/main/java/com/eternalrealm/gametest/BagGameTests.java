@@ -9,7 +9,9 @@ import com.eternalrealm.item.ItemRarity;
 import com.eternalrealm.item.ItemTier;
 import com.eternalrealm.item.bag.Bag;
 import com.eternalrealm.item.forge.BagService;
+import com.eternalrealm.item.forge.BagBack;
 import com.eternalrealm.item.forge.Bags;
+import com.eternalrealm.item.forge.Inventories;
 import com.eternalrealm.item.forge.EquipmentStacks;
 import com.eternalrealm.item.forge.GearArmorItem;
 import com.mojang.authlib.GameProfile;
@@ -44,7 +46,7 @@ public final class BagGameTests {
     }
 
     @GameTest(template = ARENA)
-    public static void givingFillsTheBagAndDropsTheRest(GameTestHelper helper) {
+    public static void givingFillsTheBagThenItsBackAndDropsTheRest(GameTestHelper helper) {
         FakePlayer player = player(helper, "er_gt_bag_give");
         Inventory inventory = player.getInventory();
         ItemStack weapon = gear(EquipmentBase.weapon(WeaponType.ONE_HANDED_SWORD, ItemTier.IRON));
@@ -56,12 +58,107 @@ public final class BagGameTests {
         Bags.give(player, new ItemStack(Items.TORCH, 10));
         check(inventory.items.get(Bag.LAST_SLOT).getCount() == 64, "the torches should top up their stack");
         check(inventory.items.get(0) == weapon, "the weapon slot must never receive items");
+        check(BagBack.get(player, 0).is(Items.TORCH) && BagBack.get(player, 0).getCount() == 6,
+                "the six torches that did not fit the front wait in the back: " + BagBack.get(player, 0));
+        for (int index = 1; index < Bag.BACK_SIZE; index++) {
+            BagBack.set(player, index, new ItemStack(Items.STONE, 64));
+        }
+        Bags.give(player, new ItemStack(Items.TORCH, 70));
+        check(BagBack.get(player, 0).getCount() == 64, "the back's torches top up first");
         List<ItemEntity> dropped = helper.getLevel().getEntitiesOfClass(ItemEntity.class,
                 new AABB(player.blockPosition()).inflate(3.0), entity -> entity.getItem().is(Items.TORCH));
-        check(dropped.size() == 1 && dropped.get(0).getItem().getCount() == 6,
-                "the six torches that did not fit should lie at the player's feet: " + dropped);
+        check(dropped.size() == 1 && dropped.get(0).getItem().getCount() == 12,
+                "the twelve torches that fit nowhere should lie at the player's feet: " + dropped);
         dropped.forEach(ItemEntity::discard);
+        BagBack.clear(player);
+        inventory.clearContent();
         helper.succeed();
+    }
+
+    /**
+     * The back of the bag (2026-11-14, 1.8 times the room): a piece given to a full bag waits there, comes forward to
+     * be equipped, the back refills the front as it empties, the smithy's materials are counted and taken there too,
+     * the sort orders front and back as one bag without losing anything, and touching a stack on the ground with the
+     * front full puts it into the back.
+     */
+    @GameTest(template = ARENA)
+    public static void theBackHoldsWhatTheFrontCannot(GameTestHelper helper) {
+        FakePlayer player = player(helper, "er_gt_bag_back");
+        Inventory inventory = player.getInventory();
+        BagBack.clear(player);
+        for (int slot = Bag.FIRST_SLOT; slot <= Bag.LAST_SLOT; slot++) {
+            inventory.items.set(slot, new ItemStack(Items.STONE, 64));
+        }
+        ItemStack sword = gear(EquipmentBase.weapon(WeaponType.ONE_HANDED_SWORD, ItemTier.IRON));
+        UUID swordId = EquipmentStacks.read(sword).orElseThrow().uniqueId();
+        Bags.give(player, sword);
+        check(EquipmentStacks.isEquipment(BagBack.get(player, 0)), "the sword waits in the back");
+        int front = BagBack.frontSlot(player, Bag.BACK_FIRST);
+        check(front == Bag.LAST_SLOT, "with the front full it changes places with the last stack: " + front);
+        check(BagBack.get(player, 0).is(Items.STONE), "the stone it changed places with is in the back now");
+        check(BagService.equip(player, front) == BagService.EquipResult.OK, "the sword is equipped from there");
+        check(EquipmentStacks.read(inventory.items.get(0)).map(data -> data.uniqueId().equals(swordId)).orElse(false),
+                "the sword is in hand");
+
+        inventory.items.set(3, ItemStack.EMPTY);
+        check(BagBack.refill(player), "a free place in the front draws the back forward");
+        check(inventory.items.get(3).is(Items.STONE) && BagBack.isEmpty(player), "the back's stone came forward");
+
+        // materials of the back count for the smithy and are taken from there
+        inventory.items.set(4, new ItemStack(Items.FLINT, 5));
+        BagBack.set(player, 2, new ItemStack(Items.FLINT, 7));
+        check(Inventories.counts(player).getOrDefault("minecraft:flint", 0) == 12, "front and back flint counted");
+        check(Inventories.take(player, java.util.Map.of("minecraft:flint", 9)), "nine flint taken");
+        check(inventory.items.get(4).isEmpty() && BagBack.get(player, 2).getCount() == 3,
+                "the front's first, then the back's: " + inventory.items.get(4) + " / " + BagBack.get(player, 2));
+
+        // the sort: front and back as one bag, nothing lost
+        inventory.clearContent();
+        BagBack.clear(player);
+        for (int slot = Bag.FIRST_SLOT; slot <= Bag.LAST_SLOT; slot++) {
+            inventory.items.set(slot, new ItemStack(Items.STONE, 64));
+        }
+        for (int index = 0; index < 10; index++) {
+            BagBack.set(player, index, new ItemStack(Items.FLINT, 30)); // 300 flint: five stacks once merged
+        }
+        int before = total(player);
+        BagService.sort(player);
+        check(total(player) == before, "the sort keeps every item: " + before + " → " + total(player));
+        int backUsed = 0;
+        for (ItemStack stack : BagBack.stacks(player)) {
+            backUsed += stack.isEmpty() ? 0 : 1;
+        }
+        check(Bags.firstFree(inventory) < 0 && backUsed == 5, "40 stacks: the front's 35 first, five in the back: "
+                + backUsed);
+
+        // a stack touched on the ground with the front full goes into the back
+        inventory.clearContent();
+        BagBack.clear(player);
+        for (int slot = Bag.FIRST_SLOT; slot <= Bag.LAST_SLOT; slot++) {
+            inventory.items.set(slot, new ItemStack(Items.STONE, 64));
+        }
+        inventory.items.set(0, ItemStack.EMPTY);
+        Vec3 at = player.position();
+        ItemEntity lying = new ItemEntity(helper.getLevel(), at.x, at.y, at.z, new ItemStack(Items.TORCH, 20));
+        helper.getLevel().addFreshEntity(lying);
+        lying.playerTouch(player);
+        check(BagBack.get(player, 0).is(Items.TORCH) && BagBack.get(player, 0).getCount() == 20,
+                "picked up into the back: " + BagBack.get(player, 0));
+        check(lying.isRemoved(), "nothing is left on the ground");
+        BagBack.clear(player);
+        inventory.clearContent();
+        helper.succeed();
+    }
+
+    private static int total(FakePlayer player) {
+        int total = 0;
+        for (int slot = Bag.FIRST_SLOT; slot <= Bag.LAST_SLOT; slot++) {
+            total += player.getInventory().items.get(slot).getCount();
+        }
+        for (ItemStack stack : BagBack.stacks(player)) {
+            total += stack.getCount();
+        }
+        return total;
     }
 
     @GameTest(template = ARENA)

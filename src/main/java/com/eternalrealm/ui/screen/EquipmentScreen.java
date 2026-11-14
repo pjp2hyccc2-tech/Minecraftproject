@@ -220,7 +220,7 @@ public final class EquipmentScreen extends Screen {
         int level = ClientCharacterState.snapshot().map(CharacterSnapshot::level).orElse(1);
         for (int row = 0; row < LIST_ROWS && scroll + row < candidates.size(); row++) {
             int inventorySlot = candidates.get(scroll + row);
-            ItemStack stack = player.getInventory().items.get(inventorySlot);
+            ItemStack stack = bagStack(player, inventorySlot);
             int ry = y + 1 + row * ROW;
             if (inventorySlot == candidate) {
                 graphics.fill(x + 1, ry, x + w - 1, ry + ROW, 0xFF3A3020);
@@ -259,10 +259,10 @@ public final class EquipmentScreen extends Screen {
         int x = left + 150;
         int y = top + 32 + LIST_ROWS * ROW + 6;
         int w = WIDTH - 150 - 8;
-        if (!Bag.isBagSlot(candidate)) {
+        if (!Bag.inBag(candidate)) {
             return;
         }
-        EquipmentData next = EquipmentStacks.read(player.getInventory().items.get(candidate)).orElse(null);
+        EquipmentData next = EquipmentStacks.read(bagStack(player, candidate)).orElse(null);
         if (next == null) {
             return;
         }
@@ -332,7 +332,7 @@ public final class EquipmentScreen extends Screen {
     }
 
     private void equipCandidate() {
-        if (Bag.isBagSlot(candidate)) {
+        if (Bag.inBag(candidate)) {
             JsonObject args = new JsonObject();
             args.addProperty("slot", candidate);
             if (slot.trinket >= 0) {
@@ -356,33 +356,39 @@ public final class EquipmentScreen extends Screen {
         if (player == null || equip == null) {
             return;
         }
-        if (Bag.isBagSlot(candidate) && EquipmentStacks.read(player.getInventory().items.get(candidate))
+        if (Bag.inBag(candidate) && EquipmentStacks.read(bagStack(player, candidate))
                 .map(data -> data.slot() != slot.kind).orElse(true)) {
             candidate = -1; // moved or equipped meanwhile
         }
         int level = ClientCharacterState.snapshot().map(CharacterSnapshot::level).orElse(1);
-        EquipmentData next = Bag.isBagSlot(candidate)
-                ? EquipmentStacks.read(player.getInventory().items.get(candidate)).orElse(null) : null;
+        EquipmentData next = Bag.inBag(candidate)
+                ? EquipmentStacks.read(bagStack(player, candidate)).orElse(null) : null;
         equip.active = next != null && reason(player, next, level, slot) == null;
         unequip.active = !worn(player, slot).isEmpty();
     }
 
     // ------------------------------------------------------------------ helpers
 
-    /** The bag slots holding pieces for the selected slot: usable ones first, then by level. */
+    /** The stack of a bag slot: the front's from the inventory, the back's from the client's copy. */
+    private static ItemStack bagStack(Player player, int bagSlot) {
+        return Bag.isBagSlot(bagSlot) ? player.getInventory().items.get(bagSlot)
+                : com.eternalrealm.client.ClientBagBack.at(bagSlot);
+    }
+
+    /** The bag slots (front and back) holding pieces for the selected slot: usable ones first, then by level. */
     private List<Integer> candidates(Player player) {
         int level = ClientCharacterState.snapshot().map(CharacterSnapshot::level).orElse(1);
         List<Integer> out = new ArrayList<>();
-        for (int i = Bag.FIRST_SLOT; i <= Bag.LAST_SLOT; i++) {
-            ItemStack stack = player.getInventory().items.get(i);
-            EquipmentData data = EquipmentStacks.read(stack).orElse(null);
+        for (int position = 0; position < Bag.CAPACITY; position++) {
+            int bagSlot = Bag.slotAt(position);
+            EquipmentData data = EquipmentStacks.read(bagStack(player, bagSlot)).orElse(null);
             if (data != null && data.slot() == slot.kind) {
-                out.add(i);
+                out.add(bagSlot);
             }
         }
         out.sort((a, b) -> {
-            EquipmentData da = EquipmentStacks.read(player.getInventory().items.get(a)).orElseThrow();
-            EquipmentData db = EquipmentStacks.read(player.getInventory().items.get(b)).orElseThrow();
+            EquipmentData da = EquipmentStacks.read(bagStack(player, a)).orElseThrow();
+            EquipmentData db = EquipmentStacks.read(bagStack(player, b)).orElseThrow();
             int usable = Boolean.compare(usable(player, db, level), usable(player, da, level));
             return usable != 0 ? usable : Integer.compare(db.requiredLevel(), da.requiredLevel());
         });
