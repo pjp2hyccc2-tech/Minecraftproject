@@ -47,11 +47,16 @@ public final class ShoreGameTests {
 
         BlockPos from = helper.absolutePos(new BlockPos(0, 0, 0));
         BlockPos to = helper.absolutePos(new BlockPos(8, 0, 8));
+        BlockPos bank = helper.absolutePos(new BlockPos(2, 0, 4));
+        BlockPos pool = helper.absolutePos(new BlockPos(3, 0, 4));
+        String seen = "bank " + ShorePatch.describeForTest(helper.getLevel(), bank.getX(), bank.getZ()) + ", pool "
+                + ShorePatch.describeForTest(helper.getLevel(), pool.getX(), pool.getZ()) + ", floor at "
+                + helper.absolutePos(new BlockPos(0, 1, 0)).getY();
         int lowered = ShorePatch.mend(helper.getLevel(), Math.min(from.getX(), to.getX()),
                 Math.min(from.getZ(), to.getZ()), Math.max(from.getX(), to.getX()), Math.max(from.getZ(), to.getZ()),
                 (x, z) -> true);
 
-        top(helper, 2, 4, 2, "one above the water: now level with it");
+        top(helper, 2, 4, 2, "one above the water: now level with it [" + seen + ", lowered " + lowered + "]");
         top(helper, 6, 4, 3, "two above: now one above");
         top(helper, 7, 4, 4, "the wall behind it went down with it");
         check(helper.getBlockState(new BlockPos(4, 3, 2)).is(Blocks.OAK_PLANKS), "what someone built stays");

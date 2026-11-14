@@ -181,8 +181,8 @@ public final class HazardGameTests {
     }
 
     /**
-     * A field lord fights like a small boss: all three moves of its body; a blow that takes it to 70% calls two
-     * monsters of its field, one to 50% makes it roar and rage (faster), and every turn comes once.
+     * A field lord fights like a small boss: the three moves of its body and three arts of a lord; a blow that takes
+     * it to 70% calls two monsters of its field, one to 50% makes it roar and rage (faster), and every turn comes once.
      */
     @GameTest(template = ARENA, timeoutTicks = 200)
     public static void aLordCallsForHelpAndFliesIntoARage(GameTestHelper helper) {
@@ -190,8 +190,13 @@ public final class HazardGameTests {
         BlockPos at = helper.absolutePos(new BlockPos(4, 2, 4));
         Mob lord = com.eternalrealm.world.forge.FieldThreatService.spawnLordForTest(level, "garm", at).orElse(null);
         check(lord != null, "no body for the lord garm");
-        check(lord instanceof ERMonster monster && monster.specialMoveCount() == 3
-                && monster.specialMoves().size() == 3, "a lord uses all three moves of its body");
+        int moves = com.eternalrealm.monster.SpecialMoves.LORD_MOVES;
+        check(lord instanceof ERMonster monster && monster.specialMoveCount() == moves
+                        && monster.specialMoves().size() == moves
+                        && monster.specialMoves().containsAll(com.eternalrealm.monster.SpecialMoves.lordArts(
+                                monster.rig().id(), monster.getVariant())),
+                "a lord uses all three moves of its body and three arts of a lord: "
+                        + (lord instanceof ERMonster body ? body.specialMoves() : "not a monster"));
         net.minecraft.world.phys.AABB around = lord.getBoundingBox().inflate(10.0);
         // only the lord's own helpers count: the batch's other tests have monsters next door
         java.util.function.IntSupplier helpers = () -> level.getEntitiesOfClass(Mob.class, around,

@@ -212,6 +212,13 @@ public final class ShorePatch {
         return cache.computeIfAbsent(BlockPos.asLong(x, 0, z), key -> probe(level, x, z));
     }
 
+    /** What the patch sees in a column (GameTests' failure messages). */
+    public static String describeForTest(ServerLevel level, int x, int z) {
+        Column column = probe(level, x, z);
+        return "(" + x + ", " + z + ": surface " + level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z) + ", ground "
+                + column.ground() + " " + column.top() + (column.wet() ? ", water " + column.water() : ", dry") + ")";
+    }
+
     /** From the surface down through plants: standing water on top, or the ground's top block. */
     private static Column probe(ServerLevel level, int x, int z) {
         int y = level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z) - 1;
