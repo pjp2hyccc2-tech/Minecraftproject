@@ -159,18 +159,27 @@ public final class ShorePatch {
      */
     public static int mend(ServerLevel level, int minX, int minZ, int maxX, int maxZ,
                            BiPredicate<Integer, Integer> may) {
+        return mend(level, minX, minZ, maxX, maxZ, may, Integer.MAX_VALUE);
+    }
+
+    /**
+     * {@link #mend} looking at the blocks at {@code ceiling} and below only (a GameTest's pool lies in a pocket under
+     * the test world's own ground; アストリア's shores are open to the sky and use the surface).
+     */
+    public static int mend(ServerLevel level, int minX, int minZ, int maxX, int maxZ,
+                           BiPredicate<Integer, Integer> may, int ceiling) {
         Map<Long, Column> columns = new HashMap<>();
         Map<Long, Integer> loweredTo = new HashMap<>();
         Map<Long, Integer> waterOf = new HashMap<>();
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
-                Column column = column(level, columns, x, z);
+                Column column = column(level, columns, x, z, ceiling);
                 if (column.wet() || !may.test(x, z)) {
                     continue;
                 }
                 int water = Column.NO_WATER;
                 for (Direction direction : Direction.Plane.HORIZONTAL) {
-                    Column next = column(level, columns, x + direction.getStepX(), z + direction.getStepZ());
+                    Column next = column(level, columns, x + direction.getStepX(), z + direction.getStepZ(), ceiling);
                     if (next.wet() && Shores.lowers(column.ground(), next.water())) {
                         water = Math.max(water, next.water());
                     }
@@ -196,7 +205,7 @@ public final class ShorePatch {
                 if (loweredTo.containsKey(key) || !may.test(nx, nz)) {
                     continue;
                 }
-                Column next = column(level, columns, nx, nz);
+                Column next = column(level, columns, nx, nz, ceiling);
                 if (!next.wet() && Shores.ripples(next.ground(), entry.getValue(), water)
                         && lower(level, nx, next.ground(), nz)) {
                     loweredTo.put(key, next.ground() - 1);
@@ -208,20 +217,20 @@ public final class ShorePatch {
         return count;
     }
 
-    private static Column column(ServerLevel level, Map<Long, Column> cache, int x, int z) {
-        return cache.computeIfAbsent(BlockPos.asLong(x, 0, z), key -> probe(level, x, z));
+    private static Column column(ServerLevel level, Map<Long, Column> cache, int x, int z, int ceiling) {
+        return cache.computeIfAbsent(BlockPos.asLong(x, 0, z), key -> probe(level, x, z, ceiling));
     }
 
     /** What the patch sees in a column (GameTests' failure messages). */
-    public static String describeForTest(ServerLevel level, int x, int z) {
-        Column column = probe(level, x, z);
+    public static String describeForTest(ServerLevel level, int x, int z, int ceiling) {
+        Column column = probe(level, x, z, ceiling);
         return "(" + x + ", " + z + ": surface " + level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z) + ", ground "
                 + column.ground() + " " + column.top() + (column.wet() ? ", water " + column.water() : ", dry") + ")";
     }
 
-    /** From the surface down through plants: standing water on top, or the ground's top block. */
-    private static Column probe(ServerLevel level, int x, int z) {
-        int y = level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z) - 1;
+    /** From the surface (or the ceiling) down through plants: standing water on top, or the ground's top block. */
+    private static Column probe(ServerLevel level, int x, int z, int ceiling) {
+        int y = Math.min(level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z) - 1, ceiling);
         int bottom = Math.max(level.getMinBuildHeight(), y - 48);
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(x, y, z);
         int water = Column.NO_WATER;

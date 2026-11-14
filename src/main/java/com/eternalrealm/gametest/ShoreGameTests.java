@@ -47,14 +47,16 @@ public final class ShoreGameTests {
 
         BlockPos from = helper.absolutePos(new BlockPos(0, 0, 0));
         BlockPos to = helper.absolutePos(new BlockPos(8, 0, 8));
+        // the test world has its own ground far above the test (the structures stand in a pocket at the bottom):
+        // the patch looks from just above the arena down
+        int ceiling = helper.absolutePos(new BlockPos(0, 7, 0)).getY();
         BlockPos bank = helper.absolutePos(new BlockPos(2, 0, 4));
         BlockPos pool = helper.absolutePos(new BlockPos(3, 0, 4));
-        String seen = "bank " + ShorePatch.describeForTest(helper.getLevel(), bank.getX(), bank.getZ()) + ", pool "
-                + ShorePatch.describeForTest(helper.getLevel(), pool.getX(), pool.getZ()) + ", floor at "
-                + helper.absolutePos(new BlockPos(0, 1, 0)).getY();
+        String seen = "bank " + ShorePatch.describeForTest(helper.getLevel(), bank.getX(), bank.getZ(), ceiling)
+                + ", pool " + ShorePatch.describeForTest(helper.getLevel(), pool.getX(), pool.getZ(), ceiling);
         int lowered = ShorePatch.mend(helper.getLevel(), Math.min(from.getX(), to.getX()),
                 Math.min(from.getZ(), to.getZ()), Math.max(from.getX(), to.getX()), Math.max(from.getZ(), to.getZ()),
-                (x, z) -> true);
+                (x, z) -> true, ceiling);
 
         top(helper, 2, 4, 2, "one above the water: now level with it [" + seen + ", lowered " + lowered + "]");
         top(helper, 6, 4, 3, "two above: now one above");
