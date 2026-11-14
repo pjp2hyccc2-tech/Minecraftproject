@@ -54,6 +54,11 @@ public final class Inventories {
         Bags.give(player, stack);
     }
 
+    /** Loot new to the world: like {@link #give}, and it counts for "collect" quest objectives ({@link Bags#loot}). */
+    public static void loot(ServerPlayer player, ItemStack stack) {
+        Bags.loot(player, stack);
+    }
+
     public static Item item(String id) {
         ResourceLocation location = ResourceLocation.tryParse(id);
         return location == null ? null : ForgeRegistries.ITEMS.getValue(location);

@@ -124,6 +124,12 @@ public final class QuestService {
         return state;
     }
 
+    /** The progress of an active quest's objectives (empty if it is not active); for GameTests and admin tools. */
+    public List<Integer> progressOf(ServerPlayer player, String questId) {
+        QuestLogState state = log(player);
+        return state == null || !state.isActive(questId) ? List.of() : state.progress(questId);
+    }
+
     private void save(ServerPlayer player, QuestLogState state) {
         playerData.setExtension(player.getUUID(), EXTENSION, QuestLogCodec.toJson(state.snapshot()).toString());
     }

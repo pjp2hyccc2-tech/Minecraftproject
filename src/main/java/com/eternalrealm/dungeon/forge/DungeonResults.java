@@ -189,7 +189,7 @@ public final class DungeonResults {
             }
         }
         for (ItemStack stack : extra) {
-            Inventories.give(player, stack.copy());
+            Inventories.loot(player, stack.copy());
         }
         player.displayClientMessage(Component.translatable("message.eternalrealm.dungeon.hero_reward")
                 .withStyle(ChatFormatting.GOLD), false);
@@ -286,7 +286,7 @@ public final class DungeonResults {
 
     private static void grant(ServerPlayer player, ServerContext context, Card card) {
         if (card.stack() != null) {
-            Inventories.give(player, card.stack().copy());
+            Inventories.loot(player, card.stack().copy());
             player.displayClientMessage(Component.translatable("message.eternalrealm.dungeon.bonus_item",
                     card.stack().getHoverName(), card.stack().getCount()).withStyle(ChatFormatting.GOLD), false);
         } else {

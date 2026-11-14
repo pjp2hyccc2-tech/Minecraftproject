@@ -1323,7 +1323,7 @@ public final class FieldThreatService {
             context.playerData().grantGold(player.getUUID(), gold);
         }
         for (ItemStack stack : items) {
-            Inventories.give(player, stack.copy());
+            Inventories.loot(player, stack.copy());
         }
         player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 0.7F, 1.3F);
     }

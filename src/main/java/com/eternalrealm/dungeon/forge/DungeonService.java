@@ -796,12 +796,12 @@ public final class DungeonService {
         player.sendSystemMessage(Component.translatable("message.eternalrealm.dungeon.reward", piece.getDisplayName())
                 .withStyle(ChatFormatting.GOLD));
         given.add(piece.copy());
-        Inventories.give(player, piece);
+        Inventories.loot(player, piece);
         int stones = com.eternalrealm.dungeon.DungeonRewards.stones(instance.difficulty);
         net.minecraft.world.item.Item stone = ERGearItems.material(Materials.ENHANCEMENT_STONE);
         if (stone != null) {
             given.add(new ItemStack(stone, stones));
-            Inventories.give(player, new ItemStack(stone, stones));
+            Inventories.loot(player, new ItemStack(stone, stones));
         }
         // named designs (armory): one of the dungeon's own, and rarely the boss's weapon
         ArmoryDrops.Difficulty odds = ArmoryDrops.Difficulty.of(instance.difficulty.name());
@@ -810,7 +810,7 @@ public final class DungeonService {
                 ItemStack named = ArmoryStacks.reward(player, design, floor, RANDOM);
                 ArmoryStacks.announce(player, named, design);
                 given.add(named.copy());
-                Inventories.give(player, named);
+                Inventories.loot(player, named);
             });
         }
         // the dungeon's own trinkets (名品の装身具): an accessory and a charm per dungeon
@@ -819,7 +819,7 @@ public final class DungeonService {
                 ItemStack trinket = ArmoryStacks.reward(player, design, floor, RANDOM);
                 ArmoryStacks.announce(player, trinket, design);
                 given.add(trinket.copy());
-                Inventories.give(player, trinket);
+                Inventories.loot(player, trinket);
             });
         }
         if (RANDOM.nextDouble() < odds.bossWeaponChance()) {
@@ -827,14 +827,14 @@ public final class DungeonService {
                 ItemStack weapon = ArmoryStacks.reward(player, design, floor, RANDOM);
                 ArmoryStacks.announce(player, weapon, design);
                 given.add(weapon.copy());
-                Inventories.give(player, weapon);
+                Inventories.loot(player, weapon);
             });
         }
         // about one kill in a thousand: one of the boss's relics (金枠)
         com.eternalrealm.item.forge.RelicDrops.roll(player, com.eternalrealm.item.Relics.SourceKind.BOSS,
                 instance.run.bossId(), RANDOM).ifPresent(relic -> {
                     given.add(relic.copy());
-                    Inventories.give(player, relic);
+                    Inventories.loot(player, relic);
                 });
         // the boss material of the dungeon's field (boss weapons are forged from these)
         if (instance.areaId >= 1 && instance.areaId <= 10) {
@@ -842,7 +842,7 @@ public final class DungeonService {
                     com.eternalrealm.monster.Materials.bossMaterial(instance.areaId));
             if (soul != null) {
                 given.add(new ItemStack(soul, stones >= 5 ? 3 : stones - 1));
-                Inventories.give(player, new ItemStack(soul, stones >= 5 ? 3 : stones - 1));
+                Inventories.loot(player, new ItemStack(soul, stones >= 5 ? 3 : stones - 1));
             }
         }
         return given;

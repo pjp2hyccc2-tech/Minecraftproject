@@ -32,9 +32,9 @@ public final class Bags {
     }
 
     /** Gives {@code stack} (consumed): into the bag, the rest at the player's feet; both show in the feed. */
-    public static void give(ServerPlayer player, ItemStack stack) {
+    public static int give(ServerPlayer player, ItemStack stack) {
         if (stack.isEmpty()) {
-            return;
+            return 0;
         }
         ItemStack shown = stack.copyWithCount(1);
         int before = stack.getCount();
@@ -48,6 +48,27 @@ public final class Bags {
             dropFor(player, stack);
         }
         player.inventoryMenu.broadcastChanges();
+        return added;
+    }
+
+    /**
+     * Loot new to the world (monster drops, boss and dungeon rewards) into the bag, like {@link #give}, and what went
+     * in counts for "collect" quest objectives. What does not fit drops at the player's feet with no thrower, so it
+     * counts when picked up ({@code QuestActions.onItemPickup}): nothing is counted twice.
+     *
+     * @return how many went into the bag
+     */
+    public static int loot(ServerPlayer player, ItemStack stack) {
+        if (stack.isEmpty()) {
+            return 0;
+        }
+        String id = String.valueOf(net.minecraftforge.registries.ForgeRegistries.ITEMS.getKey(stack.getItem()));
+        int added = give(player, stack);
+        if (added > 0) {
+            com.eternalrealm.server.ServerContext.current().ifPresent(context -> context.game().quests().event(player,
+                    new com.eternalrealm.quest.GameEvent.ItemCollected(id, Math.min(added, 64 * 64))));
+        }
+        return added;
     }
 
     /** Moves as much of {@code stack} as fits into the bag slots (the stack shrinks by what went in). */

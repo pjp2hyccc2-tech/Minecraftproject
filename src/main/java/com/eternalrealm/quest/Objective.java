@@ -77,7 +77,8 @@ public sealed interface Objective permits Objective.KillMonsters, Objective.Coll
     }
 
     /**
-     * Pick up items while the quest is active. Pickups count as progress and nothing is taken at turn-in: the materials
+     * Get items while the quest is active: loot that goes straight into the bag (monster drops, boss and dungeon
+     * rewards) and items picked up from the ground count as progress, and nothing is taken at turn-in: the materials
      * stay with the player for crafting. Abuse is prevented at the source, which only reports items new to the economy
      * ({@link GameEvent.ItemCollected}). Format args: [item, progress, required].
      */

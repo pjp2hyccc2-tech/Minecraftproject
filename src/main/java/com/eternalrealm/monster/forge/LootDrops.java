@@ -159,7 +159,7 @@ public final class LootDrops {
     private static void spawn(ServerPlayer killer, LivingEntity victim, ItemStack stack, ItemRarity rarity) {
         ServerLevel level = (ServerLevel) victim.level();
         boolean rare = rarity.rank() >= ItemRarity.RARE.rank();
-        com.eternalrealm.item.forge.Bags.give(killer, stack);
+        com.eternalrealm.item.forge.Bags.loot(killer, stack); // counts for "collect" objectives
         if (!rare) {
             return;
         }
