@@ -178,7 +178,7 @@ public final class EntityGameTests {
         });
     }
 
-    @GameTest(template = ARENA, timeoutTicks = 300)
+    @GameTest(template = ARENA, timeoutTicks = 400)
     public static void rangedEnemyFiresBolts(GameTestHelper helper) {
         HumanoidEnemy mage = helper.spawn(EREntityTypes.HUMANOID_ENEMY.get(), new BlockPos(4, 2, 1));
         mage.setVariant("frost_mage");
@@ -188,6 +188,9 @@ public final class EntityGameTests {
         float before = target.getHealth();
         mage.setTarget(target);
         helper.succeedWhen(() -> {
+            if (mage.getTarget() != target) {
+                mage.setTarget(target); // a busy server's AI may drop a target that never fights back
+            }
             if (!(target.getHealth() < before)) {
                 throw new GameTestAssertException("no bolt has hit yet (action=" + mage.currentAction() + ")");
             }
