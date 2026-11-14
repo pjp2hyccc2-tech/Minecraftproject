@@ -1,105 +1,442 @@
 {
-  "threat.eternalrealm.lord.garm": {"ja": "街道荒らしのガルム", "en": "Garm the Highway Scourge"},
-  "threat.eternalrealm.lord.hook": {"ja": "赤目のフック", "en": "Red-Eyed Hook"},
-  "threat.eternalrealm.lord.durn": {"ja": "大猪ドルン", "en": "Durn the Great Boar"},
-  "threat.eternalrealm.lord.nebula": {"ja": "月影の古老ネブラ", "en": "Nebula, Elder of the Moonshade"},
-  "threat.eternalrealm.lord.belladonna": {"ja": "宵闇の魔女ベラドンナ", "en": "Belladonna the Dusk Witch"},
-  "threat.eternalrealm.lord.lunar": {"ja": "白銀の狼王ルナール", "en": "Lunar the Silver Wolf King"},
-  "threat.eternalrealm.lord.dolga": {"ja": "坑道の墓守ドルガ", "en": "Dolga, Warden of the Shafts"},
-  "threat.eternalrealm.lord.rustbone": {"ja": "錆骨の射手", "en": "The Rustbone Archer"},
-  "threat.eternalrealm.lord.vein_eater": {"ja": "鉱脈喰らいの大ムカデ", "en": "The Vein-Eater"},
-  "threat.eternalrealm.lord.goura": {"ja": "滝壺の暴君ゴウラ", "en": "Goura, Tyrant of the Plunge Pool"},
-  "threat.eternalrealm.lord.mistweaver": {"ja": "霧糸の大蜘蛛", "en": "The Mistweaver"},
-  "threat.eternalrealm.lord.ord": {"ja": "滝守の大亀オルド", "en": "Ord the Falls Tortoise"},
-  "threat.eternalrealm.lord.valka": {"ja": "遺跡の狂戦士ヴァルカ", "en": "Valka the Ruin Berserker"},
-  "threat.eternalrealm.lord.scorch_eye": {"ja": "灼眼のブレイズ", "en": "Scorch-Eye"},
-  "threat.eternalrealm.lord.agnis": {"ja": "遺跡の神像アグニス", "en": "Agnis the Ruin Idol"},
-  "threat.eternalrealm.lord.alvin": {"ja": "天翔の聖騎士アルヴィン", "en": "Alvin, Paladin of the Peaks"},
-  "threat.eternalrealm.lord.peak_sniper": {"ja": "峰の狙撃手", "en": "The Peak Sniper"},
-  "threat.eternalrealm.lord.zephyr": {"ja": "雷翼のゼファー", "en": "Zephyr the Thunderwing"},
-  "threat.eternalrealm.lord.xenos": {"ja": "破滅の先触れゼノス", "en": "Xenos, Herald of Ruin"},
-  "threat.eternalrealm.lord.black_knight": {"ja": "終焉の黒騎士", "en": "The Black Knight of the End"},
-  "threat.eternalrealm.lord.nihil": {"ja": "虚無を喰む竜ニヒル", "en": "Nihil the Void-Gnawing Drake"},
-  "threat.eternalrealm.lord.brutus": {"ja": "暴れ牛ブルータス", "en": "Brutus the Rampaging Bull"},
-  "threat.eternalrealm.lord.harvest_boss": {"ja": "収穫泥棒の頭目", "en": "The Harvest Thief Chief"},
-  "threat.eternalrealm.lord.strom": {"ja": "案山子の王ストローム", "en": "Strom the Scarecrow King"},
-  "threat.eternalrealm.lord.melusine": {"ja": "湖の魔女メリュー", "en": "Melu, Witch of the Lake"},
-  "threat.eternalrealm.lord.drowned_fisher": {"ja": "沈んだ漁師", "en": "The Drowned Fisher"},
-  "threat.eternalrealm.lord.numel": {"ja": "湖底の主ヌメル", "en": "Numel of the Lakebed"},
-  "threat.eternalrealm.lord.barbas": {"ja": "隻眼の船長バルバス", "en": "One-Eyed Captain Barbas"},
-  "threat.eternalrealm.lord.dock_brawler": {"ja": "港の喧嘩屋", "en": "The Dock Brawler"},
-  "threat.eternalrealm.lord.ankara": {"ja": "錨喰らいの大ガニアンカラ", "en": "Ankara the Anchor-Eater"},
-  "threat.eternalrealm.calamity.meadow": {"ja": "草原を呑む影", "en": "The Shadow that Swallows the Meadow"},
-  "threat.eternalrealm.calamity.moon_forest": {"ja": "月蝕の巨樹", "en": "The Eclipsed Colossus Tree"},
-  "threat.eternalrealm.calamity.iron_mine": {"ja": "坑底の破壊獣", "en": "The Pit-Bottom Wrecker"},
-  "threat.eternalrealm.calamity.sacred_falls": {"ja": "堕ちた滝守", "en": "The Fallen Falls-Keeper"},
-  "threat.eternalrealm.calamity.ancient_ruins": {"ja": "遺跡を焦がす焔", "en": "The Flame that Scorches the Ruins"},
-  "threat.eternalrealm.calamity.soaring_peaks": {"ja": "峰を砕く巨像", "en": "The Peak-Breaking Colossus"},
-  "threat.eternalrealm.calamity.end_forest": {"ja": "終焉より来るもの", "en": "That Which Comes from the End"},
-  "threat.eternalrealm.calamity.farm": {"ja": "実りを枯らす根", "en": "The Root that Withers the Harvest"},
-  "threat.eternalrealm.calamity.lakeside": {"ja": "湖底の破壊獣", "en": "The Lake-Bed Wrecker"},
-  "threat.eternalrealm.calamity.harbour": {"ja": "嵐を呼ぶ呪術師", "en": "The Storm-Calling Hexer"},
-  "threat.eternalrealm.lord.nameplate": {"ja": "Lv%s 【ヌシ】%s", "en": "Lv%s [Lord] %s"},
-  "threat.eternalrealm.calamity.nameplate": {"ja": "【災厄】%s", "en": "[Calamity] %s"},
-  "threat.eternalrealm.grown": {"ja": "災厄「%1$s」は討たれるたびに力を増す……次に現れるときは Lv%2$s", "en": "%1$s grows stronger with every defeat... it will return at Lv%2$s"},
-  "threat.eternalrealm.grown_max": {"ja": "災厄「%1$s」の力はもう極みに達している（Lv%2$s）", "en": "%1$s has reached the height of its power (Lv%2$s)"},
-  "threat.eternalrealm.phase.calm": {"ja": "静穏", "en": "Calm"},
-  "threat.eternalrealm.phase.omen": {"ja": "兆し", "en": "Omen"},
-  "threat.eternalrealm.phase.manifest": {"ja": "顕現中", "en": "Risen"},
-  "threat.eternalrealm.phase.purified": {"ja": "浄化中", "en": "Purified"},
-  "threat.eternalrealm.omen": {"ja": "【災厄の兆し】%s の瘴気があふれ出した……まもなく災厄が顕現する", "en": "[Omen] The miasma of %s overflows... a calamity is about to rise"},
-  "threat.eternalrealm.manifest": {"ja": "【災厄顕現】%1$s に災厄「%2$s」（Lv%3$s）が現れた！ 討伐手配書で居場所を確かめよう", "en": "[Calamity] %2$s (Lv%3$s) has risen in %1$s! Check the wanted board for its lair"},
-  "threat.eternalrealm.depart": {"ja": "災厄「%s」は %s から去っていった……", "en": "The calamity %s has left %s..."},
-  "threat.eternalrealm.subdued": {"ja": "【災厄討伐】%s の災厄「%s」が鎮められた！ 殊勲：%s", "en": "[Subdued] The calamity of %1$s, %2$s, has been quelled! Hero: %3$s"},
-  "threat.eternalrealm.purified": {"ja": "%s は浄化された（%s分間、魔物の経験値+25%%）", "en": "%s is purified (%s min: +25%% EXP from monsters)"},
-  "threat.eternalrealm.calm": {"ja": "%s の浄化が解けた", "en": "The purification of %s has worn off"},
-  "threat.eternalrealm.lord_appears": {"ja": "ヌシ「%s」が姿を現した！", "en": "The lord %s appears!"},
-  "threat.eternalrealm.lord_down": {"ja": "ヌシ「%s」が討たれた！ 殊勲：%s", "en": "The lord %s has fallen! Hero: %s"},
-  "threat.eternalrealm.hud.miasma": {"ja": "瘴気 %s%%", "en": "Miasma %s%%"},
-  "threat.eternalrealm.hud.omen": {"ja": "災厄の兆し… %s", "en": "Omen... %s"},
-  "threat.eternalrealm.hud.manifest": {"ja": "災厄「%s」顕現中", "en": "%s has risen"},
-  "threat.eternalrealm.hud.purified": {"ja": "浄化中 EXP+25%% %s", "en": "Purified EXP+25%% %s"},
-  "threat.eternalrealm.hud.lord_down": {"ja": "ヌシ討伐：%s", "en": "Lord down: %s"},
-  "threat.eternalrealm.hud.merit": {"ja": "戦功 %s位（%s%%）", "en": "Merit #%s (%s%%)"},
-  "threat.eternalrealm.hud.hero": {"ja": "殊勲", "en": "Hero"},
-  "threat.eternalrealm.board.open": {"ja": "討伐手配書", "en": "Wanted board"},
-  "threat.eternalrealm.board.title": {"ja": "討伐手配書", "en": "Wanted Board"},
-  "threat.eternalrealm.board.hint": {"ja": "魔物を倒すと瘴気が溜まり、満ちると災厄が顕現する。ヌシは縄張りを歩き回る", "en": "Slain monsters fill a field's miasma; when it overflows its calamity rises. Lords roam their territory"},
-  "threat.eternalrealm.board.empty": {"ja": "アストリアにいるときに更新されます", "en": "Updated while you are in Astoria"},
-  "threat.eternalrealm.board.miasma": {"ja": "瘴気 %s%%", "en": "Miasma %s%%"},
-  "threat.eternalrealm.board.omen": {"ja": "兆し %s", "en": "Omen %s"},
-  "threat.eternalrealm.board.manifest": {"ja": "災厄顕現中", "en": "Calamity risen"},
-  "threat.eternalrealm.board.purified": {"ja": "浄化中 %s", "en": "Purified %s"},
-  "threat.eternalrealm.board.calamity": {"ja": "災厄「%s」 Lv%s", "en": "Calamity %s Lv%s"},
-  "threat.eternalrealm.board.risen": {"ja": "交戦中！", "en": "Fighting!"},
-  "threat.eternalrealm.board.waiting": {"ja": "爪痕で待つ", "en": "Waiting at its lair"},
-  "threat.eternalrealm.board.sleeping": {"ja": "眠っている", "en": "Asleep"},
-  "threat.eternalrealm.board.lord": {"ja": "◆ ヌシ「%s」 Lv%s", "en": "◆ Lord %s Lv%s"},
-  "threat.eternalrealm.board.lord_out": {"ja": "出現中", "en": "Out"},
-  "threat.eternalrealm.board.lord_back": {"ja": "出現まで %s", "en": "Out in %s"},
-  "threat.eternalrealm.board.lord_near": {"ja": "近づくと現れる", "en": "Appears when you come near"},
-  "threat.eternalrealm.map.calamity": {"ja": "災厄", "en": "Calamity"},
-  "result.eternalrealm.calamity_clear": {"ja": "CALAMITY SUBDUED", "en": "CALAMITY SUBDUED"},
-  "result.eternalrealm.time_only": {"ja": "討伐タイム %s", "en": "Time %s"},
-  "result.eternalrealm.close": {"ja": "閉じる", "en": "Close"},
-  "threat.eternalrealm.hud.lord": {"ja": "ヌシ", "en": "Lord"},
-  "threat.eternalrealm.lord_calls": {"ja": "%sが仲間を呼んだ！", "en": "%s calls for help!"},
-  "threat.eternalrealm.lord_rages": {"ja": "%sは怒り狂っている！", "en": "%s flies into a rage!"},
-  "special.eternalrealm.cleave": {"ja": "薙ぎ払い", "en": "Cleave"},
-  "special.eternalrealm.slam": {"ja": "叩きつけ", "en": "Slam"},
-  "special.eternalrealm.stomp": {"ja": "地響き", "en": "Quake Stomp"},
-  "special.eternalrealm.charge": {"ja": "突進", "en": "Charge"},
-  "special.eternalrealm.breath": {"ja": "ブレス", "en": "Breath"},
-  "special.eternalrealm.pounce": {"ja": "飛びかかり", "en": "Pounce"},
-  "special.eternalrealm.sweep": {"ja": "旋風", "en": "Whirl"},
-  "special.eternalrealm.circle": {"ja": "魔法陣", "en": "Magic Circle"},
-  "special.eternalrealm.nova": {"ja": "魔力爆発", "en": "Nova"},
-  "special.eternalrealm.storm_cross": {"ja": "雷の十字", "en": "Storm Cross"},
-  "special.eternalrealm.beam": {"ja": "光線", "en": "Beam"},
-  "special.eternalrealm.volley": {"ja": "矢の雨", "en": "Arrow Rain"},
-  "special.eternalrealm.wave": {"ja": "衝撃波", "en": "Shockwave"},
-  "threat.eternalrealm.board.lord_resting": {"ja": "休んでいる（次の入れ替えで現れる）", "en": "Resting (out at the next change)"},
-  "threat.eternalrealm.board.lord_beaten": {"ja": "討伐済み（入れ替えまで現れない）", "en": "Beaten (not out before the change)"},
-  "threat.eternalrealm.board.lord_rotation": {"ja": "ヌシは各フィールド%s体まで・入れ替えまで %s", "en": "Up to %s lords per field · next change in %s"},
-  "threat.eternalrealm.lord_leaves": {"ja": "ヌシ「%s」は去っていった……", "en": "The lord %s has gone away..."}
+  "threat.eternalrealm.lord.garm": {
+    "ja": "街道荒らしのガルム",
+    "en": "Garm the Highway Scourge"
+  },
+  "threat.eternalrealm.lord.hook": {
+    "ja": "赤目のフック",
+    "en": "Red-Eyed Hook"
+  },
+  "threat.eternalrealm.lord.durn": {
+    "ja": "大猪ドルン",
+    "en": "Durn the Great Boar"
+  },
+  "threat.eternalrealm.lord.nebula": {
+    "ja": "月影の古老ネブラ",
+    "en": "Nebula, Elder of the Moonshade"
+  },
+  "threat.eternalrealm.lord.belladonna": {
+    "ja": "宵闇の魔女ベラドンナ",
+    "en": "Belladonna the Dusk Witch"
+  },
+  "threat.eternalrealm.lord.lunar": {
+    "ja": "白銀の狼王ルナール",
+    "en": "Lunar the Silver Wolf King"
+  },
+  "threat.eternalrealm.lord.dolga": {
+    "ja": "坑道の墓守ドルガ",
+    "en": "Dolga, Warden of the Shafts"
+  },
+  "threat.eternalrealm.lord.rustbone": {
+    "ja": "錆骨の射手",
+    "en": "The Rustbone Archer"
+  },
+  "threat.eternalrealm.lord.vein_eater": {
+    "ja": "鉱脈喰らいの大ムカデ",
+    "en": "The Vein-Eater"
+  },
+  "threat.eternalrealm.lord.goura": {
+    "ja": "滝壺の暴君ゴウラ",
+    "en": "Goura, Tyrant of the Plunge Pool"
+  },
+  "threat.eternalrealm.lord.mistweaver": {
+    "ja": "霧糸の大蜘蛛",
+    "en": "The Mistweaver"
+  },
+  "threat.eternalrealm.lord.ord": {
+    "ja": "滝守の大亀オルド",
+    "en": "Ord the Falls Tortoise"
+  },
+  "threat.eternalrealm.lord.valka": {
+    "ja": "遺跡の狂戦士ヴァルカ",
+    "en": "Valka the Ruin Berserker"
+  },
+  "threat.eternalrealm.lord.scorch_eye": {
+    "ja": "灼眼のブレイズ",
+    "en": "Scorch-Eye"
+  },
+  "threat.eternalrealm.lord.agnis": {
+    "ja": "遺跡の神像アグニス",
+    "en": "Agnis the Ruin Idol"
+  },
+  "threat.eternalrealm.lord.alvin": {
+    "ja": "天翔の聖騎士アルヴィン",
+    "en": "Alvin, Paladin of the Peaks"
+  },
+  "threat.eternalrealm.lord.peak_sniper": {
+    "ja": "峰の狙撃手",
+    "en": "The Peak Sniper"
+  },
+  "threat.eternalrealm.lord.zephyr": {
+    "ja": "雷翼のゼファー",
+    "en": "Zephyr the Thunderwing"
+  },
+  "threat.eternalrealm.lord.xenos": {
+    "ja": "破滅の先触れゼノス",
+    "en": "Xenos, Herald of Ruin"
+  },
+  "threat.eternalrealm.lord.black_knight": {
+    "ja": "終焉の黒騎士",
+    "en": "The Black Knight of the End"
+  },
+  "threat.eternalrealm.lord.nihil": {
+    "ja": "虚無を喰む竜ニヒル",
+    "en": "Nihil the Void-Gnawing Drake"
+  },
+  "threat.eternalrealm.lord.brutus": {
+    "ja": "暴れ牛ブルータス",
+    "en": "Brutus the Rampaging Bull"
+  },
+  "threat.eternalrealm.lord.harvest_boss": {
+    "ja": "収穫泥棒の頭目",
+    "en": "The Harvest Thief Chief"
+  },
+  "threat.eternalrealm.lord.strom": {
+    "ja": "案山子の王ストローム",
+    "en": "Strom the Scarecrow King"
+  },
+  "threat.eternalrealm.lord.melusine": {
+    "ja": "湖の魔女メリュー",
+    "en": "Melu, Witch of the Lake"
+  },
+  "threat.eternalrealm.lord.drowned_fisher": {
+    "ja": "沈んだ漁師",
+    "en": "The Drowned Fisher"
+  },
+  "threat.eternalrealm.lord.numel": {
+    "ja": "湖底の主ヌメル",
+    "en": "Numel of the Lakebed"
+  },
+  "threat.eternalrealm.lord.barbas": {
+    "ja": "隻眼の船長バルバス",
+    "en": "One-Eyed Captain Barbas"
+  },
+  "threat.eternalrealm.lord.dock_brawler": {
+    "ja": "港の喧嘩屋",
+    "en": "The Dock Brawler"
+  },
+  "threat.eternalrealm.lord.ankara": {
+    "ja": "錨喰らいの大ガニアンカラ",
+    "en": "Ankara the Anchor-Eater"
+  },
+  "threat.eternalrealm.calamity.meadow": {
+    "ja": "草原を呑む影",
+    "en": "The Shadow that Swallows the Meadow"
+  },
+  "threat.eternalrealm.calamity.moon_forest": {
+    "ja": "月蝕の巨樹",
+    "en": "The Eclipsed Colossus Tree"
+  },
+  "threat.eternalrealm.calamity.iron_mine": {
+    "ja": "坑底の破壊獣",
+    "en": "The Pit-Bottom Wrecker"
+  },
+  "threat.eternalrealm.calamity.sacred_falls": {
+    "ja": "堕ちた滝守",
+    "en": "The Fallen Falls-Keeper"
+  },
+  "threat.eternalrealm.calamity.ancient_ruins": {
+    "ja": "遺跡を焦がす焔",
+    "en": "The Flame that Scorches the Ruins"
+  },
+  "threat.eternalrealm.calamity.soaring_peaks": {
+    "ja": "峰を砕く巨像",
+    "en": "The Peak-Breaking Colossus"
+  },
+  "threat.eternalrealm.calamity.end_forest": {
+    "ja": "終焉より来るもの",
+    "en": "That Which Comes from the End"
+  },
+  "threat.eternalrealm.calamity.farm": {
+    "ja": "実りを枯らす根",
+    "en": "The Root that Withers the Harvest"
+  },
+  "threat.eternalrealm.calamity.lakeside": {
+    "ja": "湖底の破壊獣",
+    "en": "The Lake-Bed Wrecker"
+  },
+  "threat.eternalrealm.calamity.harbour": {
+    "ja": "嵐を呼ぶ呪術師",
+    "en": "The Storm-Calling Hexer"
+  },
+  "threat.eternalrealm.lord.nameplate": {
+    "ja": "Lv%s 【ヌシ】%s",
+    "en": "Lv%s [Lord] %s"
+  },
+  "threat.eternalrealm.calamity.nameplate": {
+    "ja": "【災厄】%s",
+    "en": "[Calamity] %s"
+  },
+  "threat.eternalrealm.grown": {
+    "ja": "災厄「%1$s」は討たれるたびに力を増す……次に現れるときは Lv%2$s",
+    "en": "%1$s grows stronger with every defeat... it will return at Lv%2$s"
+  },
+  "threat.eternalrealm.grown_max": {
+    "ja": "災厄「%1$s」の力はもう極みに達している（Lv%2$s）",
+    "en": "%1$s has reached the height of its power (Lv%2$s)"
+  },
+  "threat.eternalrealm.phase.calm": {
+    "ja": "静穏",
+    "en": "Calm"
+  },
+  "threat.eternalrealm.phase.omen": {
+    "ja": "兆し",
+    "en": "Omen"
+  },
+  "threat.eternalrealm.phase.manifest": {
+    "ja": "顕現中",
+    "en": "Risen"
+  },
+  "threat.eternalrealm.phase.purified": {
+    "ja": "浄化中",
+    "en": "Purified"
+  },
+  "threat.eternalrealm.omen": {
+    "ja": "【災厄の兆し】%s の瘴気があふれ出した……まもなく災厄が顕現する",
+    "en": "[Omen] The miasma of %s overflows... a calamity is about to rise"
+  },
+  "threat.eternalrealm.manifest": {
+    "ja": "【災厄顕現】%1$s に災厄「%2$s」（Lv%3$s）が現れた！ 討伐手配書で居場所を確かめよう",
+    "en": "[Calamity] %2$s (Lv%3$s) has risen in %1$s! Check the wanted board for its lair"
+  },
+  "threat.eternalrealm.depart": {
+    "ja": "災厄「%s」は %s から去っていった……",
+    "en": "The calamity %s has left %s..."
+  },
+  "threat.eternalrealm.subdued": {
+    "ja": "【災厄討伐】%s の災厄「%s」が鎮められた！ 殊勲：%s",
+    "en": "[Subdued] The calamity of %1$s, %2$s, has been quelled! Hero: %3$s"
+  },
+  "threat.eternalrealm.purified": {
+    "ja": "%s は浄化された（%s分間、魔物の経験値+25%%）",
+    "en": "%s is purified (%s min: +25%% EXP from monsters)"
+  },
+  "threat.eternalrealm.calm": {
+    "ja": "%s の浄化が解けた",
+    "en": "The purification of %s has worn off"
+  },
+  "threat.eternalrealm.lord_appears": {
+    "ja": "ヌシ「%s」が姿を現した！",
+    "en": "The lord %s appears!"
+  },
+  "threat.eternalrealm.lord_down": {
+    "ja": "ヌシ「%s」が討たれた！ 殊勲：%s",
+    "en": "The lord %s has fallen! Hero: %s"
+  },
+  "threat.eternalrealm.hud.miasma": {
+    "ja": "瘴気 %s%%",
+    "en": "Miasma %s%%"
+  },
+  "threat.eternalrealm.hud.omen": {
+    "ja": "災厄の兆し… %s",
+    "en": "Omen... %s"
+  },
+  "threat.eternalrealm.hud.manifest": {
+    "ja": "災厄「%s」顕現中",
+    "en": "%s has risen"
+  },
+  "threat.eternalrealm.hud.purified": {
+    "ja": "浄化中 EXP+25%% %s",
+    "en": "Purified EXP+25%% %s"
+  },
+  "threat.eternalrealm.hud.lord_down": {
+    "ja": "ヌシ討伐：%s",
+    "en": "Lord down: %s"
+  },
+  "threat.eternalrealm.hud.merit": {
+    "ja": "戦功 %s位（%s%%）",
+    "en": "Merit #%s (%s%%)"
+  },
+  "threat.eternalrealm.hud.hero": {
+    "ja": "殊勲",
+    "en": "Hero"
+  },
+  "threat.eternalrealm.board.open": {
+    "ja": "討伐手配書",
+    "en": "Wanted board"
+  },
+  "threat.eternalrealm.board.title": {
+    "ja": "討伐手配書",
+    "en": "Wanted Board"
+  },
+  "threat.eternalrealm.board.hint": {
+    "ja": "魔物を倒すと瘴気が溜まり、満ちると災厄が顕現する。ヌシは縄張りを歩き回る",
+    "en": "Slain monsters fill a field's miasma; when it overflows its calamity rises. Lords roam their territory"
+  },
+  "threat.eternalrealm.board.empty": {
+    "ja": "アストリアにいるときに更新されます",
+    "en": "Updated while you are in Astoria"
+  },
+  "threat.eternalrealm.board.miasma": {
+    "ja": "瘴気 %s%%",
+    "en": "Miasma %s%%"
+  },
+  "threat.eternalrealm.board.omen": {
+    "ja": "兆し %s",
+    "en": "Omen %s"
+  },
+  "threat.eternalrealm.board.manifest": {
+    "ja": "災厄顕現中",
+    "en": "Calamity risen"
+  },
+  "threat.eternalrealm.board.purified": {
+    "ja": "浄化中 %s",
+    "en": "Purified %s"
+  },
+  "threat.eternalrealm.board.calamity": {
+    "ja": "災厄「%s」 Lv%s",
+    "en": "Calamity %s Lv%s"
+  },
+  "threat.eternalrealm.board.risen": {
+    "ja": "交戦中！",
+    "en": "Fighting!"
+  },
+  "threat.eternalrealm.board.waiting": {
+    "ja": "爪痕で待つ",
+    "en": "Waiting at its lair"
+  },
+  "threat.eternalrealm.board.sleeping": {
+    "ja": "眠っている",
+    "en": "Asleep"
+  },
+  "threat.eternalrealm.board.lord": {
+    "ja": "◆ ヌシ「%s」 Lv%s",
+    "en": "◆ Lord %s Lv%s"
+  },
+  "threat.eternalrealm.board.lord_out": {
+    "ja": "出現中",
+    "en": "Out"
+  },
+  "threat.eternalrealm.board.lord_back": {
+    "ja": "出現まで %s",
+    "en": "Out in %s"
+  },
+  "threat.eternalrealm.board.lord_near": {
+    "ja": "近づくと現れる",
+    "en": "Appears when you come near"
+  },
+  "threat.eternalrealm.map.calamity": {
+    "ja": "災厄",
+    "en": "Calamity"
+  },
+  "result.eternalrealm.calamity_clear": {
+    "ja": "CALAMITY SUBDUED",
+    "en": "CALAMITY SUBDUED"
+  },
+  "result.eternalrealm.time_only": {
+    "ja": "討伐タイム %s",
+    "en": "Time %s"
+  },
+  "result.eternalrealm.close": {
+    "ja": "閉じる",
+    "en": "Close"
+  },
+  "threat.eternalrealm.hud.lord": {
+    "ja": "ヌシ",
+    "en": "Lord"
+  },
+  "threat.eternalrealm.lord_calls": {
+    "ja": "%sが仲間を呼んだ！",
+    "en": "%s calls for help!"
+  },
+  "threat.eternalrealm.lord_rages": {
+    "ja": "%sは怒り狂っている！",
+    "en": "%s flies into a rage!"
+  },
+  "special.eternalrealm.cleave": {
+    "ja": "薙ぎ払い",
+    "en": "Cleave"
+  },
+  "special.eternalrealm.slam": {
+    "ja": "叩きつけ",
+    "en": "Slam"
+  },
+  "special.eternalrealm.stomp": {
+    "ja": "地響き",
+    "en": "Quake Stomp"
+  },
+  "special.eternalrealm.charge": {
+    "ja": "突進",
+    "en": "Charge"
+  },
+  "special.eternalrealm.breath": {
+    "ja": "ブレス",
+    "en": "Breath"
+  },
+  "special.eternalrealm.pounce": {
+    "ja": "飛びかかり",
+    "en": "Pounce"
+  },
+  "special.eternalrealm.sweep": {
+    "ja": "旋風",
+    "en": "Whirl"
+  },
+  "special.eternalrealm.circle": {
+    "ja": "魔法陣",
+    "en": "Magic Circle"
+  },
+  "special.eternalrealm.nova": {
+    "ja": "魔力爆発",
+    "en": "Nova"
+  },
+  "special.eternalrealm.storm_cross": {
+    "ja": "雷の十字",
+    "en": "Storm Cross"
+  },
+  "special.eternalrealm.beam": {
+    "ja": "光線",
+    "en": "Beam"
+  },
+  "special.eternalrealm.volley": {
+    "ja": "矢の雨",
+    "en": "Arrow Rain"
+  },
+  "special.eternalrealm.wave": {
+    "ja": "衝撃波",
+    "en": "Shockwave"
+  },
+  "threat.eternalrealm.board.lord_resting": {
+    "ja": "休んでいる（次の入れ替えで現れる）",
+    "en": "Resting (out at the next change)"
+  },
+  "threat.eternalrealm.board.lord_beaten": {
+    "ja": "討伐済み（入れ替えまで現れない）",
+    "en": "Beaten (not out before the change)"
+  },
+  "threat.eternalrealm.board.lord_rotation": {
+    "ja": "ヌシは各フィールド%s体まで・入れ替えまで %s",
+    "en": "Up to %s lords per field · next change in %s"
+  },
+  "threat.eternalrealm.lord_leaves": {
+    "ja": "ヌシ「%s」は去っていった……",
+    "en": "The lord %s has gone away..."
+  },
+  "special.eternalrealm.quake": {
+    "ja": "大地裂き",
+    "en": "Earthsplitter"
+  },
+  "special.eternalrealm.cataclysm": {
+    "ja": "天地崩落",
+    "en": "Cataclysm"
+  },
+  "special.eternalrealm.meteor": {
+    "ja": "隕星落とし",
+    "en": "Falling Star"
+  },
+  "special.eternalrealm.ruin_cross": {
+    "ja": "破滅の十字",
+    "en": "Cross of Ruin"
+  },
+  "special.eternalrealm.great_wave": {
+    "ja": "怒涛の一閃",
+    "en": "Surging Strike"
+  },
+  "special.eternalrealm.rampage": {
+    "ja": "暴威の薙ぎ",
+    "en": "Rampage"
+  },
+  "threat.eternalrealm.lord_rises": {
+    "ja": "%sはあなたの力に応えて目覚めた──Lv.%s",
+    "en": "%s rises to meet your strength: Lv.%s"
+  }
 }

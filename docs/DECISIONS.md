@@ -711,3 +711,22 @@ Decisions:
 - **One bag to the player**: the bag screen shows the 63 places in one scrolling grid (the back darker under a gold line), the sort
   orders front and back as one bag (equipment and consumables to the front), and a 「前へ」 button brings a thing of the back forward.
 
+## D-THREATPOWER: ヌシ and 災厄 sized for five, rising to the strongest player's level (2026-11-14)
+
+The owner: 「ヌシと災厄も弱すぎる。攻撃の種類とHPなども増やして、(レベル50のプレイヤー)1人でも倒せるけど5人くらい集まらないと倒せないレベルに
+して」. The owner's own clear times showed why they felt weak: a level-49 knight beats level-29 bosses in under three minutes — the
+threats of the first fields are 20 to 30 levels below the players who now walk there.
+Decisions:
+- **Sized for five, beatable by one**: a lord's health is five players' worth of four minutes of reference hits at its level (75 600 at
+  level 50, about 5 minutes for five with its armor and 25 for one in the model); a calamity counts its fighters as at least five. One
+  player can win against the same blows; five finish it in a normal boss fight's time. Their blows are stronger (lords ×1.8 of their
+  template instead of ×1.35, calamities ×1.5) and the calamities' soft enrage moved to 12 minutes, so a long solo fight gets harder but
+  never impossible.
+- **Level sync upwards, never down**: a lord takes the level of the strongest player near its home when it appears, or of a stronger
+  player's first blow while nobody has hurt it; a calamity takes the strongest fighter's level when its fight begins. Players at the
+  field's level meet the fight the field was made for, a level-50 player meets a level-50 threat everywhere. A fight in progress never
+  changes level (no punishing a newcomer's arrival). Rewards follow the level fought; lords' experience and gold went from ×2 to ×6.
+- **More attacks**: every lord adds three arts of a lord to the three moves of its body (big, slower to wind up: 大地裂き, 天地崩落, 隕星落とし,
+  破滅の十字, 怒涛の一閃, 暴威の薙ぎ — three by the kind of body) and moves every 4.5 s; every calamity got four new moves (twelve, used 5 / 8 / 12
+  by its forms), all from the existing ability kinds so the markers, effects and checks stay the same.
+

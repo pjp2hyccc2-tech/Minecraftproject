@@ -20,6 +20,10 @@ import static com.eternalrealm.boss.TargetRule.RANDOM;
  * <p>Each boss is a list of moves; its first form uses the first moves, every later form adds more and opens with
  * the newest; the move before the last is only used on EX, the last is the roar of its transformations. Ability ids
  * are {@code <boss>_<move>}.</p>
+ *
+ * <p>The calamities got four more moves each on 2026-11-14 (twelve, used 5 / 8 / 12 by their forms), blows half again
+ * as strong and the party they are sized for raised to five ({@code world.field.ThreatPower}, 「ヌシと災厄も弱すぎる。
+ * 攻撃の種類とHPなども増やして…5人くらい集まらないと倒せないレベルにして」).</p>
  */
 public final class FieldBosses {
     private static final double PARTY_SCALING = 0.55;
@@ -30,6 +34,11 @@ public final class FieldBosses {
     public static final double RAID_HEALTH = 1.5;
     /** Soft enrage after 9 minutes: grown with the health so the enrage still comes well after a normal fight. */
     private static final int ENRAGE_TICKS = 20 * 60 * 9;
+    /**
+     * The calamities' soft enrage: 12 minutes. They are sized for five fighters (2026-11-14), so one alone fights much
+     * longer; the enrage makes that harder, never impossible.
+     */
+    private static final int CALAMITY_ENRAGE_TICKS = 20 * 60 * 12;
 
     /** The ten calamities, in field order (fields 1..10). */
     public static final List<BossDefinition> CALAMITIES = List.of(meadow(), moonForest(), ironMine(), sacredFalls(),
@@ -100,13 +109,17 @@ public final class FieldBosses {
 
     /** 草原を呑む影: a veiled shade that drinks the light of the meadow and spreads its darkness in pools. */
     private static BossDefinition meadow() {
-        return boss("c_meadow", 15, 9000, 7, 4, new int[]{4, 6, 8},
+        return boss("c_meadow", 15, 9000, 7, 4, new int[]{5, 8, 12},
                 m("veil_sweep", new AbilityKind.Cone(7, 60), 24, 90, 1.5, 30, NEAREST),
                 m("shadow_pools", new AbilityKind.CircleAtTargets(3.5, 3), 30, 180, 1.4, 22, RANDOM),
                 m("umbral_lance", new AbilityKind.Line(16, 3), 26, 140, 1.7, 22, FARTHEST),
                 m("dusk_ring", new AbilityKind.Ring(4, 10), 30, 240, 1.8, 18, NEAREST),
                 m("creeping_dark", new AbilityKind.Trail(2.5, 2, 6, 10, 80), 26, 360, 1.2, 16, RANDOM),
+                m("shade_hands", new AbilityKind.CircleAtTargets(3, 5), 30, 220, 1.5, 18, RANDOM),
+                m("dark_crescent", new AbilityKind.Cone(10, 100), 28, 240, 1.8, 16, NEAREST),
                 m("swallow", seq(pull(13, -1.2), new CircleAroundBoss(5.5), 20), 30, 420, 1.8, 14, NEAREST),
+                m("abyss_rows", new AbilityKind.Exaflare(3, 5, 3, 12, 7), 30, 400, 1.6, 12, NEAREST),
+                m("umbral_cross", new AbilityKind.Crosses(15, 3, 3, 18), 30, 380, 1.6, 12, NEAREST),
                 m("eclipse_scatter", new AbilityKind.Scatter(7, 3, 12, 6, 0), 30, 380, 1.5, 14, NEAREST),
                 m("last_light", new AbilityKind.SafeZones(3, 3, 9), 60, 900, 2.4, 8, NEAREST),
                 m("night_tide", new AbilityKind.Checkerboard(4, 7, 2, 24), 34, 520, 1.7, 10, NEAREST),
@@ -115,13 +128,17 @@ public final class FieldBosses {
 
     /** 月蝕の巨樹: the moon-eaten tree; silver roots, eclipse beams and a crown of falling moon-shards. */
     private static BossDefinition moonForest() {
-        return boss("c_moon_forest", 20, 11500, 8, 8, new int[]{4, 6, 8},
+        return boss("c_moon_forest", 20, 11500, 8, 8, new int[]{5, 8, 12},
                 m("root_slam", new CircleAroundBoss(7.5), 28, 140, 2.0, 26, NEAREST),
                 m("branch_sweep", new AbilityKind.Cone(8.5, 70), 24, 100, 1.5, 26, NEAREST),
                 m("silver_thorns", new AbilityKind.Line(17, 3), 26, 130, 1.7, 22, HIGHEST_THREAT),
                 m("moonshards", new AbilityKind.Scatter(6, 3, 11, 8, 0), 30, 300, 1.4, 18, NEAREST),
                 m("root_eruption", new AbilityKind.Exaflare(1, 6, 3, 12, 7), 28, 320, 1.5, 18, NEAREST),
+                m("lunar_ring", new AbilityKind.Ring(5, 12), 32, 280, 1.9, 16, NEAREST),
+                m("silver_rain", new AbilityKind.Scatter(9, 3, 13, 6, 0), 30, 360, 1.5, 14, NEAREST),
                 m("eclipse_beams", new AbilityKind.RotatingBeam(2, 16, 3, 30, 5, 14), 28, 420, 1.4, 14, NEAREST),
+                m("crescent_beams", new AbilityKind.RotatingBeam(3, 17, 3, 26, 6, 12), 30, 440, 1.5, 12, NEAREST),
+                m("root_snare", seq(pull(14, -1.3), new AbilityKind.Ring(5.5, 12), 22), 32, 460, 1.9, 12, NEAREST),
                 m("moon_pull", seq(pull(14, -1.3), new CircleAroundBoss(7), 20), 30, 420, 1.8, 14, NEAREST),
                 m("night_of_no_moon", new AbilityKind.SafeZones(3, 3, 8), 60, 900, 2.4, 8, NEAREST),
                 m("moonfall", new AbilityKind.Crosses(15, 3, 2, 20), 30, 340, 1.6, 12, NEAREST),
@@ -130,13 +147,17 @@ public final class FieldBosses {
 
     /** 坑底の破壊獣: a beast of ore and slag from the bottom of the pit: drills, cave-ins and molten slag. */
     private static BossDefinition ironMine() {
-        return boss("c_iron_mine", 25, 13500, 9, 10, new int[]{4, 6, 8},
+        return boss("c_iron_mine", 25, 13500, 9, 10, new int[]{5, 8, 12},
                 m("drill_slam", new CircleAroundBoss(7.5), 28, 140, 2.0, 26, NEAREST),
                 m("pick_sweep", new AbilityKind.Cone(8.5, 65), 24, 100, 1.6, 26, NEAREST),
                 m("cave_in", new AbilityKind.CircleAtTargets(4, 3), 30, 200, 1.5, 20, RANDOM),
                 m("rail_charge", new AbilityKind.Charge(16, 4.5, 2, 40), 28, 300, 1.7, 18, FARTHEST),
                 m("slag_spill", new AbilityKind.Trail(2.5, 2, 6, 10, 90), 26, 360, 1.3, 16, RANDOM),
+                m("molten_rows", new AbilityKind.Exaflare(2, 6, 3, 13, 7), 30, 380, 1.6, 16, NEAREST),
+                m("forge_ring", new AbilityKind.Ring(4.5, 11.5), 32, 300, 1.9, 14, NEAREST),
                 m("ore_burst", new AbilityKind.Crosses(14, 3, 2, 20), 28, 340, 1.5, 16, NEAREST),
+                m("piston_drop", new AbilityKind.CircleAtTargets(4, 4), 30, 240, 1.6, 14, RANDOM),
+                m("slag_beams", new AbilityKind.RotatingBeam(2, 17, 3, 28, 6, 12), 30, 440, 1.5, 12, NEAREST),
                 m("collapse", new AbilityKind.Checkerboard(4, 7, 2, 24), 34, 520, 1.8, 12, NEAREST),
                 m("deep_tremor", seq(pull(14, -1.2), new CircleAroundBoss(7.5), 20), 32, 460, 2.0, 12, NEAREST),
                 m("ore_storm", new AbilityKind.Scatter(8, 3, 12, 6, 0), 30, 380, 1.5, 12, NEAREST),
@@ -145,13 +166,17 @@ public final class FieldBosses {
 
     /** 堕ちた滝守: the fallen keeper of the falls; torrents, mist and the weight of the water. */
     private static BossDefinition sacredFalls() {
-        return boss("c_sacred_falls", 30, 15000, 10, 6, new int[]{4, 6, 8},
+        return boss("c_sacred_falls", 30, 15000, 10, 6, new int[]{5, 8, 12},
                 m("torrent_lash", new AbilityKind.Cone(8, 55), 24, 90, 1.6, 28, NEAREST),
                 m("cascade", new AbilityKind.Line(18, 3.5), 26, 140, 1.7, 22, FARTHEST),
                 m("spray", new AbilityKind.ProjectileVolley(6, 1.1, 60), 26, 160, 1.0, 20, HIGHEST_THREAT),
                 m("whirlpool", new AbilityKind.Ring(4, 11), 30, 240, 1.8, 18, NEAREST),
                 m("falling_water", new AbilityKind.CircleAtTargets(4, 4), 30, 260, 1.5, 16, RANDOM),
+                m("geyser", new AbilityKind.CircleAtTargets(3.5, 5), 30, 240, 1.5, 16, RANDOM),
+                m("spear_rain", new AbilityKind.Scatter(9, 3, 12, 6, 0), 30, 360, 1.5, 14, NEAREST),
                 m("tidal_rows", new AbilityKind.Exaflare(2, 5, 3, 12, 8), 30, 380, 1.5, 14, NEAREST),
+                m("torrent_cross", new AbilityKind.Crosses(15, 3.5, 2, 20), 30, 360, 1.7, 12, NEAREST),
+                m("maelstrom_beams", new AbilityKind.RotatingBeam(2, 17, 3.5, 28, 6, 12), 30, 440, 1.5, 12, NEAREST),
                 m("undertow", seq(pull(15, -1.4), new CircleAroundBoss(7), 22), 32, 460, 2.0, 12, NEAREST),
                 m("sanctuary_lost", new AbilityKind.SafeZones(3, 3.5, 9), 60, 900, 2.4, 8, NEAREST),
                 m("deluge", new AbilityKind.Checkerboard(4, 7, 2, 24), 34, 520, 1.7, 10, NEAREST),
@@ -160,13 +185,17 @@ public final class FieldBosses {
 
     /** 遺跡を焦がす焔: a flame-wyrm that bakes the old stones: breath cones, burning rows, a sky of embers. */
     private static BossDefinition ancientRuins() {
-        return boss("c_ancient_ruins", 40, 19000, 12, 8, new int[]{4, 6, 8},
+        return boss("c_ancient_ruins", 40, 19000, 12, 8, new int[]{5, 8, 12},
                 m("flame_breath", new AbilityKind.Cone(10, 45), 26, 110, 1.8, 28, HIGHEST_THREAT),
                 m("tail_sweep", new AbilityKind.Cone(8, 90), 24, 100, 1.5, 24, NEAREST),
                 m("ember_rain", new AbilityKind.Scatter(8, 3, 12, 6, 0), 30, 260, 1.4, 20, NEAREST),
                 m("scorch_dive", new AbilityKind.Charge(18, 6.5, 2, 40), 30, 320, 1.8, 18, FARTHEST),
                 m("burning_rows", new AbilityKind.Exaflare(2, 6, 3, 14, 7), 30, 380, 1.5, 16, NEAREST),
+                m("magma_pillars", new AbilityKind.CircleAtTargets(4, 4), 30, 240, 1.6, 16, RANDOM),
+                m("wyrm_lance", new AbilityKind.Line(19, 4), 28, 180, 1.9, 16, FARTHEST),
                 m("ring_of_fire", new AbilityKind.Ring(5, 12), 32, 300, 1.9, 14, NEAREST),
+                m("inferno_burst", seq(new CircleAroundBoss(6), new AbilityKind.Ring(6, 13), 24), 32, 460, 2.0, 12, NEAREST),
+                m("ember_trail", new AbilityKind.Trail(3, 2, 6, 10, 90), 28, 400, 1.4, 12, RANDOM),
                 m("pyre_beams", new AbilityKind.RotatingBeam(3, 16, 3, 24, 6, 12), 30, 460, 1.5, 12, NEAREST),
                 m("ruin_pyre", new AbilityKind.SafeZones(2, 4, 9), 60, 900, 2.5, 8, NEAREST),
                 m("pyre_cross", new AbilityKind.Crosses(16, 3.5, 2, 20), 30, 340, 1.7, 12, NEAREST),
@@ -175,13 +204,17 @@ public final class FieldBosses {
 
     /** 峰を砕く巨像: a mountain-colossus; avalanches, peak-splitting fists and shockwaves through the rock. */
     private static BossDefinition soaringPeaks() {
-        return boss("c_summit", 50, 24000, 14, 14, new int[]{4, 6, 8},
+        return boss("c_summit", 50, 24000, 14, 14, new int[]{5, 8, 12},
                 m("peak_fist", new CircleAroundBoss(8), 28, 140, 2.1, 26, NEAREST),
                 m("ridge_sweep", new AbilityKind.Cone(9, 70), 26, 100, 1.6, 26, NEAREST),
                 m("avalanche", new AbilityKind.Scatter(7, 3.5, 12, 8, 0), 32, 280, 1.5, 20, NEAREST),
                 m("split_the_peak", new AbilityKind.Crosses(16, 3.5, 2, 22), 30, 320, 1.7, 18, NEAREST),
                 m("boulder_toss", new AbilityKind.CircleAtTargets(4.5, 3), 32, 260, 1.6, 16, RANDOM),
+                m("pillar_rise", new AbilityKind.CircleAtTargets(4, 5), 32, 240, 1.7, 16, RANDOM),
+                m("colossus_ring", new AbilityKind.Ring(5, 12.5), 34, 300, 2.0, 14, NEAREST),
                 m("shock_rows", new AbilityKind.Exaflare(1, 7, 3, 14, 7), 30, 380, 1.6, 14, NEAREST),
+                m("landslide_rows", new AbilityKind.Exaflare(3, 5, 3, 13, 7), 30, 420, 1.6, 12, NEAREST),
+                m("summit_beams", new AbilityKind.RotatingBeam(3, 17, 3.5, 24, 6, 12), 30, 460, 1.6, 12, NEAREST),
                 m("summit_quake", new AbilityKind.Checkerboard(4, 8, 2, 24), 36, 520, 1.9, 12, NEAREST),
                 m("mountain_falls", seq(pull(16, -1.3), new CircleAroundBoss(8.5), 22), 34, 480, 2.2, 10, NEAREST),
                 m("rockslide", new AbilityKind.Trail(3, 2, 6, 10, 90), 28, 380, 1.4, 12, RANDOM),
@@ -190,14 +223,18 @@ public final class FieldBosses {
 
     /** 終焉より来るもの: what comes from the end: void blades, doom marks and a sky that tears open. */
     private static BossDefinition endForest() {
-        return boss("c_end_forest", 55, 27000, 15, 12, new int[]{4, 6, 8},
+        return boss("c_end_forest", 55, 27000, 15, 12, new int[]{5, 8, 12},
                 m("void_cleave", new AbilityKind.Cone(8, 60), 24, 90, 1.8, 28, NEAREST),
                 m("rift_lance", new AbilityKind.Line(18, 3), 26, 130, 1.8, 22, FARTHEST),
                 m("doom_marks", new AbilityKind.CircleAtTargets(3.5, 4), 30, 220, 1.6, 20, RANDOM),
                 m("end_ring", new AbilityKind.Ring(4.5, 11), 30, 260, 1.9, 16, NEAREST),
                 m("void_step", seq(new AbilityKind.CircleAtTargets(3.5, 2), new CircleAroundBoss(6), 22), 34, 420, 1.9,
                         14, RANDOM),
+                m("void_rain", new AbilityKind.Scatter(10, 3, 13, 5, 0), 30, 360, 1.6, 16, NEAREST),
+                m("rift_cross", new AbilityKind.Crosses(16, 3, 3, 18), 30, 380, 1.7, 14, NEAREST),
                 m("tear_the_sky", new AbilityKind.RotatingBeam(4, 16, 3, 22, 6, 12), 30, 460, 1.6, 12, NEAREST),
+                m("end_chase", new AbilityKind.Trail(3, 2, 7, 10, 90), 28, 400, 1.5, 12, RANDOM),
+                m("oblivion_snare", seq(pull(15, -1.4), new AbilityKind.Ring(4.5, 11.5), 22), 32, 460, 2.0, 12, NEAREST),
                 m("null_field", new AbilityKind.Checkerboard(4, 8, 3, 22), 34, 520, 1.8, 12, NEAREST),
                 m("the_end", new AbilityKind.SafeZones(2, 3.5, 9), 64, 900, 2.6, 8, NEAREST),
                 m("unmaking", new AbilityKind.Exaflare(2, 6, 3, 14, 7), 30, 420, 1.7, 10, NEAREST),
@@ -206,13 +243,17 @@ public final class FieldBosses {
 
     /** 実りを枯らす根: the root that withers the harvest; blight spreads from it, husks burst, the soil grabs. */
     private static BossDefinition farm() {
-        return boss("c_farm", 20, 11000, 8, 8, new int[]{4, 6, 8},
+        return boss("c_farm", 20, 11000, 8, 8, new int[]{5, 8, 12},
                 m("root_lash", new AbilityKind.Cone(8, 70), 24, 100, 1.5, 28, NEAREST),
                 m("blight_patch", new AbilityKind.CircleAtTargets(3.5, 3), 30, 180, 1.4, 22, RANDOM),
                 m("furrow", new AbilityKind.Line(16, 3), 26, 140, 1.6, 20, HIGHEST_THREAT),
                 m("husk_burst", new AbilityKind.Scatter(6, 3, 11, 8, 0), 30, 300, 1.4, 18, NEAREST),
                 m("withering_trail", new AbilityKind.Trail(2.5, 2, 6, 12, 90), 26, 380, 1.2, 16, RANDOM),
+                m("spore_cloud", new AbilityKind.Scatter(8, 3.5, 12, 7, 0), 30, 320, 1.4, 16, NEAREST),
+                m("thorn_ring", new AbilityKind.Ring(4, 11), 30, 280, 1.8, 14, NEAREST),
                 m("grasping_soil", seq(pull(13, -1.2), new CircleAroundBoss(6.5), 20), 30, 420, 1.8, 14, NEAREST),
+                m("harvest_scythe", new AbilityKind.Cone(10, 120), 30, 300, 1.8, 12, NEAREST),
+                m("blight_beams", new AbilityKind.RotatingBeam(2, 16, 3, 28, 6, 12), 30, 440, 1.4, 12, NEAREST),
                 m("rot_rows", new AbilityKind.Exaflare(2, 5, 3, 12, 8), 28, 380, 1.5, 14, NEAREST),
                 m("famine", new AbilityKind.SafeZones(3, 3, 8), 60, 900, 2.3, 8, NEAREST),
                 m("blight_cross", new AbilityKind.Crosses(14, 3, 2, 20), 30, 340, 1.5, 12, NEAREST),
@@ -221,13 +262,17 @@ public final class FieldBosses {
 
     /** 湖底の破壊獣: a scaled beast from the lake bed; waves, a crushing bite, water spouts under the fighters. */
     private static BossDefinition lakeside() {
-        return boss("c_lakeside", 25, 13000, 9, 8, new int[]{4, 6, 8},
+        return boss("c_lakeside", 25, 13000, 9, 8, new int[]{5, 8, 12},
                 m("crushing_bite", new AbilityKind.Cone(8, 50), 24, 90, 1.8, 28, HIGHEST_THREAT),
                 m("tail_wave", new AbilityKind.Cone(8, 100), 26, 110, 1.5, 24, NEAREST),
                 m("water_spouts", new AbilityKind.CircleAtTargets(3.5, 4), 30, 200, 1.4, 20, RANDOM),
                 m("lake_charge", new AbilityKind.Charge(16, 6, 2, 40), 28, 300, 1.7, 18, FARTHEST),
                 m("whirl", new AbilityKind.Ring(4.5, 11), 30, 260, 1.8, 16, NEAREST),
+                m("lake_geysers", new AbilityKind.CircleAtTargets(3.5, 5), 30, 240, 1.5, 16, RANDOM),
+                m("fin_crescent", new AbilityKind.Cone(10, 120), 30, 280, 1.8, 14, NEAREST),
                 m("wave_rows", new AbilityKind.Exaflare(2, 5, 3, 13, 8), 30, 380, 1.5, 14, NEAREST),
+                m("lake_beams", new AbilityKind.RotatingBeam(2, 17, 3, 28, 6, 12), 30, 440, 1.5, 12, NEAREST),
+                m("abyss_snare", seq(pull(15, -1.4), new AbilityKind.Ring(5, 11.5), 22), 32, 460, 2.0, 12, NEAREST),
                 m("drag_under", seq(pull(14, -1.3), new CircleAroundBoss(7), 22), 32, 460, 2.0, 12, NEAREST),
                 m("flood", new AbilityKind.SafeZones(3, 3.5, 9), 60, 900, 2.4, 8, NEAREST),
                 m("lake_cross", new AbilityKind.Crosses(14, 3, 2, 20), 30, 340, 1.6, 12, NEAREST),
@@ -236,13 +281,17 @@ public final class FieldBosses {
 
     /** 嵐を呼ぶ呪術師: a sorcerer of the harbour who calls the storm: lightning marks, gale walls, a maelstrom. */
     private static BossDefinition harbour() {
-        return boss("c_harbour", 30, 14500, 10, 6, new int[]{4, 6, 8},
+        return boss("c_harbour", 30, 14500, 10, 6, new int[]{5, 8, 12},
                 m("staff_sweep", new AbilityKind.Cone(7.5, 60), 24, 90, 1.5, 26, NEAREST),
                 m("lightning_marks", new AbilityKind.CircleAtTargets(3.5, 4), 30, 180, 1.5, 22, RANDOM),
                 m("gale_wall", new AbilityKind.Line(18, 4), 26, 140, 1.6, 20, FARTHEST),
                 m("hex_volley", new AbilityKind.ProjectileVolley(7, 1.2, 70), 26, 160, 1.0, 20, HIGHEST_THREAT),
                 m("thunder_cross", new AbilityKind.Crosses(15, 3, 3, 18), 30, 340, 1.5, 16, NEAREST),
+                m("chain_lightning", new AbilityKind.CircleAtTargets(3, 5), 30, 220, 1.5, 16, RANDOM),
+                m("gale_ring", new AbilityKind.Ring(4.5, 12), 30, 280, 1.8, 14, NEAREST),
                 m("maelstrom", new AbilityKind.RotatingBeam(2, 16, 3, 30, 6, 12), 30, 420, 1.5, 14, NEAREST),
+                m("storm_rows", new AbilityKind.Exaflare(3, 5, 3, 13, 7), 30, 400, 1.6, 12, NEAREST),
+                m("thunder_snare", seq(pull(14, -1.3), new CircleAroundBoss(7), 20), 32, 460, 2.0, 12, NEAREST),
                 m("storm_scatter", new AbilityKind.Scatter(8, 3, 12, 6, 0), 30, 380, 1.5, 14, NEAREST),
                 m("eye_of_the_storm", new AbilityKind.SafeZones(2, 4, 9), 60, 900, 2.4, 8, NEAREST),
                 m("storm_tide", new AbilityKind.Exaflare(2, 6, 3, 14, 7), 30, 420, 1.6, 10, NEAREST),
@@ -519,10 +568,11 @@ public final class FieldBosses {
             }
         }
         String ex = abilities.get(abilities.size() - 2).id();
-        int players = forms.length == 3 ? 3 : 2;
-        return new BossDefinition(id, "minecraft:iron_golem", level, health * RAID_HEALTH, damage, armor, PARTY_SCALING,
-                players,
-                8, phases, abilities, ENRAGE_TICKS, List.of(), DifficultyTuning.NORMAL, DifficultyTuning.hard(),
-                DifficultyTuning.ex(ex));
+        boolean calamity = forms.length == 3;
+        int players = calamity ? com.eternalrealm.world.field.ThreatPower.SIZED_FOR : 2;
+        double blows = calamity ? damage * com.eternalrealm.world.field.ThreatPower.CALAMITY_DAMAGE : damage;
+        return new BossDefinition(id, "minecraft:iron_golem", level, health * RAID_HEALTH, blows, armor, PARTY_SCALING,
+                players, 8, phases, abilities, calamity ? CALAMITY_ENRAGE_TICKS : ENRAGE_TICKS, List.of(),
+                DifficultyTuning.NORMAL, DifficultyTuning.hard(), DifficultyTuning.ex(ex));
     }
 }

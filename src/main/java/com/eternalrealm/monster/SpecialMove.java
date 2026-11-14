@@ -45,7 +45,23 @@ public enum SpecialMove {
     /** A rain of arrows on a circle around the target. */
     VOLLEY(Shape.TARGET_CIRCLE, 3.2, 0.0, 32, 4.0, 18.0, 1.5, Swing.CAST),
     /** A wave of force along the ground towards the target (melee knights). */
-    WAVE(Shape.LINE, 9.0, 2.6, 28, 2.0, 8.0, 1.7, Swing.ATTACK2);
+    WAVE(Shape.LINE, 9.0, 2.6, 28, 2.0, 8.0, 1.7, Swing.ATTACK2),
+
+    // ---- the arts of the ヌシ (field lords, 2026-11-14): bigger, slower to wind up, three for each lord on top of
+    // ---- the three moves of its body (SpecialMoves#lordArts)
+
+    /** 大地裂き: a shockwave that rolls far out in a wide ring (safe only right next to the body). */
+    QUAKE(Shape.SELF_RING, 3.0, 11.0, 36, 0.0, 10.0, 1.8, Swing.ATTACK2),
+    /** 天地崩落: everything around the lord caves in (run far away). */
+    CATACLYSM(Shape.SELF_CIRCLE, 8.5, 0.0, 44, 0.0, 7.0, 2.0, Swing.CAST),
+    /** 隕星落とし: a great stone from the sky where the target stands. */
+    METEOR(Shape.TARGET_CIRCLE, 5.0, 0.0, 36, 3.0, 22.0, 1.9, Swing.CAST),
+    /** 破滅の十字: a cross of ruin, wide and long, on the target. */
+    RUIN_CROSS(Shape.TARGET_CROSS, 11.0, 3.2, 36, 3.0, 18.0, 1.8, Swing.CAST),
+    /** 怒涛の一閃: a long, broad strike along the ground through the target. */
+    GREAT_WAVE(Shape.LINE, 20.0, 5.0, 34, 2.0, 18.0, 1.9, Swing.ATTACK2),
+    /** 暴威の薙ぎ: a sweep that takes in almost everything in front. */
+    RAMPAGE(Shape.CONE, 9.0, 75.0, 30, 0.0, 8.0, 1.8, Swing.ATTACK1);
 
     /** Layout of a move's marker. */
     public enum Shape {

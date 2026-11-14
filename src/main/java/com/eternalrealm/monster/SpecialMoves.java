@@ -21,9 +21,14 @@ import java.util.Set;
 public final class SpecialMoves {
     /** Normal monsters from this level on get their first special move. */
     public static final int VETERAN_LEVEL = 30;
-    /** The ヌシ (field lords) use all three moves of their bodies, more often than elites. */
-    public static final int LORD_MOVES = 3;
-    public static final int LORD_COOLDOWN_TICKS = 110;
+    /** Moves of a body (the bestiary's have three). */
+    public static final int BODY_MOVES = 3;
+    /**
+     * The ヌシ (field lords) use all three moves of their bodies and three arts of a lord ({@link #lordArts}, owner
+     * 2026-11-14: 「攻撃の種類…も増やして」), more often than elites.
+     */
+    public static final int LORD_MOVES = 6;
+    public static final int LORD_COOLDOWN_TICKS = 90;
     public static final int ELITE_COOLDOWN_TICKS = 160;
     public static final int VETERAN_COOLDOWN_TICKS = 300;
     /** Delay after a monster starts fighting before its first special move. */
@@ -142,8 +147,32 @@ public final class SpecialMoves {
 
     /** The first {@code count} moves of a body (0..3; the first bodies have two). */
     public static List<SpecialMove> movesOf(String rig, String variant, int count) {
-        List<SpecialMove> all = forBody(rig, variant);
-        return all.subList(0, Math.max(0, Math.min(count, all.size())));
+        List<SpecialMove> body = forBody(rig, variant);
+        if (count <= BODY_MOVES || body.isEmpty()) {
+            return body.subList(0, Math.max(0, Math.min(count, body.size())));
+        }
+        List<SpecialMove> all = new java.util.ArrayList<>(body);
+        List<SpecialMove> arts = lordArts(rig, variant);
+        all.addAll(arts.subList(0, Math.min(arts.size(), count - BODY_MOVES)));
+        return List.copyOf(all);
+    }
+
+    /**
+     * The three arts a lord adds to its body's moves, by its kind: fighters sweep, strike along the ground and cross;
+     * beasts shake the ground, sweep and bring down stones; golems shake, cave in and strike; fliers and casters bring
+     * down stones and crosses and cave everything in.
+     */
+    public static List<SpecialMove> lordArts(String rig, String variant) {
+        Telegraph.Style style = style(variant);
+        boolean caster = CASTERS.contains(variant) || style == Telegraph.Style.MAGIC || style == Telegraph.Style.HOLY;
+        if (caster || "flyer".equals(rig)) {
+            return List.of(SpecialMove.METEOR, SpecialMove.RUIN_CROSS, SpecialMove.CATACLYSM);
+        }
+        return switch (rig) {
+            case "beast" -> List.of(SpecialMove.QUAKE, SpecialMove.RAMPAGE, SpecialMove.METEOR);
+            case "golem" -> List.of(SpecialMove.QUAKE, SpecialMove.CATACLYSM, SpecialMove.GREAT_WAVE);
+            default -> List.of(SpecialMove.RAMPAGE, SpecialMove.GREAT_WAVE, SpecialMove.RUIN_CROSS);
+        };
     }
 
     /** Colour of a body's markers by its element; physical moves are the red danger marker. */

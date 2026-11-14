@@ -12,7 +12,7 @@ import java.util.Set;
  * The turns of a fight with a ヌシ (field lord), at fixed marks of its health: it calls monsters of its field to its
  * side at 70%, flies into a rage at 50% (faster and harder hitting for the rest of the fight) and calls again at 30%.
  * Every turn happens once per appearance, in order, also when one heavy blow crosses several marks. Its special moves
- * (all three of its body, {@code SpecialMoves.LORD_MOVES}) come on top.
+ * (the three of its body and three arts of a lord, {@code SpecialMoves.LORD_MOVES}) come on top.
  */
 public final class LordTurns {
     /** Monsters that answer one call. */

@@ -44,7 +44,11 @@ public class SpecialMovesTest {
             assertTrue(id, moves != null && moves.size() == 3 && new java.util.HashSet<>(moves).size() == 3);
             assertEquals(moves, SpecialMoves.forBody("any", id));
             assertEquals(moves.subList(0, 1), SpecialMoves.movesOf("any", id, 1));
-            assertEquals(moves, SpecialMoves.movesOf("any", id, SpecialMoves.LORD_MOVES));
+            assertEquals(moves, SpecialMoves.movesOf("any", id, SpecialMoves.BODY_MOVES));
+            List<SpecialMove> lord = SpecialMoves.movesOf("any", id, SpecialMoves.LORD_MOVES);
+            assertEquals(id + ": a lord adds three arts", 6, lord.size());
+            assertEquals(moves, lord.subList(0, 3));
+            assertEquals(6, new java.util.HashSet<>(lord).size());
             assertTrue(id, BestiaryMoves.styleOf(id) != null);
         }
         assertEquals(130, bodies);
@@ -90,6 +94,27 @@ public class SpecialMovesTest {
         assertEquals(SpecialMove.CLEAVE, SpecialMoves.forVanillaBody("minecraft:vindicator").get(0));
         assertEquals(Telegraph.Style.FIRE, SpecialMoves.vanillaStyle("minecraft:magma_cube"));
         assertEquals(Telegraph.Style.DANGER, SpecialMoves.vanillaStyle("minecraft:piglin_brute"));
+    }
+
+    /** Every kind of body gets three lord arts of its own kind, all bigger and slower to wind up than its moves. */
+    @Test
+    public void lordsAddThreeArtsOfTheirKind() {
+        assertEquals(List.of(SpecialMove.RAMPAGE, SpecialMove.GREAT_WAVE, SpecialMove.RUIN_CROSS),
+                SpecialMoves.lordArts("humanoid", "bandit"));
+        assertEquals(List.of(SpecialMove.QUAKE, SpecialMove.RAMPAGE, SpecialMove.METEOR),
+                SpecialMoves.lordArts("beast", "wolf"));
+        assertEquals(List.of(SpecialMove.QUAKE, SpecialMove.CATACLYSM, SpecialMove.GREAT_WAVE),
+                SpecialMoves.lordArts("golem", "treant"));
+        assertEquals("casters bring down stones", SpecialMove.METEOR, SpecialMoves.lordArts("humanoid", "void_mage").get(0));
+        assertEquals(SpecialMove.METEOR, SpecialMoves.lordArts("flyer", "harpy").get(0));
+        for (SpecialMove art : List.of(SpecialMove.QUAKE, SpecialMove.CATACLYSM, SpecialMove.METEOR,
+                SpecialMove.RUIN_CROSS, SpecialMove.GREAT_WAVE, SpecialMove.RAMPAGE)) {
+            assertTrue(art + " winds up longer", art.windupTicks() >= 30);
+        }
+        assertEquals("the first bodies: two moves and three arts", 5,
+                SpecialMoves.movesOf("humanoid", "bandit", SpecialMoves.LORD_MOVES).size());
+        assertTrue("the lords move most often",
+                SpecialMoves.cooldownTicks(SpecialMoves.LORD_MOVES) < SpecialMoves.cooldownTicks(2));
     }
 
     /** The lords' HUD names the move they wind up (special.eternalrealm.<move>, docs/i18n/field_threats.json). */

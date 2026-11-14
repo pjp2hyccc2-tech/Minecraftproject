@@ -1,6 +1,7 @@
 package com.eternalrealm.monster.forge;
 
 import com.eternalrealm.monster.MonsterRole;
+import com.eternalrealm.monster.MonsterScaling;
 import com.eternalrealm.monster.MonsterSpawn;
 import com.eternalrealm.monster.MonsterStats;
 import com.eternalrealm.monster.MonsterTemplate;
@@ -107,6 +108,17 @@ public final class MonsterFactory {
         mob.setCustomName(nameplate(template, spawn.level()));
         mob.setCustomNameVisible(template.role() == MonsterRole.ELITE);
         return Optional.of(mob);
+    }
+
+    /**
+     * Brings a monster made by this factory to {@code level}: its armor and damage attributes and the level and damage
+     * it carries (a field lord rising to the level of a stronger player). Health is the caller's.
+     */
+    public static void rescale(Mob mob, MonsterTemplate template, int level) {
+        MonsterStats stats = MonsterScaling.stats(template, level);
+        setBase(mob, Attributes.ARMOR, stats.armor());
+        setBase(mob, Attributes.ATTACK_DAMAGE, stats.damage());
+        MonsterTags.mark(mob, template.id(), level, stats.damage(), MonsterTags.givesRewards(mob));
     }
 
     /** "Lv12 森グモ" in the role's colour (elites gold, minions grey). */

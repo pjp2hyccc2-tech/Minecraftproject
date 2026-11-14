@@ -36,6 +36,7 @@ import com.eternalrealm.world.field.FieldLayout;
 import com.eternalrealm.world.field.FieldThreats;
 import com.eternalrealm.world.field.LordRoster;
 import com.eternalrealm.world.field.LordTurns;
+import com.eternalrealm.world.field.ThreatPower;
 import com.eternalrealm.world.field.Miasma;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -99,8 +100,9 @@ import java.util.UUID;
  *     resting ones come out, so every change brings a lord that was not there; a beaten lord stays down until the
  *     next change. A lord that is out appears when a player comes near its home, much tougher than its kin
  *     (more health than the attribute cap allows is carried by a toughness factor), roams its territory and goes to
- *     sleep when nobody is around. It fights like a small boss: all three
- *     special moves of its body, helpers called at 70% and 30% health and a rage from 50% ({@link LordTurns}), and
+ *     sleep when nobody is around. It fights like a small boss, sized for five players and at least at the level of the
+ *     strongest player who comes to fight it ({@link ThreatPower}): the three special moves of its body and three arts
+ *     of a lord, helpers called at 70% and 30% health and a rage from 50% ({@link LordTurns}), and
  *     the players fighting it see its health, the move it winds up and the damage ranking on the boss HUD. Everyone
  *     who did a fair share of the damage gets the lord's rewards; the best contributor is the hero (殊勲).</li>
  *     <li><b>瘴気</b>: monsters slain in a field fill its gauge. An overflowing gauge brings an omen (warning to
@@ -124,7 +126,10 @@ public final class FieldThreatService {
     /** Persistent data of a monster that answered a lord's call: the lord's id. */
     public static final String HELPER_OF = "er_lord_helper";
     private static final String CALAMITY_TAG = ModInfo.MOD_ID + "_calamity";
-    private static final double LORD_DAMAGE = 1.35;
+    /** The smallest toughness: a lord's health may be this many times the attribute cap (1000 / 0.001 = 1 000 000). */
+    private static final double MIN_TOUGHNESS = 0.001;
+    /** Players this close to a lord's home when it appears bring it up to their level (level sync). */
+    private static final double SYNC_RADIUS = FieldThreats.WAKE_RADIUS;
     /** Players this close to a lord in a fight see its HUD (those who hurt it, a little farther). */
     private static final double HUD_RANGE = 28.0;
     private static final double HUD_RANGE_FIGHTER = 48.0;
@@ -488,7 +493,8 @@ public final class FieldThreatService {
             LOG.warn("Field lord {} names unknown monster template {}", lord.id(), lord.template());
             return;
         }
-        int level = Math.min(MonsterScaling.MAX_LEVEL, template.levels().max() + FieldThreats.LORD_LEVEL_BONUS);
+        int own = Math.min(MonsterScaling.MAX_LEVEL, template.levels().max() + FieldThreats.LORD_LEVEL_BONUS);
+        int level = ThreatPower.level(own, strongestNear(astoria, lord.x() + 0.5, lord.z() + 0.5, SYNC_RADIUS));
         Optional<Mob> made = MonsterFactory.create(astoria, new MonsterSpawn(template, level), true);
         if (made.isEmpty()) {
             state.dueAt = now + 20L * 60L;
@@ -497,30 +503,21 @@ public final class FieldThreatService {
         Mob mob = made.get();
         BlockPos ground = surface(astoria, lord.x(), lord.z());
         mob.moveTo(ground.getX() + 0.5, ground.getY(), ground.getZ() + 0.5, RANDOM.nextFloat() * 360.0F, 0.0F);
-        AttributeInstance health = mob.getAttribute(Attributes.MAX_HEALTH);
-        double wanted = mob.getMaxHealth() * lord.healthMultiplier();
-        double capped = Math.min(wanted, HEALTH_CAP);
-        if (health != null) {
-            health.setBaseValue(capped);
-        }
-        mob.setHealth(mob.getMaxHealth());
         mob.getPersistentData().putString(LORD_ID, lord.id());
-        mob.getPersistentData().putDouble(TOUGHNESS, capped / wanted);
         mob.addTag(LORD_TAG);
-        MonsterTags.scaleDamage(mob, LORD_DAMAGE);
+        empower(mob, level);
         if (mob instanceof PathfinderMob walker) {
             walker.restrictTo(ground, lord.territory());
         }
         mob.setPersistenceRequired();
         if (mob instanceof com.eternalrealm.entity.ERMonster monster) {
-            monster.setSpecialMoves(com.eternalrealm.monster.SpecialMoves.LORD_MOVES); // all three moves of its body
+            // the three moves of its body and three arts of a lord
+            monster.setSpecialMoves(com.eternalrealm.monster.SpecialMoves.LORD_MOVES);
         }
         state.turns = LordTurns.none();
         state.enraged = false;
         state.lastHit = -1L;
-        mob.setCustomName(Component.translatable("threat.eternalrealm.lord.nameplate", level,
-                Component.translatable(lord.translationKey())).withStyle(ChatFormatting.LIGHT_PURPLE));
-        mob.setCustomNameVisible(true);
+        nameplate(mob, lord, level);
         armSignature(mob, lord);
         state.body = mob.getUUID(); // before it joins the level: the join check lets only tracked lords in
         if (!astoria.addFreshEntity(mob)) {
@@ -547,6 +544,76 @@ public final class FieldThreatService {
         }
     }
 
+    /**
+     * A lord at {@code level}: five players' worth of health ({@link ThreatPower#lordHealth}; what the attribute cap
+     * cannot hold is carried by the toughness factor) and a lord's blows. Its armor, damage and level follow the
+     * level ({@link MonsterFactory#rescale}); it is at full health afterwards.
+     */
+    private static void empower(Mob mob, int level) {
+        Monsters.byId(MonsterTags.template(mob).map(MonsterTemplate::id).orElse(""))
+                .ifPresent(template -> MonsterFactory.rescale(mob, template, level));
+        double wanted = ThreatPower.lordHealth(level);
+        double capped = Math.min(wanted, HEALTH_CAP);
+        AttributeInstance health = mob.getAttribute(Attributes.MAX_HEALTH);
+        if (health != null) {
+            health.setBaseValue(capped);
+        }
+        mob.setHealth(mob.getMaxHealth());
+        mob.getPersistentData().putDouble(TOUGHNESS, Math.max(MIN_TOUGHNESS, capped / wanted));
+        MonsterTags.scaleDamage(mob, ThreatPower.LORD_DAMAGE);
+    }
+
+    private static void nameplate(Mob mob, FieldThreats.Lord lord, int level) {
+        mob.setCustomName(Component.translatable("threat.eternalrealm.lord.nameplate", level,
+                Component.translatable(lord.translationKey())).withStyle(ChatFormatting.LIGHT_PURPLE));
+        mob.setCustomNameVisible(true);
+    }
+
+    /** The highest character level among the players within {@code radius} of a point (0 without any). */
+    private static int strongestNear(ServerLevel level, double x, double z, double radius) {
+        ServerContext context = ServerContext.current().orElse(null);
+        int best = 0;
+        for (ServerPlayer player : level.players()) {
+            double dx = player.getX() - x;
+            double dz = player.getZ() - z;
+            if (!player.isSpectator() && dx * dx + dz * dz <= radius * radius) {
+                best = Math.max(best, levelOf(context, player));
+            }
+        }
+        return best;
+    }
+
+    private static int levelOf(ServerContext context, ServerPlayer player) {
+        return context == null ? 1 : context.playerData().snapshot(player.getUUID())
+                .map(CharacterSnapshot::level).orElse(1);
+    }
+
+    /**
+     * A stronger player strikes a lord nobody has hurt yet: it rises to their level (whole again, its new health). A
+     * lord already in a fight keeps the level it began with.
+     */
+    private static void syncOnFirstBlow(LivingEntity victim, LordState state, ServerPlayer attacker) {
+        if (state.lastHit >= 0L || !(victim instanceof Mob mob) || victim.getHealth() < victim.getMaxHealth() * 0.99F) {
+            return;
+        }
+        int level = ThreatPower.level(state.level, levelOf(ServerContext.current().orElse(null), attacker));
+        if (level <= state.level) {
+            return;
+        }
+        empower(mob, level);
+        state.level = level;
+        nameplate(mob, state.lord, level);
+        boardDirty = true;
+        ServerLevel server = (ServerLevel) victim.level();
+        server.sendParticles(ParticleTypes.SOUL_FIRE_FLAME, victim.getX(), victim.getY() + 1.2, victim.getZ(), 40, 0.8,
+                1.0, 0.8, 0.05);
+        server.playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.RAVAGER_ROAR,
+                SoundSource.HOSTILE, 1.2F, 0.6F);
+        attacker.displayClientMessage(Component.translatable("threat.eternalrealm.lord_rises",
+                Component.translatable(state.lord.translationKey()).withStyle(ChatFormatting.LIGHT_PURPLE), level)
+                .withStyle(ChatFormatting.GOLD), true);
+    }
+
     private static Optional<LordState> lordOf(Entity entity) {
         if (entity == null || !entity.getTags().contains(LORD_TAG)) {
             return Optional.empty();
@@ -562,16 +629,20 @@ public final class FieldThreatService {
         if (victim.level().isClientSide() || !victim.getTags().contains(LORD_TAG)) {
             return;
         }
+        if (event.getSource().getEntity() instanceof ServerPlayer striker) {
+            lordOf(victim).ifPresent(state -> syncOnFirstBlow(victim, state, striker));
+        }
         double toughness = victim.getPersistentData().contains(TOUGHNESS)
                 ? victim.getPersistentData().getDouble(TOUGHNESS) : 1.0;
-        float amount = (float) (event.getAmount() * Math.max(0.05, Math.min(1.0, toughness)));
+        double factor = Math.max(MIN_TOUGHNESS, Math.min(1.0, toughness));
+        float amount = (float) (event.getAmount() * factor);
         event.setAmount(amount);
         if (event.getSource().getEntity() instanceof ServerPlayer player) {
             long now = player.server.getTickCount();
             lordOf(victim).ifPresent(state -> {
                 state.lastHit = now;
                 state.contributions.damage(player.getUUID(), player.getGameProfile().getName(), jobOf(player),
-                        Math.min(amount, victim.getHealth()) / Math.max(0.05, toughness));
+                        Math.min(amount, victim.getHealth()) / factor);
             });
         }
     }
@@ -690,8 +761,8 @@ public final class FieldThreatService {
             // about one kill in a thousand: one of the lord's relics (金枠)
             com.eternalrealm.item.forge.RelicDrops.roll(player, com.eternalrealm.item.Relics.SourceKind.LORD,
                     state.lord.id(), RANDOM).ifPresent(items::add);
-            long exp = Math.round(stats.exp() * 2.0 * expMultiplier(body));
-            long gold = stats.goldMax() * 2;
+            long exp = Math.round(stats.exp() * ThreatPower.LORD_REWARD * expMultiplier(body));
+            long gold = Math.round(stats.goldMax() * ThreatPower.LORD_REWARD);
             give(context, player, items, exp, gold);
             JsonObject data = new JsonObject();
             data.addProperty("kind", "lord");
@@ -859,7 +930,7 @@ public final class FieldThreatService {
     private static JsonObject lordHud(LordState state, Mob body) {
         double toughness = body.getPersistentData().contains(TOUGHNESS) ? body.getPersistentData().getDouble(TOUGHNESS)
                 : 1.0;
-        double scale = 1.0 / Math.max(0.05, Math.min(1.0, toughness));
+        double scale = 1.0 / Math.max(MIN_TOUGHNESS, Math.min(1.0, toughness));
         double max = body.getMaxHealth() * scale;
         double hp = Math.max(0.0, body.getHealth()) * scale;
         JsonObject data = new JsonObject();
@@ -1089,11 +1160,6 @@ public final class FieldThreatService {
 
     private static void startFight(ServerLevel astoria, CalamityState state, long now) {
         FieldThreats.Calamity calamity = state.calamity;
-        BossDefinition definition = grown(calamity).orElse(null);
-        if (definition == null) {
-            handle(astoria.getServer(), astoria, miasma.departed(calamity.field(), now), now);
-            return;
-        }
         BlockPos spawn = surface(astoria, calamity.x(), calamity.z());
         Vec3 center = Vec3.atBottomCenterOf(spawn);
         Set<UUID> participants = new HashSet<>();
@@ -1105,9 +1171,16 @@ public final class FieldThreatService {
         if (participants.isEmpty()) {
             return; // everyone left while the lair was scarred: it rises when someone comes back
         }
-        // a field calamity is tuned for at least two fighters: whoever is around joins on the way
+        // it rises at least to the strongest fighter's level (level sync, ThreatPower)
+        BossDefinition definition = grown(calamity,
+                strongestNear(astoria, center.x, center.z, FieldThreats.JOIN_RADIUS)).orElse(null);
+        if (definition == null) {
+            handle(astoria.getServer(), astoria, miasma.departed(calamity.field(), now), now);
+            return;
+        }
+        // a field calamity is sized for five fighters (ThreatPower.SIZED_FOR): whoever is around joins on the way
         Set<UUID> tuning = new HashSet<>(participants);
-        while (tuning.size() < 2) {
+        while (tuning.size() < definition.minPlayers()) {
             tuning.add(UUID.randomUUID());
         }
         Optional<BossFight> started = BossFight.start(astoria, definition, Difficulty.NORMAL, spawn, center,
@@ -1258,8 +1331,16 @@ public final class FieldThreatService {
 
     /** The calamity's boss grown to its current level (health and damage, CalamityGrowth). */
     static Optional<BossDefinition> grown(FieldThreats.Calamity calamity) {
+        return grown(calamity, 0);
+    }
+
+    /**
+     * The calamity's boss at its current level, or at the level of the strongest fighter if that is higher (level
+     * sync, {@link ThreatPower}): health and damage grow the same way ({@link CalamityGrowth}).
+     */
+    static Optional<BossDefinition> grown(FieldThreats.Calamity calamity, int strongest) {
         return Bosses.byId(calamity.boss()).map(definition -> {
-            int level = growth.level(calamity.field(), definition.level());
+            int level = ThreatPower.level(growth.level(calamity.field(), definition.level()), strongest);
             return definition.atLevel(level, CalamityGrowth.healthFactor(definition.level(), level),
                     CalamityGrowth.damageFactor(definition.level(), level));
         });
