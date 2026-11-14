@@ -649,3 +649,18 @@ Decisions:
   operators (permission 2) can delete any post or comment in the phone or with `/phone admin delete`.
 - **Live but quiet**: an open phone refreshes when friends write, like or comment; a closed one gets badges and, for messages,
   friend requests and comments, one line in chat with a button. Likes only change the badge.
+
+## D-NOVANILLA: no stray vanilla items on the ground in アストリア and the dungeons (2026-11-14)
+
+The owner: 「バニラのアイテムが落ちててそれを勝手に拾ってバッグがパンパンになるからバニラのアイテムは落ちないようにして」.
+The owner's world had about 1,300 stacks lying in the fields where they fought — pink petals, seeds, flowers, crops, sticks —
+knocked loose by sweeping attacks and trampling; our monsters' own drops were already cancelled.
+Decisions:
+- **Refuse them where they appear**, not at each source: an item entity joining アストリア or the dungeons is refused when its item is
+  `minecraft:` and nobody's name is on it (no thrower, no owner, no keep mark). One rule covers plants, leaves, crops, vanilla mobs and
+  whatever else breaks, and it also clears what already lies there when the chunk loads.
+- **Never take what is someone's**: a player's tosses (Q, dragging out of a window, a full inventory pushing items out) are marked
+  through `ItemTossEvent`, a dying player's drops through `LivingDropsEvent`, loot that does not fit the bag carries its owner, and what
+  spills from a block holding things that a player breaks (a chest, a barrel, a furnace) is kept for that tick and the next.
+- **Blocks can still be broken**; they just do not drop vanilla items there. Player rooms and guild houses keep vanilla rules, and no
+  collect quest asks for a vanilla item (checked by the quest validation).
