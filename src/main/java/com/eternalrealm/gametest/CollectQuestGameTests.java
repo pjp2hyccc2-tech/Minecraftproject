@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * "Collect" quest objectives count monster loot: loot goes straight into the bag (no item on the ground is picked
@@ -42,7 +44,8 @@ public final class CollectQuestGameTests {
     private CollectQuestGameTests() {
     }
 
-    @GameTest(template = ARENA)
+    /** Stage 0: wait for the character to load; then loot, a plain give, more loot; done. */
+    @GameTest(template = ARENA, timeoutTicks = 400)
     public static void lootIntoTheBagCountsForCollectObjectives(GameTestHelper helper) {
         ServerContext context = ServerContext.current()
                 .orElseThrow(() -> new GameTestAssertException("no server context"));
@@ -54,30 +57,50 @@ public final class CollectQuestGameTests {
         player.moveTo(at.x, at.y, at.z, 0.0F, 0.0F);
         UUID id = player.getUUID();
         data.onPlayerJoin(id, name);
-        try {
-            QuestLog log = new QuestLog(List.of(new ActiveQuest(QUEST, List.of(0))), Map.of(), QuestLog.NEVER_RESET,
-                    Set.of());
-            check(data.setExtension(id, QuestService.EXTENSION, QuestLogCodec.toJson(log).toString()),
-                    "the quest log was set");
-            QuestService quests = context.game().quests();
-            check(quests.progressOf(player, QUEST).equals(List.of(0)), "the quest is active: "
-                    + quests.progressOf(player, QUEST));
-            Item gel = ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(Materials.SLIME_GEL));
-            check(gel != null, "slime gel exists");
-            int added = Bags.loot(player, new ItemStack(gel, 3));
-            check(added == 3, "three went into the bag: " + added);
-            check(quests.progressOf(player, QUEST).equals(List.of(3)), "the loot counted: "
-                    + quests.progressOf(player, QUEST));
-            Bags.give(player, new ItemStack(gel, 2));
-            check(quests.progressOf(player, QUEST).equals(List.of(3)), "a plain give (a purchase, a trade) does not");
-            Bags.loot(player, new ItemStack(gel, 10));
-            check(quests.progressOf(player, QUEST).equals(List.of(8)), "capped at what the objective needs: "
-                    + quests.progressOf(player, QUEST));
-        } finally {
-            player.getInventory().clearContent();
-            data.onPlayerLeave(id);
-        }
-        helper.succeed();
+        AtomicBoolean done = new AtomicBoolean();
+        AtomicReference<GameTestAssertException> failure = new AtomicReference<>();
+        helper.succeedWhen(() -> {
+            if (failure.get() != null) {
+                throw failure.get(); // a failed check must not turn into a pass on the next tick
+            }
+            if (done.get()) {
+                return;
+            }
+            check(data.isActive(id), "waiting for the character to load");
+            done.set(true);
+            try {
+                run(context, data, player);
+            } catch (GameTestAssertException e) {
+                failure.set(e);
+                throw e;
+            } finally {
+                player.getInventory().clearContent();
+                context.game().quests().onLogout(id);
+                data.onPlayerLeave(id);
+            }
+        });
+    }
+
+    private static void run(ServerContext context, PlayerDataService data, FakePlayer player) {
+        UUID id = player.getUUID();
+        QuestLog log = new QuestLog(List.of(new ActiveQuest(QUEST, List.of(0))), Map.of(), QuestLog.NEVER_RESET,
+                Set.of());
+        check(data.setExtension(id, QuestService.EXTENSION, QuestLogCodec.toJson(log).toString()),
+                "the quest log was set");
+        QuestService quests = context.game().quests();
+        check(quests.progressOf(player, QUEST).equals(List.of(0)), "the quest is active: "
+                + quests.progressOf(player, QUEST));
+        Item gel = ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(Materials.SLIME_GEL));
+        check(gel != null, "slime gel exists");
+        int added = Bags.loot(player, new ItemStack(gel, 3));
+        check(added == 3, "three went into the bag: " + added);
+        check(quests.progressOf(player, QUEST).equals(List.of(3)), "the loot counted: "
+                + quests.progressOf(player, QUEST));
+        Bags.give(player, new ItemStack(gel, 2));
+        check(quests.progressOf(player, QUEST).equals(List.of(3)), "a plain give (a purchase, a trade) does not");
+        Bags.loot(player, new ItemStack(gel, 10));
+        check(quests.progressOf(player, QUEST).equals(List.of(8)), "capped at what the objective needs: "
+                + quests.progressOf(player, QUEST));
     }
 
     private static void check(boolean condition, String message) {
