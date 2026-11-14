@@ -1,6 +1,7 @@
 package com.eternalrealm.gametest;
 
 import com.eternalrealm.character.CharacterSnapshot;
+import com.eternalrealm.combat.WeaponType;
 import com.eternalrealm.core.ModInfo;
 import com.eternalrealm.item.Consumable;
 import com.eternalrealm.item.EquipmentBase;
@@ -9,7 +10,6 @@ import com.eternalrealm.item.ItemPrices;
 import com.eternalrealm.item.ItemRarity;
 import com.eternalrealm.item.ItemTier;
 import com.eternalrealm.item.Materials;
-import com.eternalrealm.item.WeaponType;
 import com.eternalrealm.item.bag.Bag;
 import com.eternalrealm.item.forge.BagBack;
 import com.eternalrealm.item.forge.EquipmentStacks;
