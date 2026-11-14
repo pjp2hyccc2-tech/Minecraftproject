@@ -97,7 +97,7 @@ public abstract class JournalScreen extends Screen {
             y += 20;
         }
         addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.tab.map"),
-                b -> com.eternalrealm.ui.map.WorldMapScreen.open()).bounds(panelLeft, y + 6, TAB_WIDTH, 18).build());
+                b -> com.eternalrealm.ui.map.CapitalMapScreen.openForPlayer()).bounds(panelLeft, y + 6, TAB_WIDTH, 18).build());
         // the way home to one's inn room (the room key, Home)
         addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.tab.room"), b -> {
             onClose();

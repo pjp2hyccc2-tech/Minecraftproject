@@ -1,0 +1,370 @@
+{
+ "screen.eternalrealm.capital_map.title": {
+  "ja": "王都アルセリア 街の地図",
+  "en": "Arcelia — town map"
+ },
+ "screen.eternalrealm.capital_map.field_map": {
+  "ja": "フィールドの地図",
+  "en": "Field map"
+ },
+ "screen.eternalrealm.capital_map.field_map_tip": {
+  "ja": "王都の外、アストリア全体の地図を開く（Tab）",
+  "en": "Open the map of Astoria beyond the walls (Tab)"
+ },
+ "screen.eternalrealm.capital_map.places": {
+  "ja": "施設一覧",
+  "en": "Places"
+ },
+ "screen.eternalrealm.capital_map.hint": {
+  "ja": "ドラッグで移動・ホイールで拡大縮小・施設をクリックで詳しく ・ %s：閉じる ・ Tab：フィールドの地図",
+  "en": "Drag to move · wheel to zoom · click a place for details · %s: close · Tab: field map"
+ },
+ "screen.eternalrealm.capital_map.missing": {
+  "ja": "王都の地図を読み込めませんでした",
+  "en": "The town map could not be loaded"
+ },
+ "screen.eternalrealm.capital_map.elsewhere": {
+  "ja": "いまは王都のある世界にいません",
+  "en": "You are not in the capital's world"
+ },
+ "screen.eternalrealm.capital_map.guide": {
+  "ja": "ここへ案内",
+  "en": "Guide me here"
+ },
+ "screen.eternalrealm.capital_map.guide_tip": {
+  "ja": "黄色い道しるべで、ここまでの道を示します",
+  "en": "Yellow dots show you the way here"
+ },
+ "screen.eternalrealm.capital_map.guide_stop": {
+  "ja": "案内をやめる",
+  "en": "Stop guiding"
+ },
+ "screen.eternalrealm.capital_map.guide_stop_tip": {
+  "ja": "道しるべを消して、クエストの案内に戻します",
+  "en": "Clears the dots; the quest guide comes back"
+ },
+ "screen.eternalrealm.capital_map.guide_elsewhere": {
+  "ja": "アストリアにいるときに案内できます",
+  "en": "Guidance works while you are in Astoria"
+ },
+ "screen.eternalrealm.capital_map.guide_target": {
+  "ja": "案内先",
+  "en": "Guiding to"
+ },
+ "screen.eternalrealm.capital_map.click": {
+  "ja": "クリックで選択",
+  "en": "Click to choose"
+ },
+ "screen.eternalrealm.map.capital_map": {
+  "ja": "王都の地図",
+  "en": "Town map"
+ },
+ "screen.eternalrealm.map.capital_map_tip": {
+  "ja": "王都アルセリアの施設と通りを見る",
+  "en": "See the places and streets of Arcelia"
+ },
+ "map.eternalrealm.capital.group.services": {
+  "ja": "主な施設",
+  "en": "Services"
+ },
+ "map.eternalrealm.capital.group.guilds": {
+  "ja": "ギルド",
+  "en": "Guilds"
+ },
+ "map.eternalrealm.capital.group.sights": {
+  "ja": "名所",
+  "en": "Sights"
+ },
+ "map.eternalrealm.capital.group.castle": {
+  "ja": "王城",
+  "en": "The castle"
+ },
+ "map.eternalrealm.capital.place.arrival": {
+  "ja": "到着地点",
+  "en": "Arrival point"
+ },
+ "map.eternalrealm.capital.place.arrival.desc": {
+  "ja": "王都へ移動するとここに着く",
+  "en": "Where you arrive when you travel to the capital"
+ },
+ "map.eternalrealm.capital.place.goddess": {
+  "ja": "女神像（復活地点）",
+  "en": "Goddess statue (revival)"
+ },
+ "map.eternalrealm.capital.place.goddess.desc": {
+  "ja": "倒れて帰還を選ぶとここで目を覚ます",
+  "en": "Where you wake when you fall and choose to return"
+ },
+ "map.eternalrealm.capital.place.quest_board": {
+  "ja": "冒険者ギルド（依頼受付）",
+  "en": "Adventurers' Guild (quests)"
+ },
+ "map.eternalrealm.capital.place.quest_board.desc": {
+  "ja": "クエストを受けて、終えたら報告する",
+  "en": "Take quests, and report them when done"
+ },
+ "map.eternalrealm.capital.place.item_shop": {
+  "ja": "道具屋",
+  "en": "Item shop"
+ },
+ "map.eternalrealm.capital.place.item_shop.desc": {
+  "ja": "回復薬や消耗品を買う・持ち物を売る",
+  "en": "Buy potions and supplies, sell what you carry"
+ },
+ "map.eternalrealm.capital.place.blacksmith": {
+  "ja": "鍛冶屋",
+  "en": "Smithy"
+ },
+ "map.eternalrealm.capital.place.blacksmith.desc": {
+  "ja": "装備の強化・生産・再錬成",
+  "en": "Enhance, craft and reforge equipment"
+ },
+ "map.eternalrealm.capital.place.job_master": {
+  "ja": "職業ギルド",
+  "en": "Job Guild"
+ },
+ "map.eternalrealm.capital.place.job_master.desc": {
+  "ja": "職業を選ぶ・転職する",
+  "en": "Choose or change your job"
+ },
+ "map.eternalrealm.capital.place.auction": {
+  "ja": "取引所",
+  "en": "Exchange"
+ },
+ "map.eternalrealm.capital.place.auction.desc": {
+  "ja": "冒険者どうしで品物を売り買いする",
+  "en": "Trade goods with other adventurers"
+ },
+ "map.eternalrealm.capital.place.mailbox": {
+  "ja": "郵便局",
+  "en": "Post office"
+ },
+ "map.eternalrealm.capital.place.mailbox.desc": {
+  "ja": "手紙と届いた品物を受け取る",
+  "en": "Collect letters and parcels"
+ },
+ "map.eternalrealm.capital.place.guild_registrar": {
+  "ja": "ギルド登録所",
+  "en": "Guild registry"
+ },
+ "map.eternalrealm.capital.place.guild_registrar.desc": {
+  "ja": "ギルドを作る・ギルドに入る",
+  "en": "Found a guild or join one"
+ },
+ "map.eternalrealm.capital.place.guild_estates": {
+  "ja": "ギルドハウス仲介所",
+  "en": "Guild house broker"
+ },
+ "map.eternalrealm.capital.place.guild_estates.desc": {
+  "ja": "ギルドハウスを手に入れる（ギルド門の広場）",
+  "en": "Get a guild house (on the Guild Gate Terrace)"
+ },
+ "map.eternalrealm.capital.place.gatekeeper": {
+  "ja": "迷宮管理局（転移門）",
+  "en": "Dungeon office (gate)"
+ },
+ "map.eternalrealm.capital.place.gatekeeper.desc": {
+  "ja": "ダンジョンへ送り出してもらう",
+  "en": "Be sent into the dungeons"
+ },
+ "map.eternalrealm.capital.place.arena_master": {
+  "ja": "闘技場",
+  "en": "Arena"
+ },
+ "map.eternalrealm.capital.place.arena_master.desc": {
+  "ja": "冒険者どうしで腕を競う",
+  "en": "Pit your skill against other adventurers"
+ },
+ "map.eternalrealm.capital.place.hall_of_fame": {
+  "ja": "栄誉の殿堂",
+  "en": "Hall of Fame"
+ },
+ "map.eternalrealm.capital.place.hall_of_fame.desc": {
+  "ja": "名高い冒険者たちの記録",
+  "en": "Records of renowned adventurers"
+ },
+ "map.eternalrealm.capital.place.ranking_board": {
+  "ja": "ランキング掲示板",
+  "en": "Ranking board"
+ },
+ "map.eternalrealm.capital.place.ranking_board.desc": {
+  "ja": "冒険者たちの順位",
+  "en": "How the adventurers rank"
+ },
+ "map.eternalrealm.capital.place.inn": {
+  "ja": "宿屋「星灯りの館」",
+  "en": "Starlight Inn"
+ },
+ "map.eternalrealm.capital.place.inn.desc": {
+  "ja": "客室を借りて、自分の部屋へ",
+  "en": "Rent a room and go to it"
+ },
+ "map.eternalrealm.capital.place.stable": {
+  "ja": "厩舎",
+  "en": "Stables"
+ },
+ "map.eternalrealm.capital.place.stable.desc": {
+  "ja": "騎乗獣を受け取る",
+  "en": "Get your mounts"
+ },
+ "map.eternalrealm.capital.place.castle_gate": {
+  "ja": "城門",
+  "en": "Castle gate"
+ },
+ "map.eternalrealm.capital.place.castle_gate.desc": {
+  "ja": "王城への入口",
+  "en": "The way into the castle"
+ },
+ "map.eternalrealm.capital.place.great_hall": {
+  "ja": "大広間",
+  "en": "Great hall"
+ },
+ "map.eternalrealm.capital.place.great_hall.desc": {
+  "ja": "王城の中心の広間",
+  "en": "The hall at the heart of the castle"
+ },
+ "map.eternalrealm.capital.place.throne": {
+  "ja": "玉座の間",
+  "en": "Throne room"
+ },
+ "map.eternalrealm.capital.place.throne.desc": {
+  "ja": "国王が座す",
+  "en": "Where the king sits"
+ },
+ "map.eternalrealm.capital.place.library": {
+  "ja": "王立書庫",
+  "en": "Royal library"
+ },
+ "map.eternalrealm.capital.place.library.desc": {
+  "ja": "古い書物が眠る",
+  "en": "Where old books sleep"
+ },
+ "map.eternalrealm.capital.place.observatory": {
+  "ja": "天文台",
+  "en": "Observatory"
+ },
+ "map.eternalrealm.capital.place.observatory.desc": {
+  "ja": "城の塔の最上階",
+  "en": "The top of the castle tower"
+ },
+ "map.eternalrealm.capital.place.chapel": {
+  "ja": "城の礼拝堂",
+  "en": "Castle chapel"
+ },
+ "map.eternalrealm.capital.place.chapel.desc": {
+  "ja": "静かな祈りの場",
+  "en": "A quiet place of prayer"
+ },
+ "map.eternalrealm.capital.district.castle": {
+  "ja": "王城",
+  "en": "Royal castle"
+ },
+ "map.eternalrealm.capital.district.plaza": {
+  "ja": "中央広場",
+  "en": "Central plaza"
+ },
+ "map.eternalrealm.capital.district.guild": {
+  "ja": "ギルド街",
+  "en": "Guild quarter"
+ },
+ "map.eternalrealm.capital.district.civic": {
+  "ja": "市庁区",
+  "en": "Civic quarter"
+ },
+ "map.eternalrealm.capital.district.shops": {
+  "ja": "商店街",
+  "en": "Shops"
+ },
+ "map.eternalrealm.capital.district.market": {
+  "ja": "市場",
+  "en": "Market"
+ },
+ "map.eternalrealm.capital.district.residential_east": {
+  "ja": "東の住宅街",
+  "en": "East houses"
+ },
+ "map.eternalrealm.capital.district.residential_west": {
+  "ja": "西の住宅街",
+  "en": "West houses"
+ },
+ "map.eternalrealm.capital.district.guild_gates": {
+  "ja": "ギルド門の広場",
+  "en": "Guild Gate Terrace"
+ },
+ "map.eternalrealm.capital.district.cathedral": {
+  "ja": "大聖堂",
+  "en": "Cathedral"
+ },
+ "map.eternalrealm.capital.district.south_west": {
+  "ja": "南西の住宅街",
+  "en": "Southwest houses"
+ },
+ "map.eternalrealm.capital.district.south_east": {
+  "ja": "宿屋街",
+  "en": "Inn quarter"
+ },
+ "map.eternalrealm.capital.district.harbour": {
+  "ja": "港",
+  "en": "Harbour"
+ },
+ "map.eternalrealm.capital.district.west_fields": {
+  "ja": "農場",
+  "en": "Farms"
+ },
+ "map.eternalrealm.capital.district.east_riverside": {
+  "ja": "東の川辺",
+  "en": "East riverside"
+ },
+ "map.eternalrealm.capital.dir.n": {
+  "ja": "北",
+  "en": "north"
+ },
+ "map.eternalrealm.capital.dir.ne": {
+  "ja": "北東",
+  "en": "northeast"
+ },
+ "map.eternalrealm.capital.dir.e": {
+  "ja": "東",
+  "en": "east"
+ },
+ "map.eternalrealm.capital.dir.se": {
+  "ja": "南東",
+  "en": "southeast"
+ },
+ "map.eternalrealm.capital.dir.s": {
+  "ja": "南",
+  "en": "south"
+ },
+ "map.eternalrealm.capital.dir.sw": {
+  "ja": "南西",
+  "en": "southwest"
+ },
+ "map.eternalrealm.capital.dir.w": {
+  "ja": "西",
+  "en": "west"
+ },
+ "map.eternalrealm.capital.dir.nw": {
+  "ja": "北西",
+  "en": "northwest"
+ },
+ "map.eternalrealm.capital.dir.here": {
+  "ja": "すぐ近くです",
+  "en": "You are right here"
+ },
+ "map.eternalrealm.capital.way": {
+  "ja": "現在地から%1$sへ %2$s ブロック",
+  "en": "%2$s blocks to the %1$s"
+ },
+ "map.eternalrealm.capital.guide.label": {
+  "ja": "%sへ",
+  "en": "To: %s"
+ },
+ "map.eternalrealm.capital.guide.started": {
+  "ja": "%sへ案内します（黄色い道しるべをたどってください）",
+  "en": "Guiding you to %s — follow the yellow dots"
+ },
+ "map.eternalrealm.capital.guide.arrived": {
+  "ja": "%sに着きました",
+  "en": "You have reached %s"
+ }
+}

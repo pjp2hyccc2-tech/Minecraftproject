@@ -1,0 +1,231 @@
+{
+ "x0": -192,
+ "z0": -224,
+ "width": 384,
+ "height": 416,
+ "scale": 2,
+ "places": [
+  {
+   "id": "arrival",
+   "kind": "arrival",
+   "x": 0,
+   "z": 14
+  },
+  {
+   "id": "goddess",
+   "kind": "revival",
+   "x": 33,
+   "z": -66
+  },
+  {
+   "id": "quest_board",
+   "kind": "quest",
+   "npc": "quest_board",
+   "x": -42,
+   "z": -27
+  },
+  {
+   "id": "item_shop",
+   "kind": "shop",
+   "npc": "item_shop",
+   "x": -20,
+   "z": 34
+  },
+  {
+   "id": "blacksmith",
+   "kind": "smith",
+   "npc": "blacksmith",
+   "x": -41,
+   "z": 29
+  },
+  {
+   "id": "job_master",
+   "kind": "job",
+   "npc": "job_master",
+   "x": 41,
+   "z": -30
+  },
+  {
+   "id": "auction",
+   "kind": "market",
+   "npc": "auction",
+   "x": 47,
+   "z": -14
+  },
+  {
+   "id": "mailbox",
+   "kind": "mail",
+   "npc": "mailbox",
+   "x": -37,
+   "z": 15
+  },
+  {
+   "id": "guild_registrar",
+   "kind": "guild",
+   "npc": "guild_registrar",
+   "x": -45,
+   "z": -18
+  },
+  {
+   "id": "guild_estates",
+   "kind": "guild",
+   "npc": "guild_estates",
+   "x": -30,
+   "z": -61
+  },
+  {
+   "id": "gatekeeper",
+   "kind": "gate",
+   "npc": "gatekeeper",
+   "x": 95,
+   "z": 15
+  },
+  {
+   "id": "arena_master",
+   "kind": "arena",
+   "npc": "arena_master",
+   "x": -117,
+   "z": -42
+  },
+  {
+   "id": "hall_of_fame",
+   "kind": "fame",
+   "npc": "hall_of_fame",
+   "x": 24,
+   "z": -29
+  },
+  {
+   "id": "ranking_board",
+   "kind": "fame",
+   "x": 21,
+   "z": -35
+  },
+  {
+   "id": "inn",
+   "kind": "inn",
+   "npc": "innkeeper",
+   "x": 43,
+   "z": 71
+  },
+  {
+   "id": "castle_gate",
+   "kind": "castle",
+   "x": 0,
+   "z": -87
+  },
+  {
+   "id": "great_hall",
+   "kind": "castle",
+   "x": 0,
+   "z": -118
+  },
+  {
+   "id": "throne",
+   "kind": "castle",
+   "x": 0,
+   "z": -183
+  },
+  {
+   "id": "library",
+   "kind": "castle",
+   "x": -44,
+   "z": -120
+  },
+  {
+   "id": "observatory",
+   "kind": "castle",
+   "x": -51,
+   "z": -156
+  },
+  {
+   "id": "chapel",
+   "kind": "castle",
+   "x": 33,
+   "z": -128
+  },
+  {
+   "id": "stable",
+   "kind": "stable",
+   "npc": "stable_master",
+   "x": -20,
+   "z": 69
+  }
+ ],
+ "districts": [
+  {
+   "id": "castle",
+   "x": 0.0,
+   "z": -147.5
+  },
+  {
+   "id": "plaza",
+   "x": 0.0,
+   "z": 0.0
+  },
+  {
+   "id": "guild",
+   "x": -28.5,
+   "z": -22.5
+  },
+  {
+   "id": "civic",
+   "x": 28.5,
+   "z": -22.5
+  },
+  {
+   "id": "shops",
+   "x": -28.5,
+   "z": 22.0
+  },
+  {
+   "id": "market",
+   "x": 28.5,
+   "z": 22.0
+  },
+  {
+   "id": "residential_east",
+   "x": 73.0,
+   "z": -22.5
+  },
+  {
+   "id": "residential_west",
+   "x": -78.5,
+   "z": -22.5
+  },
+  {
+   "id": "guild_gates",
+   "x": -54.0,
+   "z": -66.5
+  },
+  {
+   "id": "cathedral",
+   "x": 55.0,
+   "z": -66.5
+  },
+  {
+   "id": "south_west",
+   "x": -53.5,
+   "z": 60.5
+  },
+  {
+   "id": "south_east",
+   "x": 61.5,
+   "z": 60.5
+  },
+  {
+   "id": "harbour",
+   "x": 75.0,
+   "z": 113.5
+  },
+  {
+   "id": "west_fields",
+   "x": -136.5,
+   "z": 82.5
+  },
+  {
+   "id": "east_riverside",
+   "x": 136.0,
+   "z": -33.5
+  }
+ ]
+}

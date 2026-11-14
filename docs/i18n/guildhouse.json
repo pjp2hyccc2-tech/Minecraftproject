@@ -46,7 +46,6 @@
   "guildhouse.eternalrealm.tier.4": {"ja": "壮麗", "en": "Splendid"},
   "guildhouse.eternalrealm.tier.5": {"ja": "至高", "en": "Grand"},
   "npc.eternalrealm.guild_estates": {"ja": "ギルドハウス仲介人 セレスタン", "en": "Célestin, Guild House Broker"},
-  "map.eternalrealm.npc.guild_estates": {"ja": "ギルドハウス", "en": "Guild houses"},
   "block.eternalrealm.guild_portal": {"ja": "ギルド門の光", "en": "Guild Gate Light"},
   "block.eternalrealm.guild_board": {"ja": "ギルド掲示板", "en": "Guild Board"},
   "message.eternalrealm.guildhouse.error.not_in_guild": {"ja": "ギルドに入っていません。", "en": "You are not in a guild."},

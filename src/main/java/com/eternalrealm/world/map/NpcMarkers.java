@@ -20,7 +20,8 @@ public final class NpcMarkers {
     /** At most this many labels at once (the nearest first). */
     public static final int MAX_LABELS = 8;
     private static final List<String> ROLES = List.of("quest_board", "guild_registrar", "item_shop", "blacksmith",
-            "job_master", "auction", "mailbox", "gatekeeper", "arena_master", "hall_of_fame", "stable_master", "innkeeper", STORY);
+            "job_master", "auction", "mailbox", "gatekeeper", "arena_master", "hall_of_fame", "stable_master", "innkeeper",
+            "guild_estates", STORY);
 
     private NpcMarkers() {
     }

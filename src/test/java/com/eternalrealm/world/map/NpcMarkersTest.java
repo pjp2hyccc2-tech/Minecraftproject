@@ -19,7 +19,8 @@ import static org.junit.Assert.assertTrue;
 /** The minimap's NPC icons and labels in the capital. */
 public class NpcMarkersTest {
     private static final List<String> SERVICES = List.of("quest_board", "item_shop", "blacksmith", "job_master",
-            "auction", "mailbox", "guild_registrar", "gatekeeper", "arena_master", "hall_of_fame", "stable_master");
+            "auction", "mailbox", "guild_registrar", "gatekeeper", "arena_master", "hall_of_fame", "stable_master",
+            "innkeeper", "guild_estates");
 
     @Test
     public void everyServiceHasItsOwnIconAndLabel() throws IOException {

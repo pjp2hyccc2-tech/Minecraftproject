@@ -18,6 +18,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class MapGeometryTest {
     private static final double EPS = 1.0E-9;
@@ -106,6 +107,35 @@ public class MapGeometryTest {
         assertEquals(MapViewport.MAX_PAN, view.centerX(), EPS);
         assertEquals(0.0, view.centerZ(), EPS);
         assertEquals(view.screenX(500.0, 10.0), 10.0 + (500.0 - view.centerX()) * view.pixelsPerBlock(), 1.0E-6);
+    }
+
+    @Test
+    public void aViewWithItsOwnLimitsKeepsToThem() {
+        // the capital's map: 0.2..1.5 blocks a pixel, the centre inside the painting
+        MapViewport view = new MapViewport(500.0, 0.0, 9.0, 0.2, 1.5, -192.0, -224.0, 192.0, 192.0);
+        assertEquals(1.5, view.blocksPerPixel(), EPS);
+        assertEquals(192.0, view.centerX(), EPS);
+        view.zoom(1.0E-9, 0, 0, 0, 0);
+        assertEquals(0.2, view.blocksPerPixel(), EPS);
+        view.zoomTo(0.5);
+        assertEquals(0.5, view.blocksPerPixel(), EPS);
+        view.zoomTo(100.0);
+        assertEquals(1.5, view.blocksPerPixel(), EPS);
+        view.centerOn(-1000.0, 1000.0);
+        assertEquals(-192.0, view.centerX(), EPS);
+        assertEquals(192.0, view.centerZ(), EPS);
+        view.drag(-100000.0, 100000.0);
+        assertEquals(192.0, view.centerX(), EPS);
+        assertEquals(-224.0, view.centerZ(), EPS);
+        view.centerOn(Double.NaN, Double.POSITIVE_INFINITY);
+        assertEquals(0.0, view.centerX(), EPS);
+        assertEquals(0.0, view.centerZ(), EPS);
+        try {
+            new MapViewport(0, 0, 1, 2.0, 1.0, 0, 0, 1, 1);
+            fail("a zoom range upside down");
+        } catch (IllegalArgumentException expected) {
+            // fine
+        }
     }
 
     @Test

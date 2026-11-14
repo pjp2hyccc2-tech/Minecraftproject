@@ -201,7 +201,23 @@ ICONS = [
         ".o........o.",
     ], {"W": hexc("f2f0e8"), "R": hexc("c0383a"), "r": hexc("e86a5a"), "B": hexc("7a4a22"),
         "Y": hexc("ffe27a")}),
-    # 12 story character: a speech bubble
+    # 12 guild house broker: a red-roofed house with the guild's blue banner on its front
+    ("guild_estates", [
+        "............",
+        ".....oo.....",
+        "....oRRo....",
+        "...oRRRro...",
+        "..oRRRRRro..",
+        ".oRRRRRRRro.",
+        "oooooooooooo",
+        ".oWWWBBWWWo.",
+        ".oWDWBYWDWo.",
+        ".oWWWBBWWWo.",
+        ".oWWWB.WWWo.",
+        ".oooooooooo.",
+    ], {"R": hexc("c0483a"), "r": hexc("8a2c26"), "W": hexc("ead9b8"), "D": hexc("4a3a5a"),
+        "B": hexc("2f6fc0"), "Y": hexc("ffd75a")}),
+    # 13 story character: a speech bubble
     ("story", [
         "............",
         "..oooooooo..",

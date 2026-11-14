@@ -743,3 +743,22 @@ Decisions:
   a wall of two right behind a lowered column follows. Rocks higher than that, anything built, the capital, waystones, entrances and
   set pieces are left as they are.
 
+
+## D-CAPITALMAP: a map of the capital painted from its blueprint, and names that give way (2026-11-14)
+
+The owner: 「マップがテレポート先の名前で埋まってて見にくいからどうにかして。王国に入るとまた王国専用のマップを開けるようにして、どこに
+何があるかみやすくして」. The realm map wrote every waystone's name (55 of them) from a middle zoom on and in the travel menu always,
+on top of each other; inside the capital the same map showed the town as a few pixels.
+Decisions:
+- **Names give way instead of being dropped by kind**: every map name plate is asked for while drawing and placed together
+  (`LabelLayout`): what must show first (field names, the capital, the tower, risen calamities, wanderers, the pointed-at, chosen or
+  current place), then the others by rank where they fit without touching. Waystone names wait for a closer zoom (known 0.3 px a
+  block, unknown 0.6) — the travel menu's list names them all. One rule for both maps, tested without a client.
+- **The capital's map is a picture of the shipped blueprint**, not a live scan: the capital is built from `data/eternalrealm/capital`,
+  so a script paints it from above once (two pixels a block) and lists its places from the blueprint's named spots; a test checks the
+  places against the blueprint so they cannot drift apart. No chunk scanning on the client, the same picture for everyone, crisp at
+  every zoom of the screen.
+- **Where things are, what they are for, how to get there**: a list by group beside the map (one click goes there and says who works
+  there, what one does there and which way it is), the town NPCs' quest marks on their places, and 「ここへ案内」 which reuses the quest
+  guide's dots (a picked place goes before the quest's until reached). The map key opens it inside the capital, the realm map outside;
+  each map has a button to the other.

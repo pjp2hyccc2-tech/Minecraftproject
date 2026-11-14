@@ -19,7 +19,11 @@ import java.util.Optional;
  * channel {@value #CHANNEL}); this walks there over the loaded terrain ({@link PathSearch}, a little each tick) and keeps
  * the yellow dots of the route for the ground ({@link GuideRenderer}), the minimap and the label under it. A route that
  * cannot reach the place yet ends where it is closest; it is searched again as the player walks along it, and at once
- * when they stray from it. Client thread only.
+ * when they stray from it.
+ *
+ * <p>A place picked on the capital's map (「ここへ案内」, 2026-11-14) is guided the same way and goes before the quest's
+ * place until the player gets there, leaves that world or stops it ({@link #guideTo}); then the quest's guide comes
+ * back. Client thread only.
  */
 public final class GuideClient {
     public static final String CHANNEL = "quest_guide";
@@ -40,6 +44,9 @@ public final class GuideClient {
     private static final double ARRIVED = 3.0;
 
     private static JsonObject guide;
+    /** A place picked on the capital's map: goes before the quest's while it lasts. */
+    private static JsonObject picked;
+    private static Component pickedName;
     private static String targetKey = "";
     private static PathSearch search;
     private static ClientTerrain terrain;
@@ -54,9 +61,49 @@ public final class GuideClient {
 
     public static void accept(JsonObject data) {
         guide = data;
+        retarget();
+    }
+
+    /**
+     * Guides to a place picked on the capital's map ({@code name}: what it is, "道具屋") in the world
+     * {@code dimension}, before the quest's place, until the player gets there.
+     */
+    public static void guideTo(String dimension, double x, double z, Component name) {
+        JsonObject data = new JsonObject();
+        data.addProperty("dim", dimension);
+        data.addProperty("x", x);
+        data.addProperty("z", z);
+        data.addProperty("active", true);
+        picked = data;
+        pickedName = name;
+        retarget();
+    }
+
+    /** Stops guiding to the picked place (the quest's guide comes back). */
+    public static void stopGuiding() {
+        picked = null;
+        pickedName = null;
+        retarget();
+    }
+
+    /** The picked place being guided to ({x, z}), if any. */
+    public static Optional<double[]> picked() {
+        return picked == null ? Optional.empty()
+                : Optional.of(new double[]{ClientUiState.doubleOr(picked, "x", 0), ClientUiState.doubleOr(picked, "z", 0)});
+    }
+
+    /** The place being guided to: the picked one, else the quest's. */
+    private static JsonObject current() {
+        return picked != null ? picked : guide;
+    }
+
+    /** A new place: the label is read again and the route searched anew. */
+    private static void retarget() {
         label = null;
-        String key = ClientUiState.stringOr(data, "dim", "") + "|" + ClientUiState.stringOr(data, "x", "") + "|"
-                + ClientUiState.stringOr(data, "z", "") + "|" + bool(data, "active");
+        JsonObject data = current();
+        String key = data == null ? "" : (picked != null ? "picked|" : "") + ClientUiState.stringOr(data, "dim", "")
+                + "|" + ClientUiState.stringOr(data, "x", "") + "|" + ClientUiState.stringOr(data, "z", "") + "|"
+                + bool(data, "active");
         if (!key.equals(targetKey)) {
             targetKey = key;
             forget();
@@ -80,6 +127,8 @@ public final class GuideClient {
 
     public static void clear() {
         guide = null;
+        picked = null;
+        pickedName = null;
         targetKey = "";
         label = null;
         forget();
@@ -93,11 +142,15 @@ public final class GuideClient {
         }
     }
 
-    /** A place to go to in the world the player is in. */
+    /**
+     * A place to go to in the world the player is in (a picked place is guided even when the quest's route is
+     * switched off in the settings: it was asked for).
+     */
     public static boolean active() {
         Minecraft minecraft = Minecraft.getInstance();
-        return enabled() && guide != null && bool(guide, "active") && minecraft.level != null
-                && minecraft.level.dimension().location().toString().equals(ClientUiState.stringOr(guide, "dim", ""));
+        JsonObject data = current();
+        return (picked != null || enabled()) && data != null && bool(data, "active") && minecraft.level != null
+                && minecraft.level.dimension().location().toString().equals(ClientUiState.stringOr(data, "dim", ""));
     }
 
     /** The place ({x, z}). */
@@ -105,19 +158,25 @@ public final class GuideClient {
         if (!active()) {
             return Optional.empty();
         }
-        return Optional.of(new double[]{ClientUiState.doubleOr(guide, "x", 0), ClientUiState.doubleOr(guide, "z", 0)});
+        JsonObject data = current();
+        return Optional.of(new double[]{ClientUiState.doubleOr(data, "x", 0), ClientUiState.doubleOr(data, "z", 0)});
     }
 
-    /** What the place is for ("森の賢者と話す"). */
+    /** What the place is for ("森の賢者と話す", "道具屋へ"). */
     public static Optional<Component> label() {
         if (!active()) {
             return Optional.empty();
         }
         if (label == null) {
-            try {
-                label = Component.Serializer.fromJson(ClientUiState.stringOr(guide, "label", "\"\""));
-            } catch (JsonParseException | IllegalStateException e) {
-                label = Component.empty();
+            if (picked != null) {
+                label = Component.translatable("map.eternalrealm.capital.guide.label",
+                        pickedName == null ? Component.empty() : pickedName);
+            } else {
+                try {
+                    label = Component.Serializer.fromJson(ClientUiState.stringOr(guide, "label", "\"\""));
+                } catch (JsonParseException | IllegalStateException e) {
+                    label = Component.empty();
+                }
             }
         }
         return Optional.ofNullable(label);
@@ -136,6 +195,18 @@ public final class GuideClient {
     public static void tick() {
         Minecraft minecraft = Minecraft.getInstance();
         LocalPlayer player = minecraft.player;
+        if (picked != null && player != null && minecraft.level != null) {
+            double[] at = picked().orElseThrow();
+            if (!minecraft.level.dimension().location().toString().equals(ClientUiState.stringOr(picked, "dim", ""))) {
+                stopGuiding(); // left the capital's world: the picked place is forgotten
+            } else if (Math.hypot(at[0] - player.getX(), at[1] - player.getZ()) < ARRIVED + 1.0) {
+                player.displayClientMessage(Component.translatable("map.eternalrealm.capital.guide.arrived",
+                        pickedName == null ? Component.empty() : pickedName)
+                        .withStyle(net.minecraft.ChatFormatting.GOLD), true);
+                com.eternalrealm.client.sound.UiSounds.click();
+                stopGuiding();
+            }
+        }
         if (!active() || player == null || minecraft.level == null) {
             if (search != null || !dots.isEmpty()) {
                 forget();

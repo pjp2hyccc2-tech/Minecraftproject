@@ -407,3 +407,8 @@
 | GameTest `ShoreGameTests` | 池の周り: 1段高い岸 → 水と同じ高さ、2段 → 1段、その後ろの壁も下がる、人が置いた板はそのまま、岸の花は消える、もとから水と同じ高さの地面はそのまま |
 | Unit `SpecialMovesTest`（追加） | ヌシは体の3技＋体の種類に合った奥義3つ、奥義は予兆1.5秒以上、ヌシは最も頻繁に技を使う、奥義にも名前がある |
 | Unit `BossesContentTest`（確認） | 追加した災厄の技も予兆・体からの届き・環の内側の余地・連携の長さの規則を満たす |
+| GameTest `HazardGameTests.aLordCallsForHelpAndFliesIntoARage`（更新） | ヌシは体の3技とヌシの奥義3つの計6技を使う |
+| Unit `LabelLayoutTest` | 地図の名前札: 重なる札は順位で譲る（同順位は先に頼んだ方）、必ず出す札は重なっても出て場所を取る、地図の外・隙間1px未満は出さない、55個の転移碑の名前は重ならない分だけ |
+| Unit `CapitalMapTest` | 王都の地図: 主な施設が全部載り絵の大きさが範囲と合う、どの場所も王都の中で設計図の NPC の位置どおり、専用のアイコンと日英の名前・説明、アイコン帳、一覧は見出し順、8方位、壊れた項目と範囲のない地図 |
+| Unit `MapGeometryTest.aViewWithItsOwnLimitsKeepsToThem` | 範囲を指定した表示: 倍率と中心が範囲に収まる、指定の倍率へ、NaN・無限大、逆さまの範囲は拒否 |
+| Unit `NpcMarkersTest`（更新） | ギルドハウス仲介人と宿の女将にも専用のアイコン |

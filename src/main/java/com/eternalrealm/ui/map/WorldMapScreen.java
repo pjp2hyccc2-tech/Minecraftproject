@@ -13,6 +13,7 @@ import com.eternalrealm.world.gen.AstoriaAreas;
 import com.eternalrealm.world.gen.AstoriaLayout;
 import com.eternalrealm.world.map.AtlasPainter;
 import com.eternalrealm.world.map.FieldMaskPainter;
+import com.eternalrealm.world.map.LabelLayout;
 import com.eternalrealm.world.map.MapMarkers;
 import com.eternalrealm.world.map.MapMath;
 import com.eternalrealm.world.map.MapView;
@@ -66,6 +67,16 @@ public final class WorldMapScreen extends Screen {
     private static final int CLICK_SLOP = 4;
     /** Width of the footer's "to the capital" button. */
     private static final int CAPITAL_BUTTON = 96;
+    /** Width of the footer's "map of the capital" button. */
+    private static final int CAPITAL_MAP_BUTTON = 84;
+    /** Known waystones are named from this zoom on (pixels per block), the others from {@link #UNKNOWN_NAMES}. */
+    private static final double KNOWN_NAMES = 0.3;
+    private static final double UNKNOWN_NAMES = 0.6;
+    /** Name plates' ranks (see {@link LabelLayout}): lower ones are placed first. */
+    private static final int RANK_DUNGEON = 1;
+    private static final int RANK_KNOWN_STONE = 2;
+    private static final int RANK_STONE = 3;
+    private static final int RANK_HABITAT = 4;
 
     private enum Mode {
         REALM, DUNGEON
@@ -90,6 +101,11 @@ public final class WorldMapScreen extends Screen {
 
     private final List<Hover> hovers = new ArrayList<>();
     private final List<StoneSpot> stoneSpots = new ArrayList<>();
+    /** The name plates asked for while drawing the realm, placed together so none covers another. */
+    private final List<LabelLayout.Box> plateBoxes = new ArrayList<>();
+    private final List<Component> plateTexts = new ArrayList<>();
+    private int mouseX = -1000;
+    private int mouseY = -1000;
     private final Travel travel;
     private Mode mode = Mode.REALM;
     private Tab tab;
@@ -225,6 +241,12 @@ public final class WorldMapScreen extends Screen {
             addRenderableWidget(Button.builder(tabLabel(Tab.WHOLE), b -> showTab(Tab.WHOLE, field))
                     .bounds(mid + 2, 4, 94, 16).build());
         }
+        if (capitalMapButton()) {
+            addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.map.capital_map"),
+                    b -> CapitalMapScreen.open()).bounds(width - MARGIN - footerButtons(), height - FOOTER + 1,
+                    CAPITAL_MAP_BUTTON, 14).tooltip(net.minecraft.client.gui.components.Tooltip.create(
+                    Component.translatable("screen.eternalrealm.map.capital_map_tip"))).build());
+        }
         if (capitalButton()) {
             addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.map.to_capital"), b -> {
                 onClose();
@@ -243,6 +265,16 @@ public final class WorldMapScreen extends Screen {
     /** The footer's "to the capital" button: on the realm map (not at a waystone, not in a dungeon). */
     private boolean capitalButton() {
         return mode == Mode.REALM && travel == null;
+    }
+
+    /** The footer's "map of the capital" button: on アストリア's map (not at a waystone, not in a dungeon). */
+    private boolean capitalMapButton() {
+        return capitalButton() && ClientMapState.view().realm().astoria() && CapitalMapScreen.data().isPresent();
+    }
+
+    /** Width the footer's buttons take on the right (with their gaps). */
+    private int footerButtons() {
+        return (capitalButton() ? CAPITAL_BUTTON + 4 : 0) + (capitalMapButton() ? CAPITAL_MAP_BUTTON + 6 : 0);
     }
 
     private Component tabLabel(Tab which) {
@@ -474,6 +506,10 @@ public final class WorldMapScreen extends Screen {
         renderBackground(graphics);
         hovers.clear();
         stoneSpots.clear();
+        plateBoxes.clear();
+        plateTexts.clear();
+        this.mouseX = dragging ? -1000 : mouseX;
+        this.mouseY = dragging ? -1000 : mouseY;
         int x0 = frameLeft();
         int y0 = frameTop();
         int x1 = frameRight();
@@ -495,7 +531,7 @@ public final class WorldMapScreen extends Screen {
                 ? Component.translatable(travel != null ? "screen.eternalrealm.waystone.hint"
                 : "screen.eternalrealm.map.hint_tabs", MapKeys.WORLD_MAP.getTranslatedKeyMessage())
                 : Component.translatable("screen.eternalrealm.map.hint", MapKeys.WORLD_MAP.getTranslatedKeyMessage());
-        int hintWidth = width - MARGIN * 2 - (capitalButton() ? CAPITAL_BUTTON + 6 : 0);
+        int hintWidth = width - MARGIN * 2 - footerButtons();
         List<net.minecraft.util.FormattedCharSequence> hintLines = font.split(hint.copy()
                 .withStyle(ChatFormatting.GRAY), Math.max(40, hintWidth));
         if (!hintLines.isEmpty()) {
@@ -542,8 +578,8 @@ public final class WorldMapScreen extends Screen {
             MutableComponent name = Component.translatable(area.translationKey());
             name.withStyle(style -> style.withColor(open ? MapMath.mix(area.color(), 0xFFFFFF, 0.45) : 0x9A9A9A));
             Component sub = open ? levelRange(area) : Component.translatable("map.eternalrealm.sealed");
-            label(graphics, name, lx, ly - 5.0F);
-            label(graphics, sub.copy().withStyle(open ? ChatFormatting.GRAY : ChatFormatting.DARK_GRAY), lx, ly + 5.0F);
+            reserve(graphics, name, lx, ly - 5.0F);
+            reserve(graphics, sub.copy().withStyle(open ? ChatFormatting.GRAY : ChatFormatting.DARK_GRAY), lx, ly + 5.0F);
         }
         // the monsters' habitats, then the fixed places
         if (astoria) {
@@ -553,6 +589,7 @@ public final class WorldMapScreen extends Screen {
             }
             drawThreats(graphics, cx, cy);
         }
+        drawPlates(graphics);
         if (minecraft.level == null || !ClientMapState.inRealm(minecraft.level)) {
             graphics.drawCenteredString(font, Component.translatable("screen.eternalrealm.map.elsewhere"),
                     Math.round(cx), frameBottom() - 14, 0xFFFF8060);
@@ -764,8 +801,8 @@ public final class WorldMapScreen extends Screen {
                 MapDraw.rect(graphics, sx - 2.0F, sy - 5.0F, sx + 2.0F, sy - 1.0F, 0xFF8A6A2A);
                 lines.add(Component.translatable(MapMarkers.CAPITAL_KEY).withStyle(ChatFormatting.GOLD));
                 lines.add(Component.translatable("map.eternalrealm.capital.desc").withStyle(ChatFormatting.GRAY));
-                label(graphics, Component.translatable(MapMarkers.CAPITAL_KEY).withStyle(ChatFormatting.GOLD), sx,
-                        sy + 12.0F);
+                plate(Component.translatable(MapMarkers.CAPITAL_KEY).withStyle(ChatFormatting.GOLD), sx, sy + 12.0F, 0,
+                        true);
             }
             case TOWER -> {
                 MapDraw.triangle(graphics, sx, sy - 10.0F, sx - 6.0F, sy + 6.0F, sx + 6.0F, sy + 6.0F, 0xFF000000);
@@ -776,8 +813,8 @@ public final class WorldMapScreen extends Screen {
                         .withStyle(ChatFormatting.GRAY));
                 lines.add(Component.translatable(view.finalBossUnlocked() ? "map.eternalrealm.tower.final_open"
                         : "map.eternalrealm.tower.desc").withStyle(ChatFormatting.DARK_PURPLE));
-                label(graphics, Component.translatable(MapMarkers.TOWER_KEY).withStyle(ChatFormatting.LIGHT_PURPLE), sx,
-                        sy + 13.0F);
+                plate(Component.translatable(MapMarkers.TOWER_KEY).withStyle(ChatFormatting.LIGHT_PURPLE), sx,
+                        sy + 13.0F, 0, true);
             }
             case DUNGEON -> {
                 MapDraw.diamond(graphics, sx, sy, 6.0F, 0xFF000000);
@@ -791,9 +828,10 @@ public final class WorldMapScreen extends Screen {
                 if (!open) {
                     lines.add(Component.translatable("map.eternalrealm.sealed").withStyle(ChatFormatting.RED));
                 }
-                if (ppb >= 0.1) {
-                    label(graphics, Component.translatable("map.eternalrealm.dungeon_label", name, place.level())
-                            .withStyle(open ? ChatFormatting.AQUA : ChatFormatting.GRAY), sx, sy + 11.0F);
+                if (ppb >= 0.1 || near(sx, sy)) {
+                    plate(Component.translatable("map.eternalrealm.dungeon_label", name, place.level())
+                            .withStyle(open ? ChatFormatting.AQUA : ChatFormatting.GRAY), sx, sy + 11.0F, RANK_DUNGEON,
+                            near(sx, sy));
                 }
             }
             case WAYSTONE -> {
@@ -821,9 +859,13 @@ public final class WorldMapScreen extends Screen {
                     lines.add(Component.translatable(travel != null ? "map.eternalrealm.waystone.choose"
                             : "map.eternalrealm.waystone.known").withStyle(ChatFormatting.YELLOW));
                 }
-                if (ppb >= 0.15 || travel != null || here) {
-                    label(graphics, name.copy().withStyle(known ? ChatFormatting.AQUA : ChatFormatting.GRAY), sx,
-                            sy + 11.0F);
+                // names only where they help (2026-11-14: 「マップがテレポート先の名前で埋まってて見にくい」): the stone
+                // one stands at, chooses or points at; the known ones once zoomed in, the others closer still, and
+                // none covering another (the travel list names them all)
+                boolean pointed = here || chosen || near(sx, sy - 3.0F);
+                if (pointed || ppb >= (known ? KNOWN_NAMES : UNKNOWN_NAMES)) {
+                    plate(name.copy().withStyle(known ? ChatFormatting.AQUA : ChatFormatting.GRAY), sx, sy + 11.0F,
+                            known ? RANK_KNOWN_STONE : RANK_STONE, pointed);
                 }
                 stoneSpots.add(new StoneSpot(sx, sy - 3.0F, id));
             }
@@ -870,8 +912,9 @@ public final class WorldMapScreen extends Screen {
             MapDraw.ring(graphics, sx, sy, Math.max(0.0F, spread - 0.8F), spread, 0x58000000 | color);
             Component name = Component.translatable(template.translationKey());
             if (ppb >= 0.55) {
-                label(graphics, name.copy().withStyle(style -> style.withColor(color)), sx, sy - 4.0F);
-                label(graphics, Component.literal("Lv" + min + "-" + max).withStyle(ChatFormatting.GRAY), sx, sy + 5.0F);
+                plate(name.copy().withStyle(style -> style.withColor(color))
+                        .append(Component.literal(" Lv" + min + "-" + max).withStyle(ChatFormatting.GRAY)), sx, sy,
+                        RANK_HABITAT, near(sx, sy));
             }
             List<Component> lines = new ArrayList<>();
             lines.add(Component.translatable("screen.eternalrealm.map.habitat", name, min, max)
@@ -923,8 +966,8 @@ public final class WorldMapScreen extends Screen {
                         : awake ? "threat.eternalrealm.board.waiting" : "threat.eternalrealm.board.sleeping")
                         .withStyle(awake ? ChatFormatting.RED : ChatFormatting.DARK_GRAY));
                 if (awake) {
-                    label(graphics, Component.translatable("threat.eternalrealm.map.calamity").withStyle(ChatFormatting.RED),
-                            sx, sy + 10.0F);
+                    plate(Component.translatable("threat.eternalrealm.map.calamity").withStyle(ChatFormatting.RED),
+                            sx, sy + 10.0F, 0, true);
                 }
                 hovers.add(new Hover(sx, sy, lines));
             }
@@ -977,8 +1020,8 @@ public final class WorldMapScreen extends Screen {
                             .withStyle(ChatFormatting.RED)
                             : Component.translatable(com.eternalrealm.world.field.Wanderers.BOARD_OUT,
                             ThreatOverlay.clock(leaves)).withStyle(ChatFormatting.YELLOW));
-                    label(graphics, Component.translatable(com.eternalrealm.world.field.Wanderers.MAP)
-                            .withStyle(ChatFormatting.GOLD), sx, sy + 10.0F);
+                    plate(Component.translatable(com.eternalrealm.world.field.Wanderers.MAP)
+                            .withStyle(ChatFormatting.GOLD), sx, sy + 10.0F, 0, true);
                     hovers.add(new Hover(sx, sy, lines));
                 }
             }
@@ -1100,6 +1143,48 @@ public final class WorldMapScreen extends Screen {
         float x = (float) viewport.screenX((rect.minX() + rect.maxX() + 1) / 2.0, cx);
         float y = (float) viewport.screenY((rect.minZ() + rect.maxZ() + 1) / 2.0, cy);
         label(graphics, text, x, y - 4.0F);
+    }
+
+    /**
+     * Asks for a name plate centred on ({@code x}, {@code y}): drawn with the others by {@link #drawPlates} where it
+     * covers none placed before it ({@code always}: whatever it covers).
+     */
+    private void plate(Component text, float x, float y, int rank, boolean always) {
+        int width = font.width(text);
+        int left = Math.round(x - width / 2.0F);
+        int top = Math.round(y - 4.0F);
+        plateBoxes.add(new LabelLayout.Box(left - 2, top - 1, left + width + 2, top + 9, rank, always));
+        plateTexts.add(text);
+    }
+
+    /** Draws a name plate now, under the markers, and keeps its room from the plates placed later. */
+    private void reserve(GuiGraphics graphics, Component text, float x, float y) {
+        label(graphics, text, x, y);
+        plate(text, x, y, 0, true);
+        plateTexts.set(plateTexts.size() - 1, null);
+    }
+
+    /** Draws the name plates asked for that fit (see {@link LabelLayout}). */
+    private void drawPlates(GuiGraphics graphics) {
+        for (int index : LabelLayout.place(plateBoxes, frameLeft(), frameTop(), frameRight(), frameBottom())) {
+            if (plateTexts.get(index) == null) {
+                continue; // drawn already (reserve)
+            }
+            LabelLayout.Box box = plateBoxes.get(index);
+            int left = Math.round(box.x0()) + 2;
+            int top = Math.round(box.y0()) + 1;
+            graphics.fill(left - 2, top - 1, Math.round(box.x1()), top + 9, LABEL_BACKGROUND);
+            graphics.drawString(font, plateTexts.get(index), left, top, 0xFFFFFF, false);
+        }
+        plateBoxes.clear();
+        plateTexts.clear();
+    }
+
+    /** The mouse points at a marker at ({@code x}, {@code y}). */
+    private boolean near(float x, float y) {
+        float dx = x - mouseX;
+        float dy = y - mouseY;
+        return dx * dx + dy * dy <= HOVER_PIXELS * HOVER_PIXELS;
     }
 
     /** Text centred on (x, y) on a dark plate. */

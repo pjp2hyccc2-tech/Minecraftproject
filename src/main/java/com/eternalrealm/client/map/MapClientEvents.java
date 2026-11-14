@@ -2,7 +2,7 @@ package com.eternalrealm.client.map;
 
 import com.eternalrealm.core.ModInfo;
 import com.eternalrealm.ui.map.AtlasTexture;
-import com.eternalrealm.ui.map.WorldMapScreen;
+import com.eternalrealm.ui.map.CapitalMapScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
@@ -24,7 +24,7 @@ public final class MapClientEvents {
         Minecraft minecraft = Minecraft.getInstance();
         while (MapKeys.WORLD_MAP.consumeClick()) {
             if (minecraft.player != null && minecraft.screen == null) {
-                WorldMapScreen.open();
+                CapitalMapScreen.openForPlayer(); // the capital's own map inside it
             }
         }
         while (MapKeys.MINIMAP_TOGGLE.consumeClick()) {

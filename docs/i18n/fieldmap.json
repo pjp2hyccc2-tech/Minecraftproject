@@ -266,5 +266,9 @@
   "map.eternalrealm.npc.innkeeper": {
     "ja": "宿屋",
     "en": "Inn"
+  },
+  "map.eternalrealm.npc.guild_estates": {
+    "ja": "ギルドハウス",
+    "en": "Guild houses"
   }
 }
