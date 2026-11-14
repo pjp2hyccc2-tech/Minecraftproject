@@ -150,6 +150,43 @@ public class SecondClassTest {
         assertNull(SkillTree.bindings(JobType.KNIGHT, 45, learned, stored)[1]);
     }
 
+    /**
+     * The owner, 2026-11-15: 「二次職の攻撃スキルの＋のパーセンテージを最低でも450とかにして攻撃特化の職業なら最高で1600％くらいに
+     * して」. Every damaging skill of a class shows at least 450 % at level 1 (its hits, or its damaging zone's pulses all
+     * together); the attack classes' strongest skill reaches 1600 %, the others stay lower.
+     */
+    @Test
+    public void classAttackSkillsHitForAtLeast450AndAttackClassesReach1600Percent() {
+        java.util.Set<JobClass> attackers = java.util.EnumSet.of(JobClass.SHINOBI, JobClass.REAPER, JobClass.SWORD_SAINT,
+                JobClass.HEXBLADE, JobClass.SAGE, JobClass.NECROMANCER, JobClass.SNIPER, JobClass.SPIRIT_ARCHER);
+        for (JobClass jobClass : JobClass.values()) {
+            double best = 0.0;
+            for (SkillDefinition skill : Jobs.classSkills(jobClass)) {
+                if (!skill.isUsable()) {
+                    continue;
+                }
+                double hits = skill.totalMultiplier();
+                double zones = 0.0;
+                for (SkillEffect effect : skill.effects()) {
+                    if (effect instanceof SkillEffect.Zone zone && !(zone.healFraction() > 0.0)) {
+                        zones += zone.damageMultiplier() * zone.pulses();
+                    }
+                }
+                if (hits > 0.0) {
+                    assertTrue(skill.id() + " shows " + hits * 100 + " %", hits >= 4.5 - 1e-9);
+                } else if (zones > 0.0) {
+                    assertTrue(skill.id() + " zone " + zones * 100 + " %", zones >= 4.5 - 1e-9);
+                }
+                best = Math.max(best, hits + zones);
+            }
+            if (attackers.contains(jobClass)) {
+                assertEquals(jobClass + " at its strongest", 16.0, best, 0.05);
+            } else {
+                assertTrue(jobClass + " at its strongest " + best, best >= 8.0 && best <= 12.05);
+            }
+        }
+    }
+
     @Test
     public void aClassesPassivesCountOnlyForTheClass() {
         Map<String, Integer> learned = Map.of("guardian_stone_skin", 3, "paladin_devotion", 3);

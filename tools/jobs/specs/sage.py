@@ -10,14 +10,14 @@ BRANCHES = [("融合", "Fusion"), ("叡智", "Sagecraft")]
 NODES = [
     # ------------------------------------------------------------------ 0: 融合
     ("a", "steam_burst", 0, 0, 1,
-     '.cd(9).theme(FIRE).act(20, 16, 16, hit(9, ahead(3.0, 4.0), 2.4, 0.8))'
+     '.cd(9).theme(FIRE).act(20, 16, 16, hit(9, ahead(3.0, 4.0), 6.03, 0.8))'
      '.fx(afflict(0, BLIND, 40, 0), afflict(0, BURN, 40, 0), vis(START, "cast"), vis(0, "mist"), vis(0, "burst"))',
      "drop cloud burn FIRE",
      "蒸気爆発", "Steam Burst",
      "炎と水を前方でぶつけ、蒸気の爆発を起こす。巻き込まれた敵は火傷を負い、目がくらむ。",
      "Clash fire and water ahead of you into an explosion of steam; caught foes are scalded and blinded."),
     ("a", "frostfire_bolt", 0, 1, 1,
-     '.cd(8).theme(FROST).act(18, 14, 14, shot(7, orb("frost_orb", 1.8, 30).withExplosion(2.4), 2.2, 0.4))'
+     '.cd(8).theme(FROST).act(18, 14, 14, shot(7, orb("frost_orb", 1.8, 30).withExplosion(2.4), 5.65, 0.4))'
      '.fx(afflict(0, FREEZE, 40, 0), afflict(0, BURN, 40, 0), vis(START, "cast"))',
      "orb hail freeze FROST",
      "氷炎弾", "Frostfire Bolt",
@@ -27,7 +27,7 @@ NODES = [
      "tome - - ARCANE",
      "元素の洞察", "Elemental Insight", "魔法攻撃力が上がる。", "Raises magic power."),
     ("a", "plasma_lance", 0, 3, 1,
-     '.cd(10).theme(THUNDER).act(18, 14, 15, shot(7, orb("thunder_orb", 2.6, 24).withPierce(6), 2.6, 0.4))'
+     '.cd(10).theme(THUNDER).act(18, 14, 15, shot(7, orb("thunder_orb", 2.6, 24).withPierce(6), 6.41, 0.4))'
      '.fx(afflict(0, STUN, 15, 0), vis(START, "cast"), vis(0, "lightning"))',
      "lance beam stun THUNDER",
      "雷炎槍", "Plasma Lance",
@@ -36,7 +36,7 @@ NODES = [
 
     ("a", "lava_rain", 0, 0, 2,
      '.req("steam_burst", 3).cd(16).theme(FIRE).act(24, 20, 20,'
-     ' shots(4, 4, 3, orb("magma", 1.4, 40).withExplosion(2.0).fallingFromAbove(), 1.4, 0.4))'
+     ' shots(4, 4, 3, orb("magma", 1.4, 40).withExplosion(2.0).fallingFromAbove(), 3.16, 0.4))'
      '.fx(afflict(2, BURN, 80, 0), vis(START, "cast"), vis(0, "rain"))',
      "meteor rain x3 MAGMA",
      "熔岩雨", "Lava Rain",
@@ -47,7 +47,7 @@ NODES = [
      "二重詠唱", "Double Casting", "スキルの再使用時間が短くなる。", "Skills recover faster."),
     ("a", "glacial_storm", 0, 2, 2,
      '.req("frostfire_bolt", 3).cd(20).theme(FROST).act(18, 14, 20, pause(5))'
-     '.fx(zone(0, LOOK, 10.0, 4.5, 6, 6, 10, 0.6, SLOW, 40, 2), vis(START, "cast"), vis(0, "storm"))',
+     '.fx(zone(0, LOOK, 10.0, 4.5, 6, 6, 10, 1.39, SLOW, 40, 2), vis(START, "cast"), vis(0, "storm"))',
      "snowflake hail slow FROST",
      "氷嵐", "Glacial Storm",
      "狙った場所に氷の嵐を起こす。嵐の中の敵は凍える風に切り刻まれ、足が鈍る。",
@@ -57,14 +57,14 @@ NODES = [
      "魔力共鳴", "Mana Resonance", "スキルの威力と会心率が上がる。", "Raises skill power and critical chance."),
 
     ("a", "prism_ray", 0, 0, 3,
-     '.req("lava_rain", 1).cd(18).theme(ARCANE).act(24, 20, 22, hit(12, beam(12.0, 1.4), 3.0, 0.6))'
+     '.req("lava_rain", 1).cd(18).theme(ARCANE).act(24, 20, 22, hit(12, beam(12.0, 1.4), 7.18, 0.6))'
      '.fx(afflict(0, BLIND, 60, 0), afflict(0, VULNERABLE, 100, 0.15), vis(START, "cast"), vis(0, "ray"))',
      "crystal beam blind ARCANE",
      "七色光線", "Prismatic Ray",
      "七つの色に分かれた光線を放ち、一直線上の敵を焼いて目をくらませ、守りを崩す。",
      "Fire a ray split into seven colours, searing every foe in its line, blinding them and opening their guard."),
     ("a", "thunderfrost_circle", 0, 1, 3,
-     '.req("double_casting", 1).cd(20).theme(THUNDER).act(22, 18, 20, hit(10, circle(5.0), 2.4, 0.6))'
+     '.req("double_casting", 1).cd(20).theme(THUNDER).act(22, 18, 20, hit(10, circle(5.0), 6.03, 0.6))'
      '.fx(afflict(0, FREEZE, 30, 0), afflict(0, STUN, 15, 0), vis(START, "sigil"), vis(0, "lightning"))',
      "rune nova freeze THUNDER",
      "雷氷陣", "Circle of Thunder and Frost",
@@ -74,7 +74,7 @@ NODES = [
      "tome glow crit ARCANE",
      "魔導の学徒", "Arcane Scholar", "魔法攻撃力と会心ダメージが上がる。", "Raises magic power and critical damage."),
     ("a", "gravity_flame", 0, 3, 3,
-     '.req("plasma_lance", 3).cd(20).theme(ARCANE).act(22, 18, 20, shot(8, orb("rift", 1.2, 40).withExplosion(3.2), 2.8, 0.0))'
+     '.req("plasma_lance", 3).cd(20).theme(ARCANE).act(22, 18, 20, shot(8, orb("rift", 1.2, 40).withExplosion(3.2), 6.79, 0.0))'
      '.fx(afflict(0, PULL, 1, 0.8), afflict(0, BURN, 60, 0), vis(START, "cast"), vis(0, "vortex"))',
      "portal spiral pull ARCANE",
      "重力炎", "Gravity Flame",
@@ -83,8 +83,8 @@ NODES = [
 
     ("a", "convergence", 0, 0, 4,
      '.req("prism_ray", 1).cd(26).theme(ARCANE)'
-     '.act(34, 30, 26, hit(8, circle(4.0), 1.0, 0.2), hit(14, circle(4.0), 1.0, 0.2), hit(20, circle(4.0), 1.0, 0.2),'
-     ' hit(26, circle(5.0), 1.8, 1.2))'
+     '.act(34, 30, 26, hit(8, circle(4.0), 2.21, 0.2), hit(14, circle(4.0), 2.21, 0.2), hit(20, circle(4.0), 2.21, 0.2),'
+     ' hit(26, circle(5.0), 3.98, 1.2))'
      '.fx(afflict(0, BURN, 60, 0), afflict(1, FREEZE, 30, 0), afflict(2, STUN, 20, 0), afflict(3, LAUNCH, 1, 0.6),'
      ' vis(START, "sigil"), vis(0, "burst"), vis(1, "storm"), vis(2, "lightning"), vis(3, "nova"))',
      "orbs3 nova x4 ARCANE",
@@ -97,7 +97,7 @@ NODES = [
      "賢者の叡智", "A Sage's Wisdom", "スキルの威力が上がる。", "Raises the power of your skills."),
     ("a", "starfall", 0, 2, 4,
      '.req("thunderfrost_circle", 1).cd(24).theme(HOLY)'
-     '.act(26, 22, 24, shots(6, 3, 5, orb("star_arrow", 1.6, 40).withExplosion(1.8).fallingFromAbove(), 1.0, 0.3))'
+     '.act(26, 22, 24, shots(6, 3, 5, orb("star_arrow", 1.6, 40).withExplosion(1.8).fallingFromAbove(), 2.2, 0.3))'
      '.fx(vis(START, "cast"), vis(0, "rain"), vis(4, "burst"))',
      "star rain x5 LIGHT",
      "星降り", "Starfall",
@@ -109,7 +109,7 @@ NODES = [
 
     ("u", "genesis", 0, 0, 5,
      '.req("convergence", 3).cd(140).theme(ARCANE)'
-     '.act(52, 48, 40, seq(pause(8), hits(16, 5, 4, circle(7.0), 1.2, 0.3), hit(40, circle(8.0), 5.0, 1.8)))'
+     '.act(52, 48, 40, seq(pause(8), hits(16, 5, 4, circle(7.0), 1.96, 0.3), hit(40, circle(8.0), 8.16, 1.8)))'
      '.fx(afflict(1, BURN, 80, 0), afflict(2, FREEZE, 40, 0), afflict(3, STUN, 30, 0),'
      ' afflict(5, VULNERABLE, 160, 0.3), vis(START, "sigil"), vis(0, "meteor_cast"), vis(1, "burst"), vis(2, "storm"),'
      ' vis(3, "lightning"), vis(5, "nova"))',
@@ -122,7 +122,7 @@ NODES = [
      "hat halo up ARCANE",
      "大賢者", "Archsage", "魔法攻撃力と会心率が上がる。", "Raises magic power and critical chance."),
     ("a", "chaos_orb", 0, 2, 5,
-     '.req("starfall", 3).cd(32).theme(ARCANE).act(26, 22, 28, shot(10, orb("arcane", 1.0, 60).withExplosion(4.0), 4.0, 1.4))'
+     '.req("starfall", 3).cd(32).theme(ARCANE).act(26, 22, 28, shot(10, orb("arcane", 1.0, 60).withExplosion(4.0), 9.09, 1.4))'
      '.fx(afflict(0, VULNERABLE, 120, 0.2), afflict(0, WEAKEN, 120, 0.2), vis(START, "cast"), vis(0, "vortex"),'
      ' vis(0, "nova"))',
      "orb spiral vuln ARCANE",
@@ -150,7 +150,7 @@ NODES = [
      "Raises maximum stamina; skills recover faster."),
     ("a", "rune_trap", 1, 3, 1,
      '.cd(16).theme(ARCANE).act(14, 10, 14, pause(4))'
-     '.fx(zone(0, LOOK, 8.0, 3.0, 20, 1, 1, 3.0, STUN, 40, 0), vis(START, "cast"), vis(0, "sigil"))',
+     '.fx(zone(0, LOOK, 8.0, 3.0, 20, 1, 1, 7.18, STUN, 40, 0), vis(START, "cast"), vis(0, "sigil"))',
      "rune zone stun ARCANE",
      "魔法陣罠", "Rune Trap",
      "狙った場所に魔法陣を描く。一秒後に陣が炸裂し、上にいる敵を気絶させる。",
@@ -188,7 +188,7 @@ NODES = [
      "Share your mana with yourself and the allies around you: for a while everyone deals more damage."),
     ("a", "slowing_field", 1, 1, 3,
      '.req("deep_thought", 1).cd(26).theme(FROST).act(14, 10, 16, pause(4))'
-     '.fx(zone(0, CASTER, 0, 6.0, 0, 10, 10, 0.2, SLOW, 40, 3), vis(0, "sigil"), vis(0, "mist"))',
+     '.fx(zone(0, CASTER, 0, 6.0, 0, 10, 10, 0.53, SLOW, 40, 3), vis(0, "sigil"), vis(0, "mist"))',
      "hourglass zone slow FROST",
      "鈍化結界", "Field of Slowness",
      "足元に結界を広げる。しばらくの間、結界の中の敵はひどく鈍くなる。",
@@ -216,7 +216,7 @@ NODES = [
      "eye halo clock LIGHT",
      "洞察", "Insight", "スキルの再使用時間が短くなる。", "Skills recover faster."),
     ("a", "repulsion", 1, 2, 4,
-     '.req("slowing_field", 1).cd(22).theme(ARCANE).act(16, 12, 18, hit(6, circle(5.0), 1.6, 3.0))'
+     '.req("slowing_field", 1).cd(22).theme(ARCANE).act(16, 12, 18, hit(6, circle(5.0), 4.5, 3.0))'
      '.fx(afflict(0, SLOW, 60, 2), vis(0, "nova"), vis(0, "shield"))',
      "orb nova slow ARCANE",
      "斥力場", "Repulsion Field",
@@ -227,7 +227,7 @@ NODES = [
      "秘術の加護", "Arcane Aegis", "防御力と最大HPが上がる。", "Raises defense and maximum health."),
 
     ("u", "eternal_wisdom", 1, 0, 5,
-     '.req("rewind", 3).cd(150).theme(ARCANE).act(36, 32, 36, pause(8), hit(18, circle(6.0), 3.0, 1.0))'
+     '.req("rewind", 3).cd(150).theme(ARCANE).act(36, 32, 36, pause(8), hit(18, circle(6.0), 7.18, 1.0))'
      '.fx(shieldAllies(0, 0.4, 240, 12), allies(0, ATTACK_UP, 0.25, 240, 12), self(0, ATTACK_UP, 0.25, 240),'
      ' heal(0, 12, 0.2, 4), cdcut(0, 100), vis(START, "cast"), vis(0, "sigil"), vis(0, "aura"), vis(1, "pillar"),'
      ' vis(1, "nova"))',

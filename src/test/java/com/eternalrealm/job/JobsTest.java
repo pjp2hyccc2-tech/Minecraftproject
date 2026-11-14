@@ -139,7 +139,10 @@ public class JobsTest {
                 }
             }
             if (damaging) {
-                assertTrue(skill.id() + " total " + total, total >= 1.0 && total <= 10.0);
+                // the second classes hit far harder (owner, 2026-11-15: 450 % at least, up to 1600 %)
+                double low = skill.isClassSkill() ? 4.5 : 1.0;
+                double high = skill.isClassSkill() ? 16.05 : 10.0;
+                assertTrue(skill.id() + " total " + total, total >= low - 1e-9 && total <= high);
             } else {
                 assertFalse(skill.id() + " needs an effect", skill.effects().isEmpty());
             }

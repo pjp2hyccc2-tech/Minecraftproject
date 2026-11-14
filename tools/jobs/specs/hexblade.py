@@ -11,14 +11,14 @@ BRANCHES = [("血呪", "Blood Hex"), ("魔剣", "Demon Blade")]
 NODES = [
     # ------------------------------------------------------------------ 0: 血呪
     ("a", "blood_edge", 0, 0, 1,
-     '.cd(8).theme(BLOOD).act(18, 14, 14, hit(7, arc(4.0, 70), 2.2, 0.4))'
+     '.cd(8).theme(BLOOD).act(18, 14, 14, hit(7, arc(4.0, 70), 6.21, 0.4))'
      '.fx(afflict(0, BLEED, 80, 0.4), siphon(0, 0.1, 0), vis(0, "slash"), vis(0, "impact"))',
      "sword arc bleed BLOOD",
      "血刃", "Blood Edge",
      "血の呪いを帯びた刃で斬る。斬られた敵は血を流し、流れた血の一部が自分のHPとなる。",
      "Cut with a blade steeped in a blood curse: the foe bleeds, and some of what it loses becomes your health."),
     ("a", "hex_brand", 0, 1, 1,
-     '.cd(12).theme(SHADOW).act(16, 12, 12, hit(6, ahead(2.0, 3.0), 1.2, 0.2))'
+     '.cd(12).theme(SHADOW).act(16, 12, 12, hit(6, ahead(2.0, 3.0), 4.5, 0.2))'
      '.fx(afflict(0, VULNERABLE, 200, 0.2), afflict(0, WEAKEN, 200, 0.12), vis(START, "cast"), vis(0, "sigil"))',
      "rune glow vuln SHADOW",
      "呪印", "Hex Brand",
@@ -28,7 +28,7 @@ NODES = [
      "drop - - BLOOD",
      "血の代償", "Price of Blood", "HPが減るほど与えるダメージが増える。", "The lower your health, the harder you strike."),
     ("a", "crimson_dash", 0, 3, 1,
-     '.cd(10).theme(BLOOD).act(16, 12, 14, hit(6, line(7.0, 1.4), 2.0, 0.6))'
+     '.cd(10).theme(BLOOD).act(16, 12, 14, hit(6, line(7.0, 1.4), 5.87, 0.6))'
      '.fx(dash(START, 7), afflict(0, BLEED, 60, 0.3), vis(START, "blink"), vis(0, "thrust"))',
      "boot speed bleed BLOOD",
      "紅の疾走", "Crimson Dash",
@@ -46,7 +46,7 @@ NODES = [
      "fangs - heal BLOOD",
      "渇き", "Thirst", "与えたダメージの一部でHPを回復する。", "Part of the damage you deal heals you."),
     ("a", "tide_of_blood", 0, 2, 2,
-     '.req("hex_brand", 1).cd(16).theme(BLOOD).act(18, 14, 18, hit(8, circle(4.5), 2.0, 0.6))'
+     '.req("hex_brand", 1).cd(16).theme(BLOOD).act(18, 14, 18, hit(8, circle(4.5), 5.87, 0.6))'
      '.fx(afflict(0, BLEED, 100, 0.5), vis(0, "nova"), vis(0, "burst"))',
      "drop waves bleed BLOOD",
      "血潮の波", "Tide of Blood",
@@ -58,14 +58,14 @@ NODES = [
      "Raises maximum health; defeating a foe heals you."),
 
     ("a", "blood_moon_cut", 0, 0, 3,
-     '.req("sanguine_rite", 1).cd(18).theme(BLOOD).act(22, 18, 20, hit(10, beam(9.0, 1.6), 3.0, 0.6))'
+     '.req("sanguine_rite", 1).cd(18).theme(BLOOD).act(22, 18, 20, hit(10, beam(9.0, 1.6), 7.58, 0.6))'
      '.fx(afflict(0, BLEED, 80, 0.4), siphon(0, 0.15, 0), vis(START, "cast"), vis(0, "arcane_slash"))',
      "moon beam bleed BLOOD",
      "血月斬", "Blood Moon Cut",
      "紅い月のような斬撃を飛ばし、一直線上の敵を切り裂いて出血させる。流れた血の一部がHPとなる。",
      "Loose a cut like a blood-red moon down a line, slicing the foes in it open; some of their blood heals you."),
     ("a", "curse_chain", 0, 1, 3,
-     '.req("thirst", 1).cd(18).theme(SHADOW).act(18, 14, 16, hit(7, line(8.0, 1.2), 1.4, 0.0))'
+     '.req("thirst", 1).cd(18).theme(SHADOW).act(18, 14, 16, hit(7, line(8.0, 1.2), 4.84, 0.0))'
      '.fx(afflict(0, PULL, 1, 1.0), afflict(0, WEAKEN, 120, 0.2), vis(0, "chains"))',
      "chains beamd weaken SHADOW",
      "呪鎖", "Chain of Hexes",
@@ -75,7 +75,7 @@ NODES = [
      "hand glow star SHADOW",
      "闇の契約", "Dark Pact", "スキルの威力と会心率が上がる。", "Raises skill power and critical chance."),
     ("a", "vein_burst", 0, 3, 3,
-     '.req("tide_of_blood", 1).cd(20).theme(BLOOD).act(18, 14, 20, hit(8, circle(5.0), 2.6, 1.0))'
+     '.req("tide_of_blood", 1).cd(20).theme(BLOOD).act(18, 14, 20, hit(8, circle(5.0), 6.89, 1.0))'
      '.fx(afflict(0, VULNERABLE, 100, 0.2), vis(0, "burst"), vis(0, "impact"))',
      "heart burst vuln BLOOD",
      "血脈爆ぜ", "Vein Burst",
@@ -83,7 +83,7 @@ NODES = [
      "Make the blood of the foes around you boil and burst, breaking their guard."),
 
     ("a", "crimson_tempest", 0, 0, 4,
-     '.req("blood_moon_cut", 1).cd(24).theme(BLOOD).act(26, 22, 24, hits(4, 3, 6, circle(4.5), 0.6, 0.2))'
+     '.req("blood_moon_cut", 1).cd(24).theme(BLOOD).act(26, 22, 24, hits(4, 3, 6, circle(4.5), 1.43, 0.2))'
      '.fx(afflict(2, BLEED, 80, 0.4), siphon(5, 0.2, 0), vis(0, "blade_storm"), vis(5, "storm"))',
      "sword spiral x6 BLOOD",
      "紅蓮の嵐", "Crimson Tempest",
@@ -94,7 +94,7 @@ NODES = [
      "血の渇望", "Bloodlust", "会心ダメージが大きく上がる。", "Greatly raises critical damage."),
     ("a", "hex_detonation", 0, 2, 4,
      '.req("curse_chain", 1).cd(24).theme(SHADOW).act(16, 12, 20, pause(4))'
-     '.fx(zone(0, LOOK, 10.0, 3.5, 20, 1, 1, 4.0, WEAKEN, 100, 0.3), vis(START, "cast"), vis(0, "sigil"), vis(0, "rift"))',
+     '.fx(zone(0, LOOK, 10.0, 3.5, 20, 1, 1, 9.29, WEAKEN, 100, 0.3), vis(START, "cast"), vis(0, "sigil"), vis(0, "rift"))',
      "rune nova weaken SHADOW",
      "呪爆", "Hex Detonation",
      "狙った場所に呪いを仕込む。一秒後に呪いが炸裂して大きなダメージを与え、敵の力を奪う。",
@@ -105,7 +105,7 @@ NODES = [
 
     ("u", "curse_of_the_red_moon", 0, 0, 5,
      '.req("crimson_tempest", 3).cd(120).theme(BLOOD)'
-     '.act(44, 40, 40, pause(8), hit(18, circle(7.0), 1.6, 0.2), hit(32, circle(8.0), 4.8, 1.6))'
+     '.act(44, 40, 40, pause(8), hit(18, circle(7.0), 3.46, 0.2), hit(32, circle(8.0), 10.38, 1.6))'
      '.fx(self(0, LIFESTEAL, 0.15, 200), afflict(1, BLEED, 120, 0.6), siphon(2, 0.35, 0),'
      ' afflict(2, VULNERABLE, 160, 0.3), vis(START, "sigil"), vis(0, "vortex"), vis(1, "shadow"), vis(2, "nova"),'
      ' vis(2, "slash"))',
@@ -119,7 +119,7 @@ NODES = [
      "血の君主", "Blood Sovereign", "与えたダメージの一部でHPを回復し、魔法攻撃力が上がる。",
      "Part of the damage you deal heals you, and your magic power rises."),
     ("a", "sacrificial_strike", 0, 2, 5,
-     '.req("hex_detonation", 3).cd(36).theme(BLOOD).act(26, 22, 26, hit(14, ahead(2.5, 2.5), 5.0, 1.2))'
+     '.req("hex_detonation", 3).cd(36).theme(BLOOD).act(26, 22, 26, hit(14, ahead(2.5, 2.5), 11.0, 1.2))'
      '.fx(execute(0, 0.3, 1.0), vis(START, "cast"), vis(0, "smite"), vis(0, "impact"))',
      "greatsword pillar skull BLOOD",
      "贄の一撃", "Sacrificial Strike",
@@ -131,14 +131,14 @@ NODES = [
 
     # ------------------------------------------------------------------ 1: 魔剣
     ("a", "venom_edge", 1, 0, 1,
-     '.cd(16).theme(VENOM).act(18, 14, 14, hit(8, arc(3.8, 60), 1.8, 0.4))'
+     '.cd(16).theme(VENOM).act(18, 14, 14, hit(8, arc(3.8, 60), 5.53, 0.4))'
      '.fx(self(0, VENOM_WEAPON, 0, 240), afflict(0, POISON, 80, 0.4), vis(0, "flame_blade"), vis(0, "slash"))',
      "sword cloud poison VENOM",
      "呪毒の刃", "Venom Edge",
      "刃に呪いの毒をまとわせて斬る。斬った敵は毒に冒され、しばらくの間、攻撃が敵を毒に冒す。",
      "Coat your blade in a cursed venom and cut: the foe is poisoned, and for a while every blow poisons."),
     ("a", "shadow_cleave", 1, 1, 1,
-     '.cd(9).theme(SHADOW).act(18, 14, 15, hit(7, arc(4.6, 100), 2.2, 0.6))'
+     '.cd(9).theme(SHADOW).act(18, 14, 15, hit(7, arc(4.6, 100), 6.21, 0.6))'
      '.fx(afflict(0, BLIND, 40, 0), vis(0, "slash"), vis(0, "shadow"))',
      "greatsword mist blind SHADOW",
      "影薙ぎ", "Shadow Cleave",
@@ -148,7 +148,7 @@ NODES = [
      "orb - - SHADOW",
      "闇の親和", "Dark Affinity", "魔法攻撃力が上がる。", "Raises magic power."),
     ("a", "void_lunge", 1, 3, 1,
-     '.cd(10).theme(SHADOW).act(16, 12, 14, hit(6, line(8.0, 1.2), 2.4, 0.6))'
+     '.cd(10).theme(SHADOW).act(16, 12, 14, hit(6, line(8.0, 1.2), 6.55, 0.6))'
      '.fx(dash(START, 8), afflict(0, VULNERABLE, 80, 0.12), vis(START, "blink"), vis(0, "thrust"))',
      "portal speed vuln SHADOW",
      "虚空突き", "Void Lunge",
@@ -167,7 +167,7 @@ NODES = [
      "eye glow weaken SHADOW",
      "悪意の刃", "Malevolence", "近接攻撃が一定確率で敵を弱らせる。", "Your melee hits may weaken the foe."),
     ("a", "night_reaver", 1, 2, 2,
-     '.req("shadow_cleave", 1).cd(14).theme(SHADOW).act(22, 18, 18, hits(4, 4, 3, arc(4.0, 80), 1.0, 0.3))'
+     '.req("shadow_cleave", 1).cd(14).theme(SHADOW).act(22, 18, 18, hits(4, 4, 3, arc(4.0, 80), 2.53, 0.3))'
      '.fx(afflict(2, BLIND, 60, 0), vis(0, "slash"), vis(2, "shadow"))',
      "crescent claws x3 SHADOW",
      "夜裂き", "Night Reaver",
@@ -178,14 +178,14 @@ NODES = [
      "影の守り", "Shadow Guard", "攻撃を回避しやすくなる。", "You dodge attacks more often."),
 
     ("a", "abyss_slash", 1, 0, 3,
-     '.req("demon_blade_unbound", 1).cd(18).theme(SHADOW).act(22, 18, 20, hit(10, beam(10.0, 2.0), 3.2, 0.6))'
+     '.req("demon_blade_unbound", 1).cd(18).theme(SHADOW).act(22, 18, 20, hit(10, beam(10.0, 2.0), 7.92, 0.6))'
      '.fx(afflict(0, WEAKEN, 100, 0.2), vis(START, "cast"), vis(0, "arcane_slash"), vis(0, "rift"))',
      "greatsword beamd weaken SHADOW",
      "深淵斬り", "Abyss Slash",
      "深淵の闇を刃に乗せて飛ばし、一直線上の敵を斬って力を奪う。",
      "Send the darkness of the abyss flying on your blade, cutting every foe in its line and sapping its strength."),
     ("a", "curse_engraving", 1, 1, 3,
-     '.req("malevolence", 1).cd(20).theme(VENOM).act(18, 14, 18, hit(8, circle(4.5), 1.6, 0.2))'
+     '.req("malevolence", 1).cd(20).theme(VENOM).act(18, 14, 18, hit(8, circle(4.5), 5.18, 0.2))'
      '.fx(afflict(0, POISON, 120, 0.5), afflict(0, VULNERABLE, 100, 0.15), vis(0, "sigil"), vis(0, "mist"))',
      "rune cloud poison VENOM",
      "呪刻", "Curse Engraving",
@@ -195,7 +195,7 @@ NODES = [
      "skull glow star SHADOW",
      "冥き決意", "Grim Resolve", "スキルの威力が上がる。", "Raises the power of your skills."),
     ("a", "shadow_walk", 1, 3, 3,
-     '.req("shadow_guard", 1).cd(18).theme(SHADOW).act(16, 12, 16, hit(6, circle(3.0), 1.6, 0.4))'
+     '.req("shadow_guard", 1).cd(18).theme(SHADOW).act(16, 12, 16, hit(6, circle(3.0), 5.18, 0.4))'
      '.fx(dash(START, 9), self(0, EVASION, 0.4, 60), vis(START, "shadow"), vis(0, "blink"))',
      "hood speed - SHADOW ghost",
      "影渡り", "Shadow Walk",
@@ -205,7 +205,7 @@ NODES = [
 
     ("a", "black_crescent", 1, 0, 4,
      '.req("abyss_slash", 1).cd(22).theme(SHADOW)'
-     '.act(22, 18, 22, shot(9, orb("crescent", 2.2, 30).withPierce(8).withExplosion(2.0), 3.0, 0.6))'
+     '.act(22, 18, 22, shot(9, orb("crescent", 2.2, 30).withPierce(8).withExplosion(2.0), 7.58, 0.6))'
      '.fx(afflict(0, BLIND, 60, 0), vis(START, "cast"), vis(0, "arcane_slash"), vis(0, "burst"))',
      "crescent burst blind SHADOW",
      "黒月閃", "Black Crescent",
@@ -217,7 +217,7 @@ NODES = [
      "呪いの鎧", "Cursed Armor", "防御力が上がり、受けたダメージの一部を跳ね返す。",
      "Raises defense; part of the damage you take is returned."),
     ("a", "soul_devour", 1, 2, 4,
-     '.req("night_reaver", 3).cd(24).theme(SHADOW).act(20, 16, 22, hit(9, ahead(3.0, 3.0), 3.2, 0.4))'
+     '.req("night_reaver", 3).cd(24).theme(SHADOW).act(20, 16, 22, hit(9, ahead(3.0, 3.0), 7.92, 0.4))'
      '.fx(siphon(0, 0.4, 0), stamina(0, 30), vis(0, "vortex"), vis(0, "shadow"))',
      "skull spiral heal SHADOW",
      "魂喰い", "Soul Devourer",
@@ -230,7 +230,7 @@ NODES = [
 
     ("u", "sword_of_the_netherlord", 1, 0, 5,
      '.req("black_crescent", 3).cd(120).theme(SHADOW)'
-     '.act(46, 42, 40, pause(10), hit(24, beam(14.0, 3.0), 3.0, 0.6), hit(36, circle(8.0), 4.4, 1.8))'
+     '.act(46, 42, 40, pause(10), hit(24, beam(14.0, 3.0), 6.49, 0.6), hit(36, circle(8.0), 9.51, 1.8))'
      '.fx(afflict(1, VULNERABLE, 160, 0.3), afflict(2, WEAKEN, 160, 0.3), afflict(2, BLIND, 60, 0),'
      ' vis(START, "judgment_charge"), vis(0, "rift"), vis(1, "arcane_slash"), vis(2, "nova"), vis(2, "shadow"))',
      "greatsword nova vuln SHADOW",
@@ -242,7 +242,7 @@ NODES = [
      "crown halo up SHADOW",
      "冥王の器", "Vessel of the Netherlord", "魔法攻撃力と最大HPが上がる。", "Raises magic power and maximum health."),
     ("a", "midnight_flash", 1, 2, 5,
-     '.req("soul_devour", 1).cd(30).theme(SHADOW).act(24, 20, 26, hit(10, circle(6.0), 3.4, 1.0))'
+     '.req("soul_devour", 1).cd(30).theme(SHADOW).act(24, 20, 26, hit(10, circle(6.0), 8.26, 1.0))'
      '.fx(afflict(0, BLIND, 80, 0), afflict(0, SLOW, 80, 2), vis(START, "shadow"), vis(0, "nova"), vis(0, "spin"))',
      "moon nova slow SHADOW",
      "闇夜の一閃", "Midnight Flash",

@@ -11,14 +11,14 @@ BRANCHES = [("剣技", "Swordcraft"), ("剣気", "Sword Spirit")]
 NODES = [
     # ------------------------------------------------------------------ 0: 剣技
     ("a", "iai_draw", 0, 0, 1,
-     '.cd(8).theme(STEEL).act(18, 14, 14, pause(2), hit(8, arc(4.2, 60), 2.8, 0.4))'
+     '.cd(8).theme(STEEL).act(18, 14, 14, pause(2), hit(8, arc(4.2, 60), 5.94, 0.4))'
      '.fx(self(START, CRIT_UP, 0.3, 18), vis(START, "cast"), vis(1, "slash"), vis(1, "impact"))',
      "katana arc crit STEEL",
      "居合抜き", "Iai Draw",
      "鞘から抜き放つ一瞬の一太刀。この一撃は会心が出やすい。",
      "One cut in the instant the blade leaves its sheath; it lands critically far more often."),
     ("a", "flowing_cut", 0, 1, 1,
-     '.cd(9).theme(WIND).act(20, 16, 15, hits(4, 4, 3, arc(3.6, 70), 0.9, 0.2))'
+     '.cd(9).theme(WIND).act(20, 16, 15, hits(4, 4, 3, arc(3.6, 70), 1.92, 0.2))'
      '.fx(dash(START, 3), vis(0, "slash"), vis(2, "slash"))',
      "katana waves x3 WIND",
      "流水斬り", "Flowing Cut",
@@ -28,7 +28,7 @@ NODES = [
      "heart - crit STEEL",
      "剣心", "Sword Heart", "会心率と魔法攻撃力が上がる。", "Raises critical chance and magic power."),
     ("a", "go_no_sen", 0, 3, 1,
-     '.cd(14).theme(STEEL).act(22, 18, 14, pause(3), hit(14, circle(3.6), 2.6, 1.0))'
+     '.cd(14).theme(STEEL).act(22, 18, 14, pause(3), hit(14, circle(3.6), 5.58, 1.0))'
      '.fx(self(START, DEFENSE_UP, 0.7, 14), vis(START, "shield"), vis(1, "spin"))',
      "katana ring shield STEEL",
      "後の先", "Go no Sen",
@@ -37,7 +37,7 @@ NODES = [
      "around you."),
 
     ("a", "swallow_return", 0, 0, 2,
-     '.req("iai_draw", 3).cd(12).theme(WIND).act(18, 14, 16, hit(4, arc(3.8, 70), 1.8, 0.2), hit(9, arc(3.8, 70), 1.8, 0.6))'
+     '.req("iai_draw", 3).cd(12).theme(WIND).act(18, 14, 16, hit(4, arc(3.8, 70), 3.69, 0.2), hit(9, arc(3.8, 70), 3.69, 0.6))'
      '.fx(afflict(1, VULNERABLE, 80, 0.15), vis(0, "slash"), vis(1, "slash"))',
      "crescent arc2 x2 WIND",
      "燕返し", "Swallow's Return",
@@ -47,7 +47,7 @@ NODES = [
      "drop waves crit FROST",
      "明鏡止水", "Still Water", "会心率が上がり、スキルの再使用時間が短くなる。", "Raises critical chance; skills recover faster."),
     ("a", "piercing_flash", 0, 2, 2,
-     '.req("flowing_cut", 1).cd(12).theme(STEEL).act(18, 14, 16, hit(7, line(6.0, 1.0), 3.0, 0.8))'
+     '.req("flowing_cut", 1).cd(12).theme(STEEL).act(18, 14, 16, hit(7, line(6.0, 1.0), 6.31, 0.8))'
      '.fx(dash(START, 5), afflict(0, VULNERABLE, 80, 0.12), vis(START, "blink"), vis(0, "thrust"))',
      "sword speed vuln STEEL",
      "刺突一閃", "Piercing Flash",
@@ -58,14 +58,14 @@ NODES = [
      "剣の鍛錬", "Blade Discipline", "会心ダメージが上がる。", "Raises critical damage."),
 
     ("a", "eight_directions", 0, 0, 3,
-     '.req("swallow_return", 1).cd(16).theme(STEEL).act(24, 20, 20, hits(4, 2, 8, circle(4.0), 0.5, 0.1))'
+     '.req("swallow_return", 1).cd(16).theme(STEEL).act(24, 20, 20, hits(4, 2, 8, circle(4.0), 1.01, 0.1))'
      '.fx(vis(0, "spin"), vis(4, "slash"), vis(7, "impact"))',
      "katana x x7 STEEL",
      "八方斬り", "Eight Directions",
      "八つの方角すべてへ瞬く間に斬りつけ、周りの敵を刻む。",
      "Cut toward all eight directions in the blink of an eye, carving every foe around you."),
     ("a", "moon_shadow_cut", 0, 1, 3,
-     '.req("still_water", 1).cd(16).theme(SHADOW).act(22, 18, 20, hit(10, beam(8.0, 1.6), 3.2, 0.6))'
+     '.req("still_water", 1).cd(16).theme(SHADOW).act(22, 18, 20, hit(10, beam(8.0, 1.6), 6.67, 0.6))'
      '.fx(afflict(0, BLIND, 60, 0), vis(START, "cast"), vis(0, "arcane_slash"))',
      "moon beam blind SHADOW",
      "月影斬", "Moon Shadow Cut",
@@ -75,7 +75,7 @@ NODES = [
      "boot glow stamina WIND",
      "無駄なき型", "Economy of Motion", "スキルと回避のスタミナ消費が減る。", "Skills and dodges cost less stamina."),
     ("a", "zanshin", 0, 3, 3,
-     '.req("piercing_flash", 1).cd(16).theme(STEEL).act(20, 16, 18, hit(10, arc(4.0, 80), 2.4, 0.6))'
+     '.req("piercing_flash", 1).cd(16).theme(STEEL).act(20, 16, 18, hit(10, arc(4.0, 80), 5.22, 0.6))'
      '.fx(retreat(START, 4), self(START, EVASION, 0.5, 20), vis(START, "blink"), vis(0, "slash"))',
      "eye arc - STEEL",
      "残心", "Zanshin",
@@ -83,7 +83,7 @@ NODES = [
      "Step back from the blow and cut back at once; while you step away, attacks rarely find you."),
 
     ("a", "heaven_splitter", 0, 0, 4,
-     '.req("eight_directions", 1).cd(22).theme(STEEL).act(26, 22, 24, hit(16, ahead(2.0, 3.0), 4.2, 1.2))'
+     '.req("eight_directions", 1).cd(22).theme(STEEL).act(26, 22, 24, hit(16, ahead(2.0, 3.0), 8.47, 1.2))'
      '.fx(leap(START, 3, 3.0), afflict(0, LAUNCH, 1, 0.6), vis(START, "blink"), vis(0, "smite"), vis(0, "slash"))',
      "greatsword smite launch STEEL",
      "天割り", "Heaven Splitter",
@@ -93,7 +93,7 @@ NODES = [
      "katana halo star STEEL",
      "剣の道", "Way of the Sword", "スキルの威力が上がる。", "Raises the power of your skills."),
     ("a", "thousand_cuts", 0, 2, 4,
-     '.req("moon_shadow_cut", 1).cd(24).theme(WIND).act(28, 24, 24, hits(4, 2, 10, arc(3.8, 90), 0.36, 0.05))'
+     '.req("moon_shadow_cut", 1).cd(24).theme(WIND).act(28, 24, 24, hits(4, 2, 10, arc(3.8, 90), 0.74, 0.05))'
      '.fx(afflict(9, BLEED, 80, 0.4), vis(0, "blade_storm"), vis(9, "slash"))',
      "katana claws bleed WIND",
      "千本斬り", "A Thousand Cuts",
@@ -105,7 +105,7 @@ NODES = [
 
     ("u", "infinite_stroke", 0, 0, 5,
      '.req("heaven_splitter", 3).cd(120).theme(STEEL)'
-     '.act(44, 40, 40, seq(pause(8), hits(14, 2, 6, circle(6.0), 0.6, 0.0), hit(32, circle(8.0), 5.0, 1.6)))'
+     '.act(44, 40, 40, seq(pause(8), hits(14, 2, 6, circle(6.0), 1.04, 0.0), hit(32, circle(8.0), 8.7, 1.6)))'
      '.fx(self(0, DEFENSE_UP, 0.5, 30), afflict(7, VULNERABLE, 160, 0.3), vis(START, "cast"), vis(1, "blade_storm"),'
      ' vis(4, "slash"), vis(7, "slash"), vis(7, "nova"))',
      "katana nova star LIGHT",
@@ -117,7 +117,7 @@ NODES = [
      "crown glow crit STEEL",
      "剣の極み", "Pinnacle of the Sword", "会心ダメージとスキルの威力が上がる。", "Raises critical damage and skill power."),
     ("a", "dragon_cleaver", 0, 2, 5,
-     '.req("thousand_cuts", 3).cd(30).theme(STEEL).act(26, 22, 26, hit(10, line(8.0, 2.0), 4.6, 1.0))'
+     '.req("thousand_cuts", 3).cd(30).theme(STEEL).act(26, 22, 26, hit(10, line(8.0, 2.0), 9.19, 1.0))'
      '.fx(dash(START, 8), vis(START, "blink"), vis(0, "slash"), vis(0, "impact"))',
      "greatsword speed x2 STEEL",
      "竜断ち", "Dragon Cleaver",
@@ -129,7 +129,7 @@ NODES = [
 
     # ------------------------------------------------------------------ 1: 剣気
     ("a", "flying_slash", 1, 0, 1,
-     '.cd(8).theme(WIND).act(18, 14, 14, shot(7, orb("crescent", 2.4, 24).withPierce(4), 2.0, 0.4))'
+     '.cd(8).theme(WIND).act(18, 14, 14, shot(7, orb("crescent", 2.4, 24).withPierce(4), 4.5, 0.4))'
      '.fx(vis(START, "cast"), vis(0, "arcane_slash"))',
      "crescent speed - WIND",
      "飛ぶ斬撃", "Flying Slash",
@@ -146,7 +146,7 @@ NODES = [
      "sword - - ARCANE",
      "気の刃", "Spirit Edge", "魔法攻撃力が上がる。", "Raises magic power."),
     ("a", "floating_swords", 1, 3, 1,
-     '.cd(12).theme(ARCANE).act(22, 18, 16, hits(4, 6, 3, circle(3.0), 0.9, 0.2))'
+     '.cd(12).theme(ARCANE).act(22, 18, 16, hits(4, 6, 3, circle(3.0), 1.92, 0.2))'
      '.fx(vis(0, "blade_storm"), vis(2, "spin"))',
      "sword orbit x3 ARCANE",
      "浮遊剣", "Floating Swords",
@@ -154,7 +154,7 @@ NODES = [
      "Raise three swords of spirit that circle you, cutting the nearby foes three times."),
 
     ("a", "cross_wave", 1, 0, 2,
-     '.req("flying_slash", 3).cd(12).theme(WIND).act(20, 16, 16, shot(8, orb("crescent", 2.0, 30).withFan(2, 12), 1.6, 0.4))'
+     '.req("flying_slash", 3).cd(12).theme(WIND).act(20, 16, 16, shot(8, orb("crescent", 2.0, 30).withFan(2, 12), 3.33, 0.4))'
      '.fx(afflict(0, VULNERABLE, 80, 0.12), vis(START, "cast"), vis(0, "arcane_slash"))',
      "crescent x vuln WIND",
      "十字剣波", "Cross Wave",
@@ -166,7 +166,7 @@ NODES = [
      "Raises maximum stamina; skills cost less stamina."),
     ("a", "rain_of_swords", 1, 2, 2,
      '.req("floating_swords", 1).cd(16).theme(ARCANE)'
-     '.act(24, 20, 18, shots(6, 3, 5, orb("crescent", 1.6, 40).fallingFromAbove(), 0.9, 0.2))'
+     '.act(24, 20, 18, shots(6, 3, 5, orb("crescent", 1.6, 40).fallingFromAbove(), 1.8, 0.2))'
      '.fx(vis(START, "cast"), vis(0, "rain"))',
      "sword rain x5 ARCANE",
      "剣の雨", "Rain of Swords",
@@ -177,14 +177,14 @@ NODES = [
      "剣の結界", "Blade Ward", "ガード性能と防御力が上がる。", "Raises guard and defense."),
 
     ("a", "phantom_swords", 1, 0, 3,
-     '.req("cross_wave", 1).cd(18).theme(SHADOW).act(24, 20, 20, shots(4, 3, 5, orb("crescent", 3.0, 20), 0.7, 0.1))'
+     '.req("cross_wave", 1).cd(18).theme(SHADOW).act(24, 20, 20, shots(4, 3, 5, orb("crescent", 3.0, 20), 1.44, 0.1))'
      '.fx(afflict(4, VULNERABLE, 100, 0.15), vis(START, "shadow"), vis(4, "arcane_slash"))',
      "sword speed x5 SHADOW ghost",
      "幻影剣", "Phantom Swords",
      "幻の剣を五本続けて撃ち出す。最後の一本を受けた敵は守りが崩れる。",
      "Fire five phantom swords one after another; the foe struck by the last loses its guard."),
     ("a", "spirit_burst", 1, 1, 3,
-     '.req("ki_circulation", 1).cd(20).theme(ARCANE).act(18, 14, 18, hit(8, circle(5.0), 2.8, 1.6))'
+     '.req("ki_circulation", 1).cd(20).theme(ARCANE).act(18, 14, 18, hit(8, circle(5.0), 5.94, 1.6))'
      '.fx(vis(0, "nova"), vis(0, "burst"))',
      "orb burst - ARCANE",
      "剣気爆発", "Spirit Burst",
@@ -194,7 +194,7 @@ NODES = [
      "note glow bleed STEEL",
      "斬鉄の響き", "Ringing Steel", "近接攻撃が一定確率で敵を出血させる。", "Your melee hits may leave the foe bleeding."),
     ("a", "heaven_piercing_blade", 1, 3, 3,
-     '.req("rain_of_swords", 1).cd(18).theme(WIND).act(20, 16, 20, shot(8, orb("crescent", 3.4, 24).withPierce(16), 3.0, 0.6))'
+     '.req("rain_of_swords", 1).cd(18).theme(WIND).act(20, 16, 20, shot(8, orb("crescent", 3.4, 24).withPierce(16), 6.31, 0.6))'
      '.fx(vis(START, "cast"), vis(0, "ray"))',
      "lance beam - WIND",
      "衝天剣", "Heaven-Piercing Blade",
@@ -202,7 +202,7 @@ NODES = [
      "Loose a sword spirit sharp enough to pierce the heavens; it runs through every foe in its line."),
 
     ("a", "rising_dragon", 1, 0, 4,
-     '.req("phantom_swords", 1).cd(22).theme(WIND).act(22, 18, 22, hit(9, circle(4.0), 3.0, 0.6))'
+     '.req("phantom_swords", 1).cd(22).theme(WIND).act(22, 18, 22, hit(9, circle(4.0), 6.31, 0.6))'
      '.fx(afflict(0, LAUNCH, 1, 0.9), self(0, ATTACK_UP, 0.1, 100), vis(0, "pillar"), vis(0, "slash"))',
      "snake pillar launch WIND",
      "昇竜剣", "Rising Dragon",
@@ -214,7 +214,7 @@ NODES = [
      "気の体", "Spirit Body", "最大HPが上がる。", "Raises maximum health."),
     ("a", "prison_of_blades", 1, 2, 4,
      '.req("spirit_burst", 1).cd(26).theme(ARCANE).act(18, 14, 22, pause(5))'
-     '.fx(zone(0, LOOK, 10.0, 4.0, 0, 8, 8, 0.7, BLEED, 60, 0.3), vis(START, "cast"), vis(0, "blade_storm"))',
+     '.fx(zone(0, LOOK, 10.0, 4.0, 0, 8, 8, 1.38, BLEED, 60, 0.3), vis(START, "cast"), vis(0, "blade_storm"))',
      "sword zone bleed ARCANE",
      "剣牢", "Prison of Blades",
      "狙った場所に剣気の牢を作る。しばらくの間、中の敵は無数の刃に斬られて出血し続ける。",
@@ -225,7 +225,7 @@ NODES = [
 
     ("u", "myriad_swords", 1, 0, 5,
      '.req("rising_dragon", 3).cd(120).theme(ARCANE)'
-     '.act(50, 46, 40, seq(pause(8), shots(14, 2, 8, orb("crescent", 2.8, 30), 0.6, 0.1), hit(40, circle(8.0), 4.4, 1.4)))'
+     '.act(50, 46, 40, seq(pause(8), shots(14, 2, 8, orb("crescent", 2.8, 30), 1.04, 0.1), hit(40, circle(8.0), 7.65, 1.4)))'
      '.fx(afflict(8, BLEED, 100, 0.4), afflict(9, VULNERABLE, 160, 0.3), vis(START, "sigil"), vis(0, "blade_storm"),'
      ' vis(1, "arcane_slash"), vis(9, "nova"), vis(9, "slash"))',
      "sword nova x7 ARCANE",
@@ -237,7 +237,7 @@ NODES = [
      "crown halo up ARCANE",
      "剣気の達人", "Master of the Sword Spirit", "魔法攻撃力と会心率が上がる。", "Raises magic power and critical chance."),
     ("a", "heaven_and_earth_flash", 1, 2, 5,
-     '.req("prison_of_blades", 3).cd(32).theme(ARCANE).act(28, 24, 28, hit(12, beam(12.0, 2.4), 4.4, 1.2))'
+     '.req("prison_of_blades", 3).cd(32).theme(ARCANE).act(28, 24, 28, hit(12, beam(12.0, 2.4), 8.83, 1.2))'
      '.fx(vis(START, "cast"), vis(0, "arcane_slash"), vis(0, "ray"))',
      "greatsword beam x2 ARCANE",
      "天地一閃", "Flash of Heaven and Earth",

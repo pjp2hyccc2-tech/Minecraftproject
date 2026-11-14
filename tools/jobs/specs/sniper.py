@@ -10,14 +10,14 @@ BRANCHES = [("狙撃", "Marksmanship"), ("戦術", "Tactics")]
 NODES = [
     # ------------------------------------------------------------------ 0: 狙撃
     ("a", "still_shot", 0, 0, 1,
-     '.weapons(BOW).cd(8).theme(WIND).act(26, 22, 14, pause(4), shot(18, arrow(5.0), 3.0, 0.6))'
+     '.weapons(BOW).cd(8).theme(WIND).act(26, 22, 14, pause(4), shot(18, arrow(5.0), 7.1, 0.6))'
      '.fx(self(START, CRIT_UP, 0.25, 26), vis(START, "cast"), vis(1, "thrust"))',
      "bow glow crit WIND",
      "静止射撃", "Still Shot",
      "息を止めて狙いを定め、渾身の一矢を放つ。この一矢は会心が出やすい。",
      "Hold your breath, settle your aim and loose one perfect arrow; it lands critically far more often."),
     ("a", "armor_piercer", 0, 1, 1,
-     '.weapons(BOW).cd(10).theme(STEEL).act(20, 16, 15, shot(9, arrow(4.6).withPierce(8), 2.2, 0.4))'
+     '.weapons(BOW).cd(10).theme(STEEL).act(20, 16, 15, shot(9, arrow(4.6).withPierce(8), 6.06, 0.4))'
      '.fx(afflict(0, VULNERABLE, 100, 0.15), vis(START, "cast"), vis(0, "ray"))',
      "arrow1 beamd vuln STEEL",
      "徹甲矢", "Armor Piercer",
@@ -27,7 +27,7 @@ NODES = [
      "eye - crit WIND",
      "狙撃の呼吸", "Marksman's Breath", "会心率と会心ダメージが上がる。", "Raises critical chance and critical damage."),
     ("a", "leg_shot", 0, 3, 1,
-     '.weapons(BOW).cd(10).theme(EARTH).act(16, 12, 14, shot(6, arrow(4.4), 1.6, 0.2))'
+     '.weapons(BOW).cd(10).theme(EARTH).act(16, 12, 14, shot(6, arrow(4.4), 5.28, 0.2))'
      '.fx(afflict(0, SLOW, 120, 3), afflict(0, WEAKEN, 100, 0.12), vis(START, "cast"))',
      "arrow2 - slow EARTH",
      "脚撃ち", "Leg Shot",
@@ -35,7 +35,7 @@ NODES = [
      "Put an arrow precisely through the foe's leg: it is slowed for a long while and its strength falters."),
 
     ("a", "weak_point", 0, 0, 2,
-     '.req("still_shot", 3).weapons(BOW).cd(14).theme(BLOOD).act(22, 18, 16, shot(12, arrow(4.8), 2.6, 0.4))'
+     '.req("still_shot", 3).weapons(BOW).cd(14).theme(BLOOD).act(22, 18, 16, shot(12, arrow(4.8), 6.58, 0.4))'
      '.fx(afflict(0, VULNERABLE, 160, 0.3), vis(START, "cast"), vis(0, "sigil"))',
      "target beamd vuln BLOOD",
      "弱点射抜き", "Weak Point",
@@ -45,7 +45,7 @@ NODES = [
      "quiver - up WIND",
      "遠矢の心得", "Long Shot", "遠距離攻撃力が上がる。", "Raises ranged power."),
     ("a", "double_tap", 0, 2, 2,
-     '.req("armor_piercer", 1).weapons(BOW).cd(12).theme(WIND).act(22, 18, 18, shots(8, 6, 2, arrow(4.6), 1.6, 0.3))'
+     '.req("armor_piercer", 1).weapons(BOW).cd(12).theme(WIND).act(22, 18, 18, shots(8, 6, 2, arrow(4.6), 3.68, 0.3))'
      '.fx(vis(START, "cast"), vis(1, "ray"))',
      "arrow2 speed x2 WIND",
      "二連射", "Double Tap",
@@ -56,14 +56,14 @@ NODES = [
      "待ち伏せ", "Lying in Wait", "会心ダメージが上がる。", "Raises critical damage."),
 
     ("a", "charged_shot", 0, 0, 3,
-     '.req("weak_point", 1).weapons(BOW).cd(18).theme(WIND).act(40, 36, 20, pause(4), shot(30, arrow(5.6).withPierce(4), 4.4, 1.6))'
+     '.req("weak_point", 1).weapons(BOW).cd(18).theme(WIND).act(40, 36, 20, pause(4), shot(30, arrow(5.6).withPierce(4), 8.92, 1.6))'
      '.fx(self(START, DEFENSE_UP, 0.3, 34), vis(START, "judgment_charge"), vis(1, "ray"), vis(1, "impact"))',
      "bow beam x2 WIND",
      "溜め撃ち", "Charged Shot",
      "弓を限界まで引き絞り、力を溜めてから放つ。溜めている間は受けるダメージが減る。",
      "Draw the bow to its limit and hold, then loose; while you hold, you take less damage."),
     ("a", "ricochet", 0, 1, 3,
-     '.req("long_shot", 1).weapons(BOW).cd(14).theme(STEEL).act(20, 16, 18, shot(8, arrow(4.0).withFan(3, 30).withPierce(2), 1.6, 0.3))'
+     '.req("long_shot", 1).weapons(BOW).cd(14).theme(STEEL).act(20, 16, 18, shot(8, arrow(4.0).withFan(3, 30).withPierce(2), 3.15, 0.3))'
      '.fx(vis(START, "cast"), vis(0, "burst"))',
      "arrows3fan ring x3 STEEL",
      "跳弾射撃", "Ricochet",
@@ -73,7 +73,7 @@ NODES = [
      "eye halo star WIND",
      "千里眼", "Far Sight", "会心率が上がる。", "Raises critical chance."),
     ("a", "headhunter", 0, 3, 3,
-     '.req("double_tap", 3).weapons(BOW).cd(18).theme(BLOOD).act(24, 20, 20, shot(14, arrow(5.0), 3.0, 0.6))'
+     '.req("double_tap", 3).weapons(BOW).cd(18).theme(BLOOD).act(24, 20, 20, shot(14, arrow(5.0), 7.1, 0.6))'
      '.fx(execute(0, 0.35, 0.9), vis(START, "cast"), vis(0, "thrust"))',
      "skull beamd skull BLOOD",
      "首狩り", "Headhunter",
@@ -81,7 +81,7 @@ NODES = [
      "Loose the finishing arrow; the weaker the foe, the more it takes."),
 
     ("a", "flash_arrow", 0, 0, 4,
-     '.req("charged_shot", 1).weapons(BOW).cd(22).theme(WIND).act(24, 20, 24, hit(10, beam(16.0, 1.0), 4.0, 0.8))'
+     '.req("charged_shot", 1).weapons(BOW).cd(22).theme(WIND).act(24, 20, 24, hit(10, beam(16.0, 1.0), 8.4, 0.8))'
      '.fx(vis(START, "cast"), vis(0, "ray"), vis(0, "lightning"))',
      "arrow1 beam - WIND",
      "一閃の矢", "Flash Arrow",
@@ -91,7 +91,7 @@ NODES = [
      "target halo star WIND",
      "名射手", "Master Marksman", "スキルの威力が上がる。", "Raises the power of your skills."),
     ("a", "suppressing_fire", 0, 2, 4,
-     '.req("ricochet", 1).weapons(BOW).cd(20).theme(STEEL).act(26, 22, 24, shots(4, 3, 6, arrow(4.0), 0.7, 0.1))'
+     '.req("ricochet", 1).weapons(BOW).cd(20).theme(STEEL).act(26, 22, 24, shots(4, 3, 6, arrow(4.0), 1.44, 0.1))'
      '.fx(afflict(5, SLOW, 80, 2), vis(START, "cast"), vis(5, "burst"))',
      "arrows5fan speed x6 STEEL",
      "制圧射撃", "Suppressing Fire",
@@ -103,7 +103,7 @@ NODES = [
 
     ("u", "one_shot_one_kill", 0, 0, 5,
      '.req("flash_arrow", 3).weapons(BOW).cd(120).theme(WIND)'
-     '.act(52, 48, 40, pause(6), shot(38, arrow(6.0).withPierce(16), 9.0, 3.0))'
+     '.act(52, 48, 40, pause(6), shot(38, arrow(6.0).withPierce(16), 16.0, 3.0))'
      '.fx(self(START, DEFENSE_UP, 0.5, 44), execute(1, 0.4, 1.5), afflict(1, VULNERABLE, 160, 0.3),'
      ' vis(START, "judgment_charge"), vis(0, "sigil"), vis(1, "ray"), vis(1, "impact"))',
      "target beam skull LIGHT",
@@ -116,7 +116,7 @@ NODES = [
      "必中", "Perfect Aim", "会心率と遠距離攻撃力が上がる。", "Raises critical chance and ranged power."),
     ("a", "skyfall_arrow", 0, 2, 5,
      '.req("suppressing_fire", 3).weapons(BOW).cd(32).theme(FIRE)'
-     '.act(30, 26, 28, shot(12, arrow(3.0).withExplosion(4.0).fallingFromAbove(), 4.2, 1.6))'
+     '.act(30, 26, 28, shot(12, arrow(3.0).withExplosion(4.0).fallingFromAbove(), 8.66, 1.6))'
      '.fx(afflict(0, BURN, 60, 0), vis(START, "meteor_cast"), vis(0, "smite"), vis(0, "nova"))',
      "meteor smite burn FIRE",
      "天墜の矢", "Skyfall Arrow",
@@ -129,14 +129,14 @@ NODES = [
 
     # ------------------------------------------------------------------ 1: 戦術
     ("a", "flashbang_arrow", 1, 0, 1,
-     '.weapons(BOW).cd(12).theme(HOLY).act(18, 14, 14, shot(7, arrow(4.0).withExplosion(3.0), 1.0, 0.2))'
+     '.weapons(BOW).cd(12).theme(HOLY).act(18, 14, 14, shot(7, arrow(4.0).withExplosion(3.0), 4.5, 0.2))'
      '.fx(afflict(0, BLIND, 80, 0), vis(START, "cast"), vis(0, "burst"))',
      "arrow1 nova blind LIGHT",
      "閃光矢", "Flashbang Arrow",
      "閃光を放つ矢を射る。炸裂した場所の周りの敵は目がくらむ。",
      "Shoot an arrow that bursts in a blinding flash; the foes around where it lands are blinded."),
     ("a", "tactical_roll", 1, 1, 1,
-     '.weapons(BOW).cd(12).theme(WIND).act(16, 12, 14, shot(6, arrow(4.2), 1.6, 0.6))'
+     '.weapons(BOW).cd(12).theme(WIND).act(16, 12, 14, shot(6, arrow(4.2), 5.28, 0.6))'
      '.fx(retreat(START, 6), self(0, SPEED, 1, 60), vis(START, "blink"), vis(0, "cast"))',
      "boot speed speed WIND",
      "戦術転回", "Tactical Roll",
@@ -147,7 +147,7 @@ NODES = [
      "戦術眼", "Battlefield Eye", "最大スタミナが上がり、回避のスタミナ消費が減る。",
      "Raises maximum stamina; dodging costs less stamina."),
     ("a", "smoke_arrow", 1, 3, 1,
-     '.weapons(BOW).cd(16).theme(SHADOW).act(16, 12, 14, shot(6, arrow(3.6).withExplosion(3.5), 1.0, 0.0))'
+     '.weapons(BOW).cd(16).theme(SHADOW).act(16, 12, 14, shot(6, arrow(3.6).withExplosion(3.5), 4.5, 0.0))'
      '.fx(afflict(0, SLOW, 80, 2), vanish(0, 10), vis(START, "cast"), vis(0, "smoke"))',
      "arrow2 cloud slow SHADOW",
      "煙幕矢", "Smoke Arrow",
@@ -155,7 +155,7 @@ NODES = [
      "Shoot an arrow trailing smoke: foes caught in it slow down, and the enemies near you lose track of you."),
 
     ("a", "net_arrow", 1, 0, 2,
-     '.req("flashbang_arrow", 1).weapons(BOW).cd(16).theme(EARTH).act(18, 14, 14, shot(7, arrow(3.6).withExplosion(2.0), 1.0, 0.0))'
+     '.req("flashbang_arrow", 1).weapons(BOW).cd(16).theme(EARTH).act(18, 14, 14, shot(7, arrow(3.6).withExplosion(2.0), 4.5, 0.0))'
      '.fx(afflict(0, STUN, 50, 0), vis(START, "cast"), vis(0, "chains"))',
      "chains glow stun EARTH",
      "捕縛網", "Net Arrow",
@@ -165,7 +165,7 @@ NODES = [
      "hood glow - LIFE",
      "隠密外套", "Ghillie Cloak", "攻撃を回避しやすくなる。", "You dodge attacks more often."),
     ("a", "concussive_arrow", 1, 2, 2,
-     '.req("tactical_roll", 1).weapons(BOW).cd(14).theme(EARTH).act(18, 14, 16, shot(7, arrow(4.2).withExplosion(2.6), 1.8, 2.4))'
+     '.req("tactical_roll", 1).weapons(BOW).cd(14).theme(EARTH).act(18, 14, 16, shot(7, arrow(4.2).withExplosion(2.6), 5.54, 2.4))'
      '.fx(afflict(0, LAUNCH, 1, 0.6), vis(START, "cast"), vis(0, "impact"), vis(0, "burst"))',
      "bomb burst launch EARTH",
      "衝撃矢", "Concussive Arrow",
@@ -176,7 +176,7 @@ NODES = [
      "観測手", "Spotter", "攻撃が一定確率で敵を脆弱にする。", "Your attacks may leave the foe vulnerable."),
 
     ("a", "mark_target", 1, 0, 3,
-     '.req("net_arrow", 1).weapons(BOW).cd(24).theme(BLOOD).act(18, 14, 16, shot(7, arrow(4.4), 1.0, 0.2))'
+     '.req("net_arrow", 1).weapons(BOW).cd(24).theme(BLOOD).act(18, 14, 16, shot(7, arrow(4.4), 4.5, 0.2))'
      '.fx(afflict(0, VULNERABLE, 240, 0.3), allies(0, ATTACK_UP, 0.1, 200, 12), vis(START, "cast"), vis(0, "sigil"))',
      "banner glow vuln BLOOD",
      "標的指示", "Mark the Target",
@@ -184,7 +184,7 @@ NODES = [
      "Point out the target with an arrow: it takes far more damage for a long while and the allies near you strike "
      "harder."),
     ("a", "incendiary_volley", 1, 1, 3,
-     '.req("ghillie_cloak", 1).weapons(BOW).cd(18).theme(FIRE).act(22, 18, 20, shots(6, 4, 3, arrow(3.2).withExplosion(2.0), 1.0, 0.3))'
+     '.req("ghillie_cloak", 1).weapons(BOW).cd(18).theme(FIRE).act(22, 18, 20, shots(6, 4, 3, arrow(3.2).withExplosion(2.0), 2.37, 0.3))'
      '.fx(afflict(2, BURN, 80, 0), vis(START, "cast"), vis(2, "burst"))',
      "arrows3fan flamewall burn FIRE",
      "焼夷弾幕", "Incendiary Volley",
@@ -195,14 +195,14 @@ NODES = [
      "作戦立案", "Battle Plan", "スキルの再使用時間が短くなる。", "Skills recover faster."),
     ("a", "overwatch", 1, 3, 3,
      '.req("concussive_arrow", 1).weapons(BOW).cd(28).theme(WIND).act(18, 14, 20, pause(5))'
-     '.fx(zone(0, LOOK, 14.0, 5.0, 0, 8, 10, 0.7, SLOW, 40, 1), vis(START, "cast"), vis(0, "arrow_rain"))',
+     '.fx(zone(0, LOOK, 14.0, 5.0, 0, 8, 10, 1.31, SLOW, 40, 1), vis(START, "cast"), vis(0, "arrow_rain"))',
      "arrows_rain zone slow WIND",
      "監視射撃", "Overwatch",
      "狙った場所を見張り、しばらくの間そこへ矢を降らせ続ける。中の敵は傷つき、足が鈍る。",
      "Watch over the spot you aim at and keep arrows falling on it for a while; foes inside are hurt and slowed."),
 
     ("a", "shrapnel_arrow", 1, 0, 4,
-     '.req("mark_target", 1).weapons(BOW).cd(22).theme(STEEL).act(20, 16, 22, shot(8, arrow(4.0).withExplosion(3.5), 2.6, 1.0))'
+     '.req("mark_target", 1).weapons(BOW).cd(22).theme(STEEL).act(20, 16, 22, shot(8, arrow(4.0).withExplosion(3.5), 6.58, 1.0))'
      '.fx(afflict(0, BLEED, 100, 0.4), vis(START, "cast"), vis(0, "burst"), vis(0, "nova"))',
      "knives7 burst bleed STEEL",
      "破片矢", "Shrapnel Arrow",
@@ -226,7 +226,7 @@ NODES = [
 
     ("u", "annihilation_field", 1, 0, 5,
      '.req("shrapnel_arrow", 3).weapons(BOW).cd(120).theme(FIRE)'
-     '.act(44, 40, 40, seq(pause(6), shots(10, 3, 8, arrow(2.6).withExplosion(2.2).fallingFromAbove(), 1.0, 0.3)))'
+     '.act(44, 40, 40, seq(pause(6), shots(10, 3, 8, arrow(2.6).withExplosion(2.2).fallingFromAbove(), 1.78, 0.3)))'
      '.fx(afflict(1, SLOW, 100, 3), afflict(8, VULNERABLE, 160, 0.3), afflict(8, BURN, 80, 0), vis(START, "sigil"),'
      ' vis(0, "cast"), vis(1, "arrow_rain"), vis(5, "rain"), vis(8, "nova"))',
      "arrows_rain flamewall x7 FIRE",
@@ -238,7 +238,7 @@ NODES = [
      "crown glow clock STEEL",
      "軍師", "Tactician", "スキルの威力が上がり、再使用時間が短くなる。", "Raises skill power; skills recover faster."),
     ("a", "parting_volley", 1, 2, 5,
-     '.req("signal_fire", 1).weapons(BOW).cd(26).theme(WIND).act(20, 16, 22, shot(8, arrow(4.6).withFan(5, 30), 1.2, 0.4))'
+     '.req("signal_fire", 1).weapons(BOW).cd(26).theme(WIND).act(20, 16, 22, shot(8, arrow(4.6).withFan(5, 30), 2.2, 0.4))'
      '.fx(retreat(START, 10), self(0, SPEED, 1, 80), vis(START, "blink"), vis(0, "cast"))',
      "arrows5fan speed speed WIND",
      "離脱射撃", "Parting Volley",

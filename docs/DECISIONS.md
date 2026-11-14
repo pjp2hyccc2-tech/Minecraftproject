@@ -804,3 +804,17 @@ Decisions:
 - **More skill points, also in old worlds**: 2 → 3 per level and per tenth level (×1.5). Forge keeps the values a config file
   has, so a world's file of balance revision 0 still at the old default 2 is moved to 3 once (`BalanceRevisions`, revision 1);
   a value set by hand stays.
+
+## D-CLASSPOWER: second-class skills hit for 450 % to 1600 % (2026-11-15)
+
+The owner: 「二次職の攻撃スキルの＋のパーセンテージを最低でも450とかにして攻撃特化の職業なら最高で1600％くらいにして」.
+- Read as the skill tree's 総威力 at level 1 (the multipliers of a skill's hits × 100, the number shown when a skill is
+  learned or looked at): every damaging class skill shows at least 450 %; a skill whose damage is a zone counts all its
+  pulses. The level bonus (+10 % a level) stays on top.
+- "Attack-specialised" classes are the eight whose kit is mostly damage: 忍者・死神・剣聖・呪剣士・賢者・冥術士・狙撃手・精霊弓士
+  (the melee, caster and ranged roles, and the hexblade, whose blood magic is offensive though its role card says hybrid).
+  Their actives spread over 450–1100 % and their damage ultimates over 1300–1600 %. The hybrids (聖騎士・審問官) go to
+  900 % / 1200 %, the tank and the healer (守護士・司教) to 800 % / 1000 %, so the attack classes stay the hardest hitters.
+- Per class the old order of strength is kept (a linear spread), nothing becomes weaker, heal zones keep their side
+  damage, and ultimates whose point is healing or protection are spread like actives. The job trees are unchanged.
+- The numbers were written into the specs by `tools/jobs/class_power.py`; `SecondClassTest` holds the rule.

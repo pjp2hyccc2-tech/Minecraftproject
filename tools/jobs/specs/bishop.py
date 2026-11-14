@@ -24,7 +24,7 @@ NODES = [
      "heart - heal LIGHT",
      "司教の慈悲", "Bishop's Mercy", "回復量が上がる。", "Raises healing."),
     ("a", "holy_word", 0, 3, 1,
-     '.cd(10).theme(HOLY).act(16, 12, 16, hit(7, circle(4.0), 1.8, 0.6))'
+     '.cd(10).theme(HOLY).act(16, 12, 16, hit(7, circle(4.0), 4.8, 0.6))'
      '.fx(heal(0, 8, 0.06, 2), afflict(0, BLIND, 40, 0), vis(0, "nova"), vis(0, "heal"))',
      "tome nova blind LIGHT",
      "聖言", "Holy Word",
@@ -101,7 +101,7 @@ NODES = [
      "守護聖人", "Patron Saint", "HPが減るほど受けるダメージが減る。", "The lower your health, the less damage you take."),
 
     ("u", "grand_benediction", 0, 0, 5,
-     '.req("hands_of_grace", 3).cd(150).theme(HOLY).act(40, 36, 40, pause(10), hit(18, circle(8.0), 2.0, 1.0))'
+     '.req("hands_of_grace", 3).cd(150).theme(HOLY).act(40, 36, 40, pause(10), hit(18, circle(8.0), 4.96, 1.0))'
      '.fx(revive(0, 16, 0.5), heal(0, 16, 0.4, 8), cleanse(0, 16), allies(0, ATTACK_UP, 0.2, 240, 16),'
      ' self(0, ATTACK_UP, 0.2, 240), shieldAllies(0, 0.3, 240, 16), afflict(1, BLIND, 60, 0), vis(START, "cast"),'
      ' vis(0, "sigil"), vis(0, "heal"), vis(1, "pillar"), vis(1, "nova"))',
@@ -133,7 +133,7 @@ NODES = [
      "Raise a barrier of light that shields you and the allies around you."),
     ("a", "exorcism_ward", 1, 1, 1,
      '.cd(20).theme(HOLY).act(14, 10, 16, pause(4))'
-     '.fx(zone(0, CASTER, 0, 5.0, 0, 8, 12, 0.6, BLIND, 30, 0), vis(0, "sigil"), vis(0, "pillar"))',
+     '.fx(zone(0, CASTER, 0, 5.0, 0, 8, 12, 0.89, BLIND, 30, 0), vis(0, "sigil"), vis(0, "pillar"))',
      "rune zone blind HOLY",
      "破魔の結界", "Exorcism Ward",
      "足元に破魔の結界を広げる。しばらくの間、結界の中の敵は光に焼かれて目がくらむ。",
@@ -142,7 +142,7 @@ NODES = [
      "chest - shield HOLY",
      "聖衣", "Sacred Vestments", "防御力と最大HPが上がる。", "Raises defense and maximum health."),
     ("a", "holy_seal", 1, 3, 1,
-     '.cd(16).theme(HOLY).act(16, 12, 14, hit(7, ahead(2.5, 4.0), 1.4, 0.0))'
+     '.cd(16).theme(HOLY).act(16, 12, 14, hit(7, ahead(2.5, 4.0), 4.5, 0.0))'
      '.fx(afflict(0, STUN, 60, 0), afflict(0, WEAKEN, 100, 0.15), vis(START, "cast"), vis(0, "chains"), vis(0, "sigil"))',
      "chains halo stun HOLY",
      "封印", "Holy Seal",
@@ -161,7 +161,7 @@ NODES = [
      "rune - shield HOLY",
      "結界術", "Warding Lore", "ガード性能と防御力が上がる。", "Raises guard and defense."),
     ("a", "repel_evil", 1, 2, 2,
-     '.req("exorcism_ward", 1).cd(18).theme(HOLY).act(16, 12, 16, hit(6, circle(5.0), 1.6, 2.6))'
+     '.req("exorcism_ward", 1).cd(18).theme(HOLY).act(16, 12, 16, hit(6, circle(5.0), 4.65, 2.6))'
      '.fx(afflict(0, WEAKEN, 100, 0.15), vis(0, "nova"), vis(0, "roar"))',
      "sun nova weaken HOLY",
      "退魔の波動", "Wave of Banishment",
@@ -181,7 +181,7 @@ NODES = [
      "Raise a ward like a cathedral: your allies are greatly hardened and keep healing while they stay inside it."),
     ("a", "binding_circle", 1, 1, 3,
      '.req("warding_lore", 1).cd(26).theme(HOLY).act(16, 12, 18, pause(5))'
-     '.fx(zone(0, LOOK, 10.0, 4.5, 0, 6, 10, 0.4, SLOW, 40, 4), vis(START, "cast"), vis(0, "sigil"), vis(0, "chains"))',
+     '.fx(zone(0, LOOK, 10.0, 4.5, 0, 6, 10, 0.88, SLOW, 40, 4), vis(START, "cast"), vis(0, "sigil"), vis(0, "chains"))',
      "rune ring slow HOLY",
      "縛魔陣", "Circle of Binding",
      "狙った場所に魔を縛る陣を描く。しばらくの間、陣の中の敵はほとんど動けなくなる。",
@@ -190,7 +190,7 @@ NODES = [
      "shield_small glow - STEEL",
      "鉄の信心", "Iron Piety", "防御力が上がる。", "Raises defense."),
     ("a", "prison_of_light", 1, 3, 3,
-     '.req("repel_evil", 1).cd(22).theme(HOLY).act(20, 16, 18, hit(9, ahead(3.0, 5.0), 2.0, 0.0))'
+     '.req("repel_evil", 1).cd(22).theme(HOLY).act(20, 16, 18, hit(9, ahead(3.0, 5.0), 4.96, 0.0))'
      '.fx(afflict(0, STUN, 60, 0), vis(START, "cast"), vis(0, "pillar"), vis(0, "chains"))',
      "tower beamd stun LIGHT",
      "光の牢獄", "Prison of Light",
@@ -210,7 +210,7 @@ NODES = [
      "結界師", "Ward Master", "スキルの再使用時間が短くなり、ガード性能が上がる。", "Skills recover faster; raises guard."),
     ("a", "rain_of_holy_lances", 1, 2, 4,
      '.req("binding_circle", 1).cd(24).theme(HOLY)'
-     '.act(26, 22, 24, shots(6, 3, 5, orb("holy_lance", 1.8, 40).withExplosion(1.6).fallingFromAbove(), 1.2, 0.3))'
+     '.act(26, 22, 24, shots(6, 3, 5, orb("holy_lance", 1.8, 40).withExplosion(1.6).fallingFromAbove(), 1.6, 0.3))'
      '.fx(vis(START, "cast"), vis(0, "rain"), vis(4, "burst"))',
      "lance rain x5 LIGHT",
      "聖槍の雨", "Rain of Holy Lances",
@@ -221,7 +221,7 @@ NODES = [
      "信仰の砦", "Bastion of Faith", "最大HPが上がる。", "Raises maximum health."),
 
     ("u", "heavenly_ward", 1, 0, 5,
-     '.req("divine_mirror", 3).cd(150).theme(HOLY).act(40, 36, 40, pause(8), hit(16, circle(8.0), 2.4, 2.0))'
+     '.req("divine_mirror", 3).cd(150).theme(HOLY).act(40, 36, 40, pause(8), hit(16, circle(8.0), 5.26, 2.0))'
      '.fx(shieldAllies(0, 0.5, 300, 14), allies(0, DEFENSE_UP, 0.35, 300, 14), self(0, DEFENSE_UP, 0.35, 300),'
      ' healZone(0, CASTER, 0, 9.0, 14, 20, 0.03, 1.0), afflict(1, WEAKEN, 120, 0.2), vis(START, "cast"),'
      ' vis(0, "sigil"), vis(0, "sanctuary"), vis(1, "pillar"), vis(1, "nova"))',
@@ -234,7 +234,7 @@ NODES = [
      "crown halo shield HOLY",
      "大結界師", "Grand Warden", "ガード性能と防御力が大きく上がる。", "Greatly raises guard and defense."),
     ("a", "great_purification", 1, 2, 5,
-     '.req("rain_of_holy_lances", 3).cd(36).theme(HOLY).act(24, 20, 26, hit(10, circle(7.0), 3.4, 1.2))'
+     '.req("rain_of_holy_lances", 3).cd(36).theme(HOLY).act(24, 20, 26, hit(10, circle(7.0), 6.02, 1.2))'
      '.fx(afflict(0, BLIND, 80, 0), cleanse(0, 10), vis(START, "cast"), vis(0, "nova"), vis(0, "judgment"))',
      "sun burst blind LIGHT",
      "大祓", "Great Purification",

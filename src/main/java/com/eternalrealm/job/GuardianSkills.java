@@ -29,10 +29,10 @@ final class GuardianSkills {
                 .fx(self(0, DEFENSE_UP, 0.35, 200), shield(0, 0.25, 200), self(0, THORNS, 0.2, 200), vis(0, "shield"),
                         vis(0, "iron_wall"));
         t.passive("stone_skin", 0, 1, 1).bonus(stats(mods().defense(6).healthPercent(0.02)));
-        t.active("shield_crush", 0, 2, 1).cd(9).theme(STEEL).act(18, 14, 16, hit(7, arc(3.6, 60), 2.6, 1.2))
+        t.active("shield_crush", 0, 2, 1).cd(9).theme(STEEL).act(18, 14, 16, hit(7, arc(3.6, 60), 5.22, 1.2))
                 .fx(afflict(0, STUN, 30, 0), afflict(0, VULNERABLE, 100, 0.15), vis(0, "impact"), vis(0, "slam_small"));
         t.active("riposte_stance", 0, 3, 1).cd(14).theme(STEEL)
-                .act(22, 18, 14, pause(3), hit(14, circle(3.4), 2.4, 1.0))
+                .act(22, 18, 14, pause(3), hit(14, circle(3.4), 5.12, 1.0))
                 .fx(self(START, DEFENSE_UP, 0.6, 20), self(START, EVASION, 0.3, 20), vis(START, "shield"),
                         vis(1, "spin"));
         t.active("bastion", 0, 0, 2).req("titan_stance", 3).cd(30).theme(EARTH).act(16, 12, 15, pause(5))
@@ -40,14 +40,14 @@ final class GuardianSkills {
                         vis(0, "sigil"));
         t.passive("iron_resolve", 0, 1, 2).req("stone_skin", 1).bonus(lastStand(0.0, 0.05));
         t.active("rampart_slam", 0, 2, 2).req("shield_crush", 3).cd(12).theme(EARTH)
-                .act(22, 18, 20, hit(9, circle(3.8), 2.8, 1.4))
+                .act(22, 18, 20, hit(9, circle(3.8), 5.32, 1.4))
                 .fx(afflict(0, SLOW, 80, 2), shield(0, 0.1, 100), vis(0, "quake"), vis(0, "impact"));
         t.passive("reprisal", 0, 3, 2).req("riposte_stance", 1).bonus(thorns(0.06));
         t.active("immovable", 0, 0, 3).req("bastion", 1).cd(40).theme(STEEL).act(12, 8, 10, pause(2))
                 .fx(self(0, DEFENSE_UP, 0.6, 100), cleanse(0, 0), stamina(0, 40), vis(0, "roar"), vis(0, "shield"));
         t.passive("fortified_heart", 0, 1, 3).req("iron_resolve", 1).bonus(stats(mods().healthPercent(0.04)));
         t.active("earthwall", 0, 2, 3).req("rampart_slam", 1).cd(18).theme(EARTH)
-                .act(26, 22, 22, hits(6, 6, 3, line(5.5, 2.0), 1.3, 0.8))
+                .act(26, 22, 22, hits(6, 6, 3, line(5.5, 2.0), 1.96, 0.8))
                 .fx(dash(START, 3), afflict(2, LAUNCH, 1, 0.7), vis(0, "quake"), vis(2, "pillar"));
         t.passive("spiked_bulwark", 0, 3, 3).req("reprisal", 3).bonus(stats(mods().guard(0.03)), thorns(0.03));
         t.active("wall_of_aegis", 0, 0, 4).req("immovable", 1).cd(45).theme(HOLY).act(18, 14, 20, pause(6))
@@ -55,47 +55,47 @@ final class GuardianSkills {
                         vis(START, "cast"), vis(0, "shield"), vis(0, "aura"));
         t.passive("unyielding", 0, 1, 4).req("fortified_heart", 1).bonus(lastStand(0.05, 0.04));
         t.active("colossus_strike", 0, 2, 4).req("earthwall", 1).cd(22).theme(EARTH)
-                .act(30, 26, 28, hit(18, circle(5.0), 4.2, 1.6))
+                .act(30, 26, 28, hit(18, circle(5.0), 6.04, 1.6))
                 .fx(leap(START, 3, 2.0), afflict(0, STUN, 40, 0), vis(START, "cast"), vis(0, "quake"), vis(0, "nova"));
         t.passive("retribution_aura", 0, 3, 4).req("spiked_bulwark", 1).bonus(proc(WEAKEN, 0.05, 80, 0.15, true));
         t.ultimate("eternal_fortress", 0, 0, 5).req("wall_of_aegis", 3).cd(130).theme(EARTH)
-                .act(32, 28, 35, pause(8), hit(22, circle(6.5), 4.5, 1.5))
+                .act(32, 28, 35, pause(8), hit(22, circle(6.5), 10.0, 1.5))
                 .fx(shield(0, 1.2, 240), self(0, DEFENSE_UP, 0.7, 240), taunt(0, 18, 240),
                         allies(0, DEFENSE_UP, 0.3, 240, 12), afflict(1, STUN, 50, 0), vis(START, "cast"),
                         vis(0, "iron_wall"), vis(1, "quake"), vis(1, "pillar"));
         t.passive("living_citadel", 0, 1, 5).req("unyielding", 3).bonus(stats(mods().healthPercent(0.05).defense(6)));
         t.active("mountain_breaker", 0, 2, 5).req("colossus_strike", 3).cd(30).theme(EARTH)
-                .act(36, 32, 32, hit(10, arc(4.5, 90), 2.4, 0.8), hit(24, ahead(3.5, 4.0), 4.0, 1.6))
+                .act(36, 32, 32, hit(10, arc(4.5, 90), 2.69, 0.8), hit(24, ahead(3.5, 4.0), 4.49, 1.6))
                 .fx(afflict(1, LAUNCH, 1, 0.8), afflict(1, VULNERABLE, 120, 0.25), vis(0, "slash"), vis(1, "quake"),
                         vis(1, "burst"));
         t.passive("soul_of_the_aegis", 0, 3, 5).req("retribution_aura", 1).bonus(cooldown(0.03), saver(0.03));
 
         // ---------------------------------------------------------------- 1: 統率
-        t.active("challengers_roar", 1, 0, 1).cd(12).theme(STEEL).act(16, 12, 12, hit(6, circle(6.0), 1.2, 0.4))
+        t.active("challengers_roar", 1, 0, 1).cd(12).theme(STEEL).act(16, 12, 12, hit(6, circle(6.0), 4.5, 0.4))
                 .fx(taunt(0, 14, 160), afflict(0, WEAKEN, 120, 0.2), vis(0, "roar"), vis(0, "war_cry"));
         t.active("shield_throw", 1, 1, 1).cd(8).theme(STEEL)
-                .act(16, 12, 14, shot(5, orb("crescent", 2.0, 20).withPierce(4), 2.2, 0.8))
+                .act(16, 12, 14, shot(5, orb("crescent", 2.0, 20).withPierce(4), 5.01, 0.8))
                 .fx(afflict(0, STUN, 20, 0), vis(START, "cast"), vis(0, "slash"));
         t.passive("commanders_presence", 1, 2, 1).bonus(stats(mods().healthPercent(0.02).guard(0.01)));
-        t.active("guardians_leap", 1, 3, 1).cd(14).theme(WIND).act(24, 20, 16, hit(16, circle(3.6), 2.0, 1.0))
+        t.active("guardians_leap", 1, 3, 1).cd(14).theme(WIND).act(24, 20, 16, hit(16, circle(3.6), 4.91, 1.0))
                 .fx(leap(START, 8, 2.5), shieldAllies(0, 0.12, 120, 5), vis(START, "blink"), vis(0, "impact"));
         t.active("iron_vow", 1, 0, 2).req("challengers_roar", 3).cd(28).theme(STEEL).act(16, 12, 15, pause(5))
                 .fx(allies(0, DEFENSE_UP, 0.25, 200, 10), allies(0, THORNS, 0.1, 200, 10), taunt(0, 10, 120),
                         vis(0, "aura"), vis(0, "sigil"));
         t.passive("rallying_spirit", 1, 1, 2).req("commanders_presence", 1).bonus(healOnKill(0.015));
         t.active("chain_hook", 1, 2, 2).req("shield_throw", 1).cd(12).theme(STEEL)
-                .act(18, 14, 14, hit(8, line(7.0, 1.2), 1.8, 0.0))
+                .act(18, 14, 14, hit(8, line(7.0, 1.2), 4.81, 0.0))
                 .fx(afflict(0, PULL, 1, 0.5), afflict(0, SLOW, 60, 2), vis(0, "chains"));
         t.passive("vanguard", 1, 3, 2).req("guardians_leap", 1).bonus(stats(mods().moveSpeed(0.02).stamina(5)));
         t.active("rallying_banner", 1, 0, 3).req("iron_vow", 1).cd(36).theme(HOLY).act(18, 14, 18, pause(6))
                 .fx(allies(0, ATTACK_UP, 0.15, 240, 10), allies(0, REGENERATION, 0, 240, 10),
                         healZone(0, CASTER, 0, 5.0, 8, 20, 0.02, 0), vis(0, "aura"), vis(0, "pillar"));
         t.active("taunting_blow", 1, 1, 3).req("chain_hook", 1).cd(10).theme(STEEL)
-                .act(16, 12, 14, hit(6, arc(3.8, 80), 2.6, 0.6))
+                .act(16, 12, 14, hit(6, arc(3.8, 80), 5.22, 0.6))
                 .fx(taunt(0, 8, 120), afflict(0, VULNERABLE, 80, 0.12), vis(0, "slash"), vis(0, "roar"));
         t.passive("warlords_grip", 1, 2, 3).req("rallying_spirit", 3).bonus(proc(STUN, 0.03, 20, 0, true));
         t.active("sentinel_charge", 1, 3, 3).req("guardians_leap", 3).cd(16).theme(WIND)
-                .act(22, 18, 20, hits(4, 5, 3, line(4.0, 1.6), 1.2, 1.0))
+                .act(22, 18, 20, hits(4, 5, 3, line(4.0, 1.6), 1.91, 1.0))
                 .fx(dash(START, 8), allies(2, SPEED, 1, 100, 6), vis(START, "blink"), vis(0, "thrust"),
                         vis(2, "impact"));
         t.active("line_of_sanctuary", 1, 0, 4).req("rallying_banner", 1).cd(40).theme(HOLY).act(20, 16, 22, pause(6))
@@ -103,7 +103,7 @@ final class GuardianSkills {
                         vis(START, "cast"), vis(0, "shield"), vis(0, "sigil"));
         t.passive("born_leader", 1, 1, 4).req("warlords_grip", 1).bonus(power(0.03));
         t.active("gravity_bash", 1, 2, 4).req("taunting_blow", 3).cd(20).theme(EARTH)
-                .act(24, 20, 22, hit(10, circle(5.5), 2.8, 0.0))
+                .act(24, 20, 22, hit(10, circle(5.5), 5.32, 0.0))
                 .fx(afflict(0, PULL, 1, 0.6), afflict(0, STUN, 30, 0), taunt(0, 12, 140), vis(0, "vortex"),
                         vis(0, "quake"));
         t.passive("steadfast_pace", 1, 3, 4).req("vanguard", 3).bonus(stats(mods().guard(0.02)), saver(0.02));

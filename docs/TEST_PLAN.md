@@ -424,3 +424,5 @@
 | Unit `JobsTest`（更新） | 全スキル数は324＋480、二次職のIDの保存値は職業に戻る、未知のIDは職業なし |
 | GameTest `SkillTreeGameTests.aKnightGrowsIntoAGuardianAndUsesOnlyItsOwnSkills` | 実サーバー: Lv39の騎士は進化できない、騎士は賢者になれない、Lv40で守護士へ（無料、保存IDは guardian、職業は騎士のまま）、守護士と騎士のスキルは習得・枠に入り聖騎士のスキルは断る、枠5が守護士のスキルで戦闘にバインドされる、聖騎士への転向で費用を払い守護士のポイントが戻り騎士の分は残り枠から外れる |
 | GameTest `SkillTreeGameTests.treeRulesAreCheckedByTheServer`（更新） | Lv10のポイントはサーバーの設定どおり（既定30） |
+| Unit `SecondClassTest.classAttackSkillsHitForAtLeast450AndAttackClassesReach1600Percent` | 二次職のダメージのあるスキルは Lv1 の総威力（領域だけなら全パルス）が450%以上、攻撃特化8職の最強は1600%、ほかの4職は800〜1205% |
+| Unit `JobsTest.totalDamageOfEverySkillIsSane`（更新） | 職業のスキルは100〜1000%、二次職のスキルは450〜1605% |

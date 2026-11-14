@@ -10,14 +10,14 @@ BRANCHES = [("刈取", "Harvest"), ("冥府", "Underworld")]
 NODES = [
     # ------------------------------------------------------------------ 0: 刈取
     ("a", "soul_reap", 0, 0, 1,
-     '.cd(8).theme(SHADOW).act(18, 14, 15, hit(7, arc(4.6, 110), 2.4, 0.6))'
+     '.cd(8).theme(SHADOW).act(18, 14, 15, hit(7, arc(4.6, 110), 6.02, 0.6))'
      '.fx(siphon(0, 0.15, 0), vis(0, "slash"), vis(0, "shadow"))',
      "scythe arc heal SHADOW",
      "魂刈り", "Soul Reap",
      "大きく弧を描いて前方を薙ぎ払う。与えたダメージの一部でHPを回復する。",
      "Reap a wide arc in front of you; part of the damage you deal flows back as health."),
     ("a", "deaths_footsteps", 0, 1, 1,
-     '.cd(10).theme(SHADOW).act(16, 12, 14, hit(6, circle(3.0), 1.8, 0.6))'
+     '.cd(10).theme(SHADOW).act(16, 12, 14, hit(6, circle(3.0), 5.37, 0.6))'
      '.fx(dash(START, 5), afflict(0, WEAKEN, 100, 0.15), vis(START, "blink"), vis(0, "impact"))',
      "boot mist weaken SHADOW",
      "死神の足音", "Death's Footsteps",
@@ -27,7 +27,7 @@ NODES = [
      "drop - heal BLOOD",
      "刈り手の本能", "Reaper's Instinct", "与えたダメージの一部でHPを回復する。", "Part of the damage you deal heals you."),
     ("a", "mark_of_doom", 0, 3, 1,
-     '.cd(12).theme(SHADOW).act(16, 12, 12, hit(6, ahead(2.0, 3.0), 1.2, 0.2))'
+     '.cd(12).theme(SHADOW).act(16, 12, 12, hit(6, ahead(2.0, 3.0), 4.72, 0.2))'
      '.fx(afflict(0, VULNERABLE, 200, 0.25), vis(START, "cast"), vis(0, "sigil"))',
      "skull halo vuln SHADOW",
      "終焉の印", "Mark of Doom",
@@ -35,7 +35,7 @@ NODES = [
      "Brand the foe ahead with the mark of the end; for a long while it takes more damage from everything."),
 
     ("a", "crescent_reap", 0, 0, 2,
-     '.req("soul_reap", 3).cd(12).theme(SHADOW).act(20, 16, 18, hit(8, circle(4.2), 2.8, 1.0))'
+     '.req("soul_reap", 3).cd(12).theme(SHADOW).act(20, 16, 18, hit(8, circle(4.2), 6.45, 1.0))'
      '.fx(afflict(0, BLEED, 80, 0.4), vis(0, "spin"), vis(0, "slash"))',
      "crescent spiral bleed SHADOW",
      "三日月刈り", "Crescent Reap",
@@ -45,7 +45,7 @@ NODES = [
      "hand - crit FROST",
      "冷たき手", "Cold Hands", "物理攻撃力と会心率が上がる。", "Raises physical power and critical chance."),
     ("a", "execution", 0, 2, 2,
-     '.req("mark_of_doom", 1).cd(16).theme(BLOOD).act(22, 18, 18, hit(10, ahead(2.2, 2.5), 3.0, 0.8))'
+     '.req("mark_of_doom", 1).cd(16).theme(BLOOD).act(22, 18, 18, hit(10, ahead(2.2, 2.5), 6.67, 0.8))'
      '.fx(execute(0, 0.35, 1.0), vis(START, "shadow"), vis(0, "thrust"))',
      "scythe beamd skull BLOOD",
      "処刑", "Execution",
@@ -56,14 +56,14 @@ NODES = [
      "死神の取り分", "The Reaper's Due", "敵を倒すとHPが回復する。", "Defeating a foe restores your health."),
 
     ("a", "soul_harvest", 0, 0, 3,
-     '.req("crescent_reap", 1).cd(20).theme(SHADOW).act(22, 18, 20, hit(10, circle(5.0), 2.2, 0.4))'
+     '.req("crescent_reap", 1).cd(20).theme(SHADOW).act(22, 18, 20, hit(10, circle(5.0), 5.8, 0.4))'
      '.fx(siphon(0, 0.25, 0), vis(0, "vortex"), vis(0, "shadow"))',
      "scythe spiral heal SHADOW",
      "魂の収穫", "Soul Harvest",
      "周りの敵から魂を刈り取る。与えたダメージの多くがHPとなって返ってくる。",
      "Harvest the souls of the foes around you; much of the damage returns to you as health."),
     ("a", "scythe_storm", 0, 1, 3,
-     '.req("cold_hands", 1).cd(18).theme(SHADOW).act(28, 24, 22, hits(4, 4, 5, circle(3.8), 0.8, 0.3))'
+     '.req("cold_hands", 1).cd(18).theme(SHADOW).act(28, 24, 22, hits(4, 4, 5, circle(3.8), 1.55, 0.3))'
      '.fx(vis(0, "blade_storm"), vis(4, "spin"))',
      "scythe claws x5 SHADOW",
      "鎌嵐", "Scythe Storm",
@@ -73,7 +73,7 @@ NODES = [
      "eye glow crit SHADOW",
      "死の集中", "Deathly Focus", "会心ダメージが大きく上がる。", "Greatly raises critical damage."),
     ("a", "death_knell", 0, 3, 3,
-     '.req("execution", 1).cd(22).theme(SHADOW).act(20, 16, 18, hit(8, circle(6.0), 1.6, 0.4))'
+     '.req("execution", 1).cd(22).theme(SHADOW).act(20, 16, 18, hit(8, circle(6.0), 5.15, 0.4))'
      '.fx(afflict(0, WEAKEN, 120, 0.2), afflict(0, SLOW, 120, 2), vis(0, "roar"), vis(0, "impact"))',
      "bell ring weaken SHADOW",
      "弔鐘", "Death Knell",
@@ -81,7 +81,7 @@ NODES = [
      "Toll the bell of mourning: the foes around who hear it grow weak and heavy-footed."),
 
     ("a", "reapers_leap", 0, 0, 4,
-     '.req("soul_harvest", 3).cd(20).theme(SHADOW).act(26, 22, 22, hit(18, circle(4.0), 3.6, 1.2))'
+     '.req("soul_harvest", 3).cd(20).theme(SHADOW).act(26, 22, 22, hit(18, circle(4.0), 7.32, 1.2))'
      '.fx(leap(START, 8, 3.5), afflict(0, VULNERABLE, 100, 0.2), vis(START, "blink"), vis(0, "smite"))',
      "wings smite vuln SHADOW",
      "死神の跳躍", "Reaper's Descent",
@@ -92,7 +92,7 @@ NODES = [
      "尽きぬ飢え", "Undying Hunger", "HPが減るほど与えるダメージが大きく増える。",
      "The lower your health, the harder you strike."),
     ("a", "severance", 0, 2, 4,
-     '.req("death_knell", 1).cd(22).theme(BLOOD).act(24, 20, 24, hit(10, beam(9.0, 1.4), 3.8, 0.6))'
+     '.req("death_knell", 1).cd(22).theme(BLOOD).act(24, 20, 24, hit(10, beam(9.0, 1.4), 7.53, 0.6))'
      '.fx(afflict(0, BLEED, 100, 0.5), vis(START, "shadow"), vis(0, "slash"), vis(0, "ray"))',
      "scythe beam bleed BLOOD",
      "断絶", "Severance",
@@ -104,7 +104,7 @@ NODES = [
 
     ("u", "crimson_harvest", 0, 0, 5,
      '.req("reapers_leap", 3).cd(120).theme(BLOOD)'
-     '.act(44, 40, 40, pause(6), hit(16, circle(7.0), 2.0, 0.4), hit(28, circle(7.5), 4.5, 1.6))'
+     '.act(44, 40, 40, pause(6), hit(16, circle(7.0), 4.92, 0.4), hit(28, circle(7.5), 11.08, 1.6))'
      '.fx(afflict(1, SLOW, 80, 3), execute(2, 0.3, 1.0), siphon(2, 0.3, 0), vis(START, "shadow"), vis(0, "vortex"),'
      ' vis(1, "spin"), vis(2, "nova"), vis(2, "slash"))',
      "moon spiral skull BLOOD",
@@ -116,7 +116,7 @@ NODES = [
      "crown glow crit SHADOW",
      "刈取の王", "Lord of the Harvest", "会心率と会心ダメージが上がる。", "Raises critical chance and critical damage."),
     ("a", "guillotine", 0, 2, 5,
-     '.req("severance", 3).cd(40).theme(BLOOD).act(30, 26, 30, hit(16, ahead(2.5, 2.5), 5.0, 1.0))'
+     '.req("severance", 3).cd(40).theme(BLOOD).act(30, 26, 30, hit(16, ahead(2.5, 2.5), 8.83, 1.0))'
      '.fx(leap(START, 4, 4.0), execute(0, 0.4, 1.2), vis(START, "blink"), vis(0, "judgment"), vis(0, "impact"))',
      "greatsword smite skull BLOOD",
      "断頭", "Guillotine",
@@ -129,14 +129,14 @@ NODES = [
 
     # ------------------------------------------------------------------ 1: 冥府
     ("a", "wraith_bolt", 1, 0, 1,
-     '.cd(8).theme(SHADOW).act(18, 14, 14, shot(7, orb("shadow_bolt", 2.0, 30), 2.2, 0.4))'
+     '.cd(8).theme(SHADOW).act(18, 14, 14, shot(7, orb("shadow_bolt", 2.0, 30), 5.8, 0.4))'
      '.fx(afflict(0, WEAKEN, 100, 0.15), vis(START, "cast"))',
      "orb mist weaken SHADOW",
      "怨霊弾", "Wraith Bolt",
      "怨霊を弾にして放つ。当たった敵は力を吸われて弱る。",
      "Fire a wraith like a bolt; the foe it strikes has its strength drained away."),
     ("a", "terror", 1, 1, 1,
-     '.cd(16).theme(SHADOW).act(16, 12, 14, hit(6, circle(5.0), 1.0, 0.2))'
+     '.cd(16).theme(SHADOW).act(16, 12, 14, hit(6, circle(5.0), 4.5, 0.2))'
      '.fx(afflict(0, SLOW, 100, 3), afflict(0, WEAKEN, 100, 0.2), vis(0, "roar"), vis(0, "shadow"))',
      "mask ring slow SHADOW",
      "恐怖", "Terror",
@@ -146,7 +146,7 @@ NODES = [
      "chains - heart SHADOW",
      "冥府の契約", "Underworld Pact", "最大スタミナと最大HPが上がる。", "Raises maximum stamina and maximum health."),
     ("a", "soul_chain", 1, 3, 1,
-     '.cd(12).theme(SHADOW).act(18, 14, 14, hit(7, line(8.0, 1.0), 1.4, 0.0))'
+     '.cd(12).theme(SHADOW).act(18, 14, 14, hit(7, line(8.0, 1.0), 4.93, 0.0))'
      '.fx(afflict(0, PULL, 1, 1.2), afflict(0, STUN, 20, 0), vis(0, "chains"))',
      "chains beamd pull SHADOW",
      "魂鎖", "Soul Chain",
@@ -155,7 +155,7 @@ NODES = [
 
     ("a", "spectral_blades", 1, 0, 2,
      '.req("wraith_bolt", 3).cd(12).theme(SHADOW)'
-     '.act(20, 16, 16, shots(4, 3, 3, orb("shadow_bolt", 2.6, 24).withPierce(3), 0.9, 0.1))'
+     '.act(20, 16, 16, shots(4, 3, 3, orb("shadow_bolt", 2.6, 24).withPierce(3), 2.11, 0.1))'
      '.fx(vis(START, "shadow"), vis(2, "ray"))',
      "daggers ring x3 SHADOW",
      "亡霊の刃", "Spectral Blades",
@@ -166,7 +166,7 @@ NODES = [
      "畏怖の気配", "Dread Presence", "近接攻撃が一定確率で敵を弱らせる。", "Your melee hits may weaken the foe."),
     ("a", "grave_mist", 1, 2, 2,
      '.req("terror", 1).cd(18).theme(VENOM).act(16, 12, 16, pause(4))'
-     '.fx(zone(0, CASTER, 0, 5.0, 0, 8, 10, 0.5, POISON, 60, 0.3), vis(0, "mist"), vis(0, "smoke"))',
+     '.fx(zone(0, CASTER, 0, 5.0, 0, 8, 10, 0.97, POISON, 60, 0.3), vis(0, "mist"), vis(0, "smoke"))',
      "skull cloud poison VENOM",
      "墓霧", "Grave Mist",
      "墓場の瘴気を足元に広げる。しばらくの間、霧の中の敵は毒に冒され続ける。",
@@ -176,7 +176,7 @@ NODES = [
      "影の衣", "Shade Skin", "攻撃を回避しやすくなる。", "You dodge attacks more often."),
 
     ("a", "legion_of_the_lost", 1, 0, 3,
-     '.req("spectral_blades", 1).cd(22).theme(SHADOW).act(30, 26, 22, hits(6, 5, 4, circle(4.5), 1.0, 0.2))'
+     '.req("spectral_blades", 1).cd(22).theme(SHADOW).act(30, 26, 22, hits(6, 5, 4, circle(4.5), 1.94, 0.2))'
      '.fx(afflict(3, WEAKEN, 100, 0.2), vis(START, "shadow"), vis(0, "storm"), vis(3, "nova"))',
      "skull orbit x4 SHADOW",
      "亡者の軍勢", "Legion of the Lost",
@@ -184,7 +184,7 @@ NODES = [
      "Rouse a host of the dead to fall upon the foes around you four times."),
     ("a", "underworld_gate", 1, 1, 3,
      '.req("dread_presence", 1).cd(26).theme(SHADOW).act(18, 14, 18, pause(6))'
-     '.fx(zone(0, LOOK, 10.0, 4.0, 6, 8, 8, 0.8, SLOW, 40, 3), vis(START, "cast"), vis(0, "rift"))',
+     '.fx(zone(0, LOOK, 10.0, 4.0, 6, 8, 8, 1.29, SLOW, 40, 3), vis(START, "cast"), vis(0, "rift"))',
      "portal spiral slow SHADOW",
      "冥府の門", "Gate of the Underworld",
      "狙った場所に冥府の門を開く。門に引かれた敵は動きが鈍り、しばらく傷つけられ続ける。",
@@ -202,7 +202,7 @@ NODES = [
      "Wrap yourself in a shroud of ghosts: for a while you take less damage, dodge more, and every blow heals you."),
 
     ("a", "requiem_chains", 1, 0, 4,
-     '.req("legion_of_the_lost", 1).cd(24).theme(SHADOW).act(22, 18, 22, hit(10, circle(6.0), 2.0, 0.0))'
+     '.req("legion_of_the_lost", 1).cd(24).theme(SHADOW).act(22, 18, 22, hit(10, circle(6.0), 5.58, 0.0))'
      '.fx(afflict(0, STUN, 40, 0), afflict(0, VULNERABLE, 100, 0.2), vis(0, "chains"), vis(0, "nova"))',
      "chains nova stun SHADOW",
      "鎮魂の鎖", "Chains of Requiem",
@@ -212,7 +212,7 @@ NODES = [
      "gem glow star SHADOW",
      "冥き力", "Dark Might", "スキルの威力が上がる。", "Raises the power of your skills."),
     ("a", "soul_burst", 1, 2, 4,
-     '.req("underworld_gate", 1).cd(22).theme(SHADOW).act(20, 16, 22, hit(9, circle(5.0), 3.4, 1.6))'
+     '.req("underworld_gate", 1).cd(22).theme(SHADOW).act(20, 16, 22, hit(9, circle(5.0), 7.1, 1.6))'
      '.fx(afflict(0, BLIND, 60, 0), vis(0, "burst"), vis(0, "nova"))',
      "orb burst blind SHADOW",
      "魂爆", "Soul Burst",
@@ -224,7 +224,7 @@ NODES = [
 
     ("u", "sending_to_yomi", 1, 0, 5,
      '.req("requiem_chains", 3).cd(130).theme(SHADOW)'
-     '.act(46, 42, 40, pause(6), hit(14, circle(8.0), 1.2, 0.0), hit(30, circle(8.0), 4.8, 1.4))'
+     '.act(46, 42, 40, pause(6), hit(14, circle(8.0), 2.95, 0.0), hit(30, circle(8.0), 11.82, 1.4))'
      '.fx(afflict(1, PULL, 1, 1.0), afflict(2, STUN, 40, 0), afflict(2, VULNERABLE, 160, 0.3), vis(START, "cast"),'
      ' vis(0, "rift"), vis(1, "vortex"), vis(2, "nova"), vis(2, "shadow"))',
      "portal nova pull SHADOW",
@@ -237,8 +237,8 @@ NODES = [
      "渡し守", "The Ferryman", "スキルの再使用時間が短くなり、敵を倒すとHPが回復する。",
      "Skills recover faster; defeating a foe heals you."),
     ("a", "sentence_of_death", 1, 2, 5,
-     '.req("soul_burst", 3).cd(34).theme(SHADOW).act(20, 16, 24, hit(6, ahead(2.0, 4.0), 1.0, 0.0))'
-     '.fx(afflict(0, VULNERABLE, 120, 0.25), zone(0, LOOK, 10.0, 3.0, 40, 1, 1, 6.0), vis(0, "sigil"),'
+     '.req("soul_burst", 3).cd(34).theme(SHADOW).act(20, 16, 24, hit(6, ahead(2.0, 4.0), 4.5, 0.0))'
+     '.fx(afflict(0, VULNERABLE, 120, 0.25), zone(0, LOOK, 10.0, 3.0, 40, 1, 1, 6.5), vis(0, "sigil"),'
      ' vis(0, "judgment"))',
      "hourglass smite skull SHADOW",
      "死の宣告", "Sentence of Death",

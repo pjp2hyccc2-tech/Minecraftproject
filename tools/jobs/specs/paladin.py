@@ -10,14 +10,14 @@ BRANCHES = [("光刃", "Radiant Blade"), ("加護", "Benediction")]
 NODES = [
     # ------------------------------------------------------------------ 0: 光刃
     ("a", "radiant_edge", 0, 0, 1,
-     '.cd(8).theme(HOLY).act(16, 12, 14, hit(6, arc(3.8, 70), 2.6, 0.5))'
+     '.cd(8).theme(HOLY).act(16, 12, 14, hit(6, arc(3.8, 70), 5.4, 0.5))'
      '.fx(siphon(0, 0.2, 0), afflict(0, BLIND, 40, 0), vis(0, "slash"), vis(0, "impact"))',
      "sword arc heal HOLY",
      "光輝の刃", "Radiant Edge",
      "光をまとった斬撃。斬った敵の目をくらませ、与えたダメージの一部でHPを回復する。",
      "A blade wreathed in light: it dazzles the foe and part of the damage heals you."),
     ("a", "smite_down", 0, 1, 1,
-     '.cd(10).theme(HOLY).act(20, 16, 16, shot(8, orb("smite", 1.6, 40).withExplosion(2.8).fallingFromAbove(), 2.8,'
+     '.cd(10).theme(HOLY).act(20, 16, 16, shot(8, orb("smite", 1.6, 40).withExplosion(2.8).fallingFromAbove(), 5.85,'
      ' 0.8)).fx(afflict(0, STUN, 20, 0), vis(START, "cast"), vis(0, "smite"))',
      "hammer smite stun HOLY",
      "天槌落とし", "Skyfall Smite",
@@ -27,7 +27,7 @@ NODES = [
      "cross - - HOLY",
      "騎士の献身", "Knight's Devotion", "物理攻撃力と回復量が上がる。", "Raises physical power and healing."),
     ("a", "crusader_dash", 0, 3, 1,
-     '.cd(12).theme(HOLY).act(18, 14, 16, hit(6, line(6.0, 1.4), 2.2, 1.0))'
+     '.cd(12).theme(HOLY).act(18, 14, 16, hit(6, line(6.0, 1.4), 4.5, 1.0))'
      '.fx(dash(START, 7), afflict(0, VULNERABLE, 80, 0.12), vis(START, "blink"), vis(0, "thrust"))',
      "lance speed vuln HOLY",
      "十字軍突撃", "Crusader's Dash",
@@ -45,7 +45,7 @@ NODES = [
      "flame - crit HOLY",
      "熱情", "Fervor", "会心率と会心ダメージが上がる。", "Raises critical chance and critical damage."),
     ("a", "hammer_of_light", 0, 2, 2,
-     '.req("smite_down", 3).cd(14).theme(HOLY).act(24, 20, 20, hit(10, ahead(2.8, 3.0), 3.4, 1.2))'
+     '.req("smite_down", 3).cd(14).theme(HOLY).act(24, 20, 20, hit(10, ahead(2.8, 3.0), 7.2, 1.2))'
      '.fx(afflict(0, STUN, 30, 0), afflict(0, WEAKEN, 100, 0.15), vis(0, "smite"), vis(0, "quake"))',
      "hammer crack weaken HOLY",
      "光の鉄槌", "Hammer of Light",
@@ -57,14 +57,14 @@ NODES = [
 
     ("a", "cross_slash", 0, 0, 3,
      '.req("blessed_blade", 1).cd(14).theme(HOLY)'
-     '.act(22, 18, 20, hit(6, line(5.0, 1.0), 1.9, 0.4), hit(12, arc(4.0, 90), 1.9, 0.4))'
+     '.act(22, 18, 20, hit(6, line(5.0, 1.0), 4.05, 0.4), hit(12, arc(4.0, 90), 4.05, 0.4))'
      '.fx(afflict(1, VULNERABLE, 100, 0.15), vis(0, "thrust"), vis(1, "slash"))',
      "sword x x2 HOLY",
      "聖十字斬", "Holy Cross",
      "縦と横に斬り、光の十字を刻む。刻まれた敵は脆弱になる。",
      "Cut down, then across, carving a cross of light; the foes it marks grow vulnerable."),
     ("a", "radiant_burst", 0, 1, 3,
-     '.req("hammer_of_light", 1).cd(18).theme(HOLY).act(20, 16, 22, hit(8, circle(4.8), 2.8, 1.0))'
+     '.req("hammer_of_light", 1).cd(18).theme(HOLY).act(20, 16, 22, hit(8, circle(4.8), 5.85, 1.0))'
      '.fx(afflict(0, BLIND, 60, 0), heal(0, 6, 0.06, 2), vis(0, "nova"), vis(0, "burst"))',
      "sun nova heal LIGHT",
      "光爆", "Burst of Radiance",
@@ -75,14 +75,14 @@ NODES = [
      "光の浸透", "Light Infusion", "与えたダメージの一部でHPを回復する。", "Part of the damage you deal heals you."),
     ("a", "judgment_lance", 0, 3, 3,
      '.req("crusader_dash", 3).cd(16).theme(HOLY).act(22, 18, 22, shot(8, orb("holy_lance", 2.8, 24).withPierce(8),'
-     ' 3.0, 0.9)).fx(afflict(0, LAUNCH, 1, 0.6), vis(START, "cast"), vis(0, "ray"))',
+     ' 6.3, 0.9)).fx(afflict(0, LAUNCH, 1, 0.6), vis(START, "cast"), vis(0, "ray"))',
      "spear beam launch HOLY",
      "裁きの槍", "Lance of Judgment",
      "光の槍を投げ放ち、一直線上の敵をすべて貫いて打ち上げる。",
      "Hurl a lance of light: it runs through every foe in its line and throws them up."),
 
     ("a", "seraph_wings", 0, 0, 4,
-     '.req("cross_slash", 1).cd(20).theme(HOLY).act(26, 22, 22, hit(18, circle(4.0), 3.4, 1.2))'
+     '.req("cross_slash", 1).cd(20).theme(HOLY).act(26, 22, 22, hit(18, circle(4.0), 7.2, 1.2))'
      '.fx(leap(START, 7, 3.0), self(0, ATTACK_UP, 0.15, 120), vis(START, "blink"), vis(0, "pillar"), vis(0, "nova"))',
      "wings pillar up HOLY",
      "熾天の翼", "Seraph's Wings",
@@ -105,7 +105,7 @@ NODES = [
      "模範騎士", "Paragon", "スキルの威力が上がる。", "Raises the power of your skills."),
 
     ("u", "divine_judgment", 0, 0, 5,
-     '.req("seraph_wings", 3).cd(120).theme(HOLY).act(40, 36, 40, pause(6), hit(26, circle(7.0), 5.5, 1.6))'
+     '.req("seraph_wings", 3).cd(120).theme(HOLY).act(40, 36, 40, pause(6), hit(26, circle(7.0), 12.0, 1.6))'
      '.fx(self(0, DEFENSE_UP, 0.5, 40), afflict(1, STUN, 50, 0), afflict(1, VULNERABLE, 160, 0.3),'
      ' heal(1, 10, 0.15, 4), vis(START, "cast"), vis(0, "sigil"), vis(1, "pillar"), vis(1, "nova"))',
      "sun smite stun LIGHT",
@@ -117,7 +117,7 @@ NODES = [
      "knight nova up HOLY",
      "光の勇者", "Champion of Light", "物理攻撃力と最大HPが上がる。", "Raises physical power and maximum health."),
     ("a", "heavens_cleave", 0, 2, 5,
-     '.req("consecrated_ground", 1).cd(30).theme(HOLY).act(34, 30, 32, hit(14, beam(10.0, 2.0), 4.2, 1.4))'
+     '.req("consecrated_ground", 1).cd(30).theme(HOLY).act(34, 30, 32, hit(14, beam(10.0, 2.0), 9.0, 1.4))'
      '.fx(afflict(0, BLIND, 80, 0), vis(START, "cast"), vis(0, "ray"), vis(0, "slash"))',
      "greatsword beam blind LIGHT",
      "天裂き", "Heaven's Cleave",
@@ -207,7 +207,7 @@ NODES = [
      "star glow heal LIGHT",
      "灯火", "Beacon", "最大HPが上がり、敵を倒すとHPが回復する。", "Raises maximum health; defeating a foe heals you."),
     ("a", "holy_bulwark", 1, 2, 4,
-     '.req("lionheart", 1).cd(30).theme(HOLY).act(18, 14, 20, hit(8, circle(5.0), 2.4, 1.2))'
+     '.req("lionheart", 1).cd(30).theme(HOLY).act(18, 14, 20, hit(8, circle(5.0), 4.95, 1.2))'
      '.fx(taunt(0, 10, 120), shield(0, 0.3, 160), allies(0, DEFENSE_UP, 0.15, 160, 8), vis(0, "shield"), vis(0, "nova"))',
      "tower nova taunt HOLY",
      "光の城壁", "Wall of Radiance",

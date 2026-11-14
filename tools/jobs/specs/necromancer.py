@@ -10,7 +10,7 @@ BRANCHES = [("呪詛", "Curses"), ("死霊", "Undeath")]
 NODES = [
     # ------------------------------------------------------------------ 0: 呪詛
     ("a", "curse_of_frailty", 0, 0, 1,
-     '.cd(10).theme(SHADOW).act(18, 14, 14, shot(7, orb("shadow_bolt", 2.2, 30), 1.4, 0.2))'
+     '.cd(10).theme(SHADOW).act(18, 14, 14, shot(7, orb("shadow_bolt", 2.2, 30), 4.73, 0.2))'
      '.fx(afflict(0, WEAKEN, 200, 0.2), afflict(0, VULNERABLE, 200, 0.15), vis(START, "cast"))',
      "skull mist weaken SHADOW",
      "衰弱の呪い", "Curse of Frailty",
@@ -18,7 +18,7 @@ NODES = [
      "Fire a bolt of curse: the foe it strikes is left weak and frail for a long while."),
     ("a", "rot", 0, 1, 1,
      '.cd(14).theme(VENOM).act(16, 12, 15, pause(4))'
-     '.fx(zone(0, LOOK, 10.0, 3.5, 0, 6, 10, 0.5, POISON, 60, 0.3), vis(START, "cast"), vis(0, "mist"))',
+     '.fx(zone(0, LOOK, 10.0, 3.5, 0, 6, 10, 1.1, POISON, 60, 0.3), vis(START, "cast"), vis(0, "mist"))',
      "flower cloud poison VENOM",
      "腐朽", "Rot",
      "狙った場所の大地を腐らせる。しばらくの間、そこにいる敵は毒に冒され続ける。",
@@ -27,7 +27,7 @@ NODES = [
      "tome - - SHADOW",
      "冥き学識", "Dark Learning", "魔法攻撃力が上がる。", "Raises magic power."),
     ("a", "hex_volley", 0, 3, 1,
-     '.cd(8).theme(SHADOW).act(18, 14, 14, shots(3, 4, 3, orb("shadow_bolt", 2.8, 24), 0.9, 0.1))'
+     '.cd(8).theme(SHADOW).act(18, 14, 14, shots(3, 4, 3, orb("shadow_bolt", 2.8, 24), 2.08, 0.1))'
      '.fx(vis(START, "cast"), vis(2, "shadow"))',
      "orbs3 speed x3 SHADOW",
      "呪弾連射", "Hex Volley",
@@ -35,7 +35,7 @@ NODES = [
      "Fire three bolts of curse in quick succession."),
 
     ("a", "agony", 0, 0, 2,
-     '.req("curse_of_frailty", 3).cd(16).theme(BLOOD).act(18, 14, 18, hit(8, circle(4.5), 1.8, 0.2))'
+     '.req("curse_of_frailty", 3).cd(16).theme(BLOOD).act(18, 14, 18, hit(8, circle(4.5), 5.2, 0.2))'
      '.fx(afflict(0, BLEED, 100, 0.4), afflict(0, SLOW, 100, 2), vis(0, "chains"), vis(0, "shadow"))',
      "heart crack bleed BLOOD",
      "苦悶", "Agony",
@@ -46,7 +46,7 @@ NODES = [
      "悪意", "Malice", "攻撃が一定確率で敵を弱らせる。", "Your attacks may weaken the foe."),
     ("a", "plague_cloud", 0, 2, 2,
      '.req("rot", 1).cd(22).theme(VENOM).act(18, 14, 18, pause(5))'
-     '.fx(zone(0, CASTER, 0, 6.0, 0, 10, 10, 0.4, POISON, 80, 0.4), vis(0, "mist"), vis(0, "storm"))',
+     '.fx(zone(0, CASTER, 0, 6.0, 0, 10, 10, 0.78, POISON, 80, 0.4), vis(0, "mist"), vis(0, "storm"))',
      "skull cloud x3 VENOM",
      "疫病の雲", "Plague Cloud",
      "自分の周りに疫病の雲を呼ぶ。長い間、雲の中の敵は重い毒に冒され続ける。",
@@ -56,14 +56,14 @@ NODES = [
      "長き呪い", "Lingering Curse", "スキルの威力が上がる。", "Raises the power of your skills."),
 
     ("a", "soul_rend", 0, 0, 3,
-     '.req("agony", 1).cd(18).theme(SHADOW).act(22, 18, 20, hit(10, beam(10.0, 1.2), 2.6, 0.4))'
+     '.req("agony", 1).cd(18).theme(SHADOW).act(22, 18, 20, hit(10, beam(10.0, 1.2), 6.12, 0.4))'
      '.fx(siphon(0, 0.2, 0), vis(START, "cast"), vis(0, "ray"), vis(0, "shadow"))',
      "skull beam heal SHADOW",
      "魂裂き", "Soul Rend",
      "魂を裂く暗い光線を放つ。一直線上の敵を傷つけ、奪った生命でHPを回復する。",
      "Fire a dark beam that tears at the soul; it wounds every foe in its line and the stolen life heals you."),
     ("a", "blinding_hex", 0, 1, 3,
-     '.req("malice", 1).cd(20).theme(SHADOW).act(16, 12, 16, hit(7, circle(5.0), 1.2, 0.2))'
+     '.req("malice", 1).cd(20).theme(SHADOW).act(16, 12, 16, hit(7, circle(5.0), 4.5, 0.2))'
      '.fx(afflict(0, BLIND, 80, 0), afflict(0, WEAKEN, 100, 0.15), vis(0, "smoke"), vis(0, "nova"))',
      "eye cloud blind SHADOW",
      "盲目の呪い", "Hex of Blindness",
@@ -73,7 +73,7 @@ NODES = [
      "hand glow crit SHADOW",
      "呪術の達人", "Hexmaster", "会心率と会心ダメージが上がる。", "Raises critical chance and critical damage."),
     ("a", "wither", 0, 3, 3,
-     '.req("plague_cloud", 1).cd(18).theme(VENOM).act(18, 14, 18, hit(8, ahead(2.5, 4.0), 1.4, 0.0))'
+     '.req("plague_cloud", 1).cd(18).theme(VENOM).act(18, 14, 18, hit(8, ahead(2.5, 4.0), 4.73, 0.0))'
      '.fx(afflict(0, POISON, 120, 0.6), vis(START, "cast"), vis(0, "sigil"))',
      "flower crack poison VENOM",
      "枯死", "Wither",
@@ -82,7 +82,7 @@ NODES = [
 
     ("a", "curse_storm", 0, 0, 4,
      '.req("soul_rend", 1).cd(26).theme(SHADOW).act(20, 16, 22, pause(5))'
-     '.fx(zone(0, CASTER, 0, 6.0, 0, 10, 8, 0.6, WEAKEN, 60, 0.2), vis(0, "storm"), vis(0, "vortex"))',
+     '.fx(zone(0, CASTER, 0, 6.0, 0, 10, 8, 1.01, WEAKEN, 60, 0.2), vis(0, "storm"), vis(0, "vortex"))',
      "skull spiral weaken SHADOW",
      "呪詛の嵐", "Storm of Curses",
      "呪いの嵐を身にまとう。しばらくの間、嵐に巻かれた敵は傷つき、力を奪われ続ける。",
@@ -91,7 +91,7 @@ NODES = [
      "tome halo star SHADOW",
      "黒の魔導書", "Black Grimoire", "スキルの威力が上がる。", "Raises the power of your skills."),
     ("a", "death_coil", 0, 2, 4,
-     '.req("blinding_hex", 1).cd(22).theme(SHADOW).act(22, 18, 22, shot(9, orb("shadow_bolt", 1.8, 40).withPierce(4), 3.2, 0.6))'
+     '.req("blinding_hex", 1).cd(22).theme(SHADOW).act(22, 18, 22, shot(9, orb("shadow_bolt", 1.8, 40).withPierce(4), 6.82, 0.6))'
      '.fx(siphon(0, 0.3, 0), vis(START, "cast"), vis(0, "rift"))',
      "snake spiral heal SHADOW",
      "死の螺旋", "Death Coil",
@@ -103,7 +103,7 @@ NODES = [
 
     ("u", "curse_of_myriad_demons", 0, 0, 5,
      '.req("curse_storm", 3).cd(130).theme(SHADOW)'
-     '.act(46, 42, 40, pause(8), hit(18, circle(8.0), 1.6, 0.0), hit(34, circle(8.0), 4.6, 1.2))'
+     '.act(46, 42, 40, pause(8), hit(18, circle(8.0), 3.35, 0.0), hit(34, circle(8.0), 9.65, 1.2))'
      '.fx(afflict(1, WEAKEN, 160, 0.3), afflict(1, VULNERABLE, 160, 0.3), afflict(2, POISON, 120, 0.6),'
      ' afflict(2, SLOW, 100, 3), vis(START, "sigil"), vis(0, "vortex"), vis(1, "chains"), vis(2, "nova"),'
      ' vis(2, "shadow"))',
@@ -117,7 +117,7 @@ NODES = [
      "不死者の叡智", "Mind of the Undying", "魔法攻撃力が上がり、スキルの再使用時間が短くなる。",
      "Raises magic power; skills recover faster."),
     ("a", "corpse_blast", 0, 2, 5,
-     '.req("death_coil", 3).cd(30).theme(BLOOD).act(24, 20, 26, hit(10, circle(5.5), 3.6, 1.6))'
+     '.req("death_coil", 3).cd(30).theme(BLOOD).act(24, 20, 26, hit(10, circle(5.5), 7.29, 1.6))'
      '.fx(afflict(0, BLEED, 100, 0.4), vis(START, "cast"), vis(0, "burst"), vis(0, "nova"))',
      "bone burst bleed BLOOD",
      "屍爆", "Corpse Blast",
@@ -129,14 +129,14 @@ NODES = [
 
     # ------------------------------------------------------------------ 1: 死霊
     ("a", "bone_spear", 1, 0, 1,
-     '.cd(8).theme(SHADOW).act(18, 14, 14, shot(7, orb("bone", 3.0, 24).withPierce(4), 2.2, 0.6))'
+     '.cd(8).theme(SHADOW).act(18, 14, 14, shot(7, orb("bone", 3.0, 24).withPierce(4), 5.66, 0.6))'
      '.fx(vis(START, "cast"), vis(0, "thrust"))',
      "bone beamd - SHADOW",
      "骨槍", "Bone Spear",
      "鋭い骨の槍を撃ち出し、一直線上の敵を貫く。",
      "Shoot a sharp spear of bone that runs through the foes in its line."),
     ("a", "life_tap", 1, 1, 1,
-     '.cd(12).theme(BLOOD).act(16, 12, 14, hit(7, ahead(2.5, 4.0), 1.6, 0.0))'
+     '.cd(12).theme(BLOOD).act(16, 12, 14, hit(7, ahead(2.5, 4.0), 4.96, 0.0))'
      '.fx(siphon(0, 0.4, 0), vis(START, "cast"), vis(0, "chains"))',
      "drop waves heal BLOOD",
      "生命吸収", "Life Tap",
@@ -153,7 +153,7 @@ NODES = [
      "Clad yourself in bone: you gain a shield and take less damage."),
 
     ("a", "bone_prison", 1, 0, 2,
-     '.req("bone_spear", 3).cd(18).theme(EARTH).act(20, 16, 18, hit(9, ahead(3.0, 5.0), 1.4, 0.0))'
+     '.req("bone_spear", 3).cd(18).theme(EARTH).act(20, 16, 18, hit(9, ahead(3.0, 5.0), 4.73, 0.0))'
      '.fx(afflict(0, STUN, 50, 0), afflict(0, SLOW, 100, 2), vis(START, "cast"), vis(0, "pillar"), vis(0, "quake"))',
      "bone zone stun EARTH",
      "骨牢", "Bone Prison",
@@ -174,14 +174,14 @@ NODES = [
      "不死の意志", "Undying Will", "HPが減るほど受けるダメージが減る。", "The lower your health, the less damage you take."),
 
     ("a", "bone_storm", 1, 0, 3,
-     '.req("bone_prison", 1).cd(20).theme(SHADOW).act(28, 24, 22, hits(4, 4, 5, circle(4.0), 0.8, 0.2))'
+     '.req("bone_prison", 1).cd(20).theme(SHADOW).act(28, 24, 22, hits(4, 4, 5, circle(4.0), 1.55, 0.2))'
      '.fx(afflict(4, BLEED, 80, 0.3), vis(0, "storm"), vis(2, "spin"))',
      "bone spiral x5 SHADOW",
      "骨嵐", "Bone Storm",
      "砕けた骨の嵐を身にまとい、周りの敵を五度切り刻む。最後の一撃で出血させる。",
      "Whirl a storm of shattered bone around you, cutting the foes around five times; the last leaves them bleeding."),
     ("a", "soul_siphon", 1, 1, 3,
-     '.req("blood_pact", 1).cd(22).theme(SHADOW).act(18, 14, 18, hit(8, circle(5.0), 1.8, 0.0))'
+     '.req("blood_pact", 1).cd(22).theme(SHADOW).act(18, 14, 18, hit(8, circle(5.0), 5.2, 0.0))'
      '.fx(siphon(0, 0.3, 6.0), stamina(0, 20), vis(0, "vortex"), vis(0, "heal"))',
      "orb spiral heal SHADOW",
      "魂吸い", "Soul Siphon",
@@ -199,8 +199,8 @@ NODES = [
      "Call the spirits of the gravekeepers: you and the allies around you are shielded and hardened."),
 
     ("a", "bone_spikes", 1, 0, 4,
-     '.req("bone_storm", 1).cd(24).theme(EARTH).act(24, 20, 24, hit(10, ahead(3.0, 4.0), 2.6, 0.4))'
-     '.fx(zone(0, AHEAD, 4.0, 4.0, 6, 3, 8, 1.4, BLEED, 60, 0.4), afflict(0, LAUNCH, 1, 0.6), vis(0, "quake"),'
+     '.req("bone_storm", 1).cd(24).theme(EARTH).act(24, 20, 24, hit(10, ahead(3.0, 4.0), 4.5, 0.4))'
+     '.fx(zone(0, AHEAD, 4.0, 4.0, 6, 3, 8, 2.17, BLEED, 60, 0.4), afflict(0, LAUNCH, 1, 0.6), vis(0, "quake"),'
      ' vis(0, "pillar"))',
      "bone crack launch EARTH",
      "骨の剣山", "Field of Bone Spikes",
@@ -223,7 +223,7 @@ NODES = [
 
     ("u", "march_of_the_dead", 1, 0, 5,
      '.req("bone_spikes", 3).cd(130).theme(SHADOW)'
-     '.act(52, 48, 40, seq(pause(6), hits(12, 4, 6, circle(6.5), 1.0, 0.3), hit(40, circle(8.0), 4.0, 1.6)))'
+     '.act(52, 48, 40, seq(pause(6), hits(12, 4, 6, circle(6.5), 1.6, 0.3), hit(40, circle(8.0), 6.4, 1.6)))'
      '.fx(siphon(7, 0.3, 8.0), afflict(3, BLEED, 100, 0.4), afflict(7, LAUNCH, 1, 0.7), vis(START, "sigil"),'
      ' vis(0, "shadow"), vis(1, "quake"), vis(4, "pillar"), vis(7, "nova"))',
      "skull crack x6 SHADOW",
@@ -235,7 +235,7 @@ NODES = [
      "crown halo heart SHADOW",
      "不死王の器", "Vessel of Undeath", "最大HPと魔法攻撃力が上がる。", "Raises maximum health and magic power."),
     ("a", "soul_cage", 1, 2, 5,
-     '.req("death_and_rebirth", 1).cd(32).theme(SHADOW).act(22, 18, 24, hit(10, circle(6.0), 2.4, 0.0))'
+     '.req("death_and_rebirth", 1).cd(32).theme(SHADOW).act(22, 18, 24, hit(10, circle(6.0), 5.89, 0.0))'
      '.fx(afflict(0, PULL, 1, 1.0), afflict(0, STUN, 40, 0), vis(0, "chains"), vis(0, "vortex"))',
      "chains spiral pull SHADOW",
      "魂の檻", "Soul Cage",

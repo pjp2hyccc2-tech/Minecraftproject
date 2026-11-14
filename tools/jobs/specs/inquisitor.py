@@ -10,14 +10,14 @@ BRANCHES = [("断罪", "Condemnation"), ("聖火", "Holy Fire")]
 NODES = [
     # ------------------------------------------------------------------ 0: 断罪
     ("a", "accusation", 0, 0, 1,
-     '.cd(9).theme(HOLY).act(18, 14, 14, shot(7, orb("holy_light", 2.6, 24), 1.6, 0.2))'
+     '.cd(9).theme(HOLY).act(18, 14, 14, shot(7, orb("holy_light", 2.6, 24), 4.85, 0.2))'
      '.fx(afflict(0, VULNERABLE, 200, 0.2), vis(START, "cast"), vis(0, "impact"))',
      "hand beamd vuln HOLY",
      "告発", "Accusation",
      "罪を告発する光を放つ。撃たれた敵は長い間、受けるダメージが増える。",
      "Fire a light that names the guilty; the foe it strikes takes more damage for a long while."),
     ("a", "chains_of_penance", 0, 1, 1,
-     '.cd(12).theme(HOLY).act(18, 14, 14, hit(7, line(8.0, 1.2), 1.2, 0.0))'
+     '.cd(12).theme(HOLY).act(18, 14, 14, hit(7, line(8.0, 1.2), 4.5, 0.0))'
      '.fx(afflict(0, PULL, 1, 1.2), afflict(0, SLOW, 80, 2), vis(0, "chains"))',
      "chains beamd pull HOLY",
      "贖罪の鎖", "Chains of Penance",
@@ -27,7 +27,7 @@ NODES = [
      "flame - up HOLY",
      "狂信", "Zealotry", "魔法攻撃力が上がる。", "Raises magic power."),
     ("a", "verdict", 0, 3, 1,
-     '.cd(10).theme(HOLY).act(20, 16, 16, hit(9, ahead(2.5, 3.0), 2.4, 0.8))'
+     '.cd(10).theme(HOLY).act(20, 16, 16, hit(9, ahead(2.5, 3.0), 5.54, 0.8))'
      '.fx(afflict(0, STUN, 30, 0), vis(START, "judgment_charge"), vis(0, "smite"))',
      "scales smite stun HOLY",
      "判決", "Verdict",
@@ -35,7 +35,7 @@ NODES = [
      "Pronounce the verdict and bring a hammer of light down on the foes ahead, stunning them for a moment."),
 
     ("a", "interrogation", 0, 0, 2,
-     '.req("accusation", 3).cd(16).theme(HOLY).act(18, 14, 16, hit(8, ahead(2.0, 3.0), 1.6, 0.0))'
+     '.req("accusation", 3).cd(16).theme(HOLY).act(18, 14, 16, hit(8, ahead(2.0, 3.0), 4.85, 0.0))'
      '.fx(afflict(0, WEAKEN, 160, 0.25), afflict(0, BLIND, 40, 0), vis(0, "sigil"), vis(0, "impact"))',
      "eye glow weaken HOLY",
      "審問", "Interrogation",
@@ -45,7 +45,7 @@ NODES = [
      "scales - crit HOLY",
      "仮借なき裁き", "Merciless Judge", "会心率と会心ダメージが上がる。", "Raises critical chance and critical damage."),
     ("a", "brand_of_heresy", 0, 2, 2,
-     '.req("verdict", 1).cd(18).theme(FIRE).act(18, 14, 18, hit(8, circle(4.5), 1.6, 0.4))'
+     '.req("verdict", 1).cd(18).theme(FIRE).act(18, 14, 18, hit(8, circle(4.5), 4.85, 0.4))'
      '.fx(afflict(0, BURN, 100, 0), afflict(0, VULNERABLE, 100, 0.15), vis(0, "sigil"), vis(0, "flame_blade"))',
      "rune flamewall burn FIRE",
      "異端の烙印", "Brand of Heresy",
@@ -56,14 +56,14 @@ NODES = [
      "鉄の信念", "Iron Conviction", "HPが減るほど与えるダメージが増える。", "The lower your health, the harder you strike."),
 
     ("a", "condemnation", 0, 0, 3,
-     '.req("interrogation", 1).cd(20).theme(HOLY).act(24, 20, 20, hit(12, ahead(2.5, 3.0), 3.4, 1.0))'
+     '.req("interrogation", 1).cd(20).theme(HOLY).act(24, 20, 20, hit(12, ahead(2.5, 3.0), 6.4, 1.0))'
      '.fx(execute(0, 0.3, 0.8), vis(START, "judgment_charge"), vis(0, "judgment"), vis(0, "smite"))',
      "scales pillar skull LIGHT",
      "断罪", "Condemnation",
      "罪ある者に裁きを下す。HPの少ない敵ほど大きなダメージを与える。",
      "Pass judgment on the guilty; the weaker the foe, the more it takes."),
     ("a", "shackles", 0, 1, 3,
-     '.req("merciless_judge", 1).cd(24).theme(HOLY).act(18, 14, 18, hit(8, circle(5.0), 1.2, 0.0))'
+     '.req("merciless_judge", 1).cd(24).theme(HOLY).act(18, 14, 18, hit(8, circle(5.0), 4.5, 0.0))'
      '.fx(afflict(0, STUN, 50, 0), vis(0, "chains"), vis(0, "nova"))',
      "chains ring stun HOLY",
      "枷", "Shackles",
@@ -74,7 +74,7 @@ NODES = [
      "異端狩り", "Heretic Hunter", "スキルの威力と会心率が上がる。", "Raises skill power and critical chance."),
     ("a", "sentence_of_light", 0, 3, 3,
      '.req("brand_of_heresy", 1).cd(22).theme(HOLY).act(16, 12, 18, pause(4))'
-     '.fx(zone(0, LOOK, 10.0, 3.5, 30, 1, 1, 4.0, STUN, 40, 0), vis(START, "cast"), vis(0, "sigil"), vis(0, "pillar"))',
+     '.fx(zone(0, LOOK, 10.0, 3.5, 30, 1, 1, 6.92, STUN, 40, 0), vis(START, "cast"), vis(0, "sigil"), vis(0, "pillar"))',
      "sun zone stun LIGHT",
      "光の宣告", "Sentence of Light",
      "狙った場所に光の宣告を刻む。一瞬ののち、天から光の柱が落ちて大きなダメージを与え、敵を気絶させる。",
@@ -82,7 +82,7 @@ NODES = [
      "damage and stunning the foes there."),
 
     ("a", "inquisition", 0, 0, 4,
-     '.req("condemnation", 1).cd(24).theme(HOLY).act(26, 22, 24, hits(6, 5, 3, ahead(2.5, 3.0), 1.4, 0.4))'
+     '.req("condemnation", 1).cd(24).theme(HOLY).act(26, 22, 24, hits(6, 5, 3, ahead(2.5, 3.0), 2.37, 0.4))'
      '.fx(afflict(2, VULNERABLE, 120, 0.2), vis(START, "cast"), vis(0, "judgment"), vis(2, "slash"))',
      "cross x x3 HOLY",
      "異端審問", "Inquisition",
@@ -92,7 +92,7 @@ NODES = [
      "eye halo crit LIGHT",
      "裁定者の眼", "Arbiter's Eye", "会心率が上がる。", "Raises critical chance."),
     ("a", "cross_of_light", 0, 2, 4,
-     '.req("shackles", 1).cd(22).theme(HOLY).act(22, 18, 22, hit(10, ahead(2.0, 5.0), 3.0, 0.4))'
+     '.req("shackles", 1).cd(22).theme(HOLY).act(22, 18, 22, hit(10, ahead(2.0, 5.0), 6.06, 0.4))'
      '.fx(afflict(0, STUN, 40, 0), afflict(0, LAUNCH, 1, 0.6), vis(START, "cast"), vis(0, "pillar"), vis(0, "judgment"))',
      "cross pillar launch LIGHT",
      "光の十字架", "Cross of Light",
@@ -104,7 +104,7 @@ NODES = [
 
     ("u", "divine_execution", 0, 0, 5,
      '.req("inquisition", 3).cd(130).theme(HOLY)'
-     '.act(46, 42, 40, pause(8), hit(20, circle(7.0), 1.2, 0.0), hit(36, circle(8.0), 5.2, 1.6))'
+     '.act(46, 42, 40, pause(8), hit(20, circle(7.0), 1.88, 0.0), hit(36, circle(8.0), 8.12, 1.6))'
      '.fx(afflict(1, PULL, 1, 1.0), afflict(2, STUN, 40, 0), afflict(2, VULNERABLE, 160, 0.3), execute(2, 0.3, 1.0),'
      ' vis(START, "judgment_charge"), vis(0, "sigil"), vis(1, "chains"), vis(2, "judgment"), vis(2, "pillar"))',
      "scales nova skull LIGHT",
@@ -116,7 +116,7 @@ NODES = [
      "crown halo crit HOLY",
      "大審問官", "Grand Inquisitor", "魔法攻撃力と会心ダメージが上がる。", "Raises magic power and critical damage."),
     ("a", "chain_of_judgment", 0, 2, 5,
-     '.req("cross_of_light", 3).cd(30).theme(HOLY).act(28, 24, 28, hits(6, 4, 4, circle(5.0), 0.8, 0.2))'
+     '.req("cross_of_light", 3).cd(30).theme(HOLY).act(28, 24, 28, hits(6, 4, 4, circle(5.0), 1.56, 0.2))'
      '.fx(afflict(3, STUN, 40, 0), vis(0, "chains"), vis(1, "lightning"), vis(3, "nova"))',
      "chains nova x4 LIGHT",
      "裁きの連鎖", "Chain of Judgment",
@@ -128,14 +128,14 @@ NODES = [
 
     # ------------------------------------------------------------------ 1: 聖火
     ("a", "sacred_flame", 1, 0, 1,
-     '.cd(8).theme(FIRE).act(18, 14, 14, shot(7, orb("fireball", 2.0, 30).withExplosion(2.0), 1.8, 0.4))'
+     '.cd(8).theme(FIRE).act(18, 14, 14, shot(7, orb("fireball", 2.0, 30).withExplosion(2.0), 5.02, 0.4))'
      '.fx(afflict(0, BURN, 80, 0), vis(START, "cast"))',
      "flame burst burn FIRE",
      "聖火弾", "Sacred Flame",
      "聖なる炎の弾を放つ。炸裂した場所の周りの敵を燃やす。",
      "Fire a bolt of holy flame that bursts where it lands and sets the foes around ablaze."),
     ("a", "censer_swing", 1, 1, 1,
-     '.cd(10).theme(FIRE).act(18, 14, 14, hit(7, circle(3.5), 1.4, 0.4))'
+     '.cd(10).theme(FIRE).act(18, 14, 14, hit(7, circle(3.5), 4.67, 0.4))'
      '.fx(afflict(0, BURN, 60, 0), heal(0, 6, 0.04, 1), vis(0, "spin"), vis(0, "aura"))',
      "lantern spiral heal FIRE",
      "香炉の炎", "Censer Swing",
@@ -146,7 +146,7 @@ NODES = [
      "flame glow burn FIRE",
      "浄化の火", "Purging Fire", "攻撃が一定確率で敵を燃やす。", "Your attacks may set the foe ablaze."),
     ("a", "flame_of_truth", 1, 3, 1,
-     '.cd(12).theme(FIRE).act(20, 16, 16, hits(4, 3, 4, arc(5.5, 35), 0.7, 0.1))'
+     '.cd(12).theme(FIRE).act(20, 16, 16, hits(4, 3, 4, arc(5.5, 35), 1.47, 0.1))'
      '.fx(afflict(3, BURN, 80, 0), vis(START, "cast"), vis(0, "breath"))',
      "eye flamewall x4 FIRE",
      "真実の炎", "Flame of Truth",
@@ -154,7 +154,7 @@ NODES = [
      "Breathe out the flame that lays the truth bare, scorching the cone ahead four times."),
 
     ("a", "pillar_of_judgment", 1, 0, 2,
-     '.req("sacred_flame", 3).cd(16).theme(FIRE).act(20, 16, 18, hit(9, ahead(2.0, 5.0), 2.6, 0.6))'
+     '.req("sacred_flame", 3).cd(16).theme(FIRE).act(20, 16, 18, hit(9, ahead(2.0, 5.0), 5.71, 0.6))'
      '.fx(afflict(0, BURN, 80, 0), afflict(0, LAUNCH, 1, 0.6), vis(START, "cast"), vis(0, "pillar"))',
      "flame pillar launch FIRE",
      "裁きの火柱", "Pillar of Judgment",
@@ -177,7 +177,7 @@ NODES = [
      "燻る信仰", "Smoldering Faith", "最大HPと防御力が上がる。", "Raises maximum health and defense."),
 
     ("a", "ring_of_cleansing_fire", 1, 0, 3,
-     '.req("pillar_of_judgment", 1).cd(20).theme(FIRE).act(20, 16, 20, hit(9, circle(5.5), 2.4, 0.8))'
+     '.req("pillar_of_judgment", 1).cd(20).theme(FIRE).act(20, 16, 20, hit(9, circle(5.5), 5.54, 0.8))'
      '.fx(afflict(0, BURN, 80, 0), cleanse(0, 8), vis(0, "nova"), vis(0, "burst"))',
      "sun nova burn FIRE",
      "浄炎の輪", "Ring of Cleansing Fire",
@@ -185,7 +185,7 @@ NODES = [
      "Spread a ring of cleansing fire: the foes around you burn and the ailments of nearby allies burn away."),
     ("a", "holy_pyre", 1, 1, 3,
      '.req("ember_soul", 1).cd(24).theme(FIRE).act(18, 14, 20, pause(5))'
-     '.fx(zone(0, LOOK, 10.0, 4.0, 0, 8, 10, 0.8, BURN, 60, 0), vis(START, "cast"), vis(0, "pillar"), vis(0, "storm"))',
+     '.fx(zone(0, LOOK, 10.0, 4.0, 0, 8, 10, 1.12, BURN, 60, 0), vis(START, "cast"), vis(0, "pillar"), vis(0, "storm"))',
      "flame zone burn MAGMA",
      "聖なる業火", "Holy Pyre",
      "狙った場所を聖なる業火で包む。しばらくの間、炎の中の敵は焼かれ続ける。",
@@ -194,7 +194,7 @@ NODES = [
      "sun glow star FIRE",
      "聖熱", "Sacred Heat", "スキルの威力と会心率が上がる。", "Raises skill power and critical chance."),
     ("a", "lash_of_flame", 1, 3, 3,
-     '.req("smoldering_faith", 1).cd(18).theme(FIRE).act(18, 14, 18, hit(8, line(8.0, 1.2), 2.2, 0.0))'
+     '.req("smoldering_faith", 1).cd(18).theme(FIRE).act(18, 14, 18, hit(8, line(8.0, 1.2), 5.37, 0.0))'
      '.fx(afflict(0, PULL, 1, 0.8), afflict(0, BURN, 60, 0), vis(0, "chains"), vis(0, "flame_blade"))',
      "snake beamd pull FIRE",
      "炎の鞭", "Lash of Flame",
@@ -203,7 +203,7 @@ NODES = [
 
     ("a", "seraphic_fire", 1, 0, 4,
      '.req("ring_of_cleansing_fire", 1).cd(24).theme(FIRE)'
-     '.act(24, 20, 24, shot(10, orb("fireball", 1.6, 40).withPierce(16).withExplosion(2.0), 3.2, 0.8))'
+     '.act(24, 20, 24, shot(10, orb("fireball", 1.6, 40).withPierce(16).withExplosion(2.0), 6.23, 0.8))'
      '.fx(afflict(0, BURN, 100, 0), vis(START, "cast"), vis(0, "ray"), vis(0, "burst"))',
      "wings flamewall burn FIRE",
      "熾天の炎", "Seraphic Fire",
@@ -228,7 +228,7 @@ NODES = [
 
     ("u", "heavenly_wildfire", 1, 0, 5,
      '.req("seraphic_fire", 3).cd(130).theme(FIRE)'
-     '.act(48, 44, 40, seq(pause(6), hits(12, 4, 5, circle(7.0), 1.0, 0.2), hit(36, circle(8.0), 4.4, 1.4)))'
+     '.act(48, 44, 40, seq(pause(6), hits(12, 4, 5, circle(7.0), 1.28, 0.2), hit(36, circle(8.0), 5.62, 1.4)))'
      '.fx(afflict(1, BURN, 120, 0), afflict(6, LAUNCH, 1, 0.8), afflict(6, VULNERABLE, 160, 0.3), vis(START, "sigil"),'
      ' vis(0, "meteor_cast"), vis(1, "storm"), vis(3, "pillar"), vis(6, "nova"))',
      "sun flamewall x5 MAGMA",
@@ -241,7 +241,7 @@ NODES = [
      "炎の聖人", "Saint of Flames", "魔法攻撃力と回復量が上がる。", "Raises magic power and healing."),
     ("a", "hammer_of_the_sun", 1, 2, 5,
      '.req("baptism_of_fire", 1).cd(34).theme(FIRE)'
-     '.act(28, 24, 28, shot(10, orb("smite", 1.4, 40).withExplosion(4.0).fallingFromAbove(), 4.0, 1.6))'
+     '.act(28, 24, 28, shot(10, orb("smite", 1.4, 40).withExplosion(4.0).fallingFromAbove(), 6.92, 1.6))'
      '.fx(afflict(0, BURN, 80, 0), afflict(0, STUN, 30, 0), vis(START, "cast"), vis(0, "smite"), vis(0, "nova"))',
      "hammer smite burn FIRE",
      "太陽の槌", "Hammer of the Sun",

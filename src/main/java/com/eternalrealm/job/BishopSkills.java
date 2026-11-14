@@ -31,7 +31,7 @@ final class BishopSkills {
                 .fx(allies(0, REGENERATION, 1, 300, 12), self(0, REGENERATION, 1, 300), vis(0, "blessing"),
                         vis(0, "aura"));
         t.passive("bishops_mercy", 0, 2, 1).bonus(stats(mods().healing(0.06)));
-        t.active("holy_word", 0, 3, 1).cd(10).theme(HOLY).act(16, 12, 16, hit(7, circle(4.0), 1.8, 0.6))
+        t.active("holy_word", 0, 3, 1).cd(10).theme(HOLY).act(16, 12, 16, hit(7, circle(4.0), 4.8, 0.6))
                 .fx(heal(0, 8, 0.06, 2), afflict(0, BLIND, 40, 0), vis(0, "nova"), vis(0, "heal"));
         t.active("litany_of_mending", 0, 0, 2).req("greater_heal", 3).cd(20).theme(HOLY).act(18, 14, 20, pause(5))
                 .fx(heal(0, 12, 0.08, 2), healZone(0, CASTER, 0, 6.0, 8, 10, 0.02, 0), vis(0, "heal"), vis(0, "sigil"));
@@ -56,7 +56,7 @@ final class BishopSkills {
                 .fx(healZone(0, CASTER, 0, 8.0, 10, 10, 0.03, 0.5), vis(0, "rain"), vis(0, "heal"));
         t.passive("patron_saint", 0, 3, 4).req("sacred_hymn", 1).bonus(lastStand(0.0, 0.04));
         t.ultimate("grand_benediction", 0, 0, 5).req("hands_of_grace", 3).cd(150).theme(HOLY)
-                .act(40, 36, 40, pause(10), hit(18, circle(8.0), 2.0, 1.0))
+                .act(40, 36, 40, pause(10), hit(18, circle(8.0), 4.96, 1.0))
                 .fx(revive(0, 16, 0.5), heal(0, 16, 0.4, 8), cleanse(0, 16), allies(0, ATTACK_UP, 0.2, 240, 16),
                         self(0, ATTACK_UP, 0.2, 240), shieldAllies(0, 0.3, 240, 16), afflict(1, BLIND, 60, 0),
                         vis(START, "cast"), vis(0, "sigil"), vis(0, "heal"), vis(1, "pillar"), vis(1, "nova"));
@@ -69,9 +69,9 @@ final class BishopSkills {
         t.active("barrier", 1, 0, 1).cd(18).theme(HOLY).act(14, 10, 14, pause(4))
                 .fx(shieldAllies(0, 0.25, 200, 8), vis(0, "shield"), vis(0, "sigil"));
         t.active("exorcism_ward", 1, 1, 1).cd(20).theme(HOLY).act(14, 10, 16, pause(4))
-                .fx(zone(0, CASTER, 0, 5.0, 0, 8, 12, 0.6, BLIND, 30, 0), vis(0, "sigil"), vis(0, "pillar"));
+                .fx(zone(0, CASTER, 0, 5.0, 0, 8, 12, 0.89, BLIND, 30, 0), vis(0, "sigil"), vis(0, "pillar"));
         t.passive("sacred_vestments", 1, 2, 1).bonus(stats(mods().defense(4).healthPercent(0.01)));
-        t.active("holy_seal", 1, 3, 1).cd(16).theme(HOLY).act(16, 12, 14, hit(7, ahead(2.5, 4.0), 1.4, 0.0))
+        t.active("holy_seal", 1, 3, 1).cd(16).theme(HOLY).act(16, 12, 14, hit(7, ahead(2.5, 4.0), 4.5, 0.0))
                 .fx(afflict(0, STUN, 60, 0), afflict(0, WEAKEN, 100, 0.15), vis(START, "cast"), vis(0, "chains"),
                         vis(0, "sigil"));
         t.active("dome_of_protection", 1, 0, 2).req("barrier", 3).cd(30).theme(HOLY).act(16, 12, 18, pause(5))
@@ -79,18 +79,18 @@ final class BishopSkills {
                         vis(0, "sanctuary"), vis(0, "shield"));
         t.passive("warding_lore", 1, 1, 2).req("sacred_vestments", 1).bonus(stats(mods().guard(0.02).defense(3)));
         t.active("repel_evil", 1, 2, 2).req("exorcism_ward", 1).cd(18).theme(HOLY)
-                .act(16, 12, 16, hit(6, circle(5.0), 1.6, 2.6))
+                .act(16, 12, 16, hit(6, circle(5.0), 4.65, 2.6))
                 .fx(afflict(0, WEAKEN, 100, 0.15), vis(0, "nova"), vis(0, "roar"));
         t.passive("holy_thorns", 1, 3, 2).req("holy_seal", 1).bonus(thorns(0.04));
         t.active("cathedral_ward", 1, 0, 3).req("dome_of_protection", 1).cd(40).theme(HOLY).act(18, 14, 20, pause(6))
                 .fx(healZone(0, CASTER, 0, 6.0, 10, 15, 0.03, 0), allies(0, DEFENSE_UP, 0.25, 200, 8),
                         self(0, DEFENSE_UP, 0.25, 200), vis(0, "sanctuary"), vis(0, "pillar"));
         t.active("binding_circle", 1, 1, 3).req("warding_lore", 1).cd(26).theme(HOLY).act(16, 12, 18, pause(5))
-                .fx(zone(0, LOOK, 10.0, 4.5, 0, 6, 10, 0.4, SLOW, 40, 4), vis(START, "cast"), vis(0, "sigil"),
+                .fx(zone(0, LOOK, 10.0, 4.5, 0, 6, 10, 0.88, SLOW, 40, 4), vis(START, "cast"), vis(0, "sigil"),
                         vis(0, "chains"));
         t.passive("iron_piety", 1, 2, 3).req("holy_thorns", 1).bonus(stats(mods().defense(5)));
         t.active("prison_of_light", 1, 3, 3).req("repel_evil", 1).cd(22).theme(HOLY)
-                .act(20, 16, 18, hit(9, ahead(3.0, 5.0), 2.0, 0.0))
+                .act(20, 16, 18, hit(9, ahead(3.0, 5.0), 4.96, 0.0))
                 .fx(afflict(0, STUN, 60, 0), vis(START, "cast"), vis(0, "pillar"), vis(0, "chains"));
         t.active("divine_mirror", 1, 0, 4).req("cathedral_ward", 1).cd(40).theme(HOLY).act(16, 12, 20, pause(5))
                 .fx(allies(0, THORNS, 0.3, 200, 10), self(0, THORNS, 0.3, 200), shieldAllies(0, 0.2, 200, 10),
@@ -98,17 +98,17 @@ final class BishopSkills {
         t.passive("ward_master", 1, 1, 4).req("iron_piety", 1).bonus(cooldown(0.02), stats(mods().guard(0.01)));
         t.active("rain_of_holy_lances", 1, 2, 4).req("binding_circle", 1).cd(24).theme(HOLY)
                 .act(26, 22, 24,
-                        shots(6, 3, 5, orb("holy_lance", 1.8, 40).withExplosion(1.6).fallingFromAbove(), 1.2, 0.3))
+                        shots(6, 3, 5, orb("holy_lance", 1.8, 40).withExplosion(1.6).fallingFromAbove(), 1.6, 0.3))
                 .fx(vis(START, "cast"), vis(0, "rain"), vis(4, "burst"));
         t.passive("bastion_of_faith", 1, 3, 4).req("iron_piety", 1).bonus(stats(mods().healthPercent(0.03)));
         t.ultimate("heavenly_ward", 1, 0, 5).req("divine_mirror", 3).cd(150).theme(HOLY)
-                .act(40, 36, 40, pause(8), hit(16, circle(8.0), 2.4, 2.0))
+                .act(40, 36, 40, pause(8), hit(16, circle(8.0), 5.26, 2.0))
                 .fx(shieldAllies(0, 0.5, 300, 14), allies(0, DEFENSE_UP, 0.35, 300, 14), self(0, DEFENSE_UP, 0.35, 300),
                         healZone(0, CASTER, 0, 9.0, 14, 20, 0.03, 1.0), afflict(1, WEAKEN, 120, 0.2),
                         vis(START, "cast"), vis(0, "sigil"), vis(0, "sanctuary"), vis(1, "pillar"), vis(1, "nova"));
         t.passive("grand_warden", 1, 1, 5).req("ward_master", 1).bonus(stats(mods().guard(0.02).defense(5)));
         t.active("great_purification", 1, 2, 5).req("rain_of_holy_lances", 3).cd(36).theme(HOLY)
-                .act(24, 20, 26, hit(10, circle(7.0), 3.4, 1.2))
+                .act(24, 20, 26, hit(10, circle(7.0), 6.02, 1.2))
                 .fx(afflict(0, BLIND, 80, 0), cleanse(0, 10), vis(START, "cast"), vis(0, "nova"), vis(0, "judgment"));
         t.passive("holy_fortitude", 1, 3, 5).req("bastion_of_faith", 3).bonus(lastStand(0.03, 0.03));
 

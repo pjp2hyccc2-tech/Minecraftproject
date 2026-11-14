@@ -10,14 +10,14 @@ BRANCHES = [("精霊矢", "Spirit Arrows"), ("霊樹", "Spirit Grove")]
 NODES = [
     # ------------------------------------------------------------------ 0: 精霊矢
     ("a", "sylph_arrow", 0, 0, 1,
-     '.weapons(BOW).cd(8).theme(WIND).act(18, 14, 14, shot(7, arrow(4.4).withPierce(3), 1.8, 1.6))'
+     '.weapons(BOW).cd(8).theme(WIND).act(18, 14, 14, shot(7, arrow(4.4).withPierce(3), 5.07, 1.6))'
      '.fx(vis(START, "cast"), vis(0, "ray"))',
      "arrow1 speed - WIND",
      "風精の矢", "Sylph Arrow",
      "風の精霊を宿した矢を放つ。敵を貫いて飛び、当たった敵を大きく吹き飛ばす。",
      "Loose an arrow carrying a wind spirit; it flies through the foes it strikes and blows them far back."),
     ("a", "snow_spirit_arrow", 0, 1, 1,
-     '.weapons(BOW).cd(10).theme(FROST).act(18, 14, 14, shot(7, arrow(3.8).withExplosion(2.2), 1.6, 0.3))'
+     '.weapons(BOW).cd(10).theme(FROST).act(18, 14, 14, shot(7, arrow(3.8).withExplosion(2.2), 4.88, 0.3))'
      '.fx(afflict(0, FREEZE, 40, 0), vis(START, "cast"), vis(0, "mist"))',
      "snowflake hail freeze FROST",
      "雪精の矢", "Snow Spirit Arrow",
@@ -27,7 +27,7 @@ NODES = [
      "feather - up WIND",
      "精霊の絆", "Spirit Bond", "遠距離攻撃力と移動速度が上がる。", "Raises ranged power and movement speed."),
     ("a", "thunder_spirit_arrow", 0, 3, 1,
-     '.weapons(BOW).cd(10).theme(THUNDER).act(18, 14, 15, shot(7, arrow(4.6), 1.8, 0.3))'
+     '.weapons(BOW).cd(10).theme(THUNDER).act(18, 14, 15, shot(7, arrow(4.6), 5.07, 0.3))'
      '.fx(afflict(0, STUN, 20, 0), vis(START, "cast"), vis(0, "lightning"))',
      "bolt beamd stun THUNDER",
      "雷精の矢", "Thunder Spirit Arrow",
@@ -35,7 +35,7 @@ NODES = [
      "Loose an arrow carrying a thunder spirit; lightning falls on the foe it strikes and stuns it."),
 
     ("a", "gale_volley", 0, 0, 2,
-     '.req("sylph_arrow", 3).weapons(BOW).cd(12).theme(WIND).act(20, 16, 16, shots(4, 3, 4, arrow(4.4), 0.7, 0.2))'
+     '.req("sylph_arrow", 3).weapons(BOW).cd(12).theme(WIND).act(20, 16, 16, shots(4, 3, 4, arrow(4.4), 1.51, 0.2))'
      '.fx(self(0, SPEED, 1, 80), vis(START, "cast"), vis(3, "storm"))',
      "arrows3fan speed x4 WIND",
      "疾風連矢", "Volley of the Gale",
@@ -45,7 +45,7 @@ NODES = [
      "feather mist slow FROST",
      "精霊のささやき", "Whisper of Spirits", "攻撃が一定確率で敵の足を鈍らせる。", "Your attacks may slow the foe."),
     ("a", "salamander_arrow", 0, 2, 2,
-     '.req("thunder_spirit_arrow", 1).weapons(BOW).cd(14).theme(FIRE).act(20, 16, 18, shot(8, arrow(3.6).withExplosion(2.8), 2.2, 0.6))'
+     '.req("thunder_spirit_arrow", 1).weapons(BOW).cd(14).theme(FIRE).act(20, 16, 18, shot(8, arrow(3.6).withExplosion(2.8), 5.46, 0.6))'
      '.fx(afflict(0, BURN, 80, 0), vis(START, "cast"), vis(0, "burst"))',
      "flame burst burn FIRE",
      "炎精の矢", "Salamander Arrow",
@@ -56,14 +56,14 @@ NODES = [
      "風精の加護", "Sylph's Grace", "攻撃を回避しやすくなる。", "You dodge attacks more often."),
 
     ("a", "tempest_arrow", 0, 0, 3,
-     '.req("gale_volley", 1).weapons(BOW).cd(18).theme(WIND).act(22, 18, 20, shot(9, arrow(3.0).withExplosion(4.0), 2.4, 0.0))'
+     '.req("gale_volley", 1).weapons(BOW).cd(18).theme(WIND).act(22, 18, 20, shot(9, arrow(3.0).withExplosion(4.0), 5.65, 0.0))'
      '.fx(afflict(0, PULL, 1, 0.8), vis(START, "cast"), vis(0, "vortex"))',
      "arrow2 spiral pull WIND",
      "嵐精の矢", "Tempest Arrow",
      "嵐の精霊を宿した矢を放つ。着弾すると竜巻が起こり、周りの敵を中心へ巻き込む。",
      "Loose an arrow carrying a storm spirit; a whirlwind rises where it lands and drags the foes around into it."),
     ("a", "aurora_arrows", 0, 1, 3,
-     '.req("spirit_whisper", 1).weapons(BOW).cd(16).theme(HOLY).act(20, 16, 18, shot(8, arrow(4.0).withFan(5, 40), 1.2, 0.2))'
+     '.req("spirit_whisper", 1).weapons(BOW).cd(16).theme(HOLY).act(20, 16, 18, shot(8, arrow(4.0).withFan(5, 40), 1.82, 0.2))'
      '.fx(afflict(0, BLIND, 60, 0), vis(START, "cast"), vis(0, "ray"))',
      "arrows5fan halo blind LIGHT",
      "極光の矢", "Aurora Arrows",
@@ -73,7 +73,7 @@ NODES = [
      "eye halo crit ARCANE",
      "精霊の眼", "Spirit Sight", "会心率が上がる。", "Raises critical chance."),
     ("a", "gnome_arrow", 0, 3, 3,
-     '.req("salamander_arrow", 1).weapons(BOW).cd(18).theme(EARTH).act(22, 18, 20, shot(9, arrow(3.4).withExplosion(3.0), 2.0, 0.6))'
+     '.req("salamander_arrow", 1).weapons(BOW).cd(18).theme(EARTH).act(22, 18, 20, shot(9, arrow(3.4).withExplosion(3.0), 5.26, 0.6))'
      '.fx(afflict(0, LAUNCH, 1, 0.6), afflict(0, SLOW, 80, 2), vis(START, "cast"), vis(0, "quake"))',
      "gem crack launch EARTH",
      "地精の矢", "Gnome Arrow",
@@ -81,7 +81,7 @@ NODES = [
      "Loose an arrow carrying an earth spirit; the ground heaves where it lands, throwing foes up and slowing them."),
 
     ("a", "wind_dragon_arrow", 0, 0, 4,
-     '.req("tempest_arrow", 1).weapons(BOW).cd(22).theme(WIND).act(24, 20, 24, shot(10, arrow(3.2).withPierce(16), 3.6, 1.8))'
+     '.req("tempest_arrow", 1).weapons(BOW).cd(22).theme(WIND).act(24, 20, 24, shot(10, arrow(3.2).withPierce(16), 6.79, 1.8))'
      '.fx(afflict(0, LAUNCH, 1, 0.7), vis(START, "cast"), vis(0, "ray"), vis(0, "storm"))',
      "snake beam launch WIND",
      "風龍の矢", "Wind Dragon Arrow",
@@ -91,7 +91,7 @@ NODES = [
      "bow halo star ARCANE",
      "精霊射術", "Spirit Archery", "スキルの威力が上がる。", "Raises the power of your skills."),
     ("a", "glacier_arrow", 0, 2, 4,
-     '.req("aurora_arrows", 1).weapons(BOW).cd(22).theme(FROST).act(24, 20, 24, shot(10, arrow(3.4).withExplosion(3.6), 2.6, 0.4))'
+     '.req("aurora_arrows", 1).weapons(BOW).cd(22).theme(FROST).act(24, 20, 24, shot(10, arrow(3.4).withExplosion(3.6), 5.84, 0.4))'
      '.fx(afflict(0, FREEZE, 60, 0), vis(START, "cast"), vis(0, "burst"), vis(0, "storm"))',
      "crystal hail freeze FROST",
      "氷河の矢", "Glacier Arrow",
@@ -103,7 +103,7 @@ NODES = [
 
     ("u", "arrow_of_the_spirit_king", 0, 0, 5,
      '.req("wind_dragon_arrow", 3).weapons(BOW).cd(120).theme(ARCANE)'
-     '.act(48, 44, 40, pause(6), shot(30, arrow(4.0).withPierce(16).withExplosion(5.0), 7.0, 2.0))'
+     '.act(48, 44, 40, pause(6), shot(30, arrow(4.0).withPierce(16).withExplosion(5.0), 16.0, 2.0))'
      '.fx(afflict(1, BURN, 80, 0), afflict(1, FREEZE, 40, 0), afflict(1, STUN, 30, 0), vis(START, "sigil"),'
      ' vis(0, "judgment_charge"), vis(1, "ray"), vis(1, "nova"))',
      "bow nova star ARCANE",
@@ -116,7 +116,7 @@ NODES = [
      "精霊の主", "Lord of Spirits", "遠距離攻撃力と会心率が上がる。", "Raises ranged power and critical chance."),
     ("a", "four_spirits", 0, 2, 5,
      '.req("glacier_arrow", 3).weapons(BOW).cd(30).theme(ARCANE)'
-     '.act(28, 24, 28, shots(6, 4, 4, arrow(4.2).withExplosion(1.8), 1.2, 0.3))'
+     '.act(28, 24, 28, shots(6, 4, 4, arrow(4.2).withExplosion(1.8), 1.99, 0.3))'
      '.fx(afflict(0, BURN, 60, 0), afflict(1, FREEZE, 30, 0), afflict(2, STUN, 20, 0), afflict(3, LAUNCH, 1, 0.6),'
      ' vis(START, "cast"), vis(3, "burst"))',
      "orbs3 burst x4 ARCANE",
@@ -136,7 +136,7 @@ NODES = [
      "森の精霊に祈り、自分と周囲の仲間を癒す。足元にしばらく癒しの光が残る。",
      "Pray to the forest spirits to heal yourself and the allies around you; a healing glow lingers at your feet."),
     ("a", "binding_vine_arrow", 1, 1, 1,
-     '.weapons(BOW).cd(12).theme(LIFE).act(18, 14, 14, shot(7, arrow(4.0), 1.2, 0.0))'
+     '.weapons(BOW).cd(12).theme(LIFE).act(18, 14, 14, shot(7, arrow(4.0), 4.5, 0.0))'
      '.fx(afflict(0, STUN, 40, 0), afflict(0, SLOW, 100, 2), vis(START, "cast"), vis(0, "chains"))',
      "flower glow stun LIFE",
      "蔦絡みの矢", "Binding Vine Arrow",
@@ -154,7 +154,7 @@ NODES = [
      "Ride the wind far forward in one bound; for a while you move swiftly and dodge more easily."),
 
     ("a", "blossom_arrow", 1, 0, 2,
-     '.req("forest_balm", 1).weapons(BOW).cd(16).theme(LIFE).act(18, 14, 16, shot(7, arrow(4.0).withExplosion(3.0), 1.4, 0.2))'
+     '.req("forest_balm", 1).weapons(BOW).cd(16).theme(LIFE).act(18, 14, 16, shot(7, arrow(4.0).withExplosion(3.0), 4.69, 0.2))'
      '.fx(heal(0, 8, 0.06, 2), vis(START, "cast"), vis(0, "heal"))',
      "flower burst heal LIFE",
      "花咲く矢", "Blossom Arrow",
@@ -166,7 +166,7 @@ NODES = [
      "新緑の魂", "Verdant Soul", "回復量が上がる。", "Raises healing."),
     ("a", "needle_rain", 1, 2, 2,
      '.req("binding_vine_arrow", 1).weapons(BOW).cd(16).theme(LIFE)'
-     '.act(24, 20, 18, shots(6, 3, 5, arrow(2.8).fallingFromAbove(), 0.8, 0.1))'
+     '.act(24, 20, 18, shots(6, 3, 5, arrow(2.8).fallingFromAbove(), 1.44, 0.1))'
      '.fx(afflict(4, BLEED, 80, 0.3), vis(START, "cast"), vis(0, "rain"))',
      "arrows_rain rain bleed LIFE",
      "針葉の矢雨", "Needle Rain",
@@ -185,7 +185,7 @@ NODES = [
      "足元に霊樹の聖域を開く。しばらくの間、仲間は癒されて守りが固まり、敵は傷つけられる。",
      "Open a sanctuary of the grove at your feet: for a while allies heal and harden, and foes are hurt."),
     ("a", "beast_spirit_arrow", 1, 1, 3,
-     '.req("verdant_soul", 1).weapons(BOW).cd(18).theme(BLOOD).act(20, 16, 18, shot(8, arrow(4.6), 2.4, 0.8))'
+     '.req("verdant_soul", 1).weapons(BOW).cd(18).theme(BLOOD).act(20, 16, 18, shot(8, arrow(4.6), 5.65, 0.8))'
      '.fx(afflict(0, BLEED, 100, 0.4), self(0, ATTACK_UP, 0.15, 160), vis(START, "roar"), vis(0, "thrust"))',
      "paw beamd bleed BLOOD",
      "獣霊の矢", "Beast Spirit Arrow",
@@ -196,7 +196,7 @@ NODES = [
      "leaf waves clock WIND",
      "精霊の息吹", "Breath of Spirits", "スキルの再使用時間が短くなる。", "Skills recover faster."),
     ("a", "earths_wrath", 1, 3, 3,
-     '.req("needle_rain", 1).cd(22).theme(EARTH).act(22, 18, 20, hit(10, circle(5.0), 2.4, 0.6))'
+     '.req("needle_rain", 1).cd(22).theme(EARTH).act(22, 18, 20, hit(10, circle(5.0), 5.65, 0.6))'
      '.fx(afflict(0, LAUNCH, 1, 0.7), afflict(0, SLOW, 80, 2), vis(0, "quake"), vis(0, "pillar"))',
      "hand crack launch EARTH",
      "大地の怒り", "Wrath of the Earth",
@@ -228,7 +228,7 @@ NODES = [
      "深き根", "Deep Roots", "HPが減るほど受けるダメージが減る。", "The lower your health, the less damage you take."),
 
     ("u", "world_tree_awakening", 1, 0, 5,
-     '.req("tree_of_life", 3).cd(140).theme(LIFE).act(40, 36, 40, pause(8), hit(20, circle(8.0), 3.0, 1.2))'
+     '.req("tree_of_life", 3).cd(140).theme(LIFE).act(40, 36, 40, pause(8), hit(20, circle(8.0), 6.22, 1.2))'
      '.fx(healZone(0, CASTER, 0, 9.0, 12, 20, 0.05, 1.2), revive(0, 12, 0.3), shieldAllies(0, 0.3, 240, 12),'
      ' allies(0, ATTACK_UP, 0.2, 240, 12), afflict(1, LAUNCH, 1, 0.8), vis(START, "cast"), vis(0, "sigil"),'
      ' vis(0, "heal"), vis(1, "pillar"), vis(1, "quake"))',
@@ -242,7 +242,7 @@ NODES = [
      "森の守り人", "Keeper of the Grove", "回復量と最大HPが上がる。", "Raises healing and maximum health."),
     ("a", "spirit_storm", 1, 2, 5,
      '.req("spirits_blessing", 1).cd(30).theme(WIND).act(18, 14, 22, pause(5))'
-     '.fx(zone(0, LOOK, 12.0, 5.0, 4, 10, 8, 0.8, SLOW, 40, 2), vis(START, "cast"), vis(0, "storm"), vis(0, "vortex"))',
+     '.fx(zone(0, LOOK, 12.0, 5.0, 4, 10, 8, 1.1, SLOW, 40, 2), vis(START, "cast"), vis(0, "storm"), vis(0, "vortex"))',
      "feather spiral slow WIND",
      "精霊嵐", "Spirit Storm",
      "狙った場所に精霊たちの嵐を起こす。しばらくの間、嵐の中の敵は切り刻まれ、足が鈍る。",

@@ -22,14 +22,14 @@ NODES = [
      "helmet - - EARTH",
      "岩肌", "Stone Skin", "防御力と最大HPが上がる。", "Raises defense and maximum health."),
     ("a", "shield_crush", 0, 2, 1,
-     '.cd(9).theme(STEEL).act(18, 14, 16, hit(7, arc(3.6, 60), 2.6, 1.2))'
+     '.cd(9).theme(STEEL).act(18, 14, 16, hit(7, arc(3.6, 60), 5.22, 1.2))'
      '.fx(afflict(0, STUN, 30, 0), afflict(0, VULNERABLE, 100, 0.15), vis(0, "impact"), vis(0, "slam_small"))',
      "shield_broken burst stun STEEL",
      "盾砕き", "Shield Crush",
      "盾ごと叩きつけて敵をよろめかせ、守りを崩して脆弱にする。",
      "Smash with your whole shield: the foe reels, stunned, its guard broken (vulnerable)."),
     ("a", "riposte_stance", 0, 3, 1,
-     '.cd(14).theme(STEEL).act(22, 18, 14, pause(3), hit(14, circle(3.4), 2.4, 1.0))'
+     '.cd(14).theme(STEEL).act(22, 18, 14, pause(3), hit(14, circle(3.4), 5.12, 1.0))'
      '.fx(self(START, DEFENSE_UP, 0.6, 20), self(START, EVASION, 0.3, 20), vis(START, "shield"), vis(1, "spin"))',
      "sword ring x2 STEEL",
      "反撃の構え", "Riposte Stance",
@@ -48,7 +48,7 @@ NODES = [
      "heart glow - STEEL",
      "鉄の決意", "Iron Resolve", "HPが減るほど受けるダメージが減る。", "The lower your health, the less damage you take."),
     ("a", "rampart_slam", 0, 2, 2,
-     '.req("shield_crush", 3).cd(12).theme(EARTH).act(22, 18, 20, hit(9, circle(3.8), 2.8, 1.4))'
+     '.req("shield_crush", 3).cd(12).theme(EARTH).act(22, 18, 20, hit(9, circle(3.8), 5.32, 1.4))'
      '.fx(afflict(0, SLOW, 80, 2), shield(0, 0.1, 100), vis(0, "quake"), vis(0, "impact"))',
      "hammer crack slow EARTH",
      "城壁打ち", "Rampart Slam",
@@ -69,7 +69,7 @@ NODES = [
      "heart halo heart BLOOD",
      "堅き心臓", "Fortified Heart", "最大HPが大きく上がる。", "Greatly raises maximum health."),
     ("a", "earthwall", 0, 2, 3,
-     '.req("rampart_slam", 1).cd(18).theme(EARTH).act(26, 22, 22, hits(6, 6, 3, line(5.5, 2.0), 1.3, 0.8))'
+     '.req("rampart_slam", 1).cd(18).theme(EARTH).act(26, 22, 22, hits(6, 6, 3, line(5.5, 2.0), 1.96, 0.8))'
      '.fx(dash(START, 3), afflict(2, LAUNCH, 1, 0.7), vis(0, "quake"), vis(2, "pillar"))',
      "chest crack x3 EARTH",
      "大地の壁", "Earthwall",
@@ -93,7 +93,7 @@ NODES = [
      "不屈", "Unyielding", "HPが減るほど与えるダメージが増え、受けるダメージが減る。",
      "The lower your health, the harder you hit and the less you take."),
     ("a", "colossus_strike", 0, 2, 4,
-     '.req("earthwall", 1).cd(22).theme(EARTH).act(30, 26, 28, hit(18, circle(5.0), 4.2, 1.6))'
+     '.req("earthwall", 1).cd(22).theme(EARTH).act(30, 26, 28, hit(18, circle(5.0), 6.04, 1.6))'
      '.fx(leap(START, 3, 2.0), afflict(0, STUN, 40, 0), vis(START, "cast"), vis(0, "quake"), vis(0, "nova"))',
      "greatsword smite stun EARTH",
      "巨像撃", "Colossus Strike",
@@ -104,7 +104,7 @@ NODES = [
      "報復の気", "Aura of Retribution", "近接攻撃が確率で敵を弱体化させる。", "Your melee hits may weaken the foe."),
 
     ("u", "eternal_fortress", 0, 0, 5,
-     '.req("wall_of_aegis", 3).cd(130).theme(EARTH).act(32, 28, 35, pause(8), hit(22, circle(6.5), 4.5, 1.5))'
+     '.req("wall_of_aegis", 3).cd(130).theme(EARTH).act(32, 28, 35, pause(8), hit(22, circle(6.5), 10.0, 1.5))'
      '.fx(shield(0, 1.2, 240), self(0, DEFENSE_UP, 0.7, 240), taunt(0, 18, 240), allies(0, DEFENSE_UP, 0.3, 240, 12),'
      ' afflict(1, STUN, 50, 0), vis(START, "cast"), vis(0, "iron_wall"), vis(1, "quake"), vis(1, "pillar"))',
      "tower nova shield EARTH",
@@ -117,7 +117,7 @@ NODES = [
      "生ける城塞", "Living Citadel", "最大HPと防御力が大きく上がる。", "Greatly raises maximum health and defense."),
     ("a", "mountain_breaker", 0, 2, 5,
      '.req("colossus_strike", 3).cd(30).theme(EARTH)'
-     '.act(36, 32, 32, hit(10, arc(4.5, 90), 2.4, 0.8), hit(24, ahead(3.5, 4.0), 4.0, 1.6))'
+     '.act(36, 32, 32, hit(10, arc(4.5, 90), 2.69, 0.8), hit(24, ahead(3.5, 4.0), 4.49, 1.6))'
      '.fx(afflict(1, LAUNCH, 1, 0.8), afflict(1, VULNERABLE, 120, 0.25), vis(0, "slash"), vis(1, "quake"),'
      ' vis(1, "burst"))',
      "hammer crack launch EARTH",
@@ -131,14 +131,14 @@ NODES = [
 
     # ------------------------------------------------------------------ 1: 統率
     ("a", "challengers_roar", 1, 0, 1,
-     '.cd(12).theme(STEEL).act(16, 12, 12, hit(6, circle(6.0), 1.2, 0.4))'
+     '.cd(12).theme(STEEL).act(16, 12, 12, hit(6, circle(6.0), 4.5, 0.4))'
      '.fx(taunt(0, 14, 160), afflict(0, WEAKEN, 120, 0.2), vis(0, "roar"), vis(0, "war_cry"))',
      "banner waves taunt STEEL",
      "挑戦の咆哮", "Challenger's Roar",
      "戦場に響く咆哮で広い範囲の敵を引きつけ、怯ませて弱体化させる。",
      "A roar across the battlefield: every foe in a wide circle turns on you, weakened by fear."),
     ("a", "shield_throw", 1, 1, 1,
-     '.cd(8).theme(STEEL).act(16, 12, 14, shot(5, orb("crescent", 2.0, 20).withPierce(4), 2.2, 0.8))'
+     '.cd(8).theme(STEEL).act(16, 12, 14, shot(5, orb("crescent", 2.0, 20).withPierce(4), 5.01, 0.8))'
      '.fx(afflict(0, STUN, 20, 0), vis(START, "cast"), vis(0, "slash"))',
      "buckler speed stun STEEL",
      "盾投げ", "Shield Throw",
@@ -148,7 +148,7 @@ NODES = [
      "crown - - STEEL",
      "将の威風", "Commander's Presence", "最大HPとガード性能が上がる。", "Raises maximum health and guard."),
     ("a", "guardians_leap", 1, 3, 1,
-     '.cd(14).theme(WIND).act(24, 20, 16, hit(16, circle(3.6), 2.0, 1.0))'
+     '.cd(14).theme(WIND).act(24, 20, 16, hit(16, circle(3.6), 4.91, 1.0))'
      '.fx(leap(START, 8, 2.5), shieldAllies(0, 0.12, 120, 5), vis(START, "blink"), vis(0, "impact"))',
      "wings speed shield WIND",
      "守護の跳躍", "Guardian's Leap",
@@ -167,7 +167,7 @@ NODES = [
      "banner glow heal LIFE",
      "鼓舞", "Rallying Spirit", "敵を倒すとHPが回復する。", "Defeating a foe restores your health."),
     ("a", "chain_hook", 1, 2, 2,
-     '.req("shield_throw", 1).cd(12).theme(STEEL).act(18, 14, 14, hit(8, line(7.0, 1.2), 1.8, 0.0))'
+     '.req("shield_throw", 1).cd(12).theme(STEEL).act(18, 14, 14, hit(8, line(7.0, 1.2), 4.81, 0.0))'
      '.fx(afflict(0, PULL, 1, 0.5), afflict(0, SLOW, 60, 2), vis(0, "chains"))',
      "chains beam pull STEEL",
      "鎖鉤", "Chain Hook",
@@ -186,7 +186,7 @@ NODES = [
      "旗を掲げて仲間を奮い立たせる。周囲の仲間の攻撃力が上がり、旗のもとでHPが少しずつ回復する。",
      "Raise the banner: allies around you strike harder and slowly heal while they stand beneath it."),
     ("a", "taunting_blow", 1, 1, 3,
-     '.req("chain_hook", 1).cd(10).theme(STEEL).act(16, 12, 14, hit(6, arc(3.8, 80), 2.6, 0.6))'
+     '.req("chain_hook", 1).cd(10).theme(STEEL).act(16, 12, 14, hit(6, arc(3.8, 80), 5.22, 0.6))'
      '.fx(taunt(0, 8, 120), afflict(0, VULNERABLE, 80, 0.12), vis(0, "slash"), vis(0, "roar"))',
      "sword arc taunt STEEL",
      "挑発撃", "Taunting Blow",
@@ -196,7 +196,7 @@ NODES = [
      "hand burst stun STEEL",
      "覇者の握力", "Warlord's Grip", "近接攻撃が確率で敵を気絶させる。", "Your melee hits may stun the foe."),
     ("a", "sentinel_charge", 1, 3, 3,
-     '.req("guardians_leap", 3).cd(16).theme(WIND).act(22, 18, 20, hits(4, 5, 3, line(4.0, 1.6), 1.2, 1.0))'
+     '.req("guardians_leap", 3).cd(16).theme(WIND).act(22, 18, 20, hits(4, 5, 3, line(4.0, 1.6), 1.91, 1.0))'
      '.fx(dash(START, 8), allies(2, SPEED, 1, 100, 6), vis(START, "blink"), vis(0, "thrust"), vis(2, "impact"))',
      "lance speed x3 WIND",
      "哨兵突撃", "Sentinel Charge",
@@ -215,7 +215,7 @@ NODES = [
      "crown halo star HOLY",
      "生まれながらの将", "Born Leader", "スキルの威力が上がる。", "Raises the power of your skills."),
     ("a", "gravity_bash", 1, 2, 4,
-     '.req("taunting_blow", 3).cd(20).theme(EARTH).act(24, 20, 22, hit(10, circle(5.5), 2.8, 0.0))'
+     '.req("taunting_blow", 3).cd(20).theme(EARTH).act(24, 20, 22, hit(10, circle(5.5), 5.32, 0.0))'
      '.fx(afflict(0, PULL, 1, 0.6), afflict(0, STUN, 30, 0), taunt(0, 12, 140), vis(0, "vortex"), vis(0, "quake"))',
      "gem spiral pull EARTH",
      "重圧打", "Gravity Bash",
