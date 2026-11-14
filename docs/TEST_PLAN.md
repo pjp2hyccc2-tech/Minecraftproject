@@ -422,3 +422,5 @@
 | Unit `ResourcesTest`（追加） | 二次職の名前・説明・系統名の日英、紋章の画像、職業名と二次職名は漢字で重複なし |
 | Unit `StoryTranslationsTest`（更新） | 職業ギルド長の台詞の職業名は正式名（騎士・暗殺者・魔導士・狩人・神官・魔剣士） |
 | Unit `JobsTest`（更新） | 全スキル数は324＋480、二次職のIDの保存値は職業に戻る、未知のIDは職業なし |
+| GameTest `SkillTreeGameTests.aKnightGrowsIntoAGuardianAndUsesOnlyItsOwnSkills` | 実サーバー: Lv39の騎士は進化できない、騎士は賢者になれない、Lv40で守護士へ（無料、保存IDは guardian、職業は騎士のまま）、守護士と騎士のスキルは習得・枠に入り聖騎士のスキルは断る、枠5が守護士のスキルで戦闘にバインドされる、聖騎士への転向で費用を払い守護士のポイントが戻り騎士の分は残り枠から外れる |
+| GameTest `SkillTreeGameTests.treeRulesAreCheckedByTheServer`（更新） | Lv10のポイントはサーバーの設定どおり（既定30） |

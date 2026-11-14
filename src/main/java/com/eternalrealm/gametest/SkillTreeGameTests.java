@@ -140,7 +140,11 @@ public final class SkillTreeGameTests {
             try {
                 check(JobActions.chooseJob(player, context, JobType.KNIGHT), "choosing the knight failed");
                 check(data.setLevel(id, 10) == SetLevelResult.SUCCESS, "could not set level 10");
-                check(data.snapshot(id).orElseThrow().unspentSkillPoints() == 20, "a level 10 character has 20 points");
+                // the server's rates (3 a level and 3 at the 10th by default: 30 points)
+                int earned = data.rules().earnedSkillPoints(10);
+                check(data.snapshot(id).orElseThrow().unspentSkillPoints() == earned,
+                        "a level 10 character has " + earned + " points, not "
+                                + data.snapshot(id).orElseThrow().unspentSkillPoints());
 
                 expect(data.investSkill(id, "knight_heavy_slam"), SkillTree.InvestResult.PREREQUISITE, "heavy slam");
                 expect(data.investSkill(id, "knight_shield_bash"), SkillTree.InvestResult.OK, "shield bash Lv2");
@@ -159,7 +163,7 @@ public final class SkillTreeGameTests {
                 check("knight_heavy_slam".equals(SkillTree.effectiveLoadout(JobType.KNIGHT, snapshot.level(),
                                 snapshot.skillInvestments(), snapshot.skillLoadout()).get(2)),
                         "heavy slam should sit in slot 3: " + snapshot.skillLoadout());
-                check(snapshot.unspentSkillPoints() == 17, "three points should be spent, left "
+                check(snapshot.unspentSkillPoints() == earned - 3, "three points should be spent, left "
                         + snapshot.unspentSkillPoints());
 
                 long cost = context.game().jobRules().skillResetCost(10);
@@ -175,12 +179,88 @@ public final class SkillTreeGameTests {
                 check(paid.result() == PlayerDataService.SkillResetResult.OK && paid.cost() == cost,
                         "the paid reset was " + paid);
                 CharacterSnapshot after = data.snapshot(id).orElseThrow();
-                check(after.skillInvestments().isEmpty() && after.unspentSkillPoints() == 20
+                check(after.skillInvestments().isEmpty() && after.unspentSkillPoints() == earned
                                 && after.gold() == gold - cost,
                         "after the reset: " + after.skillInvestments() + ", points " + after.unspentSkillPoints()
                                 + ", gold " + after.gold());
                 expect(data.investSkill(id, "knight_heavy_slam"), SkillTree.InvestResult.PREREQUISITE,
                         "heavy slam after the reset");
+            } catch (GameTestAssertException e) {
+                failure.set(e);
+                throw e;
+            } finally {
+                data.onPlayerLeave(id);
+            }
+        });
+    }
+
+    /**
+     * The second class on a real server: a level 39 knight cannot advance; at 40 the journal's action makes it a
+     * guardian (free, the class is stored as the job id); then it learns and slots its class's skills, never the
+     * paladin's, and its combat bindings hold the guardian's skill; changing to the paladin costs gold and takes the
+     * guardian's skill out of the slots.
+     */
+    @GameTest(template = ARENA, timeoutTicks = 400)
+    public static void aKnightGrowsIntoAGuardianAndUsesOnlyItsOwnSkills(GameTestHelper helper) {
+        ServerContext context = requireContext();
+        PlayerDataService data = context.playerData();
+        FakePlayer player = fighter(helper, "er_gt_class_" + UUID.randomUUID().toString().substring(0, 8),
+                WeaponProfiles.ONE_HANDED_SWORD);
+        UUID id = player.getUUID();
+        data.onPlayerJoin(id, "gametest_class");
+        AtomicBoolean done = new AtomicBoolean();
+        AtomicReference<GameTestAssertException> failure = new AtomicReference<>();
+        helper.succeedWhen(() -> {
+            if (failure.get() != null) {
+                throw failure.get();
+            }
+            if (done.get()) {
+                return;
+            }
+            check(data.isActive(id), "waiting for the character to load");
+            done.set(true);
+            try {
+                check(JobActions.chooseJob(player, context, JobType.KNIGHT), "choosing the knight failed");
+                check(data.setLevel(id, 39) == SetLevelResult.SUCCESS, "could not set level 39");
+                check(!JobActions.advance(player, context, com.eternalrealm.job.JobClass.GUARDIAN),
+                        "a level 39 knight advanced");
+                check(data.setLevel(id, 40) == SetLevelResult.SUCCESS, "could not set level 40");
+                check(!JobActions.advance(player, context, com.eternalrealm.job.JobClass.SAGE), "a knight became a sage");
+                long goldBefore = data.gold(id);
+                check(JobActions.advance(player, context, com.eternalrealm.job.JobClass.GUARDIAN),
+                        "the level 40 knight did not become a guardian");
+                CharacterSnapshot guardian = data.snapshot(id).orElseThrow();
+                check("guardian".equals(guardian.jobId()), "the stored job id is " + guardian.jobId());
+                check(data.gold(id) == goldBefore, "the first advance cost gold");
+                check(JobType.fromStored(guardian.jobId()) == JobType.KNIGHT, "a guardian is still a knight");
+
+                expect(data.investSkill(id, "guardian_titan_stance"), SkillTree.InvestResult.OK, "the guardian's skill");
+                expect(data.investSkill(id, "paladin_radiant_edge"), SkillTree.InvestResult.WRONG_JOB,
+                        "the paladin's skill");
+                expect(data.investSkill(id, "knight_cleave"), SkillTree.InvestResult.OK, "the knight's own skill");
+                expectSlot(data.setSkillSlot(id, 5, "guardian_titan_stance"), SkillTree.LoadoutResult.OK,
+                        "the guardian's skill in slot 5");
+                expectSlot(data.setSkillSlot(id, 6, "paladin_radiant_edge"), SkillTree.LoadoutResult.WRONG_JOB,
+                        "the paladin's skill in a slot");
+                CharacterSnapshot slotted = data.snapshot(id).orElseThrow();
+                com.eternalrealm.combat.SkillBinding[] bindings = SkillTree.bindings(
+                        com.eternalrealm.job.JobPath.of(slotted.jobId()), slotted.level(), slotted.skillInvestments(),
+                        slotted.skillLoadout());
+                check(bindings[5] != null && "guardian_titan_stance".equals(bindings[5].action().id()),
+                        "slot 5 should bind the guardian's skill: " + slotted.skillLoadout());
+
+                long cost = context.game().jobRules().classChangeCost(40);
+                data.grantGold(id, cost);
+                long gold = data.gold(id);
+                check(JobActions.advance(player, context, com.eternalrealm.job.JobClass.PALADIN),
+                        "changing to the paladin failed");
+                CharacterSnapshot paladin = data.snapshot(id).orElseThrow();
+                check("paladin".equals(paladin.jobId()) && data.gold(id) == gold - cost,
+                        "after the change: " + paladin.jobId() + ", gold " + data.gold(id) + " of " + gold);
+                check(paladin.investment("guardian_titan_stance") == 0 && paladin.investment("knight_cleave") == 1,
+                        "the guardian's points come back, the knight's stay: " + paladin.skillInvestments());
+                check(!paladin.skillLoadout().contains("guardian_titan_stance"),
+                        "the guardian's skill left the slots: " + paladin.skillLoadout());
             } catch (GameTestAssertException e) {
                 failure.set(e);
                 throw e;
