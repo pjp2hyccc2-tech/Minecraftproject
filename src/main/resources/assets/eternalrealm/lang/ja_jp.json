@@ -8749,5 +8749,11 @@
   "screen.eternalrealm.guild_battle.online_guilds": "いま仲間がいるギルド",
   "screen.eternalrealm.guild_battle.no_guilds": "ほかのギルドの人はいません。",
   "screen.eternalrealm.guild_battle.guild_line": "%s 【%s】 Lv%s ・ %s人 ・ %s勝%s敗",
-  "estate.eternalrealm.arena.colosseum": "対抗戦の闘技場"
+  "estate.eternalrealm.arena.colosseum": "対抗戦の闘技場",
+  "label.eternalrealm.guildgate.own": "▼ あなたのギルドの門 ▼",
+  "label.eternalrealm.guildgate.guide": "「%s」のギルドハウスの門",
+  "map.eternalrealm.guild_gate": "★ %s のギルドハウスの門",
+  "map.eternalrealm.guild_gate.hint": "ギルドの頁の「ギルドハウスの門へ案内」で道案内できます",
+  "screen.eternalrealm.guild.guide_gate": "ギルドハウスの門へ案内",
+  "screen.eternalrealm.guild.guide_gate.away": "王都のある世界（アストリア）にいるときに使えます"
 }

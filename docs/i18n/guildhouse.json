@@ -139,5 +139,11 @@
   "block.eternalrealm.gilded_roof_tile_slab": {"ja": "金の屋根瓦のハーフブロック", "en": "Gilded Roof Tile Slab"},
   "block.eternalrealm.thatch_roof": {"ja": "茅葺き屋根", "en": "Thatch Roof"},
   "block.eternalrealm.thatch_roof_stairs": {"ja": "茅葺き屋根の階段", "en": "Thatch Roof Stairs"},
-  "block.eternalrealm.thatch_roof_slab": {"ja": "茅葺き屋根のハーフブロック", "en": "Thatch Roof Slab"}
+  "block.eternalrealm.thatch_roof_slab": {"ja": "茅葺き屋根のハーフブロック", "en": "Thatch Roof Slab"},
+  "label.eternalrealm.guildgate.own": {"ja": "▼ あなたのギルドの門 ▼", "en": "▼ Your guild's gate ▼"},
+  "label.eternalrealm.guildgate.guide": {"ja": "「%s」のギルドハウスの門", "en": "the gate of the \"%s\" guild house"},
+  "map.eternalrealm.guild_gate": {"ja": "★ %s のギルドハウスの門", "en": "★ %s's guild house gate"},
+  "map.eternalrealm.guild_gate.hint": {"ja": "ギルドの頁の「ギルドハウスの門へ案内」で道案内できます", "en": "\"Guide me to the guild house gate\" on the guild page lays the way"},
+  "screen.eternalrealm.guild.guide_gate": {"ja": "ギルドハウスの門へ案内", "en": "Guide me to our gate"},
+  "screen.eternalrealm.guild.guide_gate.away": {"ja": "王都のある世界（アストリア）にいるときに使えます", "en": "Works while you are in Astoria, the capital's world"}
 }

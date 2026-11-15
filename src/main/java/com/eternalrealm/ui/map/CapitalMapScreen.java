@@ -586,6 +586,7 @@ public final class CapitalMapScreen extends Screen {
         for (MapView.Npc npc : stories) {
             drawStoryNpc(graphics, npc, cx, cy, ppb);
         }
+        drawGuildGate(graphics, cx, cy, pulse);
         drawGuideTarget(graphics, cx, cy, pulse);
         drawPlates(graphics);
         drawMembersAndPlayer(graphics, cx, cy, partialTick);
@@ -679,6 +680,36 @@ public final class CapitalMapScreen extends Screen {
             plate(name.copy().withStyle(ChatFormatting.GREEN), sx, sy + icon / 2.0F + 6.0F, RANK_STORY, false,
                     LABEL_BACKGROUND);
         }
+    }
+
+    /**
+     * The gate of the player's guild's house on the Guild Gate Terrace (2026-11-15): a gold-rimmed diamond in the
+     * colour of the guild's standing, with the guild's name.
+     */
+    private void drawGuildGate(GuiGraphics graphics, float cx, float cy, float pulse) {
+        Minecraft minecraft = Minecraft.getInstance();
+        Optional<com.eternalrealm.client.guildhouse.GuildGateClient.Own> own =
+                com.eternalrealm.client.guildhouse.GuildGateClient.own();
+        if (own.isEmpty() || minecraft.level == null || !ClientMapState.inAstoria(minecraft.level)) {
+            return;
+        }
+        MapView.Realm realm = ClientMapState.view().realm();
+        double[] front = own.get().gate().inFront(1.5);
+        float sx = (float) viewport.screenX(front[0] - realm.centerX(), cx);
+        float sy = (float) viewport.screenY(front[1] - realm.centerZ(), cy);
+        if (sx < frameLeft() - 20 || sx > frameRight() + 20 || sy < frameTop() - 20 || sy > frameBottom() + 20) {
+            return;
+        }
+        MapDraw.ring(graphics, sx, sy, 5.5F + pulse * 0.6F, 6.8F + pulse * 0.6F, 0xD0FFD040);
+        MapDraw.diamond(graphics, sx, sy, 6.0F, 0xFF000000);
+        MapDraw.diamond(graphics, sx, sy, 4.6F, 0xFFFFD040);
+        MapDraw.diamond(graphics, sx, sy, 3.0F, 0xFF000000 | own.get().color());
+        Component name = Component.translatable("map.eternalrealm.guild_gate", own.get().guild())
+                .withStyle(style -> style.withColor(0xFFE070));
+        plate(name, sx, sy + 13.0F, RANK_STORY, true, LABEL_BACKGROUND);
+        hovers.add(new Hover(sx, sy, List.of(name, Component.translatable(own.get().gate().nameKey())
+                .withStyle(ChatFormatting.GRAY), Component.translatable("map.eternalrealm.guild_gate.hint")
+                .withStyle(ChatFormatting.YELLOW))));
     }
 
     /** Where the guide leads (a picked place or the quest's), if it is in the capital. */

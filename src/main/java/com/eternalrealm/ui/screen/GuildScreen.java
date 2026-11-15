@@ -1,6 +1,7 @@
 package com.eternalrealm.ui.screen;
 
 import com.eternalrealm.client.ClientUiState;
+import com.eternalrealm.client.guildhouse.GuildGateClient;
 import com.eternalrealm.network.forge.ERNetwork;
 import com.eternalrealm.network.forge.UiActionPacket;
 import com.google.gson.JsonArray;
@@ -9,6 +10,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 
 import java.util.Locale;
@@ -18,8 +20,8 @@ import java.util.Optional;
  * Guild page: create (tag + name) or join by invite; for members the guild's level (merit to the next level, the
  * perks: docs/modules/guild_levels.md) above two views: the members (ranks, invite, kick, promote, demote, leave) and
  * the guild battles (record, the battle under way, challenges, guilds online to challenge:
- * docs/modules/guild_battles.md). The page only shows server documents ({@code guild}, {@code guild.battle}) and
- * sends requests.
+ * docs/modules/guild_battles.md); with a guild house, 「ギルドハウスの門へ案内」 lays the guide's dots to its gate on
+ * the terrace. The page only shows server documents ({@code guild}, {@code guild.battle}) and sends requests.
  */
 public final class GuildScreen extends JournalScreen {
     private static final String BATTLE = "guild.battle";
@@ -89,6 +91,19 @@ public final class GuildScreen extends JournalScreen {
         }).bounds(left + 124, top + 49, 60, 18).build());
         addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.guild.leave"),
                 b -> send("guild.leave", new JsonObject())).bounds(left, top + PANEL_HEIGHT - 20, 80, 18).build());
+        if (GuildGateClient.own().isPresent()) {
+            // the guide's dots to the gate of the guild's house on the Guild Gate Terrace
+            Button guide = addRenderableWidget(Button.builder(
+                    Component.translatable("screen.eternalrealm.guild.guide_gate"), b -> {
+                        if (GuildGateClient.guideToOwn()) {
+                            onClose();
+                        }
+                    }).bounds(left + 84, top + PANEL_HEIGHT - 20, 130, 18).build());
+            guide.active = GuildGateClient.canGuide();
+            if (!guide.active) {
+                guide.setTooltip(Tooltip.create(Component.translatable("screen.eternalrealm.guild.guide_gate.away")));
+            }
+        }
         String myRank = ClientUiState.stringOr(guild.get(), "myRank", "member");
         if (!"member".equals(myRank)) {
             int y = top + 74;

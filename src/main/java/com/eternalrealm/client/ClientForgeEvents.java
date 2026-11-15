@@ -113,6 +113,7 @@ public final class ClientForgeEvents {
         com.eternalrealm.client.telegraph.TelegraphRenderer.render(event);
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_PARTICLES) {
             com.eternalrealm.client.guide.GuideRenderer.render(event);
+            com.eternalrealm.client.guildhouse.GateLabelRenderer.render(event);
             ArtTrails.render(event);
             HeroFx.render(event);
             SkillFx.render(event);

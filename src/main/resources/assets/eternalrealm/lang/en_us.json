@@ -8749,5 +8749,11 @@
   "screen.eternalrealm.guild_battle.online_guilds": "Guilds with members online",
   "screen.eternalrealm.guild_battle.no_guilds": "Nobody of another guild is online.",
   "screen.eternalrealm.guild_battle.guild_line": "%s [%s] Lv%s · %s online · %sW %sL",
-  "estate.eternalrealm.arena.colosseum": "Guild Battle Arena"
+  "estate.eternalrealm.arena.colosseum": "Guild Battle Arena",
+  "label.eternalrealm.guildgate.own": "▼ Your guild's gate ▼",
+  "label.eternalrealm.guildgate.guide": "the gate of the \"%s\" guild house",
+  "map.eternalrealm.guild_gate": "★ %s's guild house gate",
+  "map.eternalrealm.guild_gate.hint": "\"Guide me to the guild house gate\" on the guild page lays the way",
+  "screen.eternalrealm.guild.guide_gate": "Guide me to our gate",
+  "screen.eternalrealm.guild.guide_gate.away": "Works while you are in Astoria, the capital's world"
 }

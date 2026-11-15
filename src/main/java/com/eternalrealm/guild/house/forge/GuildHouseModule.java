@@ -9,7 +9,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 /**
  * Wiring of the guild houses (docs/modules/guildhouse.md), called once from the mod's constructor: blocks and the
  * training dummy, the bridge to the estates core (member rule, "house ready"), the broker, the screens' actions and
- * the server events. Bells may be rung inside estates (the rally bell).
+ * the server events (the gates' light, which gate is whose: {@link GuildGateLabels}). Bells may be rung inside estates
+ * (the rally bell).
  */
 public final class GuildHouseModule {
     private GuildHouseModule() {
@@ -27,6 +28,9 @@ public final class GuildHouseModule {
         forgeBus.addListener(GuildHouses::onServerTick);
         forgeBus.addListener(GuildGates::onServerTick);
         forgeBus.addListener(GuildGates::onServerStopped);
+        forgeBus.addListener(GuildGateLabels::onServerTick);
+        forgeBus.addListener(GuildGateLabels::onLogout);
+        forgeBus.addListener(GuildGateLabels::onServerStopped);
         forgeBus.addListener(GuildHouses::onServerStopping);
         forgeBus.addListener(GuildHouseEvents::onRightClickBlock);
         forgeBus.addListener(GuildHouseEvents::onContainerOpen);
