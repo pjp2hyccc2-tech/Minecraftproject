@@ -839,3 +839,42 @@ The owner sent concept sheets (front/side/back views, close-ups, weapons) and as
 - Dense clips (many spring chains) are split by the Java emitter into helper methods (the 64 KiB method limit);
   chain keys can be thinned per chain (`Chain.key_rate`) and are rounded to 0.1°.
 
+
+## D-GUILDHOUSE2: the guild-house round of 2026-11-15 (gates, levels, battles, storehouses, boss levels, raid drops)
+
+The owner: 「ギルドハウスがバグりがち。入ったら入る権限がありません的なこと言われるのと、入って出たら海の上に落とされて何も出来なく
+なる。ギルドハウス内のギミックでマイハウスみたいに一括でアイテムを管理できるギミックを入れて。あと建物の構造がおかしいギルドハウスが
+多々あるから調査して修正。ギルドハウスを全種類2倍くらいの広さにして。ギルドレベルっていうのも実装してなんか良さげにシステム作って。
+ギルド対抗バトルも実装して。ギルドハウスの門がどれが自分のギルドのハウスか分からないからなんかわかるように工夫して、名前つけるとか。
+ダンジョンボスのレベルを5ずつ上げて。レイドバトルは、全体貢献ランキングで1位がレアドロップ10%、2位は5%3位は3%それより下は全員0.5%にして。」
+
+- **Gates act at the end of the tick**: the light only notes a touch; the gate moves the player from the server tick. A
+  teleport across dimensions from inside the move packet's handling is undone by the handler's tail (it puts the player
+  back at the packet's coordinates in the new dimension) - the cause of both reported bugs. Players already stranded far
+  out over the sea (|x| or |z| > 100 000 in Astoria) are brought to the capital on login and while playing.
+- **Twice the size = a second lobe and a storehouse**, not twenty redrawn buildings: every island gets a lobe of about its
+  own size to the north (the sky temple: a new island and a bridge), with the storehouse, a pavilion from tier 2, a path
+  and the theme's trees; ground area 1.92-2.10 times. The lobe only fills empty ground and the storehouse asserts its
+  place is free, so no house is cut into; existing houses are refurbished to the new blueprints when next entered.
+- **Bulk storage reuses the inn rooms' sorting desk**: a per-estate-kind policy in `LedgerService` (which containers,
+  which may be filled, what to do with the moves); the guild's policy keeps the vaults to master and officers (taken
+  from, never filled by "put away") and writes the guild's storage log. The houses' chests became labelled storage
+  chests so "put away" sorts by label; storage doubled with the storehouse (6 ... 14 chests by tier).
+- **Structural fixes from a walking survey** (`tools/estates/guild/survey.py`), fixing what players can actually not
+  use (unreachable stations, floors and vaults, a sealed courtyard, a bell out of reach, stairs that need a jump) and
+  carrying floating lanterns and chandeliers up to a ceiling; attics, shelf tops and gate ornaments are left.
+- **Guild levels**: merit from play (monsters, quests, dungeons, lords, wanderers, calamities, donations, battles), twenty
+  levels, modest perks (members +2 a level to 68, +0.5 % experience a level to +9.5 %, house discount 5-20 %, a standing
+  colour on the members' tags). Merit for donations is slow (100 G a point) so play, not gold, raises a guild.
+- **Guild battles in arenas of their own** (estate kind `arena`, three at a time): knock-outs instead of deaths, a short
+  shelter after standing up, first to 20 or the most after five minutes, 1-10 fighters a side, records per guild,
+  merit and gold. PvP stays off everywhere else (`PvpRules` has one arena rule: opponents of a running fight, both in
+  its arena).
+- **Your gate is marked for you only**: the server tells each player in the capital which gate is theirs; the client
+  draws the guild's name, "your guild's gate" and a beam over it, marks it on the capital map and can guide there.
+  Other gates get their house's name when near.
+- **Boss levels +5 with their strength**: health grows by the ratio of the balance hit at the new level to the old one,
+  damage by 70 % of that growth (as for the calamities); dungeon levels and relic levels stay.
+- **The raid's rare drop is the boss weapon of the final raid**, rolled per player by their place in the fight's merit
+  ranking (1st 10 %, 2nd 5 %, 3rd 3 %, everyone else 0.5 %); ordinary dungeons keep their weapon odds and relic drops are
+  unchanged.

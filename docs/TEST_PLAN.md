@@ -437,3 +437,17 @@
 | Unit `BossesContentTest`（確認） | 生成し直した `BossRigData` は前と同じ（インパクト < 長さ、体の大きさ、予兆 ≥ 溜め） |
 | 手動 | 各ダンジョンでボスの見た目（三面図と比べる）、待機・歩き・各技の動き、形態の変化、倒れ方、叩きつけの届く距離（武器が床に着く所で当たる）。`tools/art_entities/previews/anim_<リグ>.png` |
 
+
+## 20. ギルドの回（2026-11-15、[modules/guildhouse.md](modules/guildhouse.md)・[modules/guild_levels.md](modules/guild_levels.md)・[modules/guild_battles.md](modules/guild_battles.md)・DECISIONS D-GUILDHOUSE2）
+
+| クラス | 主な検証内容 |
+|---|---|
+| GameTest `GuildHouseGameTests`（更新） | 門の光に触れた tick の中では移動せず、tick の終わりに自分のギルドのハウスへ入る |
+| Unit `GuildModelTest` / `GuildServiceTest`（更新）・`GuildLevelTest`（新規） | 20 段の閾値と定員、経験値の加算とレベルアップの出来事、保存から読んだ通算、加護・割引（切り上げ）・格 |
+| Unit `GuildBattleTest`（新規） | 挑戦・受ける・期限、闘技場の割り当て、受付・中止、準備中は無敵、ノックアウトと点・保護時間、目標・時間切れ・誰もいない側の負け、MVP、休息、戦績 |
+| Unit `GuildHouseServiceTest`（更新） | 共有の収納箱 6〜14 個（本館＋別館） |
+| Unit `BossesContentTest` / `DungeonDefinitionTest` / `RelicCatalogTest`（更新） | ボスの Lv = ダンジョン + 5、HP と攻撃の伸び、遺宝はダンジョンの Lv のまま |
+| Unit `ContributionsTest` / `ArmoryTest`（更新） | 戦功の順位、レイドのレアドロップの確率（1位 10%・2位 5%・3位 3%・ほか 0.5%） |
+| 間取りの検査（`tools/estates/guild/build.py`） | 段ごとの数（収納箱＝本館＋別館、仕分け机 1）、箱の蓋、掲示板、出口、階段の行き先と頭上 |
+| 歩く検査（`tools/estates/guild/survey.py`、手動で実行） | 入口から歩いて全設備・全部屋に手が届く（残りは門の上の飾りと人の入らない空間）。浮いたランタン・鎖がない |
+| 手動 | 門から入る・出る（海に落ちない・追い出されない）、自分の門の名前と光の柱・地図の印・案内、別館の仕分け机（取り出し・しまう・金庫・記録）、北の丘と東屋、ギルドのレベルアップと名前の色、対抗戦（挑戦〜受付〜準備〜戦闘〜結果〜帰還）、レイドのレアドロップの表示 |

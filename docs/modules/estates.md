@@ -58,6 +58,7 @@ EstateStatus s = EstateService.status(key);                    // NONE / BUILDIN
 EstateService.ready(key);                                      // 入れるか
 EstateService.enter(player, key);                              // 入口へ。来た場所をプレイヤーに記録。だめなら理由を表示して返す
 EstateService.leave(player);                                   // 記録した場所へ（なければ王都の estate.lobby、なければ王都のスポーン）
+EstateService.rescueIfStranded(player);                        // 王都の世界の遠い海の上（10 万ブロック超）にいたら王都へ（2026-11-15）
 EstateService.toCapital(player);                               // 王都の estate.lobby へ（記録は消える）
 EstateService.redesign(key, "grand_hall");                     // 模様替え（§4）
 EstateService.release(key);                                    // 手放す（中の人は外へ、区画は解体、残った物は預かり品へ）
@@ -150,6 +151,11 @@ EstateService.keepsafe(owner);  EstateService.claimKeepsafe(player, owner);   //
   **すべてしまう**: 鞄（枠1〜35、手の武器は触らない）を札に合わせて片付ける。同じ物の積み増し → 本は書棚 → その種類の札 → 札なし →
   「その他」の順（`DepositPlanner`）。回復薬・強壮剤・帰還の巻物は鞄に残す（種類のタブの「…をしまう」なら持っていく）。
   サーバーが毎回部屋を読み直して実行し、鞄に入った分だけ収納から減らす（失わない・増やさない）。物の種類は `EstateItems`。
+- **種類ごとの規則**（2026-11-15、`LedgerService.Policy` / `setPolicy(kind, policy)`）: 屋敷の種類が、台帳に出す収納（`uses`）、
+  「しまう」で入れてよい収納（`fills`、既定は `uses` と同じ）、動いた物の知らせ（`moved`、1 回の操作ぶんを収納と品ごとにまとめて）を
+  決められる。客室は規則なし（部屋の収納すべて）。ギルドハウス（[guildhouse.md](guildhouse.md) §5.1）は保管の家具だけ、金庫は
+  マスターと幹部だけ・「しまう」では入れない、動いた物はギルドの出し入れの記録へ。台帳の文書に屋敷の種類（`estate`）が入り、
+  画面の題が変わる。
 
 ## 9. 自室への帰還（Home キー・日誌の「自室へ」）と王都への転移（End キー・日誌の「王都へ」・地図の「王都へ転移」）
 
