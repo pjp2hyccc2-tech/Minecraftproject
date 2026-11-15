@@ -426,3 +426,14 @@
 | GameTest `SkillTreeGameTests.treeRulesAreCheckedByTheServer`（更新） | Lv10のポイントはサーバーの設定どおり（既定30） |
 | Unit `SecondClassTest.classAttackSkillsHitForAtLeast450AndAttackClassesReach1600Percent` | 二次職のダメージのあるスキルは Lv1 の総威力（領域だけなら全パルス）が450%以上、攻撃特化8職の最強は1600%、ほかの4職は800〜1205% |
 | Unit `JobsTest.totalDamageOfEverySkillIsSane`（更新） | 職業のスキルは100〜1000%、二次職のスキルは450〜1605% |
+
+## 19. ダンジョンボスの専用リグ（2026-11-15、[modules/entity.md](modules/entity.md) §3.2・DECISIONS D-BOSSRIGS）
+
+| クラス | 主な検証内容 |
+|---|---|
+| Unit `EntityAssetsTest`（更新） | 専用リグ9つ（BANDIT〜ENDKING）を含む全ボスのリグ: 各ボスにテクスチャ、形態ごとの外見、テクスチャの大きさが UV 表×2 と一致 |
+| Unit `ClientModelSmokeTest`（更新、Gradle） | 専用リグ9つの形状・盾の層を焼き、BossModel で全外見・全アニメーションを評価 |
+| GameTest `EntityGameTests`（確認、CI） | 全ボス（b1〜final）の出現・全アニメーション・撃破（`bossLifecycle`）、巨体（b2・b3・b6・final）が柱を回り込み自分の届く距離から叩く（届く距離 ≥ 体の縁+1） |
+| Unit `BossesContentTest`（確認） | 生成し直した `BossRigData` は前と同じ（インパクト < 長さ、体の大きさ、予兆 ≥ 溜め） |
+| 手動 | 各ダンジョンでボスの見た目（三面図と比べる）、待機・歩き・各技の動き、形態の変化、倒れ方、叩きつけの届く距離（武器が床に着く所で当たる）。`tools/art_entities/previews/anim_<リグ>.png` |
+
