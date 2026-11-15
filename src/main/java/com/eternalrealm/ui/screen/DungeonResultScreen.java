@@ -319,9 +319,22 @@ public final class DungeonResultScreen extends Screen {
             graphics.drawString(font, taken, takenRight - font.width(taken), y, 0xFFB0A8A0);
             y += rowHeight;
         }
-        if (data.has("heroMe") && data.get("heroMe").getAsBoolean() && t > 1.2) {
+        boolean heroMe = data.has("heroMe") && data.get("heroMe").getAsBoolean();
+        if (heroMe && t > 1.2) {
             graphics.drawString(font, Component.translatable("result.eternalrealm.hero_you").withStyle(ChatFormatting.GOLD),
                     left + 4, bottom - 11, 0xFFFFFFFF);
+        }
+        if (data.has("rareChance") && t > 1.3) {
+            // the raid: the rare drop went by the player's place in the merit ranking
+            int place = ClientUiState.intOr(data, "meritPlace", 0);
+            String odds = String.format(Locale.ROOT, "%s%%",
+                    new java.math.BigDecimal(data.get("rareChance").getAsDouble() * 100.0)
+                            .setScale(1, java.math.RoundingMode.HALF_UP).stripTrailingZeros().toPlainString());
+            Component line = place > 0
+                    ? Component.translatable("result.eternalrealm.raid_rare", place, odds)
+                    : Component.translatable("result.eternalrealm.raid_rare_none", odds);
+            graphics.drawString(font, line.copy().withStyle(ChatFormatting.LIGHT_PURPLE), left + 4,
+                    bottom - (heroMe ? 22 : 11), 0xFFFFFFFF);
         }
 
         // ---- the rewards

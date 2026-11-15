@@ -31,6 +31,22 @@ public class ContributionsTest {
         assertEquals(1000.0, contributions.totalDamage(), 1e-9);
     }
 
+    /** The raid's rare drop goes by the overall merit ranking (score), not by damage alone (2026-11-15). */
+    @Test
+    public void meritPlaceFollowsTheScore() {
+        Contributions contributions = new Contributions();
+        contributions.damage(KNIGHT, "Knight", "knight", 500);
+        contributions.damage(MAGE, "Mage", "mage", 500);
+        contributions.taken(KNIGHT, "Knight", "knight", 900);   // the knight held the boss as well
+        contributions.healing(PRIEST, "Priest", "priest", 800);
+        assertEquals(1, contributions.meritPlace(KNIGHT));
+        assertEquals(KNIGHT, contributions.byScore().get(0).id());
+        assertEquals(contributions.byScore().indexOf(contributions.line(MAGE).orElseThrow()) + 1,
+                contributions.meritPlace(MAGE));
+        assertEquals(3, contributions.byScore().size());
+        assertEquals(0, contributions.meritPlace(new UUID(0, 9)));
+    }
+
     @Test
     public void firstStrikeAndLastHitAreBonuses() {
         Contributions contributions = new Contributions();

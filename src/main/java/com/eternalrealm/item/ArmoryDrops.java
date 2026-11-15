@@ -16,7 +16,9 @@ import java.util.random.RandomGenerator;
  * lords (ヌシ)     signature weapon: hero (殊勲) 25 %, other contributors 8 %
  * calamities       weapon: hero 30 %, others 10 %; a piece of the calamity set: hero 50 %, others 20 %
  * dungeon bosses   a design of the dungeon: NORMAL 15 %, HARD 25 %, EX 40 %
- * boss weapon      NORMAL 3 %, HARD 8 %, EX 15 % (final raid: as its difficulty)
+ * boss weapon      NORMAL 3 %, HARD 8 %, EX 15 %
+ * raid rare drop   the final raid's boss weapon by the place in the fight's overall merit ranking (戦功):
+ *                  1st 10 %, 2nd 5 %, 3rd 3 %, everyone else 0.5 % (any difficulty; owner 2026-11-15)
  * </pre>
  *
  * <p>Weapons that drop in the world — from monsters (also their equipment rolls,
@@ -37,6 +39,10 @@ public final class ArmoryDrops {
     public static final double CALAMITY_WEAPON = 0.10;
     public static final double CALAMITY_ARMOR_HERO = 0.50;
     public static final double CALAMITY_ARMOR = 0.20;
+    /** The raid's rare drop for the first, second and third place of the merit ranking. */
+    private static final double[] RAID_RARE_TOP = {0.10, 0.05, 0.03};
+    /** The raid's rare drop for everyone below the third place. */
+    public static final double RAID_RARE_OTHERS = 0.005;
     /** A field design may be at most this many levels above the monster that drops it. */
     public static final int FIELD_LEVEL_MARGIN = 5;
 
@@ -96,6 +102,15 @@ public final class ArmoryDrops {
 
     public static double calamityArmorChance(boolean hero) {
         return hero ? CALAMITY_ARMOR_HERO : CALAMITY_ARMOR;
+    }
+
+    /**
+     * The raid's rare drop (its boss's weapon) by the place in the fight's overall merit ranking, 1-based (owner,
+     * 2026-11-15: 「レイドバトルは、全体貢献ランキングで1位がレアドロップ10%、2位は5%3位は3%それより下は全員0.5%にして」).
+     * Places below the third, and members who earned no merit at all, have {@link #RAID_RARE_OTHERS}.
+     */
+    public static double raidRareChance(int place) {
+        return place >= 1 && place <= RAID_RARE_TOP.length ? RAID_RARE_TOP[place - 1] : RAID_RARE_OTHERS;
     }
 
     /**

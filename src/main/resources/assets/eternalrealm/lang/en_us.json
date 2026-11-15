@@ -8654,5 +8654,7 @@
   "screen.eternalrealm.skill.preview": "Preview: learnable once you advance to the %s",
   "screen.eternalrealm.skill.class_tag": "%s skill",
   "skill_info.eternalrealm.other_class": "A skill of the %s (not yours to use now)",
-  "message.eternalrealm.estate.stranded": "You had drifted far out over the sea, so you were brought back to the capital, Astoria."
+  "message.eternalrealm.estate.stranded": "You had drifted far out over the sea, so you were brought back to the capital, Astoria.",
+  "result.eternalrealm.raid_rare": "Merit #%s · rare drop %s",
+  "result.eternalrealm.raid_rare_none": "No merit · rare drop %s"
 }

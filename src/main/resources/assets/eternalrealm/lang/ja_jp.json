@@ -8654,5 +8654,7 @@
   "screen.eternalrealm.skill.preview": "見るだけ：二次職「%s」に進化すると習得できます",
   "screen.eternalrealm.skill.class_tag": "二次職「%s」のスキル",
   "skill_info.eternalrealm.other_class": "二次職「%s」のスキル（いまは使えません）",
-  "message.eternalrealm.estate.stranded": "遠い海の上に迷い込んでいたので、王都アストリアへお連れしました。"
+  "message.eternalrealm.estate.stranded": "遠い海の上に迷い込んでいたので、王都アストリアへお連れしました。",
+  "result.eternalrealm.raid_rare": "戦功 %s位 · レアドロップ %s",
+  "result.eternalrealm.raid_rare_none": "戦功なし · レアドロップ %s"
 }

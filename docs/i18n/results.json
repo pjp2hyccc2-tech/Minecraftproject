@@ -70,5 +70,13 @@
   "message.eternalrealm.dungeon.bonus_gold": {
     "ja": "ボーナス：%s G",
     "en": "Bonus: %s G"
+  },
+  "result.eternalrealm.raid_rare": {
+    "ja": "戦功 %s位 · レアドロップ %s",
+    "en": "Merit #%s · rare drop %s"
+  },
+  "result.eternalrealm.raid_rare_none": {
+    "ja": "戦功なし · レアドロップ %s",
+    "en": "No merit · rare drop %s"
   }
 }

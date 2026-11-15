@@ -550,4 +550,16 @@ public class ArmoryTest {
         EquipmentData rerolled = Reroll.reroll(rolled, random);
         assertEquals(keen, rerolled.design());
     }
+
+    /** The raid's rare drop by merit place: 10 %, 5 %, 3 %, then 0.5 % for everyone else (owner 2026-11-15). */
+    @Test
+    public void raidRareDropGoesByMeritPlace() {
+        assertEquals(0.10, ArmoryDrops.raidRareChance(1), 0.0);
+        assertEquals(0.05, ArmoryDrops.raidRareChance(2), 0.0);
+        assertEquals(0.03, ArmoryDrops.raidRareChance(3), 0.0);
+        for (int place : new int[] {4, 5, 10, 20}) {
+            assertEquals(0.005, ArmoryDrops.raidRareChance(place), 0.0);
+        }
+        assertEquals("a member without merit still has the last share", 0.005, ArmoryDrops.raidRareChance(0), 0.0);
+    }
 }

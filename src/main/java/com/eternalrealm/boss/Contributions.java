@@ -165,6 +165,20 @@ public final class Contributions {
         return 0;
     }
 
+    /**
+     * 1-based place of {@code id} in the overall merit ranking ({@link #byScore}, the 戦功 shown during the fight), 0
+     * if absent.
+     */
+    public int meritPlace(UUID id) {
+        List<Line> lines = byScore();
+        for (int i = 0; i < lines.size(); i++) {
+            if (lines.get(i).id().equals(id)) {
+                return i + 1;
+            }
+        }
+        return 0;
+    }
+
     /** The hero (殊勲): the best score among those who hurt the boss. */
     public Optional<Line> hero() {
         return byScore().stream().filter(line -> line.damage() > 0.0).findFirst();

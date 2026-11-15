@@ -159,6 +159,12 @@ public final class DungeonResults {
             data.addProperty("rank", rank.name());
             data.addProperty("me", player.getUUID().toString());
             data.addProperty("heroMe", isHero);
+            if (DungeonService.isRaid(instance)) {
+                // the raid's rare drop went by the merit ranking: show the player's place and odds
+                int place = contributions.meritPlace(player.getUUID());
+                data.addProperty("meritPlace", place);
+                data.addProperty("rareChance", com.eternalrealm.item.ArmoryDrops.raidRareChance(place));
+            }
             data.add("party", party);
             JsonArray rewards = new JsonArray();
             for (ItemStack stack : items) {

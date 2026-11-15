@@ -822,7 +822,10 @@ public final class DungeonService {
                 Inventories.loot(player, trinket);
             });
         }
-        if (RANDOM.nextDouble() < odds.bossWeaponChance()) {
+        // the boss weapon; in the raid it is the rare drop of the merit ranking (1st 10 %, 2nd 5 %, 3rd 3 %, 0.5 %)
+        double weaponChance = isRaid(instance)
+                ? ArmoryDrops.raidRareChance(meritPlace(instance, player.getUUID())) : odds.bossWeaponChance();
+        if (RANDOM.nextDouble() < weaponChance) {
             Signatures.bossWeapon(instance.run.bossId()).ifPresent(design -> {
                 ItemStack weapon = ArmoryStacks.reward(player, design, floor, RANDOM);
                 ArmoryStacks.announce(player, weapon, design);
@@ -850,6 +853,16 @@ public final class DungeonService {
 
     static ItemTier tierOfArea(int areaId) {
         ItemTier best = ItemTier.IRON;
+    /** Whether the instance is the final raid (its rare drop goes by the merit ranking). */
+    static boolean isRaid(DungeonInstance instance) {
+        return Dungeons.FINAL_RAID.id().equals(instance.contentId);
+    }
+
+    /** {@code player}'s 1-based place in the instance's boss fight merit ranking, 0 without a fight or merit. */
+    static int meritPlace(DungeonInstance instance, UUID player) {
+        return instance.fight().map(fight -> fight.contributions().meritPlace(player)).orElse(0);
+    }
+
         for (ItemTier tier : ItemTier.values()) {
             if (tier.area() <= areaId && tier.number() >= best.number()) {
                 best = tier;
