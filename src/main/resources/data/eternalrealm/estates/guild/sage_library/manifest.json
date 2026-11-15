@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "141d46aba46b11c7",
+ "build": "3029627e55aaeb0e",
  "tileSize": 32,
  "minY": -32,
  "maxY": 159,
@@ -22,26 +22,37 @@
   "eternalrealm:slate_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
   "eternalrealm:slate_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
   "eternalrealm:slate_roof_tiles",
+  "eternalrealm:sorting_desk[facing=south]",
+  "eternalrealm:storage_chest[facing=south,label=food]",
+  "eternalrealm:storage_chest[facing=south,label=gear]",
+  "eternalrealm:storage_chest[facing=south,label=material]",
+  "eternalrealm:storage_chest[facing=south,label=potion]",
+  "eternalrealm:storage_chest[facing=south,label=treasure]",
   "eternalrealm:verdigris_roof_tiles",
   "minecraft:allium",
   "minecraft:andesite",
   "minecraft:anvil[facing=east]",
   "minecraft:azalea_leaves[distance=1,persistent=true]",
   "minecraft:azure_bluet",
+  "minecraft:barrel[facing=up,open=false]",
   "minecraft:bell[attachment=ceiling,facing=east,powered=false]",
+  "minecraft:birch_leaves[distance=1,persistent=true]",
+  "minecraft:birch_log[axis=x]",
+  "minecraft:birch_log[axis=y]",
   "minecraft:birch_stairs[facing=north,half=bottom,shape=straight]",
   "minecraft:birch_stairs[facing=north,half=top,shape=straight]",
   "minecraft:birch_stairs[facing=south,half=bottom,shape=straight]",
   "minecraft:birch_stairs[facing=south,half=top,shape=straight]",
   "minecraft:blast_furnace[facing=south,lit=true]",
+  "minecraft:blue_carpet",
   "minecraft:blue_orchid",
+  "minecraft:blue_wall_banner[facing=south]",
   "minecraft:blue_wool",
   "minecraft:bookshelf",
   "minecraft:brewing_stand[has_bottle_0=true,has_bottle_1=false,has_bottle_2=true]",
   "minecraft:brown_wool",
   "minecraft:cartography_table",
   "minecraft:chain[axis=y]",
-  "minecraft:chest[facing=south,type=single]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_3_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=north]",
@@ -52,10 +63,15 @@
   "minecraft:cracked_stone_bricks",
   "minecraft:crafting_table",
   "minecraft:dandelion",
+  "minecraft:dark_oak_door[facing=north,half=lower,hinge=left,open=false]",
+  "minecraft:dark_oak_door[facing=north,half=upper,hinge=left,open=false]",
   "minecraft:dark_oak_fence",
   "minecraft:dark_oak_planks",
   "minecraft:dark_oak_slab[type=top]",
   "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=straight]",
+  "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight]",
+  "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=straight]",
   "minecraft:dirt",
   "minecraft:enchanting_table",
   "minecraft:end_rod[facing=up]",
@@ -63,6 +79,7 @@
   "minecraft:fletching_table",
   "minecraft:flower_pot",
   "minecraft:furnace[facing=north,lit=false]",
+  "minecraft:glass_pane",
   "minecraft:gold_block",
   "minecraft:grass",
   "minecraft:grass_block",
@@ -74,10 +91,13 @@
   "minecraft:lantern[hanging=true]",
   "minecraft:lectern[facing=east,has_book=true]",
   "minecraft:lectern[facing=north,has_book=true]",
+  "minecraft:lectern[facing=south,has_book=false]",
   "minecraft:light_blue_stained_glass_pane",
+  "minecraft:lily_of_the_valley",
   "minecraft:lime_wool",
   "minecraft:loom[facing=north]",
   "minecraft:moss_block",
+  "minecraft:mossy_cobblestone",
   "minecraft:mossy_stone_bricks",
   "minecraft:oak_leaves[distance=1,persistent=true]",
   "minecraft:oak_log[axis=x]",
@@ -95,6 +115,8 @@
   "minecraft:smithing_table",
   "minecraft:smoker[facing=north,lit=true]",
   "minecraft:smooth_stone",
+  "minecraft:spruce_leaves[distance=1,persistent=true]",
+  "minecraft:spruce_log[axis=y]",
   "minecraft:spruce_planks",
   "minecraft:spruce_sign[rotation=12]",
   "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight]",
@@ -110,10 +132,16 @@
   "minecraft:trapped_chest[facing=south,type=single]",
   "minecraft:white_candle[candles=1,lit=true]",
   "minecraft:white_candle[candles=3,lit=true]",
+  "minecraft:white_carpet",
   "minecraft:white_tulip",
   "minecraft:white_wool"
  ],
  "tiles": [
+  {
+   "x": -1,
+   "z": -2,
+   "file": "tiles/-1_-2.bin"
+  },
   {
    "x": -1,
    "z": -1,
@@ -123,6 +151,11 @@
    "x": -1,
    "z": 0,
    "file": "tiles/-1_0.bin"
+  },
+  {
+   "x": 0,
+   "z": -2,
+   "file": "tiles/0_-2.bin"
   },
   {
    "x": 0,
@@ -170,6 +203,62 @@
   },
   {
    "pos": [
+    -5,
+    1,
+    -49
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.1\"}}"
+  },
+  {
+   "pos": [
+    -5,
+    1,
+    -39
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.2\"}}"
+  },
+  {
+   "pos": [
+    -5,
+    2,
+    -49
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.3\"}}"
+  },
+  {
+   "pos": [
+    -4,
+    1,
+    -49
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.5\"}}"
+  },
+  {
+   "pos": [
+    -3,
+    1,
+    -49
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.6\"}}"
+  },
+  {
+   "pos": [
+    -2,
+    1,
+    -49
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.7\"}}"
+  },
+  {
+   "pos": [
+    -1,
+    1,
+    -49
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.8\"}}"
+  },
+  {
+   "pos": [
     -1,
     1,
     -16
@@ -194,11 +283,43 @@
   },
   {
    "pos": [
+    -1,
+    7,
+    -49
+   ],
+   "nbt": "{Patterns:[{Pattern:\"bs\",Color:0},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -1,
+    8,
+    -37
+   ],
+   "nbt": "{Patterns:[{Pattern:\"bs\",Color:0},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    0,
+    1,
+    -49
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.9\"}}"
+  },
+  {
+   "pos": [
     0,
     1,
     -10
    ],
    "nbt": "{ForgeData:{er_slot:\"shelf.2\"}}"
+  },
+  {
+   "pos": [
+    1,
+    1,
+    -49
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.10\"}}"
   },
   {
    "pos": [
@@ -263,6 +384,22 @@
     -10
    ],
    "nbt": "{ForgeData:{er_slot:\"shelf.7\"}}"
+  },
+  {
+   "pos": [
+    5,
+    7,
+    -49
+   ],
+   "nbt": "{Patterns:[{Pattern:\"bs\",Color:0},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    5,
+    8,
+    -37
+   ],
+   "nbt": "{Patterns:[{Pattern:\"bs\",Color:0},{Pattern:\"bo\",Color:4}]}"
   },
   {
    "pos": [

@@ -399,6 +399,24 @@ def dwarven_forge(w):
     oy = peak.get((ox, oz), base - 3)
     w.fill(ox, oy + 1, oz, ox, oy + 5, oz, F("polished_blackstone_bricks"))
     K.TK.smoke(w, ox, oy + 6, oz, heavy=True)
+    # the north adit (2026-11-15): a vaulted tunnel from the hall, between the forge and the eastern lava, out of
+    # the mountain's north flank to the storehouse's lobe
+    tx0, tx1 = 8, 9
+    z = hz0 - 1
+    while z > -24:
+        if all(peak.get((x, z), 0) < 1 for x in (tx0 - 1, tx1 + 1)) and z < hz0 - 6:
+            break
+        w.fill(tx0 - 1, 0, z, tx1 + 1, 4, z, F("deepslate_bricks"))
+        w.fill(tx0, 0, z, tx1, 0, z, F("polished_deepslate"))
+        K.clear(w, tx0, 1, z, tx1, 3, z)
+        if (hz0 - 1 - z) % 4 == 2:
+            w.set(tx0, 3, z, B.lantern(hanging=True))
+        z -= 1
+    for x in range(tx0 - 1, tx1 + 2):                               # the portal at the flank: gold-banded lintel
+        w.set(x, 4, z + 1, F("gilded_trim"))
+    w.set(tx0 - 1, 1, z, B.lantern(hanging=False))
+    w.set(tx1 + 1, 1, z, B.lantern(hanging=False))
+    K.clear(w, tx0, 1, hz0, tx1, 3, hz0)
     return h.finish()
 
 

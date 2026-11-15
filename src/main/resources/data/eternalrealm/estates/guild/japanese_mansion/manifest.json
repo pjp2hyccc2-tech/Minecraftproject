@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "0717c67f0a2a106f",
+ "build": "69fd9780ec054274",
  "tileSize": 32,
  "minY": -32,
  "maxY": 159,
@@ -21,6 +21,12 @@
   "eternalrealm:kawara_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
   "eternalrealm:kawara_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
   "eternalrealm:kawara_roof_tiles",
+  "eternalrealm:sorting_desk[facing=south]",
+  "eternalrealm:storage_chest[facing=south,label=food]",
+  "eternalrealm:storage_chest[facing=south,label=gear]",
+  "eternalrealm:storage_chest[facing=south,label=material]",
+  "eternalrealm:storage_chest[facing=south,label=potion]",
+  "eternalrealm:storage_chest[facing=south,label=treasure]",
   "eternalrealm:white_plaster",
   "minecraft:andesite",
   "minecraft:andesite_slab[type=bottom]",
@@ -43,7 +49,6 @@
   "minecraft:cherry_log[axis=x]",
   "minecraft:cherry_log[axis=y]",
   "minecraft:cherry_log[axis=z]",
-  "minecraft:chest[facing=south,type=single]",
   "minecraft:chiseled_deepslate",
   "minecraft:clay",
   "minecraft:cobblestone",
@@ -53,15 +58,21 @@
   "minecraft:crimson_slab[type=bottom]",
   "minecraft:dark_oak_door[facing=north,half=lower,hinge=left,open=false]",
   "minecraft:dark_oak_door[facing=north,half=upper,hinge=left,open=false]",
+  "minecraft:dark_oak_fence",
   "minecraft:dark_oak_log[axis=x]",
   "minecraft:dark_oak_log[axis=y]",
   "minecraft:dark_oak_log[axis=z]",
   "minecraft:dark_oak_planks",
   "minecraft:dark_oak_slab[type=bottom]",
+  "minecraft:dark_oak_slab[type=top]",
+  "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=straight]",
   "minecraft:dark_oak_stairs[facing=east,half=top,shape=straight]",
   "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:dark_oak_stairs[facing=north,half=top,shape=straight]",
   "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight]",
+  "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=straight]",
   "minecraft:dark_oak_stairs[facing=west,half=top,shape=straight]",
+  "minecraft:dark_oak_wood[axis=y]",
   "minecraft:deepslate_tile_slab[type=bottom]",
   "minecraft:deepslate_tile_slab[type=top]",
   "minecraft:deepslate_tile_stairs[facing=east,half=bottom,shape=straight]",
@@ -72,14 +83,17 @@
   "minecraft:fern",
   "minecraft:flower_pot",
   "minecraft:furnace[facing=south,lit=false]",
+  "minecraft:glass_pane",
   "minecraft:grass",
   "minecraft:grass_block",
   "minecraft:gravel",
+  "minecraft:green_carpet",
   "minecraft:grindstone[face=floor,facing=south]",
   "minecraft:hay_block[axis=y]",
   "minecraft:iron_bars",
   "minecraft:lantern[hanging=false]",
   "minecraft:lantern[hanging=true]",
+  "minecraft:lectern[facing=south,has_book=false]",
   "minecraft:lectern[facing=south,has_book=true]",
   "minecraft:lily_of_the_valley",
   "minecraft:lily_pad",
@@ -88,18 +102,24 @@
   "minecraft:moss_block",
   "minecraft:mossy_cobblestone",
   "minecraft:packed_mud",
+  "minecraft:pink_petals",
   "minecraft:pink_petals[facing=north,flower_amount=2]",
   "minecraft:pink_petals[facing=west,flower_amount=2]",
   "minecraft:pink_petals[facing=west,flower_amount=3]",
   "minecraft:polished_andesite",
+  "minecraft:polished_blackstone",
   "minecraft:polished_blackstone_bricks",
+  "minecraft:polished_blackstone_wall",
   "minecraft:potted_fern",
   "minecraft:purple_carpet",
   "minecraft:red_carpet",
   "minecraft:red_concrete",
+  "minecraft:red_wall_banner[facing=south]",
   "minecraft:smithing_table",
   "minecraft:smoker[facing=south,lit=true]",
   "minecraft:smooth_stone",
+  "minecraft:spruce_leaves[distance=1,persistent=true]",
+  "minecraft:spruce_log[axis=y]",
   "minecraft:spruce_planks",
   "minecraft:spruce_slab[type=top]",
   "minecraft:spruce_wall_sign[facing=east]",
@@ -120,6 +140,11 @@
  "tiles": [
   {
    "x": -1,
+   "z": -2,
+   "file": "tiles/-1_-2.bin"
+  },
+  {
+   "x": -1,
    "z": -1,
    "file": "tiles/-1_-1.bin"
   },
@@ -127,6 +152,11 @@
    "x": -1,
    "z": 0,
    "file": "tiles/-1_0.bin"
+  },
+  {
+   "x": 0,
+   "z": -2,
+   "file": "tiles/0_-2.bin"
   },
   {
    "x": 0,
@@ -160,9 +190,41 @@
    "pos": [
     -5,
     1,
+    -47
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.1\"}}"
+  },
+  {
+   "pos": [
+    -5,
+    1,
+    -37
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.2\"}}"
+  },
+  {
+   "pos": [
+    -5,
+    1,
     -18
    ],
    "nbt": "{ForgeData:{er_slot:\"furnace.1\"}}"
+  },
+  {
+   "pos": [
+    -5,
+    2,
+    -47
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.6\"}}"
+  },
+  {
+   "pos": [
+    -4,
+    1,
+    -47
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.5\"}}"
   },
   {
    "pos": [
@@ -182,6 +244,62 @@
   },
   {
    "pos": [
+    -3,
+    1,
+    -47
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.6\"}}"
+  },
+  {
+   "pos": [
+    -2,
+    1,
+    -47
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.7\"}}"
+  },
+  {
+   "pos": [
+    -1,
+    1,
+    -47
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.8\"}}"
+  },
+  {
+   "pos": [
+    -1,
+    7,
+    -47
+   ],
+   "nbt": "{Patterns:[{Pattern:\"ci\",Color:0},{Pattern:\"bo\",Color:15}]}"
+  },
+  {
+   "pos": [
+    -1,
+    8,
+    -35
+   ],
+   "nbt": "{Patterns:[{Pattern:\"ci\",Color:0},{Pattern:\"bo\",Color:15}]}"
+  },
+  {
+   "pos": [
+    0,
+    1,
+    -47
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.9\"}}"
+  },
+  {
+   "pos": [
+    1,
+    1,
+    -47
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.10\"}}"
+  },
+  {
+   "pos": [
     2,
     1,
     -18
@@ -194,7 +312,7 @@
     1,
     -18
    ],
-   "nbt": "{ForgeData:{er_slot:\"barrel.1\"}}"
+   "nbt": "{ForgeData:{er_slot:\"barrel.3\"}}"
   },
   {
    "pos": [
@@ -210,7 +328,23 @@
     1,
     -18
    ],
-   "nbt": "{ForgeData:{er_slot:\"barrel.2\"}}"
+   "nbt": "{ForgeData:{er_slot:\"barrel.4\"}}"
+  },
+  {
+   "pos": [
+    5,
+    7,
+    -47
+   ],
+   "nbt": "{Patterns:[{Pattern:\"ci\",Color:0},{Pattern:\"bo\",Color:15}]}"
+  },
+  {
+   "pos": [
+    5,
+    8,
+    -35
+   ],
+   "nbt": "{Patterns:[{Pattern:\"ci\",Color:0},{Pattern:\"bo\",Color:15}]}"
   },
   {
    "pos": [
@@ -226,7 +360,7 @@
     1,
     -18
    ],
-   "nbt": "{ForgeData:{er_slot:\"barrel.3\"}}"
+   "nbt": "{ForgeData:{er_slot:\"barrel.5\"}}"
   },
   {
    "pos": [

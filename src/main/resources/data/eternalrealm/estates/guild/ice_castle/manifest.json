@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "ac80091dae1a4415",
+ "build": "b503623f1628f371",
  "tileSize": 32,
  "minY": -32,
  "maxY": 159,
@@ -13,8 +13,19 @@
   "eternalrealm:shingle_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
   "eternalrealm:shingle_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
   "eternalrealm:smoke_emitter[heavy=false]",
+  "eternalrealm:sorting_desk[facing=south]",
+  "eternalrealm:storage_chest[facing=east,label=material]",
+  "eternalrealm:storage_chest[facing=east,label=potion]",
+  "eternalrealm:storage_chest[facing=south,label=food]",
+  "eternalrealm:storage_chest[facing=south,label=gear]",
+  "eternalrealm:storage_chest[facing=south,label=material]",
+  "eternalrealm:storage_chest[facing=south,label=potion]",
+  "eternalrealm:storage_chest[facing=south,label=treasure]",
+  "eternalrealm:storage_chest[facing=west,label=food]",
+  "eternalrealm:storage_chest[facing=west,label=treasure]",
   "minecraft:andesite",
   "minecraft:anvil[facing=east]",
+  "minecraft:barrel[facing=up,open=false]",
   "minecraft:bell[attachment=ceiling,facing=east,powered=false]",
   "minecraft:birch_sign[rotation=12]",
   "minecraft:blast_furnace[facing=south,lit=true]",
@@ -25,9 +36,6 @@
   "minecraft:campfire[facing=east,lit=true]",
   "minecraft:cartography_table",
   "minecraft:chain[axis=y]",
-  "minecraft:chest[facing=east,type=single]",
-  "minecraft:chest[facing=south,type=single]",
-  "minecraft:chest[facing=west,type=single]",
   "minecraft:crafting_table",
   "minecraft:diorite_stairs[facing=north,half=top,shape=straight]",
   "minecraft:diorite_stairs[facing=south,half=top,shape=straight]",
@@ -42,23 +50,41 @@
   "minecraft:ladder[facing=south]",
   "minecraft:lantern[hanging=false]",
   "minecraft:lantern[hanging=true]",
+  "minecraft:lectern[facing=south,has_book=false]",
   "minecraft:light_blue_carpet",
   "minecraft:light_blue_stained_glass",
   "minecraft:light_blue_stained_glass_pane",
+  "minecraft:light_blue_wall_banner[facing=south]",
   "minecraft:light_gray_carpet",
   "minecraft:loom[facing=north]",
   "minecraft:packed_ice",
   "minecraft:polished_andesite",
+  "minecraft:polished_blackstone",
+  "minecraft:polished_blackstone_wall",
   "minecraft:quartz_stairs[facing=west,half=bottom,shape=straight]",
   "minecraft:sea_lantern",
   "minecraft:smithing_table",
   "minecraft:smoker[facing=south,lit=true]",
   "minecraft:smooth_quartz",
+  "minecraft:smooth_quartz_slab[type=bottom]",
+  "minecraft:smooth_quartz_stairs[facing=east,half=bottom,shape=straight]",
+  "minecraft:smooth_quartz_stairs[facing=north,half=bottom,shape=outer_left]",
+  "minecraft:smooth_quartz_stairs[facing=north,half=bottom,shape=outer_right]",
+  "minecraft:smooth_quartz_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:smooth_quartz_stairs[facing=north,half=top,shape=straight]",
+  "minecraft:smooth_quartz_stairs[facing=south,half=bottom,shape=outer_left]",
+  "minecraft:smooth_quartz_stairs[facing=south,half=bottom,shape=outer_right]",
+  "minecraft:smooth_quartz_stairs[facing=south,half=bottom,shape=straight]",
+  "minecraft:smooth_quartz_stairs[facing=west,half=bottom,shape=straight]",
   "minecraft:snow[layers=2]",
   "minecraft:snow[layers=3]",
   "minecraft:snow_block",
   "minecraft:soul_campfire[facing=south,lit=true]",
+  "minecraft:soul_lantern[hanging=false]",
   "minecraft:soul_lantern[hanging=true]",
+  "minecraft:spruce_door[facing=north,half=lower,hinge=left,open=false]",
+  "minecraft:spruce_door[facing=north,half=upper,hinge=left,open=false]",
+  "minecraft:spruce_fence",
   "minecraft:spruce_leaves[distance=1,persistent=true]",
   "minecraft:spruce_log[axis=y]",
   "minecraft:spruce_planks",
@@ -73,12 +99,23 @@
   "minecraft:stonecutter[facing=north]",
   "minecraft:target[power=0]",
   "minecraft:trapped_chest[facing=south,type=single]",
+  "minecraft:white_candle[candles=1,lit=true]",
   "minecraft:white_candle[candles=2,lit=true]",
   "minecraft:white_candle[candles=3,lit=true]",
   "minecraft:white_carpet",
   "minecraft:white_stained_glass"
  ],
  "tiles": [
+  {
+   "x": -1,
+   "z": -3,
+   "file": "tiles/-1_-3.bin"
+  },
+  {
+   "x": -1,
+   "z": -2,
+   "file": "tiles/-1_-2.bin"
+  },
   {
    "x": -1,
    "z": -1,
@@ -91,6 +128,16 @@
   },
   {
    "x": 0,
+   "z": -3,
+   "file": "tiles/0_-3.bin"
+  },
+  {
+   "x": 0,
+   "z": -2,
+   "file": "tiles/0_-2.bin"
+  },
+  {
+   "x": 0,
    "z": -1,
    "file": "tiles/0_-1.bin"
   },
@@ -98,6 +145,11 @@
    "x": 0,
    "z": 0,
    "file": "tiles/0_0.bin"
+  },
+  {
+   "x": 1,
+   "z": -2,
+   "file": "tiles/1_-2.bin"
   }
  ],
  "blockEntities": [
@@ -159,11 +211,51 @@
   },
   {
    "pos": [
+    -6,
+    1,
+    -57
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.1\"}}"
+  },
+  {
+   "pos": [
+    -6,
+    1,
+    -45
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.2\"}}"
+  },
+  {
+   "pos": [
+    -6,
+    2,
+    -57
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.3\"}}"
+  },
+  {
+   "pos": [
+    -5,
+    1,
+    -57
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.6\"}}"
+  },
+  {
+   "pos": [
     -5,
     1,
     -9
    ],
    "nbt": "{ForgeData:{er_slot:\"chest.1\"}}"
+  },
+  {
+   "pos": [
+    -4,
+    1,
+    -57
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.7\"}}"
   },
   {
    "pos": [
@@ -183,6 +275,22 @@
   },
   {
    "pos": [
+    -3,
+    1,
+    -57
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.8\"}}"
+  },
+  {
+   "pos": [
+    -2,
+    1,
+    -57
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.9\"}}"
+  },
+  {
+   "pos": [
     -2,
     1,
     6
@@ -196,6 +304,62 @@
     9
    ],
    "nbt": "{ForgeData:{er_slot:\"furnace.3\"}}"
+  },
+  {
+   "pos": [
+    -1,
+    1,
+    -57
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.10\"}}"
+  },
+  {
+   "pos": [
+    -1,
+    7,
+    -57
+   ],
+   "nbt": "{Patterns:[{Pattern:\"flo\",Color:0},{Pattern:\"bo\",Color:0}]}"
+  },
+  {
+   "pos": [
+    -1,
+    8,
+    -43
+   ],
+   "nbt": "{Patterns:[{Pattern:\"flo\",Color:0},{Pattern:\"bo\",Color:0}]}"
+  },
+  {
+   "pos": [
+    0,
+    1,
+    -57
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.11\"}}"
+  },
+  {
+   "pos": [
+    1,
+    1,
+    -57
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.12\"}}"
+  },
+  {
+   "pos": [
+    5,
+    7,
+    -57
+   ],
+   "nbt": "{Patterns:[{Pattern:\"flo\",Color:0},{Pattern:\"bo\",Color:0}]}"
+  },
+  {
+   "pos": [
+    5,
+    8,
+    -43
+   ],
+   "nbt": "{Patterns:[{Pattern:\"flo\",Color:0},{Pattern:\"bo\",Color:0}]}"
   }
  ],
  "entities": [

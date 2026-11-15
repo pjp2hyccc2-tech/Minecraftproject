@@ -57,9 +57,12 @@ public final class GuildHouseRules {
         return pieceName != null && pieceName.startsWith(VAULT_PREFIX);
     }
 
-    /** Shared storage chests (27 slots each) of a house of {@code tier}: 2, 3, 4, 5, 6 plus vaults. */
+    /**
+     * Shared storage chests (27 slots each) of a house of {@code tier}: 6, 8, 10, 12, 14 plus vaults - tier + 1 in
+     * the house itself and tier + 3 in its storehouse (2026-11-15, tools/estates/guild/hkit.py {@code REQUIRED}).
+     */
     public static int storageChests(int tier) {
-        return tier + 1;
+        return 2 * tier + 4;
     }
 
     /** Vault chests of a house of {@code tier}: 1 up to tier 3, then 2. */

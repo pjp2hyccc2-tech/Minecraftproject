@@ -1,12 +1,22 @@
 {
  "format": 1,
- "build": "b9a6df3ba8ca0c99",
+ "build": "101269a5a54b4cf9",
  "tileSize": 32,
  "minY": -32,
  "maxY": 159,
  "palette": [
   "eternalrealm:void",
   "minecraft:air",
+  "eternalrealm:gilded_roof_tile_slab[type=bottom]",
+  "eternalrealm:gilded_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
+  "eternalrealm:gilded_roof_tile_stairs[facing=north,half=bottom,shape=outer_left]",
+  "eternalrealm:gilded_roof_tile_stairs[facing=north,half=bottom,shape=outer_right]",
+  "eternalrealm:gilded_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+  "eternalrealm:gilded_roof_tile_stairs[facing=south,half=bottom,shape=outer_left]",
+  "eternalrealm:gilded_roof_tile_stairs[facing=south,half=bottom,shape=outer_right]",
+  "eternalrealm:gilded_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+  "eternalrealm:gilded_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
+  "eternalrealm:gilded_roof_tiles",
   "eternalrealm:gilded_trim",
   "eternalrealm:guild_board[facing=west]",
   "eternalrealm:guild_portal[axis=z,theme=arcane_tower]",
@@ -14,12 +24,27 @@
   "eternalrealm:slate_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
   "eternalrealm:slate_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
   "eternalrealm:slate_roof_tiles",
+  "eternalrealm:sorting_desk[facing=south]",
+  "eternalrealm:storage_chest[facing=east,label=gear]",
+  "eternalrealm:storage_chest[facing=east,label=material]",
+  "eternalrealm:storage_chest[facing=east,label=potion]",
+  "eternalrealm:storage_chest[facing=south,label=book]",
+  "eternalrealm:storage_chest[facing=south,label=food]",
+  "eternalrealm:storage_chest[facing=south,label=gear]",
+  "eternalrealm:storage_chest[facing=south,label=material]",
+  "eternalrealm:storage_chest[facing=south,label=potion]",
+  "eternalrealm:storage_chest[facing=south,label=treasure]",
+  "eternalrealm:storage_chest[facing=west,label=food]",
+  "eternalrealm:storage_chest[facing=west,label=misc]",
+  "eternalrealm:storage_chest[facing=west,label=treasure]",
   "minecraft:allium",
   "minecraft:amethyst_block",
   "minecraft:amethyst_cluster[facing=down]",
   "minecraft:amethyst_cluster[facing=up]",
+  "minecraft:andesite",
   "minecraft:anvil[facing=west]",
   "minecraft:azure_bluet",
+  "minecraft:barrel[facing=up,open=false]",
   "minecraft:bell[attachment=ceiling,facing=east,powered=false]",
   "minecraft:blast_furnace[facing=south,lit=true]",
   "minecraft:bookshelf",
@@ -32,10 +57,12 @@
   "minecraft:cherry_log[axis=x]",
   "minecraft:cherry_log[axis=y]",
   "minecraft:cherry_log[axis=z]",
-  "minecraft:chest[facing=east,type=single]",
-  "minecraft:chest[facing=west,type=single]",
+  "minecraft:cobblestone",
   "minecraft:crafting_table",
   "minecraft:crying_obsidian",
+  "minecraft:dark_oak_door[facing=north,half=lower,hinge=left,open=false]",
+  "minecraft:dark_oak_door[facing=north,half=upper,hinge=left,open=false]",
+  "minecraft:dark_oak_fence",
   "minecraft:dark_oak_planks",
   "minecraft:dark_oak_sign[rotation=12]",
   "minecraft:dark_oak_slab[type=top]",
@@ -48,6 +75,8 @@
   "minecraft:end_rod[facing=up]",
   "minecraft:fern",
   "minecraft:fletching_table",
+  "minecraft:flower_pot",
+  "minecraft:flowering_azalea_leaves[distance=1,persistent=true]",
   "minecraft:furnace[facing=south,lit=false]",
   "minecraft:gold_block",
   "minecraft:grass",
@@ -57,21 +86,33 @@
   "minecraft:iron_bars",
   "minecraft:lantern[hanging=true]",
   "minecraft:large_amethyst_bud[facing=up]",
+  "minecraft:lectern[facing=south,has_book=false]",
+  "minecraft:lilac[half=lower]",
   "minecraft:lodestone",
   "minecraft:loom[facing=south]",
+  "minecraft:magenta_carpet",
+  "minecraft:magenta_stained_glass_pane",
   "minecraft:moss_block",
+  "minecraft:oak_log[axis=y]",
+  "minecraft:oak_log[axis=z]",
+  "minecraft:pink_tulip",
+  "minecraft:polished_blackstone",
+  "minecraft:polished_blackstone_wall",
   "minecraft:polished_deepslate",
   "minecraft:potted_brown_mushroom",
   "minecraft:potted_red_mushroom",
   "minecraft:purple_carpet",
   "minecraft:purple_stained_glass",
   "minecraft:purple_stained_glass_pane",
+  "minecraft:purple_wall_banner[facing=south]",
   "minecraft:purpur_block",
   "minecraft:purpur_pillar[axis=y]",
   "minecraft:purpur_stairs[facing=north,half=top,shape=straight]",
   "minecraft:purpur_stairs[facing=south,half=top,shape=straight]",
   "minecraft:smithing_table",
   "minecraft:smoker[facing=south,lit=true]",
+  "minecraft:smooth_quartz",
+  "minecraft:soul_lantern[hanging=false]",
   "minecraft:soul_lantern[hanging=true]",
   "minecraft:stone",
   "minecraft:stonecutter[facing=south]",
@@ -80,6 +121,7 @@
   "minecraft:trapped_chest[facing=south,type=single]",
   "minecraft:tuff",
   "minecraft:water_cauldron[level=3]",
+  "minecraft:white_candle[candles=2,lit=true]",
   "minecraft:white_candle[candles=3,lit=true]"
  ],
  "tiles": [
@@ -90,6 +132,16 @@
   },
   {
    "x": -1,
+   "z": -3,
+   "file": "tiles/-1_-3.bin"
+  },
+  {
+   "x": -1,
+   "z": -2,
+   "file": "tiles/-1_-2.bin"
+  },
+  {
+   "x": -1,
    "z": -1,
    "file": "tiles/-1_-1.bin"
   },
@@ -97,6 +149,11 @@
    "x": -1,
    "z": 0,
    "file": "tiles/-1_0.bin"
+  },
+  {
+   "x": 0,
+   "z": -3,
+   "file": "tiles/0_-3.bin"
   },
   {
    "x": 0,
@@ -115,6 +172,11 @@
   },
   {
    "x": 1,
+   "z": -2,
+   "file": "tiles/1_-2.bin"
+  },
+  {
+   "x": 1,
    "z": -1,
    "file": "tiles/1_-1.bin"
   }
@@ -127,6 +189,126 @@
     -3
    ],
    "nbt": "{front_text:{messages:['{\"translate\":\"guildhouse.eternalrealm.design.arcane_tower\",\"bold\":true}','{\"text\":\"★★★★★\",\"color\":\"gold\"}','{\"translate\":\"guildhouse.eternalrealm.plaque.home\"}','{\"translate\":\"guildhouse.eternalrealm.plaque.home_hint\",\"italic\":true}'],color:\"magenta\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    -7,
+    1,
+    -67
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.1\"}}"
+  },
+  {
+   "pos": [
+    -7,
+    1,
+    -53
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.2\"}}"
+  },
+  {
+   "pos": [
+    -7,
+    2,
+    -67
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.3\"}}"
+  },
+  {
+   "pos": [
+    -6,
+    1,
+    -67
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.7\"}}"
+  },
+  {
+   "pos": [
+    -5,
+    1,
+    -67
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.8\"}}"
+  },
+  {
+   "pos": [
+    -4,
+    1,
+    -67
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.9\"}}"
+  },
+  {
+   "pos": [
+    -3,
+    1,
+    -67
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.10\"}}"
+  },
+  {
+   "pos": [
+    -2,
+    1,
+    -67
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.11\"}}"
+  },
+  {
+   "pos": [
+    -1,
+    1,
+    -67
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.12\"}}"
+  },
+  {
+   "pos": [
+    -1,
+    7,
+    -67
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:2},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -1,
+    8,
+    -51
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:2},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    0,
+    1,
+    -67
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.13\"}}"
+  },
+  {
+   "pos": [
+    1,
+    1,
+    -67
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.14\"}}"
+  },
+  {
+   "pos": [
+    5,
+    7,
+    -67
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:2},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    5,
+    8,
+    -51
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:2},{Pattern:\"bo\",Color:4}]}"
   },
   {
    "pos": [

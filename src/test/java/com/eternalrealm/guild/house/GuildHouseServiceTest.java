@@ -198,8 +198,11 @@ public class GuildHouseServiceTest {
         assertFalse(GuildHouseRules.mayOpenVault(GuildRank.MEMBER));
         assertTrue(GuildHouseRules.isVault("vault.1"));
         assertFalse(GuildHouseRules.isVault("chest.1"));
-        assertEquals(54, hut.storageSlots());
-        assertEquals(162, palace.storageSlots());
+        // the house's own chests (tier + 1) and its storehouse's (tier + 3): 6 chests at tier 1, 14 at tier 5
+        assertEquals(6, GuildHouseRules.storageChests(1));
+        assertEquals(14, GuildHouseRules.storageChests(5));
+        assertEquals(6 * 27, hut.storageSlots());
+        assertEquals(14 * 27, palace.storageSlots());
         assertEquals(2, GuildHouseRules.vaultChests(5));
     }
 }

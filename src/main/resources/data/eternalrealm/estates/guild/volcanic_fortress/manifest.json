@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "2f9cd11b66a5fce0",
+ "build": "45c1db64c3696b5a",
  "tileSize": 32,
  "minY": -32,
  "maxY": 159,
@@ -11,9 +11,22 @@
   "eternalrealm:guild_board[facing=west]",
   "eternalrealm:guild_portal[axis=z,theme=volcanic_fortress]",
   "eternalrealm:smoke_emitter[heavy=true]",
+  "eternalrealm:sorting_desk[facing=south]",
+  "eternalrealm:storage_chest[facing=north,label=food]",
+  "eternalrealm:storage_chest[facing=north,label=gear]",
+  "eternalrealm:storage_chest[facing=north,label=material]",
+  "eternalrealm:storage_chest[facing=north,label=potion]",
+  "eternalrealm:storage_chest[facing=north,label=treasure]",
+  "eternalrealm:storage_chest[facing=south,label=food]",
+  "eternalrealm:storage_chest[facing=south,label=gear]",
+  "eternalrealm:storage_chest[facing=south,label=material]",
+  "eternalrealm:storage_chest[facing=south,label=potion]",
+  "eternalrealm:storage_chest[facing=south,label=treasure]",
   "minecraft:anvil[facing=west]",
+  "minecraft:barrel[facing=up,open=false]",
   "minecraft:basalt[axis=y]",
   "minecraft:bell[attachment=ceiling,facing=north,powered=false]",
+  "minecraft:black_carpet",
   "minecraft:blackstone",
   "minecraft:blast_furnace[facing=south,lit=true]",
   "minecraft:bookshelf",
@@ -22,9 +35,13 @@
   "minecraft:campfire[lit=true]",
   "minecraft:cartography_table",
   "minecraft:chain[axis=y]",
-  "minecraft:chest[facing=north,type=single]",
   "minecraft:chiseled_polished_blackstone",
+  "minecraft:cracked_polished_blackstone_bricks",
   "minecraft:crafting_table",
+  "minecraft:crimson_door[facing=north,half=lower,hinge=left,open=false]",
+  "minecraft:crimson_door[facing=north,half=upper,hinge=left,open=false]",
+  "minecraft:crimson_fence",
+  "minecraft:crimson_planks",
   "minecraft:crimson_slab[type=top]",
   "minecraft:crimson_stairs[facing=east,half=bottom,shape=straight]",
   "minecraft:crimson_stairs[facing=north,half=bottom,shape=straight]",
@@ -37,6 +54,7 @@
   "minecraft:deepslate[axis=y]",
   "minecraft:enchanting_table",
   "minecraft:fletching_table",
+  "minecraft:flower_pot",
   "minecraft:furnace[facing=south,lit=false]",
   "minecraft:gilded_blackstone",
   "minecraft:gold_block",
@@ -44,15 +62,25 @@
   "minecraft:hay_block[axis=y]",
   "minecraft:iron_bars",
   "minecraft:ladder[facing=east]",
+  "minecraft:lantern[hanging=false]",
   "minecraft:lantern[hanging=true]",
   "minecraft:lava[level=0]",
+  "minecraft:lectern[facing=south,has_book=false]",
   "minecraft:loom[facing=south]",
   "minecraft:magma_block",
   "minecraft:obsidian",
   "minecraft:orange_stained_glass_pane",
   "minecraft:polished_basalt",
   "minecraft:polished_blackstone",
+  "minecraft:polished_blackstone_brick_slab[type=bottom]",
+  "minecraft:polished_blackstone_brick_stairs[facing=east,half=bottom,shape=straight]",
+  "minecraft:polished_blackstone_brick_stairs[facing=north,half=bottom,shape=outer_left]",
+  "minecraft:polished_blackstone_brick_stairs[facing=north,half=bottom,shape=outer_right]",
+  "minecraft:polished_blackstone_brick_stairs[facing=north,half=bottom,shape=straight]",
   "minecraft:polished_blackstone_brick_stairs[facing=north,half=top,shape=straight]",
+  "minecraft:polished_blackstone_brick_stairs[facing=south,half=bottom,shape=outer_left]",
+  "minecraft:polished_blackstone_brick_stairs[facing=south,half=bottom,shape=outer_right]",
+  "minecraft:polished_blackstone_brick_stairs[facing=south,half=bottom,shape=straight]",
   "minecraft:polished_blackstone_brick_stairs[facing=south,half=top,shape=straight]",
   "minecraft:polished_blackstone_brick_stairs[facing=west,half=bottom,shape=straight]",
   "minecraft:polished_blackstone_brick_stairs[facing=west,half=top,shape=straight]",
@@ -62,10 +90,12 @@
   "minecraft:polished_blackstone_stairs[facing=north,half=top,shape=straight]",
   "minecraft:polished_blackstone_stairs[facing=south,half=bottom,shape=straight]",
   "minecraft:polished_blackstone_stairs[facing=south,half=top,shape=straight]",
+  "minecraft:polished_blackstone_wall",
   "minecraft:red_carpet",
   "minecraft:red_nether_brick_wall",
   "minecraft:red_nether_bricks",
   "minecraft:red_stained_glass_pane",
+  "minecraft:red_wall_banner[facing=south]",
   "minecraft:smithing_table",
   "minecraft:smoker[facing=south,lit=true]",
   "minecraft:smooth_basalt",
@@ -73,9 +103,20 @@
   "minecraft:target[power=0]",
   "minecraft:trapped_chest[facing=west,type=single]",
   "minecraft:tuff",
+  "minecraft:white_candle[candles=2,lit=true]",
   "minecraft:white_candle[candles=3,lit=true]"
  ],
  "tiles": [
+  {
+   "x": -1,
+   "z": -3,
+   "file": "tiles/-1_-3.bin"
+  },
+  {
+   "x": -1,
+   "z": -2,
+   "file": "tiles/-1_-2.bin"
+  },
   {
    "x": -1,
    "z": -1,
@@ -85,6 +126,16 @@
    "x": -1,
    "z": 0,
    "file": "tiles/-1_0.bin"
+  },
+  {
+   "x": 0,
+   "z": -3,
+   "file": "tiles/0_-3.bin"
+  },
+  {
+   "x": 0,
+   "z": -2,
+   "file": "tiles/0_-2.bin"
   },
   {
    "x": 0,
@@ -132,6 +183,46 @@
   },
   {
    "pos": [
+    -6,
+    1,
+    -57
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.1\"}}"
+  },
+  {
+   "pos": [
+    -6,
+    1,
+    -45
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.2\"}}"
+  },
+  {
+   "pos": [
+    -6,
+    2,
+    -57
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.3\"}}"
+  },
+  {
+   "pos": [
+    -5,
+    1,
+    -57
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.6\"}}"
+  },
+  {
+   "pos": [
+    -4,
+    1,
+    -57
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.7\"}}"
+  },
+  {
+   "pos": [
     -4,
     1,
     -2
@@ -140,11 +231,67 @@
   },
   {
    "pos": [
+    -3,
+    1,
+    -57
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.8\"}}"
+  },
+  {
+   "pos": [
+    -2,
+    1,
+    -57
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.9\"}}"
+  },
+  {
+   "pos": [
+    -1,
+    1,
+    -57
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.10\"}}"
+  },
+  {
+   "pos": [
     -1,
     1,
     -2
    ],
    "nbt": "{ForgeData:{er_slot:\"brewer.1\"}}"
+  },
+  {
+   "pos": [
+    -1,
+    7,
+    -57
+   ],
+   "nbt": "{Patterns:[{Pattern:\"mr\",Color:15},{Pattern:\"bo\",Color:1}]}"
+  },
+  {
+   "pos": [
+    -1,
+    8,
+    -43
+   ],
+   "nbt": "{Patterns:[{Pattern:\"mr\",Color:15},{Pattern:\"bo\",Color:1}]}"
+  },
+  {
+   "pos": [
+    0,
+    1,
+    -57
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.11\"}}"
+  },
+  {
+   "pos": [
+    1,
+    1,
+    -57
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.12\"}}"
   },
   {
    "pos": [
@@ -169,6 +316,22 @@
     12
    ],
    "nbt": "{ForgeData:{er_slot:\"chest.3\"}}"
+  },
+  {
+   "pos": [
+    5,
+    7,
+    -57
+   ],
+   "nbt": "{Patterns:[{Pattern:\"mr\",Color:15},{Pattern:\"bo\",Color:1}]}"
+  },
+  {
+   "pos": [
+    5,
+    8,
+    -43
+   ],
+   "nbt": "{Patterns:[{Pattern:\"mr\",Color:15},{Pattern:\"bo\",Color:1}]}"
   },
   {
    "pos": [

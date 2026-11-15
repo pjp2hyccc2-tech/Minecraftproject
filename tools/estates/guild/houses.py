@@ -41,11 +41,16 @@ def _views():
         half = HALF[d["tier"]]
         tall = d["size"][2]
         gx = -half + 6
+        # the grounds reach about 2.6 radii north since the storehouse's lobe (2026-11-15): the air views look at
+        # the middle of house and lobe from further out
+        mid = -half * 0.85
         cams = {
             f"{th}_arrive": dict(pos=(gx + 2.5, 2.62, 0.5), look=(half * 0.7, tall * 0.3, 0.5), fov=84,
                                  label=f"{th}: from the return gate"),
-            f"{th}_aerial": dict(pos=(-half * 1.25, tall + 16, half * 1.15), look=(2.0, tall * 0.2, 0.0), fov=62,
+            f"{th}_aerial": dict(pos=(-half * 1.7, tall + 26, half * 1.0), look=(2.0, tall * 0.15, mid), fov=62,
                                  label=f"{th}: from the air"),
+            f"{th}_storehouse": dict(pos=(-half * 0.9, 9.0, -half * 0.75), look=(2.0, 3.0, mid - half * 0.2),
+                                     fov=70, label=f"{th}: the storehouse"),
             f"{th}_thumb": dict(pos=(-half * 1.3, tall * 0.5 + 10, -half * 1.0), look=(2.0, tall * 0.28, 0.0),
                                 fov=60),
         }

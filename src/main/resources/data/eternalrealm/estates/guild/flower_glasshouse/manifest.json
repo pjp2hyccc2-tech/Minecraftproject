@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "0cd7095dd6f90114",
+ "build": "c28a02421bdf6c9a",
  "tileSize": 32,
  "minY": -32,
  "maxY": 159,
@@ -15,16 +15,35 @@
   "eternalrealm:slate_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
   "eternalrealm:slate_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
   "eternalrealm:smoke_emitter[heavy=false]",
+  "eternalrealm:sorting_desk[facing=south]",
+  "eternalrealm:storage_chest[facing=north,label=gear]",
+  "eternalrealm:storage_chest[facing=north,label=material]",
+  "eternalrealm:storage_chest[facing=north,label=potion]",
+  "eternalrealm:storage_chest[facing=south,label=food]",
+  "eternalrealm:storage_chest[facing=south,label=gear]",
+  "eternalrealm:storage_chest[facing=south,label=material]",
+  "eternalrealm:storage_chest[facing=south,label=potion]",
+  "eternalrealm:verdigris_roof_tile_slab[type=bottom]",
+  "eternalrealm:verdigris_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+  "eternalrealm:verdigris_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+  "eternalrealm:verdigris_roof_tiles",
   "minecraft:allium",
   "minecraft:andesite",
   "minecraft:anvil[facing=west]",
   "minecraft:azalea_leaves[distance=1,persistent=true]",
   "minecraft:azure_bluet",
+  "minecraft:barrel[facing=up,open=false]",
   "minecraft:bell[attachment=ceiling,facing=east,powered=false]",
   "minecraft:birch_door[facing=north,half=lower,hinge=left,open=false]",
   "minecraft:birch_door[facing=north,half=upper,hinge=left,open=false]",
   "minecraft:birch_fence",
+  "minecraft:birch_leaves[distance=1,persistent=true]",
+  "minecraft:birch_log[axis=x]",
+  "minecraft:birch_log[axis=y]",
+  "minecraft:birch_log[axis=z]",
+  "minecraft:birch_planks",
   "minecraft:birch_sign[rotation=12]",
+  "minecraft:birch_slab[type=top]",
   "minecraft:birch_stairs[facing=east,half=bottom,shape=straight]",
   "minecraft:birch_stairs[facing=north,half=bottom,shape=straight]",
   "minecraft:birch_stairs[facing=south,half=bottom,shape=straight]",
@@ -33,6 +52,7 @@
   "minecraft:birch_trapdoor[facing=west,half=bottom,open=true]",
   "minecraft:blast_furnace[facing=south,lit=true]",
   "minecraft:blue_orchid",
+  "minecraft:bookshelf",
   "minecraft:brewing_stand[has_bottle_0=true,has_bottle_1=false,has_bottle_2=true]",
   "minecraft:bricks",
   "minecraft:calcite",
@@ -41,7 +61,7 @@
   "minecraft:cherry_leaves[distance=1,persistent=true]",
   "minecraft:cherry_log[axis=x]",
   "minecraft:cherry_log[axis=y]",
-  "minecraft:chest[facing=north,type=single]",
+  "minecraft:cherry_log[axis=z]",
   "minecraft:cobblestone",
   "minecraft:composter[level=6]",
   "minecraft:cornflower",
@@ -49,6 +69,7 @@
   "minecraft:dandelion",
   "minecraft:dirt",
   "minecraft:fletching_table",
+  "minecraft:flower_pot",
   "minecraft:flowering_azalea_leaves[distance=1,persistent=true]",
   "minecraft:furnace[facing=south,lit=false]",
   "minecraft:glass",
@@ -61,17 +82,25 @@
   "minecraft:jungle_log[axis=y]",
   "minecraft:lantern[hanging=false]",
   "minecraft:lantern[hanging=true]",
+  "minecraft:lectern[facing=south,has_book=false]",
+  "minecraft:light_blue_stained_glass_pane",
   "minecraft:lilac[half=lower]",
   "minecraft:lilac[half=upper]",
   "minecraft:lily_of_the_valley",
   "minecraft:loom[facing=south]",
   "minecraft:moss_block",
+  "minecraft:mossy_cobblestone",
+  "minecraft:oak_log[axis=x]",
+  "minecraft:oak_log[axis=y]",
+  "minecraft:oak_log[axis=z]",
   "minecraft:oxeye_daisy",
   "minecraft:peony[half=lower]",
   "minecraft:peony[half=upper]",
+  "minecraft:pink_carpet",
   "minecraft:pink_stained_glass",
   "minecraft:pink_terracotta",
   "minecraft:pink_tulip",
+  "minecraft:pink_wall_banner[facing=south]",
   "minecraft:polished_blackstone",
   "minecraft:polished_blackstone_wall",
   "minecraft:polished_diorite",
@@ -94,6 +123,7 @@
   "minecraft:smoker[facing=south,lit=true]",
   "minecraft:smooth_quartz",
   "minecraft:smooth_quartz_slab[type=bottom]",
+  "minecraft:smooth_quartz_stairs[facing=north,half=top,shape=straight]",
   "minecraft:spruce_planks",
   "minecraft:stone",
   "minecraft:stonecutter[facing=south]",
@@ -103,10 +133,17 @@
   "minecraft:trapped_chest[facing=west,type=single]",
   "minecraft:water[level=0]",
   "minecraft:water_cauldron[level=3]",
+  "minecraft:white_candle[candles=3,lit=true]",
   "minecraft:white_carpet",
+  "minecraft:white_concrete",
   "minecraft:white_tulip"
  ],
  "tiles": [
+  {
+   "x": -1,
+   "z": -2,
+   "file": "tiles/-1_-2.bin"
+  },
   {
    "x": -1,
    "z": -1,
@@ -116,6 +153,11 @@
    "x": -1,
    "z": 0,
    "file": "tiles/-1_0.bin"
+  },
+  {
+   "x": 0,
+   "z": -2,
+   "file": "tiles/0_-2.bin"
   },
   {
    "x": 0,
@@ -139,11 +181,51 @@
   },
   {
    "pos": [
+    -4,
+    1,
+    -38
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.1\"}}"
+  },
+  {
+   "pos": [
+    -4,
+    1,
+    -30
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.2\"}}"
+  },
+  {
+   "pos": [
+    -4,
+    2,
+    -38
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.3\"}}"
+  },
+  {
+   "pos": [
+    -3,
+    1,
+    -38
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.4\"}}"
+  },
+  {
+   "pos": [
     -3,
     1,
     -9
    ],
    "nbt": "{ForgeData:{er_slot:\"chest.1\"}}"
+  },
+  {
+   "pos": [
+    -2,
+    1,
+    -38
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.5\"}}"
   },
   {
    "pos": [
@@ -157,9 +239,49 @@
    "pos": [
     -1,
     1,
+    -38
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.6\"}}"
+  },
+  {
+   "pos": [
+    -1,
+    1,
     -9
    ],
    "nbt": "{ForgeData:{er_slot:\"chest.2\"}}"
+  },
+  {
+   "pos": [
+    -1,
+    7,
+    -38
+   ],
+   "nbt": "{Patterns:[{Pattern:\"flo\",Color:0},{Pattern:\"bo\",Color:0}]}"
+  },
+  {
+   "pos": [
+    -1,
+    8,
+    -28
+   ],
+   "nbt": "{Patterns:[{Pattern:\"flo\",Color:0},{Pattern:\"bo\",Color:0}]}"
+  },
+  {
+   "pos": [
+    0,
+    1,
+    -38
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.7\"}}"
+  },
+  {
+   "pos": [
+    1,
+    1,
+    -38
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.8\"}}"
   },
   {
    "pos": [
@@ -168,6 +290,22 @@
     -12
    ],
    "nbt": "{ForgeData:{er_slot:\"furnace.2\"}}"
+  },
+  {
+   "pos": [
+    5,
+    7,
+    -38
+   ],
+   "nbt": "{Patterns:[{Pattern:\"flo\",Color:0},{Pattern:\"bo\",Color:0}]}"
+  },
+  {
+   "pos": [
+    5,
+    8,
+    -28
+   ],
+   "nbt": "{Patterns:[{Pattern:\"flo\",Color:0},{Pattern:\"bo\",Color:0}]}"
   },
   {
    "pos": [

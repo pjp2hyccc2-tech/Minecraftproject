@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "a76bcb7964fdad0c",
+ "build": "d8f4a18185e2f22c",
  "tileSize": 32,
  "minY": -32,
  "maxY": 159,
@@ -10,10 +10,24 @@
   "eternalrealm:guild_board[facing=west]",
   "eternalrealm:guild_portal[axis=z,theme=great_tree]",
   "eternalrealm:shingle_roof_tile_slab[type=bottom]",
+  "eternalrealm:sorting_desk[facing=south]",
+  "eternalrealm:storage_chest[facing=north,label=food]",
+  "eternalrealm:storage_chest[facing=north,label=material]",
+  "eternalrealm:storage_chest[facing=south,label=food]",
+  "eternalrealm:storage_chest[facing=south,label=gear]",
+  "eternalrealm:storage_chest[facing=south,label=material]",
+  "eternalrealm:storage_chest[facing=south,label=potion]",
+  "eternalrealm:storage_chest[facing=south,label=treasure]",
+  "eternalrealm:thatch_roof",
+  "eternalrealm:thatch_roof_slab[type=bottom]",
+  "eternalrealm:thatch_roof_stairs[facing=north,half=bottom,shape=straight]",
+  "eternalrealm:thatch_roof_stairs[facing=south,half=bottom,shape=straight]",
   "minecraft:andesite",
   "minecraft:anvil[facing=west]",
   "minecraft:azalea",
   "minecraft:azalea_leaves[distance=1,persistent=true]",
+  "minecraft:azure_bluet",
+  "minecraft:barrel[facing=up,open=false]",
   "minecraft:bell[attachment=ceiling,facing=east,powered=false]",
   "minecraft:birch_fence",
   "minecraft:birch_leaves[distance=1,persistent=true]",
@@ -33,10 +47,11 @@
   "minecraft:cave_vines_plant[berries=false]",
   "minecraft:cave_vines_plant[berries=true]",
   "minecraft:chain[axis=y]",
-  "minecraft:chest[facing=north,type=single]",
-  "minecraft:chest[facing=south,type=single]",
   "minecraft:coarse_dirt",
+  "minecraft:cobblestone",
   "minecraft:crafting_table",
+  "minecraft:dandelion",
+  "minecraft:dark_oak_leaves[distance=1,persistent=true]",
   "minecraft:dark_oak_log[axis=x]",
   "minecraft:dark_oak_log[axis=y]",
   "minecraft:dark_oak_log[axis=z]",
@@ -53,15 +68,18 @@
   "minecraft:fletching_table",
   "minecraft:flowering_azalea_leaves[distance=1,persistent=true]",
   "minecraft:furnace[facing=south,lit=false]",
+  "minecraft:glass_pane",
   "minecraft:grass",
   "minecraft:grass_block",
   "minecraft:green_carpet",
+  "minecraft:green_wall_banner[facing=south]",
   "minecraft:grindstone[face=floor,facing=south]",
   "minecraft:hanging_roots",
   "minecraft:hay_block[axis=y]",
   "minecraft:ladder[facing=east]",
   "minecraft:lantern[hanging=false]",
   "minecraft:lantern[hanging=true]",
+  "minecraft:lectern[facing=south,has_book=false]",
   "minecraft:lily_of_the_valley",
   "minecraft:lime_carpet",
   "minecraft:lime_stained_glass_pane",
@@ -69,14 +87,25 @@
   "minecraft:moss_block",
   "minecraft:moss_carpet",
   "minecraft:mossy_cobblestone",
+  "minecraft:oak_door[facing=north,half=lower,hinge=left,open=false]",
+  "minecraft:oak_door[facing=north,half=upper,hinge=left,open=false]",
+  "minecraft:oak_fence",
   "minecraft:oak_leaves[distance=1,persistent=true]",
   "minecraft:oak_log[axis=x]",
   "minecraft:oak_log[axis=y]",
   "minecraft:oak_log[axis=z]",
+  "minecraft:oak_planks",
   "minecraft:oak_sign[rotation=12]",
+  "minecraft:oak_slab[type=top]",
+  "minecraft:oak_stairs[facing=east,half=bottom,shape=straight]",
+  "minecraft:oak_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:oak_stairs[facing=north,half=top,shape=straight]",
+  "minecraft:oak_stairs[facing=south,half=bottom,shape=straight]",
+  "minecraft:oak_stairs[facing=west,half=bottom,shape=straight]",
   "minecraft:podzol",
   "minecraft:polished_blackstone",
   "minecraft:polished_blackstone_wall",
+  "minecraft:poppy",
   "minecraft:potted_fern",
   "minecraft:red_mushroom",
   "minecraft:rooted_dirt",
@@ -97,10 +126,15 @@
   "minecraft:target[power=0]",
   "minecraft:trapped_chest[facing=west,type=single]",
   "minecraft:tuff",
-  "minecraft:vine[north=true]",
+  "minecraft:white_candle[candles=2,lit=true]",
   "minecraft:white_candle[candles=3,lit=true]"
  ],
  "tiles": [
+  {
+   "x": -1,
+   "z": -2,
+   "file": "tiles/-1_-2.bin"
+  },
   {
    "x": -1,
    "z": -1,
@@ -110,6 +144,11 @@
    "x": -1,
    "z": 0,
    "file": "tiles/-1_0.bin"
+  },
+  {
+   "x": 0,
+   "z": -2,
+   "file": "tiles/0_-2.bin"
   },
   {
    "x": 0,
@@ -133,6 +172,94 @@
   },
   {
    "pos": [
+    -5,
+    1,
+    -49
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.1\"}}"
+  },
+  {
+   "pos": [
+    -5,
+    1,
+    -39
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.2\"}}"
+  },
+  {
+   "pos": [
+    -5,
+    2,
+    -49
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.3\"}}"
+  },
+  {
+   "pos": [
+    -4,
+    1,
+    -49
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.5\"}}"
+  },
+  {
+   "pos": [
+    -3,
+    1,
+    -49
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.6\"}}"
+  },
+  {
+   "pos": [
+    -2,
+    1,
+    -49
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.7\"}}"
+  },
+  {
+   "pos": [
+    -1,
+    1,
+    -49
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.8\"}}"
+  },
+  {
+   "pos": [
+    -1,
+    7,
+    -49
+   ],
+   "nbt": "{Patterns:[{Pattern:\"flo\",Color:5},{Pattern:\"bo\",Color:12}]}"
+  },
+  {
+   "pos": [
+    -1,
+    8,
+    -37
+   ],
+   "nbt": "{Patterns:[{Pattern:\"flo\",Color:5},{Pattern:\"bo\",Color:12}]}"
+  },
+  {
+   "pos": [
+    0,
+    1,
+    -49
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.9\"}}"
+  },
+  {
+   "pos": [
+    1,
+    1,
+    -49
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.10\"}}"
+  },
+  {
+   "pos": [
     4,
     1,
     -4
@@ -146,6 +273,22 @@
     4
    ],
    "nbt": "{ForgeData:{er_slot:\"chest.3\"}}"
+  },
+  {
+   "pos": [
+    5,
+    7,
+    -49
+   ],
+   "nbt": "{Patterns:[{Pattern:\"flo\",Color:5},{Pattern:\"bo\",Color:12}]}"
+  },
+  {
+   "pos": [
+    5,
+    8,
+    -37
+   ],
+   "nbt": "{Patterns:[{Pattern:\"flo\",Color:5},{Pattern:\"bo\",Color:12}]}"
   },
   {
    "pos": [

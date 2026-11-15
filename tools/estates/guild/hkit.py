@@ -9,9 +9,13 @@ Every house has
   island facing east, filled with the animated portal of its theme. Spots ``exit`` (just in front of the portal)
   and ``entry`` (a few steps further, facing into the house); walking back into the portal leads home.
 * the **guild board** (``eternalrealm:guild_board``, a 3 x 2 notice board on a wall; spot ``board``),
-* **storage**: chests named ``chest.<n>`` (every member; tier + 1 of them) and trapped chests named ``vault.<n>``
-  (the master and the officers; one, two from tier 4), plus trophy frames ``frame.<n>`` and armour stands
-  ``stand.<n>`` from tier 3 - all moved by name when the guild switches designs (estates core),
+* **storage**: labelled storage chests (``eternalrealm:storage_chest``) named ``chest.<n>`` (every member: tier + 1
+  in the house, tier + 3 more in the storehouse) and trapped chests named ``vault.<n>`` (the master and the
+  officers; one, two from tier 4), plus trophy frames ``frame.<n>`` and armour stands ``stand.<n>`` from tier 3 -
+  all moved by name when the guild switches designs (estates core),
+* the **storehouse** (別館, 2026-11-15, ``annex``): a two-storey building on a second lobe of the island that doubles
+  the grounds - the storage room with the **sorting desk** (``eternalrealm:sorting_desk``: the ledger of every chest
+  of the house, "put away" by the chests' labels) and the council room above,
 * **training dummies** (``eternalrealm:training_dummy``: hit them to see your damage; they never fall and give no
   ranking credit), a **rally bell** (ringing it calls the members who are online), and **work stations** - more of
   everything in the higher tiers (``REQUIRED``).
@@ -44,15 +48,18 @@ CW = {"north": "east", "east": "south", "south": "west", "west": "north"}
 CCW = {v: k for k, v in CW.items()}
 STEP = {"north": (0, -1), "south": (0, 1), "east": (1, 0), "west": (-1, 0)}
 
-# what a house of each tier must hold (checked by House.finish)
+# what a house of each tier must hold (checked by House.finish): the house's own chests (tier + 1) and the
+# storehouse's (tier + 3), one sorting desk
 REQUIRED = {
-    #     chests vaults dummies stations frames stands enchanting
-    1: dict(chest=2, vault=1, dummy=1, stations=8, frame=0, stand=0, enchanting=False),
-    2: dict(chest=3, vault=1, dummy=2, stations=10, frame=0, stand=0, enchanting=False),
-    3: dict(chest=4, vault=1, dummy=3, stations=11, frame=4, stand=0, enchanting=True),
-    4: dict(chest=5, vault=2, dummy=4, stations=12, frame=6, stand=2, enchanting=True),
-    5: dict(chest=6, vault=2, dummy=5, stations=12, frame=8, stand=4, enchanting=True),
+    #     chests vaults dummies stations frames stands enchanting desks
+    1: dict(chest=6, vault=1, dummy=1, stations=8, frame=0, stand=0, enchanting=False, desk=1),
+    2: dict(chest=8, vault=1, dummy=2, stations=10, frame=0, stand=0, enchanting=False, desk=1),
+    3: dict(chest=10, vault=1, dummy=3, stations=11, frame=4, stand=0, enchanting=True, desk=1),
+    4: dict(chest=12, vault=2, dummy=4, stations=12, frame=6, stand=2, enchanting=True, desk=1),
+    5: dict(chest=14, vault=2, dummy=5, stations=12, frame=8, stand=4, enchanting=True, desk=1),
 }
+# chests of the storehouse (the rest are the house's own)
+ANNEX_CHESTS = {tier: REQUIRED[tier]["chest"] - (tier + 1) for tier in REQUIRED}
 SOFT = {"grass", "fern", "tall_grass", "large_fern", "red_mushroom", "brown_mushroom", "dandelion", "poppy",
         "azure_bluet", "oxeye_daisy", "cornflower", "allium", "blue_orchid", "lily_of_the_valley", "dead_bush", "snow",
         "moss_carpet", "azalea", "flowering_azalea", "sweet_berry_bush", "pink_petals", "seagrass", "red_tulip",
@@ -76,14 +83,25 @@ class House:
         self.boards = 0
         self.stations = set()
         self.enchanting = False
+        self.desks = 0
 
     # ------------------------------------------------------------------ storage
-    def chest(self, t, x, y, z, facing="south"):
-        """A members' chest (a vanilla chest, 27 slots) named chest.<n>; ``facing`` = the side its lid opens to."""
+    def chest(self, t, x, y, z, facing="south", label=None):
+        """A members' chest named chest.<n>: a labelled storage chest (27 slots, the brass plate with the picture of
+        what it is for on its front, towards ``facing``; the label defaults by its number, ``estates.kit.
+        CHEST_LABELS``), so the sorting desk puts things away by it."""
         name = self.storage.name("chest")
-        t.set(x, y, z, B.chest(facing))
+        number = int(name.split(".")[1])
+        label = label or EK.CHEST_LABELS[(number - 1) % len(EK.CHEST_LABELS)]
+        t.set(x, y, z, B.S("storage_chest", facing=facing, label=label))
         t.be(x, y, z, "{" + EK.slot_nbt(name) + "}")
         return name
+
+    def desk(self, t, x, y, z, facing):
+        """The sorting desk (its block at (x, y, z)): the ledger of every chest of the house; its drawer front
+        towards ``facing`` (the side one sits at)."""
+        t.set(x, y, z, B.S("sorting_desk", facing=facing))
+        self.desks += 1
 
     def vault(self, t, x, y, z, facing="south"):
         """The officers' vault: a trapped chest named vault.<n> (only the master and the officers open it)."""
@@ -229,7 +247,11 @@ class House:
             self.w.be(x, y, z, "{" + (body + "," if body else "") + EK.slot_nbt(name) + "}")
 
     def finish(self):
-        """Check the house holds what its tier promises; returns the storage (for the exporter's checks)."""
+        """Build the storehouse on its lobe (``storehouses``), then check the house holds what its tier promises;
+        returns the storage (for the exporter's checks)."""
+        from . import storehouses
+        if self.theme in storehouses.STOREHOUSES:
+            storehouses.build(self, self.w)
         fix_supports(self.w)
         self.name_containers()
         need = REQUIRED[self.tier]
@@ -248,6 +270,8 @@ class House:
             problems.append("no enchanting nook")
         if self.boards != 1:
             problems.append(f"boards: {self.boards}")
+        if self.desks < need["desk"]:
+            problems.append(f"sorting desks {self.desks} < {need['desk']}")
         if self.bells < 1:
             problems.append("no rally bell")
         for spot in ("entry", "exit", "board"):
@@ -672,6 +696,396 @@ def torii(w, x, y, z, axis="x", width=5, height=6, wood="crimson"):
         w.set(px, y + height - 1, pz, B.full(f"{wood}_planks"))
         w.set(px, y + height + 1, pz, B.full("blackstone") if abs(k) <= hw else B.slab("blackstone", "bottom"))
         w.set(px, y + height, pz, B.full(f"{wood}_planks"))
+
+
+# ====================================================================================== the storehouse (2026-11-15)
+# Owner, 2026-11-15: 「ギルドハウス内のギミックでマイハウスみたいに一括でアイテムを管理できるギミックを入れて」
+# 「ギルドハウスを全種類2倍くらいの広さにして」. Every house gets a second lobe of its island (``lobe``) with the
+# storehouse (``annex``): the storage room with the sorting desk and the storehouse's labelled chests, the council
+# room above. Outer size (across the front, deep) by tier:
+ANNEX_SIZE = {1: (13, 11), 2: (15, 11), 3: (17, 13), 4: (19, 15), 5: (21, 17)}
+# labels of the storehouse's chests, in order (materials first: what a guild gathers most)
+ANNEX_LABELS = ("material", "material", "gear", "potion", "food", "treasure", "material", "book", "gear", "misc")
+ANNEX_DEFAULT = dict(
+    base="stone_bricks", floor="spruce_planks", floor2="spruce_planks", wall="spruce_planks",
+    post=None, band=None, window=None, roof="shingle_roof_tiles", roof_kind="gable", gable=None, wood="spruce",
+    door="spruce", carpet="red", cloth="white", banner=("red", (("bo", "yellow"), ("mc", "yellow"))), soul=False,
+    trim=None, path=("stone_bricks", "cobblestone", "andesite"), shelf="bookshelf", lamp=None,
+)
+
+
+def lobe(w, cx, cz, rx, rz, top=0, depth=14, surface=("grass_block",), soil="dirt",
+         rock=("stone", "andesite", "tuff", "stone", "cobblestone"), seed=1, rough=0.22):
+    """A second lobe of the island (2026-11-15): a noisy ellipse like ``island``, but only where the ground
+    (y = ``top`` and the block below) is still empty - nothing built is touched and the two lobes run into each
+    other. Returns the new surface cells."""
+    cells = set()
+    R = int(max(rx, rz) * 1.35) + 3
+    for x in range(cx - R, cx + R + 1):
+        for z in range(cz - R, cz + R + 1):
+            ex, ez = (x - cx) / rx, (z - cz) / rz
+            d = math.sqrt(ex * ex + ez * ez) + fbm2(x, z, 6.0, 3, seed) * rough
+            if d > 1.0 or not w.is_empty(x, top, z) or not w.is_empty(x, top - 1, z):
+                continue
+            cells.add((x, z))
+            bottom = top - 3 - int(depth * (1.0 - d) ** 0.6 + hash2(x, z, seed + 3) * 3)
+            for y in range(bottom, top + 1):
+                if not w.is_empty(x, y, z):
+                    continue
+                if y == top:
+                    st = surface_at(surface, x, z, seed)
+                elif y >= top - 2 and soil:
+                    st = B.S(soil)
+                else:
+                    st = B.S(rock[int(hash3(x, y, z, seed) * len(rock)) % len(rock)])
+                w.set(x, y, z, st)
+    return cells
+
+
+def _has_stairs(material):
+    try:
+        return B.has_stairs(material)
+    except (KeyError, ValueError):
+        return False
+
+
+def _free(f, x0, y0, z0, x1, y1, z1, what):
+    """Asserts nothing but air and soft plants is in a box of frame ``f`` (the storehouse must not cut into the
+    house); clears the plants."""
+    hits = []
+    for x in range(x0, x1 + 1):
+        for z in range(z0, z1 + 1):
+            for y in range(y0, y1 + 1):
+                st = f.get(x, y, z)
+                name = st.split("[")[0].split(":")[-1]
+                if name in ("air", "cave_air", "void"):
+                    continue
+                if name in SOFT or name.endswith("leaves"):
+                    f.set(x, y, z, AIR)
+                    continue
+                hits.append((f.pos(x, y, z), st))
+    if hits:
+        raise AssertionError(f"{what} would cut into {len(hits)} blocks, e.g. {hits[:4]}")
+
+
+def annex(h, w, cx, cz, facing, style, seed=0, path_to=None):
+    """The storehouse (別館): a two-storey building centred on (cx, cz), its door in the middle of the front, which
+    faces ``facing`` (towards the house). Local frame: +z is the front.
+
+    * Ground floor - the storage room: the **sorting desk** in the middle with its chair, the storehouse's labelled
+      chests (``ANNEX_CHESTS``, labels ``ANNEX_LABELS``) along the back and left walls, barrels in the corners, a
+      straight stair up the right wall, lanterns under the beams.
+    * Upper floor - the council room, open to the roof: a long table with chairs, a shelf wall, the guild's
+      banners, windows on every side.
+    * A canopy and lanterns over the door; ``path_to`` (world x, z): a path from the door to there.
+
+    ``style`` names the theme's materials (``ANNEX_DEFAULT``): base, floor, floor2, wall (an id or a tuple mixed by
+    noise), post (a state for the corners and frame posts), band (a state for the course at the upper floor),
+    window (a pane state), roof (a material with stairs) and roof_kind (gable / hip / flat / dome), gable, wood (the
+    furniture), door, carpet, cloth, banner (colour, patterns), soul (soul lanterns), trim (a material with stairs
+    for sills and the canopy), path (states), shelf, lamp (a state for the lights instead of lanterns).
+    Returns the frame."""
+    st = dict(ANNEX_DEFAULT, **style)
+    W, D = ANNEX_SIZE[h.tier]
+    hw, dd = W // 2, D // 2
+    f = Frame(w, origin=(cx, 0, cz), rot=GK.ROT[facing])
+    _free(f, -hw - 1, 1, -dd - 1, hw + 1, 20, dd + 3, f"{h.theme}: the storehouse")
+    wood = st["wood"]
+    walls = st["wall"] if isinstance(st["wall"], (tuple, list)) else (st["wall"],)
+    wall_states = [B.S(x) if "[" not in x and ":" not in x else x for x in walls]
+    post = st["post"] or B.log(wood, "y")
+    band = st["band"]
+    window = st["window"] or B.pane()
+    trim = st["trim"] or wood
+    lamp = st["lamp"] or B.lantern(hanging=True, soul=st["soul"])
+    base = B.full(st["base"])
+
+    # ---------------------------------------------------------------- shell
+    f.fill(-hw, -3, -dd, hw, 0, dd, base)
+    f.fill(-hw + 1, 0, -dd + 1, hw - 1, 0, dd - 1, B.full(st["floor"]))
+    for y in range(1, 10):
+        for x in range(-hw, hw + 1):
+            for z in (-dd, dd):
+                f.set(x, y, z, wall_states[int(hash3(x, y, z, seed) * len(wall_states)) % len(wall_states)])
+        for z in range(-dd + 1, dd):
+            for x in (-hw, hw):
+                f.set(x, y, z, wall_states[int(hash3(x, y, z, seed) * len(wall_states)) % len(wall_states)])
+    for (x, z) in ((-hw, -dd), (-hw, dd), (hw, -dd), (hw, dd)):
+        f.fill(x, 1, z, x, 9, z, post)
+    if st.get("frame"):                      # timber framing: posts every four blocks along the walls
+        for x in range(-hw + 4, hw, 4):
+            f.fill(x, 1, -dd, x, 9, -dd, post)
+            f.fill(x, 1, dd, x, 9, dd, post)
+        for z in range(-dd + 4, dd, 4):
+            f.fill(-hw, 1, z, -hw, 9, z, post)
+            f.fill(hw, 1, z, hw, 9, z, post)
+    if band:
+        for x in range(-hw, hw + 1):
+            for z in (-dd, dd):
+                f.set(x, 5, z, band)
+        for z in range(-dd, dd + 1):
+            for x in (-hw, hw):
+                f.set(x, 5, z, band)
+    f.fill(-hw + 1, 5, -dd + 1, hw - 1, 5, dd - 1, B.full(st["floor2"]))
+    f.clear(-hw + 1, 1, -dd + 1, hw - 1, 4, dd - 1)
+    f.clear(-hw + 1, 6, -dd + 1, hw - 1, 9, dd - 1)
+
+    # ---------------------------------------------------------------- windows and the door
+    # window columns, symmetric: across the front and back at 2, 5, 8 .. from the middle, along the sides at 0, 3 ..
+    across = sorted({sgn * a for a in range(2, hw - 1, 3) for sgn in (-1, 1)})
+    along = sorted({sgn * a for a in range(0, dd - 1, 3) for sgn in (-1, 1)})
+
+    def side_windows(y0, rows):
+        for z in along:
+            for x in (-hw, hw):
+                for yy in range(y0, y0 + rows):
+                    f.set(x, yy, z, window)
+        for x in across:
+            for z in (-dd, dd):
+                for yy in range(y0, y0 + rows):
+                    f.set(x, yy, z, window)
+    side_windows(2, 2)
+    side_windows(7, 2)
+    for yy in (7, 8):                         # a tall window over the door
+        f.set(0, yy, dd, window)
+    door(f, 0, 0, dd, "north", wood=st["door"])
+    # the canopy over the door (brackets of upside-down stairs), lanterns standing on both sides
+    for x in (-1, 0, 1):
+        f.set(x, 4, dd + 1, B.stairs(trim, "north", "top") if _has_stairs(trim) else B.full(trim))
+    for x in (-2, 2):
+        f.set(x, 1, dd + 1, B.lantern(hanging=False, soul=st["soul"]))
+
+    # ---------------------------------------------------------------- the stair up the right wall
+    sw = 1 if h.tier < 3 else 2                # stair width
+    s = dd - 2                                 # the first step
+    xs = [hw - 1 - k for k in range(sw)]
+    for i in range(5):                         # five steps: the fifth lies in the upper floor, level with it
+        y = 1 + i
+        z = s - i
+        for x in xs:
+            f.set(x, y, z, B.stairs(wood, "north"))
+            if y > 1:
+                f.fill(x, 1, z, x, y - 1, z, B.full(f"{wood}_planks") if _has_stairs(wood) else base)
+    # head room through the upper floor: a player walking up bumps into a ceiling over the step they leave, so the
+    # opening runs over the second, third and fourth steps
+    for i in (1, 2, 3):
+        for x in xs:
+            f.set(x, 5, s - i, AIR)
+    rail = B.fence(wood) if _has_stairs(wood) else B.wall(st["base"])
+    for i in (0, 1, 2, 3):
+        f.set(hw - 1 - sw, 6, s - i, rail)
+    for x in xs:
+        f.set(x, 6, s, rail)
+
+    # ---------------------------------------------------------------- the storage room
+    labels = list(ANNEX_LABELS)
+    want = ANNEX_CHESTS[h.tier]
+    cells = [(x, -dd + 1, "south") for x in range(-hw + 2, hw - sw - 1)]          # the back wall
+    cells += [(-hw + 1, z, "east") for z in range(-dd + 2, dd - 1)]               # the left wall
+    placed = 0
+    for i, (x, z, fac) in enumerate(cells):
+        if placed >= want:
+            break
+        h.chest(f, x, 1, z, fac, label=labels[placed % len(labels)])
+        placed += 1
+    assert placed == want, (h.theme, "storehouse chests", placed, want)
+    f.set(-hw + 1, 1, -dd + 1, B.barrel("up"))                                    # corners: barrels
+    f.set(-hw + 1, 2, -dd + 1, B.barrel("up"))
+    f.set(-hw + 1, 1, dd - 1, B.barrel("up"))
+    FN.goods(f, -hw + 1, 2, dd - 1, seed=seed, kinds=("lantern", "candle", "flower_pot"))
+    # the sorting desk in the middle, its chair, a rug
+    dx = -1 if sw == 2 else 0
+    for x in range(dx - 1, dx + 2):
+        for z in (-1, 0, 1):
+            f.set(x, 1, z, B.carpet(st["carpet"]))
+    h.desk(f, dx, 1, 0, "south")
+    f.set(dx, 1, 1, B.stairs(wood, "south"))
+    # lanterns under the beams (never over the stair)
+    for (x, z) in ((dx - 2, -1), (dx + 2, -2), (dx - 2, dd - 2), (-hw + 3, -dd + 3)):
+        if -hw < x < hw - sw - 1 and -dd < z < dd and f.is_empty(x, 4, z):
+            f.set(x, 4, z, lamp)
+    # a bench by the door
+    f.set(-2, 1, dd - 1, B.stairs(wood, "south"))
+    f.set(-3, 1, dd - 1, B.stairs(wood, "south"))
+
+    # ---------------------------------------------------------------- the council room
+    length = max(4, W - 9)
+    x0 = -hw + 3
+    council(f, x0, 5, 0, length, axis="x", top=wood, cloth=st["cloth"], chair=wood, seed=seed)
+    for x in range(x0 - 1, x0 + length + 1):
+        for z in (-2, 2):
+            if f.is_empty(x, 6, z):
+                f.set(x, 6, z, B.carpet(st["carpet"]))
+    # the shelf wall on the left, a lectern; the guild's banners on the back wall
+    for z in range(-dd + 1, dd):
+        for y in (6, 7):
+            if f.is_empty(-hw + 1, y, z) and f.get(-hw, y, z) != window:
+                f.set(-hw + 1, y, z, B.S(st["shelf"]) if "[" not in st["shelf"] else st["shelf"])
+    f.set(-hw + 2, 6, -dd + 1, B.S("lectern", facing="south", has_book=False))
+    color, patterns = st["banner"]
+    for x in (-3, 3):
+        if f.get(x, 7, -dd) != window:
+            crest_banner(f, x, 7, -dd + 1, "south", color, list(patterns))
+    # light: lanterns on chains from the roof
+    for (x, z) in ((x0 + 1, 0), (x0 + length - 2, 0)):
+        y = 10
+        while y < 30 and f.is_empty(x, y + 1, z):
+            y += 1
+        if y >= 30:
+            continue
+        for yy in range(9, y + 1):
+            f.set(x, yy, z, B.chain())
+        f.set(x, 8, z, lamp)
+
+    # ---------------------------------------------------------------- the roof
+    kind = st["roof_kind"]
+    gable = st["gable"] or wall_states[0]
+    if kind == "gable":
+        S.gable_roof(f, -hw, -dd, hw, dd, 10, st["roof"], axis="x", overhang=1, gable_state=gable)
+    elif kind == "hip":
+        S.hip_roof(f, -hw, -dd, hw, dd, 10, st["roof"], overhang=1)
+    elif kind == "cap":
+        # a mushroom cap (or any dome) over the walls, open to the council room below
+        r = max(hw, dd) + 2
+        S.dome(f, 0, 9, 0, r, B.S(st["cap"]), ry=6, hollow=True, thickness=1.0)
+        for x in range(-hw, hw + 1):
+            for z in range(-dd, dd + 1):
+                if f.get(x, 9, z) == B.S(st["cap"]) and (abs(x) < hw and abs(z) < dd):
+                    f.set(x, 9, z, AIR)
+    else:
+        f.fill(-hw, 10, -dd, hw, 10, dd, B.full(st["roof"]))
+        for x in range(-hw, hw + 1):
+            for z in (-dd, dd):
+                f.set(x, 11, z, B.slab(st["roof"], "bottom") if (x + z) % 2 else B.full(st["roof"]))
+        for z in range(-dd, dd + 1):
+            for x in (-hw, hw):
+                f.set(x, 11, z, B.slab(st["roof"], "bottom") if (x + z) % 2 else B.full(st["roof"]))
+        if kind == "dome":
+            S.dome(f, 0, 11, 0, min(hw, dd) - 2, B.full(st.get("dome", st["roof"])), hollow=False)
+    # banners outside on the upper storey, between the windows
+    for x in (-1, 1):
+        bx = x * (3 if 3 not in across else 4)
+        if f.get(bx, 8, dd) != window and abs(bx) < hw:
+            crest_banner(f, bx, 8, dd + 1, "south", color, list(patterns))
+    if path_to is not None:
+        start = f.pos(0, 0, dd + 2)
+        path(w, [(start[0], start[2]), path_to], 0, st["path"], width=3, seed=seed)
+    return f
+
+
+def clear_spots(w, cells, count, seed=0, radius=2, height=8, avoid=()):
+    """Up to ``count`` surface cells of ``cells`` with nothing within ``radius`` (x/z) from y = 1 to ``height``
+    and at least ``radius`` + 2 from every cell of ``avoid`` - places for trees and rocks, picked by hash."""
+    order = sorted(cells, key=lambda c: hash2(c[0], c[1], seed))
+    picked = []
+    for (x, z) in order:
+        if len(picked) >= count:
+            break
+        if any(abs(x - px) < radius * 2 + 2 and abs(z - pz) < radius * 2 + 2 for (px, pz) in picked + list(avoid)):
+            continue
+        if any((x + dx, z + dz) not in cells for dx in (-radius, 0, radius) for dz in (-radius, 0, radius)):
+            continue                                   # keep off the edge
+        ok = True
+        for dx in range(-radius, radius + 1):
+            for dz in range(-radius, radius + 1):
+                if not ok:
+                    break
+                for y in range(1, height + 1):
+                    if not w.is_empty(x + dx, y, z + dz):
+                        name = w.get(x + dx, y, z + dz).split("[")[0].split(":")[-1]
+                        if name not in SOFT:
+                            ok = False
+                            break
+        if ok:
+            picked.append((x, z))
+    return picked
+
+
+def pavilion(w, cx, cz, style, half=2, seed=0):
+    """A garden pavilion (東屋) in the theme's materials, centred on (cx, cz): a raised floor of the base, posts at
+    the corners, a hipped roof of the theme's roof (a cap or a flat roof becomes the roof material's hip), benches
+    on two sides round a little table, a lantern under the roof. ``half`` = 2 (5 x 5) or 3 (7 x 7)."""
+    st = dict(ANNEX_DEFAULT, **style)
+    wood = st["wood"]
+    post = st["post"] or B.log(wood, "y")
+    roof = st["roof"] if _has_stairs(st["roof"]) else wood
+    x0, x1, z0, z1 = cx - half, cx + half, cz - half, cz + half
+    w.fill(x0, -2, z0, x1, 0, z1, B.full(st["base"]))
+    for (x, z) in ((x0, z0), (x1, z0), (x0, z1), (x1, z1)):
+        w.fill(x, 1, z, x, 3, z, post)
+    for x in range(x0, x1 + 1):
+        for z in range(z0, z1 + 1):
+            if x in (x0, x1) or z in (z0, z1):
+                w.set(x, 4, z, B.full(f"{wood}_planks") if _has_stairs(wood) else B.full(st["base"]))
+    S.hip_roof(w, x0, z0, x1, z1, 5, roof, overhang=1)
+    for x in range(x0 + 1, x1):                      # benches along the north and south sides
+        w.set(x, 1, z0 + 1 if half > 2 else z0, B.stairs(wood, "north"))
+        w.set(x, 1, z1 - 1 if half > 2 else z1, B.stairs(wood, "south"))
+    w.set(cx, 1, cz, B.slab(wood, "top") if _has_stairs(wood) else B.full(st["base"]))
+    FN.goods(w, cx, 2, cz, seed=seed, kinds=("candle", "flower_pot", "candle"))
+    w.set(cx, 4, cz, st["lamp"] or B.lantern(hanging=True, soul=st["soul"]))
+    w.set(cx, 5, cz, B.full(f"{wood}_planks") if _has_stairs(wood) else B.full(st["base"]))
+
+
+def extend(h, w, lobe_at, annex_at, facing, style, route=(), surface=("grass_block",), soil="dirt",
+           underside=("stone", "andesite", "tuff", "stone", "cobblestone"), depth=13, seed=0, trees=(), rocks=0,
+           rock_states=("stone", "andesite", "mossy_cobblestone"), plants=None, plants_on=("grass_block",),
+           density=0.2, drips=("stone", "andesite", "cobblestone"), dress=None, gazebo=True, posts=True):
+    """The grounds' second half (2026-11-15: the houses twice as large): a lobe of the island at ``lobe_at``
+    = (cx, cz, rx, rz), the storehouse centred on ``annex_at`` facing ``facing`` (``annex``), a path from its door
+    through the points ``route`` (world x, z: from the door outwards), then ``trees`` (kinds, one per tree; ``palm``
+    for palms), ``rocks`` boulders, plants on ``plants_on`` and ``dress(w, cells)`` for the theme's own touches.
+    Returns the lobe's surface cells."""
+    cx, cz, rx, rz = lobe_at
+    cells = lobe(w, cx, cz, rx, rz, depth=depth, surface=surface, soil=soil, rock=underside, seed=seed + 101)
+    drip_stalactites(w, cells, 0, seed=seed + 102, kinds=drips)
+    f = annex(h, w, annex_at[0], annex_at[1], facing, style, seed=seed)
+    W, D = ANNEX_SIZE[h.tier]
+    door_x, _, door_z = f.pos(0, 0, D // 2 + 2)
+    pts = [(door_x, door_z)] + list(route)
+    if len(pts) > 1:
+        path(w, pts, 0, style.get("path", ANNEX_DEFAULT["path"]), width=3, seed=seed + 103)
+        if posts:                                    # lamp posts along the path, on the lobe
+            soul = style.get("soul", False)
+            for (ax, az), (bx, bz) in zip(pts, pts[1:]):
+                n = max(abs(bx - ax), abs(bz - az))
+                for i in range(3, n, 6):
+                    x = round(ax + (bx - ax) * i / n)
+                    z = round(az + (bz - az) * i / n)
+                    side = (2, 0) if abs(bz - az) >= abs(bx - ax) else (0, 2)
+                    for sgn in (-1, 1):
+                        px, pz = x + side[0] * sgn, z + side[1] * sgn
+                        if (px, pz) in cells and all(w.is_empty(px, y, pz) or
+                                                     w.get(px, y, pz).split("[")[0].split(":")[-1] in SOFT
+                                                     for y in range(1, 6)):
+                            deco.lamp_post(w, px, 0, pz, height=3, soul=soul)
+    if gazebo and h.tier >= 2:                       # a pavilion on the lobe, away from the storehouse and path
+        half_p = 2 if h.tier < 4 else 3
+        spot = clear_spots(w, cells, 1, seed=seed + 107, radius=half_p + 2, height=8,
+                           avoid=pts + [(annex_at[0], annex_at[1])])
+        for (x, z) in spot:
+            if abs(x - annex_at[0]) > W // 2 + half_p + 3 or abs(z - annex_at[1]) > W // 2 + half_p + 3:
+                pavilion(w, x, z, style, half=half_p, seed=seed + 108)
+    spots = clear_spots(w, cells, len(trees), seed=seed + 104, radius=2, height=9,
+                        avoid=[p for p in pts] + [(annex_at[0], annex_at[1])])
+    for (x, z), kind in zip(spots, trees):
+        if abs(x - annex_at[0]) <= W // 2 + 3 and abs(z - annex_at[1]) <= W // 2 + 3:
+            continue
+        if kind == "palm":
+            palm(w, x, 0, z, height=6 + int(hash2(x, z, seed) * 3), seed=x * 3 + z,
+                 lean=((1, 0), (0, 1), (-1, 0), (0, -1))[int(hash2(z, x, seed) * 4) % 4])
+        else:
+            tree(w, x, 0, z, kind, seed=x * 7 + z)
+    for (x, z) in clear_spots(w, cells, rocks, seed=seed + 105, radius=1, height=4,
+                              avoid=pts + [(annex_at[0], annex_at[1])] + spots):
+        if abs(x - annex_at[0]) <= W // 2 + 2 and abs(z - annex_at[1]) <= W // 2 + 2:
+            continue
+        rock(w, x, 0, z, r=1.3, states=rock_states, seed=x + z * 3)
+    if dress:
+        dress(w, cells)
+    if plants:
+        scatter_plants(w, cells, 0, seed=seed + 106, kinds=plants, density=density, on=plants_on)
+    return cells
 
 
 def fix_supports(w, reach=24):
