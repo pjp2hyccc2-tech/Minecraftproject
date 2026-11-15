@@ -917,3 +917,22 @@ us), and 「この必殺技はctを90秒にして、アニメーションとエ�
   healing, a cleanse) and pours its rose window's light down (the last blow, a revival of fallen allies, shields), in
   keeping with the class's healing and wards.
 
+## D-QUESTONERUN: one run of a dungeon carries both of its story quests (2026-11-15)
+
+The owner: 「クエストでダンジョンのクエストがトータル二回ダンジョンに挑まないといけないからそれを修正して」. Each area's story asks
+to "clear the dungeon" (`mN_dungeon`, `ClearDungeon`) and then to "defeat its boss" (`mN_boss`, `DefeatBoss`). A clear
+of a dungeon *is* the defeat of its boss (the run ends with the boss; `DungeonService.onCleared` tells everyone who was
+there of both at once), but the boss quest can only be accepted after the dungeon quest is turned in, and events from
+before acceptance never counted: every dungeon had to be run twice.
+
+- **The rule**: a once-only quest (main or side) counts, on acceptance, the defeat of the boss of a dungeon its
+  completed prerequisite asked to clear (`QuestEngine.creditClearedBosses`, the dungeon's boss from
+  `Areas.dungeon(...).bossId()`). It is ready to turn in at once; the player is told the boss already fell in that run
+  (`message.eternalrealm.quest.boss_already_defeated`). Nothing else from before acceptance counts, and a daily always
+  needs a new defeat.
+- **Old saves**: a boss quest accepted before the rule (still at 0) is credited when the character's quest log is
+  loaded, and saved.
+- **Not chosen**: merging the two quests (their ids, rewards and dialogues are in saves and translations), letting
+  the boss quest be accepted alongside the dungeon quest (a player who did not take both before the run would still
+  have to go twice), or counting any boss kill from before acceptance (dailies and the story's pacing would break).
+

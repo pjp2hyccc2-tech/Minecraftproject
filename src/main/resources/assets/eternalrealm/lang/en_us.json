@@ -8806,5 +8806,6 @@
   "skill.eternalrealm.sword_saint_heavenfall_blade": "Hidden Art: Heavenfall Blade",
   "skill.eternalrealm.sword_saint_heavenfall_blade.desc": "[Finale] Raise your sword to the sky and take up the colossal holy blade that parts the clouds. Brought down with all your strength, it cleaves the ground ahead, and whatever survives the blow is stunned and stripped of its guard.",
   "skill.eternalrealm.hexblade_hour_of_the_ox": "Hidden Art: Hour of the Ox",
-  "skill.eternalrealm.hexblade_hour_of_the_ox.desc": "[Finale] Call down the curse of the hour of the ox: a giant cursed nail is driven against the foe ahead and a cursed hammer strikes it three times. The last blow is always critical and sinks the nail deep, and the foe withers under the curse for a long while."
+  "skill.eternalrealm.hexblade_hour_of_the_ox.desc": "[Finale] Call down the curse of the hour of the ox: a giant cursed nail is driven against the foe ahead and a cursed hammer strikes it three times. The last blow is always critical and sinks the nail deep, and the foe withers under the curse for a long while.",
+  "message.eternalrealm.quest.boss_already_defeated": "[%s] You already defeated %s when you cleared its dungeon"
 }

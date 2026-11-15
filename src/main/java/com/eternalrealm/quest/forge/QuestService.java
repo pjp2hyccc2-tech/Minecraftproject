@@ -117,7 +117,9 @@ public final class QuestService {
                 return QuestLogState.fresh();
             }
         }).orElseGet(QuestLogState::fresh);
-        if (engine.resetDailies(state, dayIndex)) {
+        // a boss quest accepted after its dungeon quest (before one run counted for both) is ready now
+        boolean dirty = !engine.creditClearedBosses(state).isEmpty();
+        if (engine.resetDailies(state, dayIndex) || dirty) {
             save(player, state);
         }
         logs.put(id, state);
@@ -147,7 +149,8 @@ public final class QuestService {
         if (state == null) {
             return AcceptResult.UNKNOWN_QUEST;
         }
-        AcceptResult result = engine.accept(state, questId, context(player));
+        List<QuestUpdate> counted = new java.util.ArrayList<>();
+        AcceptResult result = engine.accept(state, questId, context(player), counted);
         Component name = questName(questId);
         player.displayClientMessage(Component.translatable(result.messageKey(), name)
                 .withStyle(result.isSuccess() ? ChatFormatting.GREEN : ChatFormatting.RED), true);
@@ -155,7 +158,9 @@ public final class QuestService {
             save(player, state);
             player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BOOK_PAGE_TURN,
                     SoundSource.PLAYERS, 1.0F, 1.0F);
-            // objectives that are already met (an area the player stands in) count at once
+            // objectives already met count at once: the area the player stands in, the boss its dungeon run defeated
+            announceBossesAlreadyDefeated(player, questId, counted);
+            announce(player, state, counted);
             world.areaOf(player).ifPresent(area -> event(player, new GameEvent.AreaEntered(area.id())));
         }
         sendView(player);
@@ -296,6 +301,30 @@ public final class QuestService {
             return;
         }
         save(player, state);
+        announce(player, state, updates);
+        sendView(player);
+    }
+
+    /**
+     * "The boss already fell in your run of its dungeon": said once when a boss quest is accepted ready to turn in
+     * ({@link com.eternalrealm.quest.QuestEngine#creditClearedBosses}).
+     */
+    private void announceBossesAlreadyDefeated(ServerPlayer player, String questId, List<QuestUpdate> counted) {
+        QuestDefinition quest = engine.catalog().byId(questId).orElse(null);
+        if (quest == null) {
+            return;
+        }
+        for (QuestUpdate update : counted) {
+            if (update instanceof QuestUpdate.ObjectiveCompleted completed
+                    && quest.objectives().get(completed.objectiveIndex()) instanceof Objective.DefeatBoss boss) {
+                player.sendSystemMessage(Component.translatable(QuestMessages.BOSS_ALREADY_DEFEATED, questName(questId),
+                        Component.translatable("boss.eternalrealm." + boss.bossId())).withStyle(ChatFormatting.AQUA));
+            }
+        }
+    }
+
+    /** Progress, objectives done and quests ready to turn in, as toasts and chat lines. */
+    private void announce(ServerPlayer player, QuestLogState state, List<QuestUpdate> updates) {
         for (QuestUpdate update : updates) {
             Component quest = questName(update.questId());
             if (update instanceof QuestUpdate.ReadyToTurnIn) {
@@ -313,7 +342,6 @@ public final class QuestService {
                         true);
             }
         }
-        sendView(player);
     }
 
     public void tickSecond() {

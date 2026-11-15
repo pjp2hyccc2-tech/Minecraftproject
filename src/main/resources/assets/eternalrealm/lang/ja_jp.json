@@ -8806,5 +8806,6 @@
   "skill.eternalrealm.sword_saint_heavenfall_blade": "秘奥義・神剣天墜",
   "skill.eternalrealm.sword_saint_heavenfall_blade.desc": "【秘奥義】天に剣を掲げ、雲を割って現れた巨大な聖剣をその手に宿す。渾身の力で振り下ろした聖剣は大地ごと前方を断ち、その一撃に耐えた敵も気絶して守りを失う。",
   "skill.eternalrealm.hexblade_hour_of_the_ox": "秘奥義・丑の刻参り",
-  "skill.eternalrealm.hexblade_hour_of_the_ox.desc": "【秘奥義】丑の刻の呪いを呼ぶ。前方の敵に巨大な呪いの釘を突き立て、呪いの金槌で三度打ち込む。最後の一打は必ず会心となって釘を深く沈め、敵は長く呪詛に蝕まれて弱り続ける。"
+  "skill.eternalrealm.hexblade_hour_of_the_ox.desc": "【秘奥義】丑の刻の呪いを呼ぶ。前方の敵に巨大な呪いの釘を突き立て、呪いの金槌で三度打ち込む。最後の一打は必ず会心となって釘を深く沈め、敵は長く呪詛に蝕まれて弱り続ける。",
+  "message.eternalrealm.quest.boss_already_defeated": "【%s】%sはダンジョンを踏破したときにもう倒している"
 }

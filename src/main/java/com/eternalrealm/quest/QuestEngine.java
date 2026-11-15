@@ -1,5 +1,7 @@
 package com.eternalrealm.quest;
 
+import com.eternalrealm.world.Areas;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -13,7 +15,9 @@ import java.util.Optional;
  *     <li><b>Accept</b>: not active, not completed (MAIN/SIDE) or not done in the current day (DAILY), prerequisite
  *         quests completed, required area unlocked, level reached, fewer than {@link #MAX_ACTIVE_QUESTS} active.</li>
  *     <li><b>Progress</b>: every matching event advances every active quest it matches; counters stop at the required
- *         amount. Events from before acceptance never count.</li>
+ *         amount. Events from before acceptance never count, with one exception: a dungeon's boss falls in every clear
+ *         of that dungeon, so a once-only quest to defeat it counts the defeat made in the clear its prerequisite asked
+ *         for ({@link #creditClearedBosses}): one run carries the story's "clear the dungeon" and "defeat its boss".</li>
  *     <li><b>Turn in</b>: only when every objective is complete; the reward is returned exactly once. Nothing is
  *         consumed (CollectItems counts pickups, see {@link Objective.CollectItems}).</li>
  *     <li><b>Dailies</b>: a DAILY can be turned in once per day index; a later day index starts a new period. Active
@@ -66,11 +70,21 @@ public final class QuestEngine {
 
     /**
      * Accepts the quest if allowed. Starts the daily period of {@code context.dayIndex()} first. A
-     * {@link Objective.ReachArea} for the area the player is standing in is completed immediately.
+     * {@link Objective.ReachArea} for the area the player is standing in is completed immediately, and so is the
+     * defeat of a boss its prerequisite's dungeon clear already made ({@link #creditClearedBosses}).
      */
     public AcceptResult accept(QuestLogState state, String questId, QuestContext context) {
+        return accept(state, questId, context, new ArrayList<>());
+    }
+
+    /**
+     * {@link #accept(QuestLogState, String, QuestContext)}, adding to {@code updates} the progress counted at once (so
+     * the caller can announce it).
+     */
+    public AcceptResult accept(QuestLogState state, String questId, QuestContext context, List<QuestUpdate> updates) {
         Objects.requireNonNull(state, "state");
         Objects.requireNonNull(context, "context");
+        Objects.requireNonNull(updates, "updates");
         resetDailies(state, context.dayIndex());
         AcceptResult result = canAccept(state, questId, context);
         if (!result.isSuccess()) {
@@ -79,9 +93,49 @@ public final class QuestEngine {
         QuestDefinition quest = catalog.byId(questId).orElseThrow();
         state.start(quest);
         if (context.currentAreaId() != 0) {
-            advance(state, quest, new GameEvent.AreaEntered(context.currentAreaId()), new ArrayList<>());
+            advance(state, quest, new GameEvent.AreaEntered(context.currentAreaId()), updates);
         }
+        credit(state, quest, updates);
         return AcceptResult.SUCCESS;
+    }
+
+    /**
+     * Counts, for every active quest, the boss defeats its prerequisites' dungeon clears already made: quests accepted
+     * before this rule (a loaded log) get the same credit a new acceptance gets. Idempotent.
+     *
+     * @return what changed (empty if nothing)
+     */
+    public List<QuestUpdate> creditClearedBosses(QuestLogState state) {
+        Objects.requireNonNull(state, "state");
+        List<QuestUpdate> updates = new ArrayList<>();
+        for (String questId : state.activeQuestIds()) {
+            catalog.byId(questId).ifPresent(quest -> credit(state, quest, updates));
+        }
+        return List.copyOf(updates);
+    }
+
+    /**
+     * A dungeon's boss falls in every clear of that dungeon (everyone in the run is told of both at once,
+     * {@code DungeonService.onCleared}). A once-only quest whose completed prerequisite asked for a clear of the
+     * dungeon therefore already has the defeat of that dungeon's boss: the story's "clear the dungeon" and "defeat its
+     * boss" take one run, not two (owner, 2026-11-15: 「ダンジョンのクエストがトータル二回ダンジョンに挑まないといけないから
+     * それを修正して」). A daily always asks for a new defeat.
+     */
+    private void credit(QuestLogState state, QuestDefinition quest, List<QuestUpdate> updates) {
+        if (quest.kind().isRepeatable()) {
+            return;
+        }
+        for (String required : quest.prerequisites().questIds()) {
+            if (!state.hasCompleted(required)) {
+                continue;
+            }
+            for (Objective objective : catalog.byId(required).map(QuestDefinition::objectives).orElse(List.of())) {
+                if (objective instanceof Objective.ClearDungeon clear) {
+                    Areas.dungeon(clear.dungeonId()).ifPresent(site ->
+                            advance(state, quest, new GameEvent.BossDefeated(site.bossId()), updates));
+                }
+            }
+        }
     }
 
     /** Drops an active quest and its progress. @return {@code false} if it was not active */

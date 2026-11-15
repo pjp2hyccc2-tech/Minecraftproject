@@ -359,5 +359,6 @@
   "monster.eternalrealm.lord_dock_brawler": {"ja": "港の喧嘩屋", "en": "The Dock Brawler"},
   "monster.eternalrealm.lord_ankara": {"ja": "錨喰らいの大ガニアンカラ", "en": "Ankara the Anchor-Eater"},
   "hud.eternalrealm.area.recommended_level_from": {"ja": "推奨レベル %s〜", "en": "Recommended Lv %s+"},
-  "message.eternalrealm.world.world_edge": {"ja": "深い霧に阻まれて、これより先へは進めない。", "en": "A thick mist turns you back. You cannot go any further."}
+  "message.eternalrealm.world.world_edge": {"ja": "深い霧に阻まれて、これより先へは進めない。", "en": "A thick mist turns you back. You cannot go any further."},
+  "message.eternalrealm.quest.boss_already_defeated": {"ja": "【%s】%sはダンジョンを踏破したときにもう倒している", "en": "[%s] You already defeated %s when you cleared its dungeon"}
 }

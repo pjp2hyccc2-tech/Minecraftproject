@@ -52,8 +52,10 @@ public class MainStoryPlaythroughTest {
             }
             assertEquals(quest.id(), AcceptResult.SUCCESS, engine.accept(log, quest.id(), context));
 
-            for (Objective objective : quest.objectives()) {
-                for (int n = 0; n < objective.required(); n++) {
+            for (int o = 0; o < quest.objectives().size(); o++) {
+                Objective objective = quest.objectives().get(o);
+                // what is already done (the boss of the dungeon run just made) is not done again
+                for (int n = log.progress(quest.id()).get(o); n < objective.required(); n++) {
                     perform(objective);
                 }
             }
@@ -87,12 +89,35 @@ public class MainStoryPlaythroughTest {
         assertTrue(engine.isReadyToTurnIn(restored, "m2_arrival"));
     }
 
-    /** The events a player generates while doing the objective; boss kills also update the server-wide progress. */
+    /**
+     * The events a player generates while doing the objective; boss kills also update the server-wide progress. A
+     * dungeon run ends with its boss's defeat: the server reports the clear and the defeat together.
+     */
     private void perform(Objective objective) {
         if (objective instanceof Objective.DefeatBoss boss) {
             world.recordBossDefeat(boss.bossId(), NOW);
         }
         engine.onEvent(log, eventFor(objective));
+        if (objective instanceof Objective.ClearDungeon clear) {
+            String boss = com.eternalrealm.world.Areas.dungeon(clear.dungeonId()).orElseThrow().bossId();
+            world.recordBossDefeat(boss, NOW);
+            engine.onEvent(log, new GameEvent.BossDefeated(boss));
+        }
+        runs += objective instanceof Objective.ClearDungeon || objective instanceof Objective.DefeatBoss ? 1 : 0;
+    }
+
+    /** Dungeon runs (and the final raid) the story took. */
+    private int runs;
+
+    /**
+     * Owner, 2026-11-15: 「ダンジョンのクエストがトータル二回ダンジョンに挑まないといけないからそれを修正して」. The whole
+     * story takes one run of each of its eight dungeons and the final raid: every boss quest after its dungeon quest
+     * is ready the moment it is accepted.
+     */
+    @Test
+    public void theStoryTakesOneRunOfEachDungeon() {
+        theMainChainIsCompletableInOrderAndEndsWithTheFinalBoss();
+        assertEquals(8 + 1, runs);
     }
 
     private static GameEvent eventFor(Objective objective) {

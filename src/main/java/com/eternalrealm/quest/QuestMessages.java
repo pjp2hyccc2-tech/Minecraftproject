@@ -23,9 +23,14 @@ public final class QuestMessages {
     public static final String ABANDONED = "message.eternalrealm.quest.abandoned";
     /** When a new daily period started while the player is online. No args. */
     public static final String DAILY_RESET = "message.eternalrealm.quest.daily_reset";
+    /**
+     * A boss quest accepted after the dungeon quest whose clear already defeated the boss
+     * ({@link QuestEngine#creditClearedBosses}). Args: quest name, boss name.
+     */
+    public static final String BOSS_ALREADY_DEFEATED = "message.eternalrealm.quest.boss_already_defeated";
 
     public static final List<String> ALL = List.of(PROGRESS, OBJECTIVE_COMPLETE, READY_TO_TURN_IN, COMPLETED, REWARD,
-            NOT_READY, ABANDONED, DAILY_RESET);
+            NOT_READY, ABANDONED, DAILY_RESET, BOSS_ALREADY_DEFEATED);
 
     private QuestMessages() {
     }
