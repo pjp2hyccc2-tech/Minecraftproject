@@ -610,5 +610,9 @@
   "screen.eternalrealm.map.to_capital_tip": {
     "ja": "どこからでも王都の広場へ転移します（約3秒の詠唱・キー: End）",
     "en": "Travel to the capital's plaza from anywhere (a 3 s cast / key: End)"
+  },
+  "message.eternalrealm.estate.stranded": {
+    "ja": "遠い海の上に迷い込んでいたので、王都アストリアへお連れしました。",
+    "en": "You had drifted far out over the sea, so you were brought back to the capital, Astoria."
   }
 }

@@ -164,8 +164,16 @@ public final class GuildHouseGameTests {
                         }
                         BlockState portal = portal(FIRST);
                         home.setBlock(gate, portal, 3);
-                        GuildGates.onPortal(s.member, gate, portal);
-                        check(EstateLevels.isEstateLevel(s.member.level()), "the member walked into the house");
+                        // walking into the light only notes the touch: the gate acts at the end of the server tick,
+                        // never inside the player's move packet (whose end would put the player back at the
+                        // packet's coordinates in the new dimension)
+                        portal.entityInside(home, gate, s.member);
+                        check(s.member.level() == home, "the gate must not act inside the touch");
+                        s.stage.set(10);
+                    }
+                    case 10 -> {
+                        check(EstateLevels.isEstateLevel(s.member.level()),
+                                "the member walked into the house at the end of the tick");
                         check(EstateService.at(s.member).map(k -> k.owner().equals(s.guild)).orElse(false),
                                 "the member stands in the guild's own house");
                         Blueprint.Spot entry = EstateService.spot(key(s.guild), EstateService.ENTRY_SPOT)

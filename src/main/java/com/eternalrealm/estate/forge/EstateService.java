@@ -11,6 +11,7 @@ import com.eternalrealm.item.forge.Bags;
 import com.eternalrealm.persistence.file.AtomicFileStore;
 import com.eternalrealm.persistence.file.FileEstateRepository;
 import com.eternalrealm.server.ServerContext;
+import com.eternalrealm.world.forge.AstoriaDimension;
 import com.eternalrealm.world.forge.AstoriaTravel;
 import com.eternalrealm.world.forge.Capital;
 import com.eternalrealm.world.forge.HubLayout;
@@ -91,6 +92,12 @@ public final class EstateService {
     public static final String EXIT_SPOT = "exit";
     /** Capital spot where players come out when they have no return point. */
     public static final String LOBBY_SPOT = "estate.lobby";
+    /**
+     * Farther than this from the capital (|x| or |z|, blocks) a player in アストリア is stranded: the playable land
+     * ends within two thousand blocks, and only estate coordinates carried into the capital's world (the guild gate
+     * bug fixed 2026-11-15) put anyone this far out, over the southern sea.
+     */
+    public static final int STRANDED_DISTANCE = 100_000;
 
     private static final Map<String, EstateAccess> ACCESS = new ConcurrentHashMap<>();
     private static final List<BiConsumer<ServerLevel, EstateKey>> READY = new CopyOnWriteArrayList<>();
@@ -430,6 +437,13 @@ public final class EstateService {
         if (now % 10 == 3) {
             watchPlayers(current);
         }
+        if (now % 20 == 13) {
+            AstoriaTravel.astoria(current.server).ifPresent(astoria -> {
+                for (ServerPlayer player : List.copyOf(astoria.players())) {
+                    rescueIfStranded(player);
+                }
+            });
+        }
         ServerLevel overworld = current.server.overworld();
         boolean rain = overworld.isRaining();
         boolean thunder = overworld.isThundering();
@@ -485,12 +499,40 @@ public final class EstateService {
         }
     }
 
+    /** Whether a player at {@code (x, z)} of {@code level} is stranded far out in アストリア. */
+    public static boolean stranded(Level level, double x, double z) {
+        return level.dimension() == AstoriaDimension.LEVEL
+                && (Math.abs(x) > STRANDED_DISTANCE || Math.abs(z) > STRANDED_DISTANCE);
+    }
+
+    /**
+     * A player stranded far out in アストリア (see {@link #STRANDED_DISTANCE}) is brought to the capital's lobby.
+     * Spectators and creative operators may roam. @return whether the player was moved
+     */
+    static boolean rescueIfStranded(ServerPlayer player) {
+        if (player.isSpectator() || player.isCreative() && player.hasPermissions(2)
+                || !stranded(player.level(), player.getX(), player.getZ())) {
+            return false;
+        }
+        LOG.warn("{} was stranded at {} {} {} in the capital's world; taking them to the capital",
+                player.getGameProfile().getName(), (int) player.getX(), (int) player.getY(), (int) player.getZ());
+        player.setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);
+        player.fallDistance = 0.0F;
+        toCapital(player);
+        player.displayClientMessage(Component.translatable("message.eternalrealm.estate.stranded")
+                .withStyle(ChatFormatting.YELLOW), false);
+        return true;
+    }
+
     /**
      * Logging in inside the estates: a player who may be where they logged out stays (the build must stand);
      * anyone else is taken out as if through the door.
      */
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player && rescueIfStranded(player)) {
+            return;
+        }
         if (!(event.getEntity() instanceof ServerPlayer player) || !EstateLevels.isEstateLevel(player.level())) {
             return;
         }

@@ -8653,5 +8653,6 @@
   "screen.eternalrealm.skill.tab_class_pick": "二次職を選ぶ",
   "screen.eternalrealm.skill.preview": "見るだけ：二次職「%s」に進化すると習得できます",
   "screen.eternalrealm.skill.class_tag": "二次職「%s」のスキル",
-  "skill_info.eternalrealm.other_class": "二次職「%s」のスキル（いまは使えません）"
+  "skill_info.eternalrealm.other_class": "二次職「%s」のスキル（いまは使えません）",
+  "message.eternalrealm.estate.stranded": "遠い海の上に迷い込んでいたので、王都アストリアへお連れしました。"
 }

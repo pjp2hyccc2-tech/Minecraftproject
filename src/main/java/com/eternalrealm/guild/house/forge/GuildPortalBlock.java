@@ -108,7 +108,7 @@ public class GuildPortalBlock extends Block {
     @SuppressWarnings("deprecation")
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (!level.isClientSide && entity instanceof ServerPlayer player && !player.isSpectator()) {
-            GuildGates.onPortal(player, pos, state);
+            GuildGates.touch(player, pos); // acted on at the end of the tick, never inside the move packet
         }
     }
 

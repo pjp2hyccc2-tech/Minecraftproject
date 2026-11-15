@@ -25,6 +25,8 @@ public final class GuildHouseModule {
         IEventBus forgeBus = MinecraftForge.EVENT_BUS;
         forgeBus.addListener(GuildHouses::onServerStarted);
         forgeBus.addListener(GuildHouses::onServerTick);
+        forgeBus.addListener(GuildGates::onServerTick);
+        forgeBus.addListener(GuildGates::onServerStopped);
         forgeBus.addListener(GuildHouses::onServerStopping);
         forgeBus.addListener(GuildHouseEvents::onRightClickBlock);
         forgeBus.addListener(GuildHouseEvents::onContainerOpen);

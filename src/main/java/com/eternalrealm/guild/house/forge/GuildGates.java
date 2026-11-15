@@ -6,6 +6,7 @@ import com.eternalrealm.guild.house.GuildHouseCatalog;
 import com.eternalrealm.world.forge.AstoriaTravel;
 import com.eternalrealm.world.forge.Capital;
 import com.eternalrealm.world.forge.HubLayout;
+import com.mojang.logging.LogUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -13,15 +14,23 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.server.ServerStoppedEvent;
+import org.slf4j.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,15 +46,77 @@ import java.util.UUID;
  *     showcase the same way; anyone else is told why not and pushed gently back out of the light.</li>
  * </ul>
  * A player in the light is handled once, then left alone for a moment (the light touches them every tick).
+ *
+ * <p>The light only notes the touch ({@link #touch}); the gate acts at the end of the server tick
+ * ({@link #onServerTick}). A player touches the light while the server handles their move packet, and the code
+ * that handles it ends by putting the player back where the packet said, in whatever dimension they are in by then:
+ * a teleport made from inside it to another dimension left players at the house's coordinates in the capital's
+ * world (out over the southern sea) or at the gate's coordinates in the estates' void (where the estates' watcher
+ * sent them out with "you may not enter here").</p>
  */
 public final class GuildGates {
+    private static final Logger LOG = LogUtils.getLogger();
     /** Ticks between two gate actions for one player. */
     static final int COOLDOWN = 40;
     private static final Map<UUID, Long> LAST = new HashMap<>();
+    /** Gate lights touched this tick, by player: the first touch counts. */
+    private static final Map<UUID, Touch> PENDING = new LinkedHashMap<>();
+
+    /** A touch of a gate's light, acted on at the end of the tick (the player itself: fake players are in no list). */
+    record Touch(ServerPlayer player, ResourceKey<Level> level, BlockPos pos) {
+    }
 
     private GuildGates() {
     }
 
+    /** Notes that {@code player} stands in the light at {@code pos}; the gate acts at the end of the tick. */
+    public static void touch(ServerPlayer player, BlockPos pos) {
+        PENDING.putIfAbsent(player.getUUID(), new Touch(player, player.level().dimension(), pos.immutable()));
+    }
+
+    /** Whether a touch of {@code player} waits for the end of the tick (for tests). */
+    static boolean pending(UUID player) {
+        return PENDING.containsKey(player);
+    }
+
+    /**
+     * End of the server tick: every gate touched during the tick acts, outside any packet handling. A player who
+     * has meanwhile left the gate's level, or a light that is gone, is skipped.
+     */
+    public static void onServerTick(TickEvent.ServerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END || PENDING.isEmpty()) {
+            return;
+        }
+        List<Touch> touches = new ArrayList<>(PENDING.values());
+        PENDING.clear();
+        for (Touch touch : touches) {
+            ServerPlayer player = touch.player();
+            if (player.isRemoved() || player.isSpectator() || player.getServer() != event.getServer()
+                    || player.level().dimension() != touch.level()) {
+                continue;
+            }
+            BlockState state = player.level().getBlockState(touch.pos());
+            if (!(state.getBlock() instanceof GuildPortalBlock)) {
+                continue;
+            }
+            try {
+                onPortal(player, touch.pos(), state);
+            } catch (RuntimeException e) {
+                LOG.error("Guild gate at {} failed for {}", touch.pos(), player.getGameProfile().getName(), e);
+            }
+        }
+    }
+
+    /** Server stopped: no touch outlives its server. */
+    public static void onServerStopped(ServerStoppedEvent event) {
+        PENDING.clear();
+        LAST.clear();
+    }
+
+    /**
+     * Acts on a player standing in the light at {@code pos} (from {@link #onServerTick}; tests may call it
+     * directly).
+     */
     public static void onPortal(ServerPlayer player, BlockPos pos, BlockState state) {
         long now = player.serverLevel().getGameTime();
         Long last = LAST.get(player.getUUID());
@@ -208,9 +279,10 @@ public final class GuildGates {
         return alongX ? new Vec3(0, 0, sign) : new Vec3(sign, 0, 0);
     }
 
-    /** Forget a player's cooldown (logout). */
+    /** Forget a player's cooldown and pending touch (logout). */
     public static void forget(UUID player) {
         LAST.remove(player);
+        PENDING.remove(player);
     }
 
     /** Whether {@code design} is a known design (for commands and tests). */
