@@ -172,9 +172,9 @@ public class ERBoss extends Monster {
     /** Degrees per tick the body turns: heavy bodies turn slowly. */
     public float turnRate() {
         return switch (this.kind.rig()) {
-            case KING, QUEEN -> 14.0F;
-            case DRAGON -> 10.0F;
-            case TREANT, COLOSSUS -> 8.0F;
+            case KING, QUEEN, BANDIT, EXECUTIONER, ICEQUEEN, GATEKEEPER, ENDKING -> 14.0F;
+            case DRAGON, FIREDRAGON -> 10.0F;
+            case TREANT, COLOSSUS, TREEGUARD, SANDTITAN, SKYGOD -> 8.0F;
         };
     }
 

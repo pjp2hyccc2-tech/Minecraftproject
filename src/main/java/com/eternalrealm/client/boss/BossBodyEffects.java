@@ -124,11 +124,12 @@ public final class BossBodyEffects {
 
     private static SoundEvent thud(ERBoss boss) {
         return switch (boss.kind().rig()) {
-            case KING -> SoundEvents.IRON_GOLEM_STEP;
+            case KING, EXECUTIONER, GATEKEEPER, ENDKING, SKYGOD -> SoundEvents.IRON_GOLEM_STEP;
+            case ICEQUEEN -> SoundEvents.AMETHYST_BLOCK_STEP;
             case QUEEN -> SoundEvents.ARMOR_EQUIP_IRON;
-            case TREANT -> SoundEvents.WOOD_STEP;
-            case COLOSSUS -> SoundEvents.RAVAGER_STEP;
-            case DRAGON -> SoundEvents.RAVAGER_STEP;
+            case TREANT, TREEGUARD -> SoundEvents.WOOD_STEP;
+            case COLOSSUS, DRAGON, SANDTITAN, FIREDRAGON -> SoundEvents.RAVAGER_STEP;
+            case BANDIT -> SoundEvents.ARMOR_EQUIP_LEATHER;
         };
     }
 

@@ -36,6 +36,11 @@ public class ClientModelSmokeTest {
             {"HUMANOID", "HumanoidEnemy", "enemy"}, {"BEAST", "BeastEnemy", "enemy"}, {"GOLEM", "GolemEnemy", "enemy"},
             {"FLYER", "FlyerEnemy", "enemy"}, {"KING", "KingBoss", "boss"}, {"TREANT", "TreantBoss", "boss"},
             {"COLOSSUS", "ColossusBoss", "boss"}, {"QUEEN", "QueenBoss", "boss"}, {"DRAGON", "DragonBoss", "boss"},
+            {"BANDIT", "BanditBoss", "boss"}, {"TREEGUARD", "TreeguardBoss", "boss"},
+            {"SANDTITAN", "SandtitanBoss", "boss"}, {"EXECUTIONER", "ExecutionerBoss", "boss"},
+            {"ICEQUEEN", "IcequeenBoss", "boss"}, {"FIREDRAGON", "FiredragonBoss", "boss"},
+            {"SKYGOD", "SkygodBoss", "boss"}, {"GATEKEEPER", "GatekeeperBoss", "boss"},
+            {"ENDKING", "EndkingBoss", "boss"},
             {"NPC", "Npc", "npc"}, {"HERO", "Hero", "hero"}};
 
     private static Class<?> load(String name) {

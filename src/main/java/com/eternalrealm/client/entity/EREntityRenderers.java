@@ -1,15 +1,24 @@
 package com.eternalrealm.client.entity;
 
+import com.eternalrealm.client.entity.model.gen.BanditBossGeometry;
 import com.eternalrealm.client.entity.model.gen.BeastEnemyGeometry;
 import com.eternalrealm.client.entity.model.gen.ColossusBossGeometry;
 import com.eternalrealm.client.entity.model.gen.DragonBossGeometry;
+import com.eternalrealm.client.entity.model.gen.EndkingBossGeometry;
+import com.eternalrealm.client.entity.model.gen.ExecutionerBossGeometry;
+import com.eternalrealm.client.entity.model.gen.FiredragonBossGeometry;
 import com.eternalrealm.client.entity.model.gen.FlyerEnemyGeometry;
+import com.eternalrealm.client.entity.model.gen.GatekeeperBossGeometry;
 import com.eternalrealm.client.entity.model.gen.GolemEnemyGeometry;
 import com.eternalrealm.client.entity.model.gen.HumanoidEnemyGeometry;
+import com.eternalrealm.client.entity.model.gen.IcequeenBossGeometry;
 import com.eternalrealm.client.entity.model.gen.KingBossGeometry;
 import com.eternalrealm.client.entity.model.gen.NpcGeometry;
 import com.eternalrealm.client.entity.model.gen.QueenBossGeometry;
+import com.eternalrealm.client.entity.model.gen.SandtitanBossGeometry;
+import com.eternalrealm.client.entity.model.gen.SkygodBossGeometry;
 import com.eternalrealm.client.entity.model.gen.TreantBossGeometry;
+import com.eternalrealm.client.entity.model.gen.TreeguardBossGeometry;
 import com.eternalrealm.core.ModInfo;
 import com.eternalrealm.entity.BeastEnemy;
 import com.eternalrealm.entity.BossKind;
@@ -47,6 +56,15 @@ public final class EREntityRenderers {
         boss(event, BossRig.COLOSSUS, ColossusBossGeometry::create);
         boss(event, BossRig.QUEEN, QueenBossGeometry::create);
         boss(event, BossRig.DRAGON, DragonBossGeometry::create);
+        boss(event, BossRig.BANDIT, BanditBossGeometry::create);
+        boss(event, BossRig.TREEGUARD, TreeguardBossGeometry::create);
+        boss(event, BossRig.SANDTITAN, SandtitanBossGeometry::create);
+        boss(event, BossRig.EXECUTIONER, ExecutionerBossGeometry::create);
+        boss(event, BossRig.ICEQUEEN, IcequeenBossGeometry::create);
+        boss(event, BossRig.FIREDRAGON, FiredragonBossGeometry::create);
+        boss(event, BossRig.SKYGOD, SkygodBossGeometry::create);
+        boss(event, BossRig.GATEKEEPER, GatekeeperBossGeometry::create);
+        boss(event, BossRig.ENDKING, EndkingBossGeometry::create);
         event.registerLayerDefinition(ERModelLayers.npc(), () -> NpcGeometry.create(0.0F));
         event.registerLayerDefinition(ERModelLayers.hero(),
                 () -> com.eternalrealm.client.entity.model.gen.HeroGeometry.create(0.0F));

@@ -412,3 +412,972 @@ dragon       hind_right_leg_foot 0 scale:foot        126   55    6  3  8
 dragon       hind_left_leg    0 scale:thigh        84    0    6 12  9 mirror share=hu
 dragon       hind_left_leg_shin 0 scale:shin2       106   53    5  9  5 mirror share=hs
 dragon       hind_left_leg_foot 0 scale:foot        126   55    6  3  8 mirror share=hf
+== bandit 128x128 x2
+bandit       hips             0 leather:coat3      68   43    9  3  5 
+bandit       hips             1 leather:belt       36   43   10  2  6 
+bandit       hips             2 gold:buckle         6   63    3  2  1 
+bandit       pouch_r          0 leather:pouch     116   48    2  3  3 
+bandit       pouch_l          0 leather:pouch     116   48    2  3  3 mirror share=pouch
+bandit       coat_r           0 leather:flap      116   33    4  7  1 
+bandit       coat_l           0 leather:flap      116   33    4  7  1 mirror share=flap
+bandit       coat_back        0 leather:flap_b     94   34   10  8  1 
+bandit       torso            0 leather:coat2      86   23    8  6  5 
+bandit       torso            1 leather:belt2      14   51    9  1  6 
+bandit       chest            0 leather:coat       94    0    9  7  5 
+bandit       chest            1 fur:mantle         50    0   14  4  8 
+bandit       chest            2 fur:ftuft          92   51    4  3  3 
+bandit       chest            3 fur:ftuft          92   51    4  3  3 mirror share=ft
+bandit       chest            4 fur:collar         48   24   10  3  7 
+bandit       chest            5 fur:lapel         116   41    2  6  1 
+bandit       chest            6 fur:lapel         116   41    2  6  1 mirror share=lapel
+bandit       head             0 skin:face           0    0    8  8  8 
+bandit       head             1 hair:hair_top      50   12    9  3  9 
+bandit       head             2 hair:bangs        106   59    9  3  1 
+bandit       head             3 hair:side          32    0    1  8  8 
+bandit       head             4 hair:side          32    0    1  8  8 mirror share=side
+bandit       head             5 hair:back           0   27    9  8  2 
+bandit       head             6 hair:tuft          92   57    2  2  3 
+bandit       head             7 hair:tuft          92   57    2  2  3 mirror share=tf1
+bandit       head             8 hair:tuft          48   58    2  2  3 
+bandit       head             9 hair:tuft          48   58    2  2  3 mirror share=tf2
+bandit       head             10 hair:tuft          74   62    2  1  3 
+bandit       head             11 hair:tuft          74   62    2  1  3 share=tf3
+bandit       head             12 hair:lock          92   62    2  3  1 
+bandit       crown            0 gold:crown         86   12    9  2  9 
+bandit       crown            1 gold:spike_c      122   54    2  4  1 
+bandit       crown            2 gold:spike         98   62    2  3  1 
+bandit       crown            3 gold:spike         98   62    2  3  1 share=sp
+bandit       crown            4 gold:spike_s       68   58    1  3  2 
+bandit       crown            5 gold:spike_s       68   58    1  3  2 share=ss
+bandit       crown            6 gold:spike         98   62    2  3  1 share=sp
+bandit       crown            7 gold:spike         98   62    2  3  1 share=sp
+bandit       crown            8 gold:spike_b        0   63    2  3  1 
+bandit       crown            9 gem:amethyst       84   62    3  3  1 
+bandit       hair_tail        0 hair:tail          74   58    7  3  1 
+bandit       pendant          0 gold:pendant       14   63    2  2  1 
+bandit       pendant          1 gem:ruby           32   63    1  1  1 
+bandit       right_arm        0 leather:sleeve     32   16    4  7  4 
+bandit       right_arm        1 fur:pad            96   43    5  3  5 
+bandit       right_forearm    0 leather:sleeve2   112   23    4  6  4 
+bandit       right_forearm    1 leather:bracer     44   51    4  3  4 
+bandit       right_forearm    2 gold:wrist        106   54    4  1  4 
+bandit       right_hand       0 skin:hand          60   51    4  3  4 
+bandit       dagger_r         0 gold:pommel        20   63    2  2  1 
+bandit       dagger_r         1 leather:grip       58   58    1  1  4 
+bandit       dagger_r         2 gold:guard        102   57    1  4  1 
+bandit       dagger_r         3 metal:blade         0   46    1  2  6 
+bandit       dagger_r         4 metal:tip          26   63    1  1  2 
+bandit       left_arm         0 leather:sleeve     32   16    4  7  4 mirror share=uarm
+bandit       left_arm         1 fur:pad            96   43    5  3  5 mirror share=pad
+bandit       left_forearm     0 leather:sleeve2   112   23    4  6  4 mirror share=farm
+bandit       left_forearm     1 leather:bracer     44   51    4  3  4 mirror share=bracer
+bandit       left_forearm     2 gold:wrist        106   54    4  1  4 mirror share=wrist
+bandit       left_hand        0 skin:hand          60   51    4  3  4 mirror share=hand
+bandit       dagger_l         0 gold:pommel        20   63    2  2  1 mirror share=pommel
+bandit       dagger_l         1 leather:grip       58   58    1  1  4 mirror share=grip
+bandit       dagger_l         2 gold:guard        102   57    1  4  1 mirror share=guard
+bandit       dagger_l         3 metal:blade         0   46    1  2  6 mirror share=blade
+bandit       dagger_l         4 metal:tip          26   63    1  1  2 mirror share=tip
+bandit       cape             0 cloth:cape         38   34   13  8  1 
+bandit       cape_mid         0 cloth:cape2        66   34   13  8  1 
+bandit       cape_low         0 cloth:cape3         0   16   15 10  1 
+bandit       right_leg        0 cloth:pants        22   27    4  6  4 
+bandit       right_shin       0 cloth:pants2       20   37    4  5  4 
+bandit       right_shin       1 gold:band           0   58    4  1  4 
+bandit       right_shin       2 leather:shaft      76   51    4  3  4 
+bandit       right_shin       3 gold:cuff          16   58    4  1  4 
+bandit       right_foot       0 leather:boot2       0   37    4  3  6 
+bandit       right_foot       1 gold:cuff2         32   58    4  1  4 
+bandit       left_leg         0 cloth:pants        22   27    4  6  4 mirror share=thigh
+bandit       left_shin        0 cloth:pants2       20   37    4  5  4 mirror share=shin
+bandit       left_shin        1 gold:band           0   58    4  1  4 mirror share=kband
+bandit       left_shin        2 leather:shaft      76   51    4  3  4 mirror share=shaft
+bandit       left_shin        3 gold:cuff          16   58    4  1  4 mirror share=cuff
+bandit       left_foot        0 leather:boot2       0   37    4  3  6 mirror share=boot
+bandit       left_foot        1 gold:cuff2         32   58    4  1  4 mirror share=ankle
+== treeguard 256x128 x2
+treeguard    hips             0 bark:pelvis         0   27   14  6 10 
+treeguard    torso            0 bark:waist        184    0   13  8 10 
+treeguard    torso            1 leaf:waist_moss    48   42   14  3 11 
+treeguard    chest            0 bark:chest          0    0   20 14 13 
+treeguard    chest            1 leaf:chest_top    112   19   21  2 14 
+treeguard    chest            2 bark:back_block    98   50   12  6  3 
+treeguard    rune_chest       0 rune:rune         158   50    9  9  0 
+treeguard    head             0 bark:head         112    0   10  9 10 
+treeguard    head             1 bark:brow         106   65   11  2  1 
+treeguard    head             2 bark:nose         100   65    2  3  1 
+treeguard    jaw              0 bark:jaw          130   65    8  2  1 
+treeguard    crown_moss       0 leaf:crown         98   35   12  3 12 
+treeguard    crown_moss       1 leaf:crown2       128   50    8  2  7 
+treeguard    crown_moss       2 flower:bloom       18   63    3  2  3 
+treeguard    crown_moss       3 flower:bloom2     148   65    2  1  2 
+treeguard    crown_moss       4 flower:bloom       18   63    3  2  3 share=cf1
+treeguard    hvine_r          0 leaf:vine         158   59    1  5  1 
+treeguard    hvine_r2         0 leaf:vine2        162   59    1  5  1 
+treeguard    hvine_l          0 leaf:vine         166   59    1  5  1 
+treeguard    hvine_l2         0 leaf:vine2        170   59    1  5  1 
+treeguard    antler_r         0 bark:antler       206   35    3  8  3 
+treeguard    antler_r2        0 bark:branch        36   43    3  7  3 
+treeguard    antler_r2        1 flower:bloom2       0   64    2  2  2 
+treeguard    antler_r5        0 bark:twig          44   56    2  5  2 
+treeguard    antler_r5        1 flower:bloom2     156   65    2  1  2 
+treeguard    antler_r4        0 bark:twig           0   55    2  2  7 
+treeguard    antler_r4        1 flower:bloom       86   63    3  2  2 
+treeguard    avine_r          0 leaf:vine         188   59    1  5  1 
+treeguard    avine_r2         0 leaf:vine2        192   59    1  5  1 
+treeguard    antler_r3        0 bark:twig         248   49    2  7  2 
+treeguard    antler_r3        1 flower:bloom       38   63    3  2  3 
+treeguard    antler_l         0 bark:antler       206   35    3  8  3 mirror share=at1
+treeguard    antler_l2        0 bark:branch        36   43    3  7  3 mirror share=at2
+treeguard    antler_l2        1 flower:bloom2       0   64    2  2  2 mirror share=af2
+treeguard    antler_l5        0 bark:twig          44   56    2  5  2 mirror share=at5
+treeguard    antler_l5        1 flower:bloom2     156   65    2  1  2 mirror share=af4
+treeguard    antler_l4        0 bark:twig           0   55    2  2  7 mirror share=at4
+treeguard    antler_l4        1 flower:bloom       86   63    3  2  2 mirror share=af3
+treeguard    avine_l          0 leaf:vine         196   59    1  5  1 
+treeguard    avine_l2         0 leaf:vine2        200   59    1  5  1 
+treeguard    antler_l3        0 bark:twig         248   49    2  7  2 mirror share=at3
+treeguard    antler_l3        1 flower:bloom       38   63    3  2  3 mirror share=af1
+treeguard    right_arm        0 bark:shoulder      66    0   11  9 12 
+treeguard    right_arm        1 leaf:shoulder_top   48   27   12  2 13 
+treeguard    right_arm        2 bark:uarm         220   18    7  9  7 
+treeguard    right_arm        3 flower:bloom       62   63    2  3  2 
+treeguard    right_arm        4 flower:bloom2       8   64    2  2  2 
+treeguard    svine_r          0 leaf:vine         204   59    1  5  1 
+treeguard    svine_r2         0 leaf:vine2        208   59    1  5  1 
+treeguard    svine_r3         0 leaf:vine2        212   59    1  5  1 
+treeguard    svine2_r         0 leaf:vine         216   59    1  5  1 
+treeguard    svine2_r2        0 leaf:vine2        220   59    1  5  1 
+treeguard    thorns_r         0 crystal:thorn      52   56    2  5  2 
+treeguard    thorns_r         1 crystal:thorn      70   63    2  3  2 
+treeguard    right_forearm    0 bark:farm         152    0    8 11  8 
+treeguard    right_forearm    1 leaf:band         190   49    8  2  8 
+treeguard    right_hand       0 bark:palm         222   49    7  4  6 
+treeguard    right_f1         0 bark:finger       176   50    2  6  2 
+treeguard    right_f1b        0 bark:fingertip     60   56    2  5  2 
+treeguard    right_f2         0 bark:finger        36   53    2  6  2 
+treeguard    right_f2b        0 bark:fingertip     68   56    2  5  2 
+treeguard    right_f3         0 bark:finger        18   55    2  6  2 
+treeguard    right_f3b        0 bark:fingertip     76   56    2  5  2 
+treeguard    right_f4         0 bark:finger        26   55    2  6  2 
+treeguard    right_f4b        0 bark:fingertip     84   56    2  5  2 
+treeguard    vine_r           0 leaf:vine         184   50    1  6  1 
+treeguard    vine_r2          0 leaf:vine2         92   56    1  6  1 
+treeguard    left_arm         0 bark:shoulder      66    0   11  9 12 mirror share=shoulder
+treeguard    left_arm         1 leaf:shoulder_top   48   27   12  2 13 mirror share=stop
+treeguard    left_arm         2 bark:uarm         220   18    7  9  7 mirror share=uarm
+treeguard    left_arm         3 flower:bloom       62   63    2  3  2 mirror share=fl1
+treeguard    left_arm         4 flower:bloom2       8   64    2  2  2 mirror share=fl2
+treeguard    svine_l          0 leaf:vine         224   59    1  5  1 
+treeguard    svine_l2         0 leaf:vine2        228   59    1  5  1 
+treeguard    svine_l3         0 leaf:vine2        232   59    1  5  1 
+treeguard    svine2_l         0 leaf:vine         236   59    1  5  1 
+treeguard    svine2_l2        0 leaf:vine2        240   59    1  5  1 
+treeguard    thorns_l         0 crystal:thorn      52   56    2  5  2 mirror share=th1
+treeguard    thorns_l         1 crystal:thorn      70   63    2  3  2 mirror share=th2
+treeguard    left_forearm     0 bark:farm         152    0    8 11  8 mirror share=farm
+treeguard    left_forearm     1 leaf:band         190   49    8  2  8 mirror share=band
+treeguard    left_hand        0 bark:palm         222   49    7  4  6 mirror share=palm
+treeguard    left_f1          0 bark:finger       176   50    2  6  2 mirror share=fg0
+treeguard    left_f1b         0 bark:fingertip     60   56    2  5  2 mirror share=ft0
+treeguard    left_f2          0 bark:finger        36   53    2  6  2 mirror share=fg1
+treeguard    left_f2b         0 bark:fingertip     68   56    2  5  2 mirror share=ft1
+treeguard    left_f3          0 bark:finger        18   55    2  6  2 mirror share=fg2
+treeguard    left_f3b         0 bark:fingertip     76   56    2  5  2 mirror share=ft2
+treeguard    left_f4          0 bark:finger        26   55    2  6  2 mirror share=fg3
+treeguard    left_f4b         0 bark:fingertip     84   56    2  5  2 mirror share=ft3
+treeguard    vine_l           0 leaf:vine         184   57    1  6  1 
+treeguard    vine_l2          0 leaf:vine2        248   58    1  6  1 
+treeguard    crystal          0 crystal:crystal   190   35    4  8  4 
+treeguard    crystal_b        0 crystal:crystal2  176   58    2  5  2 
+treeguard    crystal_c        0 crystal:crystal2  142   59    2  4  2 
+treeguard    thorns           0 crystal:thorn     150   59    2  4  2 
+treeguard    thorns           1 crystal:thorn     150   59    2  4  2 share=th
+treeguard    thorns           2 crystal:thorn     150   59    2  4  2 share=th
+treeguard    cvine_1          0 leaf:vine         244   59    1  5  1 
+treeguard    cvine_12         0 leaf:vine2         34   61    1  5  1 
+treeguard    cvine_2          0 leaf:vine          30   63    1  4  1 
+treeguard    cvine_22         0 leaf:vine2         78   63    1  4  1 
+treeguard    cvine_23         0 leaf:vine2         82   63    1  4  1 
+treeguard    cvine_3          0 leaf:vine         252   58    1  6  1 
+treeguard    cvine_32         0 leaf:vine2         96   59    1  6  1 
+treeguard    right_leg        0 bark:thigh        184   18    9  8  9 
+treeguard    right_shin       0 bark:shin         220   34    8  7  8 
+treeguard    right_shin       1 leaf:knee           0   43    9  3  9 
+treeguard    right_foot       0 bark:foot         146   35   10  3 12 
+treeguard    right_foot       1 bark:toe          100   59    3  2  4 
+treeguard    right_foot       2 bark:toe          114   59    3  2  4 
+treeguard    right_foot       3 bark:toe          128   59    3  2  4 
+treeguard    right_foot       4 bark:toe           50   63    3  2  3 
+treeguard    left_leg         0 bark:thigh        184   18    9  8  9 mirror share=thigh
+treeguard    left_shin        0 bark:shin         220   34    8  7  8 mirror share=shin
+treeguard    left_shin        1 leaf:knee           0   43    9  3  9 mirror share=knee
+treeguard    left_foot        0 bark:foot         146   35   10  3 12 mirror share=foot
+treeguard    left_foot        1 bark:toe          100   59    3  2  4 mirror share=toe1
+treeguard    left_foot        2 bark:toe          114   59    3  2  4 mirror share=toe2
+treeguard    left_foot        3 bark:toe          128   59    3  2  4 mirror share=toe3
+treeguard    left_foot        4 bark:toe           50   63    3  2  3 mirror share=toe4
+== sandtitan 256x128 x2
+sandtitan    hips             0 sandstone:pelvis   52   48   18  6 12 
+sandtitan    hips             1 gold:belt         152   78   19  3 13 
+sandtitan    hips             2 gold:buckle        78  102    5  4  1 
+sandtitan    hips             3 gem:turq_belt     158  103    2  2  1 
+sandtitan    loin_f           0 cloth:loin         48   93   10  8  1 
+sandtitan    loin_f2          0 cloth:loin2       134   94   10  8  1 
+sandtitan    loin_b           0 cloth:loin         48   83   10  9  1 
+sandtitan    loin_b2          0 cloth:loin2       156   94   10  8  1 
+sandtitan    torso            0 sandstone:waist    76   29   16  8 11 
+sandtitan    chest            0 sandstone:chest    76    0   22 15 14 
+sandtitan    chest            1 gold:pectoral       0  102   16  6  1 
+sandtitan    chest            2 gem:turq           90  102    3  3  1 
+sandtitan    head             0 sandstone:head    148   25   10 10 10 
+sandtitan    head             1 gold:diadem         0   68   11  2 11 
+sandtitan    head             2 gem:turq_head     178  102    2  3  1 
+sandtitan    head             3 gold:crest        124   80    2  6  6 
+sandtitan    head             4 sandstone:cap     102   92    8  1  8 
+sandtitan    head             5 gold:ear          242  100    2  4  3 
+sandtitan    head             6 gold:ear          242  100    2  4  3 mirror share=ear
+sandtitan    jaw              0 sandstone:jaw     184  102    7  2  1 
+sandtitan    lock_r1          0 stone:lock         70   83    2  8  2 
+sandtitan    lock_r1b         0 stone:lock2       236   90    2  8  2 
+sandtitan    lock_r2          0 stone:lock        126  101    2  4  2 
+sandtitan    lock_r2b         0 stone:lock2        70  101    2  5  2 
+sandtitan    lock_r3          0 stone:lock        102  101    2  5  2 
+sandtitan    lock_r3b         0 stone:lock2        70   93    2  6  2 
+sandtitan    lock_l1          0 stone:lock        244   90    2  8  2 
+sandtitan    lock_l1b         0 stone:lock2         0   92    2  8  2 
+sandtitan    lock_l2          0 stone:lock         62  102    2  4  2 
+sandtitan    lock_l2b         0 stone:lock2       110  101    2  5  2 
+sandtitan    lock_l3          0 stone:lock        118  101    2  5  2 
+sandtitan    lock_l3b         0 stone:lock2       218  100    2  6  2 
+sandtitan    lock_b1          0 stone:lock          8   92    2  8  2 
+sandtitan    lock_b1b         0 stone:lock2        16   92    2  8  2 
+sandtitan    lock_b2          0 stone:lock         40   81    2  9  2 
+sandtitan    lock_b2b         0 stone:lock2       140   80    2 10  2 
+sandtitan    lock_b3          0 stone:lock         24   92    2  8  2 
+sandtitan    lock_b3b         0 stone:lock2        32   92    2  8  2 
+sandtitan    right_arm        0 sandstone:shoulder  148    0   12 11 14 
+sandtitan    right_arm        1 gold:paul_rim     174   61   13  2 15 
+sandtitan    right_arm        2 sandstone:uarm    200   22    9 12  9 
+sandtitan    right_forearm    0 sandstone:farm    200    0   10 12 10 
+sandtitan    right_forearm    1 gold:bracer       216   78   10  2 10 
+sandtitan    right_forearm    2 gold:bracer2        0   81   10  1 10 
+sandtitan    right_hand       0 sandstone:fist    112   63   10  7 10 
+sandtitan    right_hand       1 sandstone:knuckles  134  106   10  2  1 
+sandtitan    maul             0 wood:haft           0    0    3 39  3 
+sandtitan    maul             1 gold:ring          34  102    4  2  4 
+sandtitan    maul             2 gold:ring          34  102    4  2  4 share=ring
+sandtitan    maul             3 gold:ring          34  102    4  2  4 share=ring
+sandtitan    maul             4 gold:pommel       226  100    4  3  4 
+sandtitan    maul             5 sandstone:maul     12    0   16 16 16 
+sandtitan    maul             6 gold:mband        188   43   16  2 16 
+sandtitan    maul             7 gold:mband        188   43   16  2 16 share=mband
+sandtitan    maul             8 gold:mcap         178   94    6  2  6 
+sandtitan    strip_r1         0 cloth:strip        40   92    3  9  1 
+sandtitan    strip_r1b        0 cloth:strip2       78   92    3  9  1 
+sandtitan    strip_r2         0 cloth:strip        86   92    3  9  1 
+sandtitan    strip_r2b        0 cloth:strip2       94   92    3  9  1 
+sandtitan    left_arm         0 sandstone:shoulder  148    0   12 11 14 mirror share=shoulder
+sandtitan    left_arm         1 gold:paul_rim     174   61   13  2 15 mirror share=rim
+sandtitan    left_arm         2 sandstone:uarm    200   22    9 12  9 mirror share=uarm
+sandtitan    left_forearm     0 sandstone:farm    200    0   10 12 10 mirror share=farm
+sandtitan    left_forearm     1 gold:bracer       216   78   10  2 10 mirror share=bracer
+sandtitan    left_forearm     2 gold:bracer2        0   81   10  1 10 mirror share=bracer2
+sandtitan    left_hand        0 sandstone:fist    112   63   10  7 10 mirror share=fist
+sandtitan    left_hand        1 sandstone:knuckles  134  106   10  2  1 mirror share=knk
+sandtitan    strip_l1         0 cloth:strip        40   92    3  9  1 mirror share=st0
+sandtitan    strip_l1b        0 cloth:strip2       78   92    3  9  1 mirror share=sb0
+sandtitan    strip_l2         0 cloth:strip        86   92    3  9  1 mirror share=st1
+sandtitan    strip_l2b        0 cloth:strip2       94   92    3  9  1 mirror share=sb1
+sandtitan    rubble           0 sandstone:rubble  216   90    5  5  5 
+sandtitan    rubble           1 sandstone:rubble  216   90    5  5  5 share=rb
+sandtitan    rubble           2 sandstone:rubble2  202  100    4  4  4 
+sandtitan    rubble           3 sandstone:rubble2  202  100    4  4  4 share=rb2
+sandtitan    rubble           4 sandstone:rubble3   50  102    3  3  3 
+sandtitan    rubble           5 sandstone:rubble3   50  102    3  3  3 share=rb3
+sandtitan    right_leg        0 sandstone:thigh    12   32   10  9 10 
+sandtitan    right_shin       0 sandstone:shin     48   66    9  8  9 
+sandtitan    right_shin       1 sandstone:knee    130   45   11  7 11 
+sandtitan    right_shin       2 gold:anklet        84   80   10  2 10 
+sandtitan    right_foot       0 sandstone:foot      0   51   11  4 13 
+sandtitan    right_foot       1 sandstone:toes    134  103   11  2  1 
+sandtitan    left_leg         0 sandstone:thigh    12   32   10  9 10 mirror share=thigh
+sandtitan    left_shin        0 sandstone:shin     48   66    9  8  9 mirror share=shin
+sandtitan    left_shin        1 sandstone:knee    130   45   11  7 11 mirror share=knee
+sandtitan    left_shin        2 gold:anklet        84   80   10  2 10 mirror share=anklet
+sandtitan    left_foot        0 sandstone:foot      0   51   11  4 13 mirror share=foot
+sandtitan    left_foot        1 sandstone:toes    134  103   11  2  1 mirror share=toes
+== executioner 128x128 x2
+executioner  hips             0 metal:faulds       90   59   12  4  7 
+executioner  hips             1 leather:belt       62   70   13  2  8 
+executioner  hips             2 metal:buckle       36   99    3  3  1 
+executioner  hips             3 chain:belt_chain   60  104   13  1  1 
+executioner  hips             4 metal:tasset       18   99    4  4  1 
+executioner  hips             5 metal:tasset       18   99    4  4  1 share=tas
+executioner  hips             6 metal:tasset_side   34   90    1  4  5 
+executioner  hips             7 metal:tasset_side   34   90    1  4  5 share=tass
+executioner  tabard           0 cloth:tabard       20   90    6  8  1 
+executioner  tabard2          0 cloth:tabard2      52   97    6  6  1 
+executioner  waist_chain      0 chain:link         46   98    1  4  1 
+executioner  waist_chain2     0 chain:link         46   98    1  4  1 share=wch
+executioner  waist_chain3     0 chain:link         46   98    1  4  1 share=wch
+executioner  torso            0 metal:waist        46   21   11  6  7 
+executioner  chest            0 metal:cuirass      36    0   14 12  9 
+executioner  chest            1 metal:gorget        0   81    9  2  7 
+executioner  chest            2 ice:chest_snow      0   59   15  1 10 
+executioner  chest_chain      0 chain:clink2        0  104    2  2  1 
+executioner  chest_chain      1 chain:clink        60  106    2  1  1 
+executioner  chest_chain      2 chain:clink2        6  104    2  2  1 
+executioner  chest_chain      3 chain:clink        66  106    2  1  1 
+executioner  chest_chain      4 chain:clink2       12  104    2  2  1 
+executioner  chest_chain      5 chain:clink        72  106    2  1  1 
+executioner  chest_chain      6 chain:clink2       18  104    2  2  1 
+executioner  chest_chain      7 chain:clink        78  106    2  1  1 
+executioner  chest_chain      8 chain:clink2       24  104    2  2  1 
+executioner  chest_chain      9 chain:clink        84  106    2  1  1 
+executioner  chest_chain      10 chain:clink2       30  104    2  2  1 
+executioner  head             0 metal:helm         82    0    9 10  9 
+executioner  head             1 metal:visor       102   90    8  6  1 
+executioner  head             2 metal:crest        30   70    1  2  9 
+executioner  head             3 ice:helm_snow      50   59   10  1 10 
+executioner  head             4 ice:helm_icicle    48  103    1  2  1 
+executioner  head             5 ice:helm_icicle    48  106    1  1  1 
+executioner  head             6 ice:helm_icicle   112  103    1  2  1 
+executioner  head             7 ice:helm_icicle   112  106    1  1  1 
+executioner  head             8 ice:helm_icicle    36  103    1  3  1 
+executioner  horn_r           0 bone:horn          92   97    5  3  3 
+executioner  horn_r2          0 bone:horn_mid     120   90    2  5  2 
+executioner  horn_r3          0 bone:horn_tip      28   99    1  4  1 
+executioner  horn_r3          1 ice:horn_ice      116  106    1  1  1 
+executioner  ice_horn_r       0 ice:ice_horn       54   81    2  7  2 
+executioner  horn_l           0 bone:horn          92   97    5  3  3 mirror share=h1
+executioner  horn_l2          0 bone:horn_mid     120   90    2  5  2 mirror share=h2
+executioner  horn_l3          0 bone:horn_tip      28   99    1  4  1 mirror share=h3
+executioner  horn_l3          1 ice:horn_ice      116  106    1  1  1 mirror share=h3i
+executioner  ice_horn_l       0 ice:ice_horn       54   81    2  7  2 mirror share=ih
+executioner  icicle_crown     0 ice:crown_ice     108   97    1  5  1 
+executioner  icicle_crown     1 ice:crown_ice2     46   90    2  7  1 
+executioner  icicle_crown     2 ice:crown_ice     108   97    1  5  1 share=ci1
+executioner  icicle_crown     3 ice:crown_ice3     32   99    1  4  1 
+executioner  icicle_crown     4 ice:crown_ice3     32   99    1  4  1 share=ci3
+executioner  right_arm        0 metal:pauldron     82   19    9  6 10 
+executioner  right_arm        1 metal:pauldron2    88   35    8  3  9 
+executioner  right_arm        2 ice:snow           46   35   10  1 11 
+executioner  right_arm        3 ice:icicle        120  106    1  1  1 
+executioner  right_arm        4 ice:icicle         52  104    1  2  1 
+executioner  right_arm        5 ice:icicle        124  106    1  1  1 
+executioner  right_arm        6 ice:icicle         56  104    1  2  1 
+executioner  right_arm        7 metal:arm          90   47    5  7  5 
+executioner  right_forearm    0 metal:gauntlet      8   23    6  7  6 
+executioner  right_forearm    1 ice:cuff_snow      78   90    6  1  6 
+executioner  right_hand       0 metal:fist          0   90    5  4  5 
+executioner  axe              0 wood:haft           0    0    2 38  2 
+executioner  axe              1 metal:butt        116   97    3  2  3 
+executioner  axe              2 leather:wrap      116  102    3  1  3 
+executioner  axe              3 leather:wrap      116  102    3  1  3 share=wrap
+executioner  axe              4 metal:axe_blade     8    0    2 11 12 
+executioner  axe              5 metal:axe_horn     66   97    2  2  5 
+executioner  axe              6 metal:axe_horn     66   97    2  2  5 share=ahorn
+executioner  axe              7 ice:edge           36   21    3 14  2 
+executioner  axe              8 metal:socket       50   70    3  8  3 
+executioner  axe              9 metal:spike        80   97    1  2  5 
+executioner  axe              10 ice:blade_snow     32   81    3  1  8 
+executioner  axe_chain        0 chain:link        112   97    1  5  1 
+executioner  axe_chain2       0 chain:link        112   97    1  5  1 share=ach
+executioner  left_arm         0 metal:pauldron     82   19    9  6 10 mirror share=paul
+executioner  left_arm         1 metal:pauldron2    88   35    8  3  9 mirror share=paul2
+executioner  left_arm         2 ice:snow           46   35   10  1 11 mirror share=psnow
+executioner  left_arm         3 ice:icicle          0  107    1  1  1 
+executioner  left_arm         4 ice:icicle         40  103    1  3  1 
+executioner  left_arm         5 ice:icicle          4  107    1  1  1 
+executioner  left_arm         6 ice:icicle         44  103    1  3  1 
+executioner  left_arm         7 metal:arm          90   47    5  7  5 mirror share=uarm
+executioner  left_forearm     0 metal:gauntlet      8   23    6  7  6 mirror share=gaunt
+executioner  left_forearm     1 ice:cuff_snow      78   90    6  1  6 mirror share=gsnow
+executioner  left_hand        0 metal:fist          0   90    5  4  5 mirror share=fist
+executioner  cape             0 cloth:cape         94   80   14  9  1 
+executioner  cape_mid         0 cloth:cape2        62   80   15  9  1 
+executioner  cape_low         0 cloth:cape3         8   37   16 11  1 
+executioner  right_leg        0 metal:cuisse       42   47    6  6  6 
+executioner  right_shin       0 metal:greave       66   47    6  6  6 
+executioner  right_shin       1 metal:knee          0   99    7  3  2 
+executioner  right_shin       2 ice:knee_snow      92  103    7  1  3 
+executioner  right_foot       0 metal:sabaton       0   70    7  3  8 
+executioner  right_foot       1 ice:boot_snow      52   90    7  1  6 
+executioner  left_leg         0 metal:cuisse       42   47    6  6  6 mirror share=cuisse
+executioner  left_shin        0 metal:greave       66   47    6  6  6 mirror share=greave
+executioner  left_shin        1 metal:knee          0   99    7  3  2 mirror share=knee
+executioner  left_shin        2 ice:knee_snow      92  103    7  1  3 mirror share=ksnow
+executioner  left_foot        0 metal:sabaton       0   70    7  3  8 mirror share=sab
+executioner  left_foot        1 ice:boot_snow      52   90    7  1  6 mirror share=bsnow
+== icequeen 256x128 x2
+icequeen     hips             0 cloth:waist       220   42   10  3  7 
+icequeen     chest            0 cloth:bodice      194    0   10 12  7 
+icequeen     chest            1 fur:collar        182   34   11  3  8 
+icequeen     chest            2 fur:stole          50   46   13  2  7 
+icequeen     chest            3 gem:brooch        208   55    3  3  1 
+icequeen     chest            4 gem:gem2          240   58    2  2  1 
+icequeen     chest            5 gem:gem2          240   58    2  2  1 share=g2
+icequeen     head             0 skin:face         146   19    9  9  9 
+icequeen     head             1 hair:top           84   21   10  3 10 
+icequeen     head             2 hair:bangs        134   56   10  3  1 
+icequeen     head             3 hair:side         228    0    1  7  9 
+icequeen     head             4 hair:side         228    0    1  7  9 mirror share=side
+icequeen     crown            0 crystal:band      118   37    9  2  9 
+icequeen     crown            1 crystal:spire     208   45    2  8  2 
+icequeen     crown            2 gem:crown_gem     164   56    2  3  1 
+icequeen     crown            3 crystal:spike     146   48    1  5  1 
+icequeen     crown            4 crystal:spike     146   48    1  5  1 share=s1
+icequeen     crown            5 crystal:spike2      0   57    1  3  1 
+icequeen     crown            6 crystal:spike2      0   57    1  3  1 share=s2
+icequeen     crown            7 crystal:spike4    252   52    1  4  1 
+icequeen     crown            8 crystal:spike4    252   52    1  4  1 share=s4
+icequeen     crown            9 crystal:spike4    252   52    1  4  1 share=s4
+icequeen     crown            10 crystal:spike4    252   52    1  4  1 share=s4
+icequeen     crown            11 crystal:spike3    172   47    1  6  1 
+icequeen     lock_r           0 hair:lock         114   48    2  6  2 
+icequeen     lock_r2          0 hair:lock2        122   48    2  6  2 
+icequeen     lock_l           0 hair:lock         130   48    2  6  2 mirror 
+icequeen     lock_l2          0 hair:lock2        138   48    2  6  2 mirror 
+icequeen     hair_back        0 hair:back         222   30   10 10  2 
+icequeen     hair_back2       0 hair:back2         94   34   10 10  2 
+icequeen     hair_back3       0 hair:back3        228   16    9 12  2 
+icequeen     right_arm        0 cloth:puff        154   37    5  4  6 
+icequeen     right_arm        1 gold:puff_trim     50   55    5  1  6 
+icequeen     right_arm        2 cloth:sleeve      176   45    4  6  4 
+icequeen     right_forearm    0 cloth:sleeve2     192   45    4  6  4 
+icequeen     cuff_r           0 cloth:cuff         90   46    6  3  6 
+icequeen     cuff_r           1 ice:cuff_ice      216   52    6  1  6 
+icequeen     right_hand       0 skin:glove        240   52    3  3  3 
+icequeen     staff            0 crystal:shaft       0    0    2 44  2 
+icequeen     staff            1 gold:grip          72   55    3  3  3 
+icequeen     staff            2 gold:staff_collar   94   55    3  2  3 
+icequeen     staff            3 crystal:foot      156   56    2  2  2 
+icequeen     staff            4 gem:flake_gem     198   55    3  3  2 
+icequeen     flake_0          0 crystal:flake     150   48    1  5  1 
+icequeen     flake_0          1 crystal:twig      246   58    3  1  1 
+icequeen     flake_1          0 crystal:flake     150   48    1  5  1 share=fa
+icequeen     flake_1          1 crystal:twig      246   58    3  1  1 share=ft
+icequeen     flake_2          0 crystal:flake     150   48    1  5  1 share=fa
+icequeen     flake_2          1 crystal:twig      246   58    3  1  1 share=ft
+icequeen     flake_3          0 crystal:flake     150   48    1  5  1 share=fa
+icequeen     flake_3          1 crystal:twig      246   58    3  1  1 share=ft
+icequeen     flake_4          0 crystal:flake     150   48    1  5  1 share=fa
+icequeen     flake_4          1 crystal:twig      246   58    3  1  1 share=ft
+icequeen     flake_5          0 crystal:flake     150   48    1  5  1 share=fa
+icequeen     flake_5          1 crystal:twig      246   58    3  1  1 share=ft
+icequeen     left_arm         0 cloth:puff        154   37    5  4  6 mirror share=puff
+icequeen     left_arm         1 gold:puff_trim     50   55    5  1  6 mirror share=ptrim
+icequeen     left_arm         2 cloth:sleeve      176   45    4  6  4 mirror share=uarm
+icequeen     left_forearm     0 cloth:sleeve2     192   45    4  6  4 mirror share=farm
+icequeen     cuff_l           0 cloth:cuff         90   46    6  3  6 mirror share=cuff
+icequeen     cuff_l           1 ice:cuff_ice      216   52    6  1  6 mirror share=cice
+icequeen     left_hand        0 skin:glove        240   52    3  3  3 mirror share=glove
+icequeen     wing_r           0 ice:wing1         172   55   12  4  1 
+icequeen     wing_r           1 ice:wing2         106   56   13  3  1 
+icequeen     wing_r           2 ice:wing3          26   56   11  3  1 
+icequeen     wing_r           3 ice:wing4           4   57    8  2  1 
+icequeen     wing_l           0 ice:wing1         172   55   12  4  1 mirror share=w1
+icequeen     wing_l           1 ice:wing2         106   56   13  3  1 mirror share=w2
+icequeen     wing_l           2 ice:wing3          26   56   11  3  1 mirror share=w3
+icequeen     wing_l           3 ice:wing4           4   57    8  2  1 mirror share=w4
+icequeen     mantle           0 ice:mantle          8   37   13 10  1 
+icequeen     mantle2          0 ice:mantle2         8   24   16 12  1 
+icequeen     mantle3          0 ice:mantle3       182   19   19 14  1 
+icequeen     skirt            0 cloth:skirt1      146    0   14  9 10 
+icequeen     skirt            1 cloth:panel1       36   46    6  9  1 
+icequeen     skirt            2 gold:sash          42   34   15  1 11 
+icequeen     skirt2           0 cloth:skirt2       84    0   18  8 13 
+icequeen     skirt2           1 cloth:panel2        0   48    7  8  1 
+icequeen     skirt3           0 cloth:skirt3        8    0   22  8 16 
+icequeen     skirt3           1 cloth:panel3      154   47    8  8  1 
+icequeen     skirt3           2 ice:shard          26   48    2  5  3 
+icequeen     skirt3           3 ice:shard          26   48    2  5  3 share=sh1
+icequeen     skirt3           4 ice:shard2         16   48    2  6  3 
+icequeen     skirt3           5 ice:shard2         16   48    2  6  3 share=sh2
+icequeen     skirt3           6 ice:shard3         84   55    3  4  2 
+icequeen     skirt3           7 ice:shard3         84   55    3  4  2 share=sh3
+icequeen     skirt3           8 ice:shard3         84   55    3  4  2 share=sh3
+icequeen     skirt3           9 ice:shard3         84   55    3  4  2 share=sh3
+== firedragon 256x128 x2
+firedragon   body             0 scale:body          0    0   18 14 28 
+firedragon   body             1 scale:chest        76   65   15 12  4 
+firedragon   body             2 bone:belly         92    0   14  1 26 
+firedragon   body             3 bone:breast       100   93   13 10  1 
+firedragon   body             4 bone:spine         96  104    2  4  3 
+firedragon   body             5 bone:spine2        70  104    3  5  3 
+firedragon   body             6 bone:spine3       226  103    3  6  3 
+firedragon   body             7 bone:spine2        70  104    3  5  3 share=bsp2
+firedragon   body             8 bone:spine4       106  104    2  4  3 
+firedragon   body             9 bone:sspine       218  104    2  3  2 
+firedragon   body             10 bone:sspine       218  104    2  3  2 share=ssp
+firedragon   body             11 bone:sspine       218  104    2  3  2 share=ssp
+firedragon   body             12 bone:sspine       218  104    2  3  2 share=ssp
+firedragon   neck1            0 scale:neck        136   43   10 10  9 
+firedragon   neck1            1 bone:throat       160   94    8  1  9 
+firedragon   neck1            2 bone:spine        188  104    2  3  3 
+firedragon   neck1            3 bone:spine        188  104    2  3  3 share=nsp
+firedragon   neck2            0 scale:neck2       114   62    9  9  8 
+firedragon   neck2            1 bone:throat2      226   94    7  1  8 
+firedragon   neck2            2 bone:spine        188  104    2  3  3 share=nsp
+firedragon   head             0 scale:head         92   27   11  9 11 
+firedragon   head             1 scale:snout       182   78    8  6 10 
+firedragon   head             2 scale:nose         26  105    6  3  2 
+firedragon   head             3 scale:brow        238  103    3  2  6 
+firedragon   head             4 scale:brow        238  103    3  2  6 mirror share=brow
+firedragon   head             5 bone:teeth        194   94    7  1  9 
+firedragon   head             6 bone:cheek        176  104    2  2  4 
+firedragon   head             7 bone:cheek        176  104    2  2  4 mirror share=ck
+firedragon   head             8 bone:crest        198  104    2  3  3 
+firedragon   head             9 bone:crest        198  104    2  3  3 share=cr
+firedragon   head             10 bone:crest        198  104    2  3  3 share=cr
+firedragon   horn_r           0 bone:horn          22   93    3  3  9 
+firedragon   horn_r2          0 bone:horn2          0   94    2  2  7 
+firedragon   horn_r3          0 bone:horn3         82  104    1  1  6 
+firedragon   horn_l           0 bone:horn          22   93    3  3  9 mirror share=hn1
+firedragon   horn_l2          0 bone:horn2          0   94    2  2  7 mirror share=hn2
+firedragon   horn_l3          0 bone:horn3         82  104    1  1  6 mirror share=hn3
+firedragon   jaw              0 scale:jaw           0   42    7  3 16 
+firedragon   jaw              1 bone:teeth2        22   79    6  1 13 
+firedragon   jaw              2 bone:chin          42  105    2  2  3 
+firedragon   tail1            0 scale:tail        206    0   11  9 12 
+firedragon   tail1            1 bone:tspine       116  104    2  4  3 
+firedragon   tail1            2 bone:tspine2      208  104    2  3  3 
+firedragon   tail2            0 scale:tail2        46   42    9  7 12 
+firedragon   tail2            1 bone:tspine2      208  104    2  3  3 share=tsp2
+firedragon   tail2            2 bone:tspine2      208  104    2  3  3 share=tsp2
+firedragon   tail3            0 scale:tail3       212   61    7  5 12 
+firedragon   tail3            1 bone:tspine3      218  109    1  2  3 
+firedragon   tail3            2 bone:tspine3      218  109    1  2  3 share=tsp3
+firedragon   tail_tip         0 scale:tail4       134   92    5  4  8 
+firedragon   tail_flame       0 flame:flame        46   93    7  7  5 
+firedragon   tail_flame       1 flame:flame2        0  103    4  5  4 
+firedragon   tail_flame       2 flame:flame3      136  110    2  3  2 
+firedragon   right_wing       0 scale:wingbone    126  104   22  3  3 
+firedragon   right_wing       1 membrane:membrane  172   23   22  0 20 
+firedragon   right_wing       2 scale:strut       174   43    1  1 18 
+firedragon   right_wing       3 scale:strut2      148   62    1  1 16 
+firedragon   right_wing       4 scale:strut3      134   79    1  1 12 
+firedragon   right_wing       5 bone:wingclaw     144  110    2  3  2 
+firedragon   right_wing_tip   0 scale:wingbone2   160  110   20  2  2 
+firedragon   right_wing_tip   1 membrane:membrane2    0   61   20  0 18 
+firedragon   right_wing_tip   2 scale:strut4      218   78    1  1 15 
+firedragon   right_wing_tip   3 scale:strut5      212   43    1  1 17 
+firedragon   right_wing_tip   4 bone:wingclaw2    152  110    2  3  2 
+firedragon   left_wing        0 scale:wingbone    126  104   22  3  3 mirror share=bone
+firedragon   left_wing        1 membrane:membrane  172   23   22  0 20 mirror share=mem
+firedragon   left_wing        2 scale:strut       174   43    1  1 18 mirror share=st1
+firedragon   left_wing        3 scale:strut2      148   62    1  1 16 mirror share=st2
+firedragon   left_wing        4 scale:strut3      134   79    1  1 12 mirror share=st3
+firedragon   left_wing        5 bone:wingclaw     144  110    2  3  2 mirror share=wc
+firedragon   left_wing_tip    0 scale:wingbone2   160  110   20  2  2 mirror share=tipbone
+firedragon   left_wing_tip    1 membrane:membrane2    0   61   20  0 18 mirror share=tipmem
+firedragon   left_wing_tip    2 scale:strut4      218   78    1  1 15 mirror share=ts1
+firedragon   left_wing_tip    3 scale:strut5      212   43    1  1 17 mirror share=ts2
+firedragon   left_wing_tip    4 bone:wingclaw2    152  110    2  3  2 mirror share=wc2
+firedragon   front_right_leg  0 scale:leg          88   47    6 11  7 
+firedragon   front_right_leg  1 bone:spur          16  105    2  3  3 
+firedragon   front_right_leg_shin 0 scale:shin        114   79    5  9  5 
+firedragon   front_right_leg_foot 0 scale:foot         70   93    7  3  8 
+firedragon   front_right_leg_foot 1 bone:claw          52  105    2  2  3 
+firedragon   front_right_leg_foot 2 bone:claw          26  110    2  2  3 
+firedragon   front_right_leg_foot 3 bone:claw          36  110    2  2  3 
+firedragon   front_left_leg   0 scale:leg          88   47    6 11  7 mirror share=fu
+firedragon   front_left_leg   1 bone:spur          16  105    2  3  3 mirror share=fsp
+firedragon   front_left_leg_shin 0 scale:shin        114   79    5  9  5 mirror share=fs
+firedragon   front_left_leg_foot 0 scale:foot         70   93    7  3  8 mirror share=ff
+firedragon   front_left_leg_foot 1 bone:claw          52  105    2  2  3 mirror share=frontc1
+firedragon   front_left_leg_foot 2 bone:claw          26  110    2  2  3 mirror share=frontc2
+firedragon   front_left_leg_foot 3 bone:claw          36  110    2  2  3 mirror share=frontc3
+firedragon   hind_right_leg   0 scale:thigh       172    0    7 13 10 
+firedragon   hind_right_leg_shin 0 scale:shin2         0   79    5  9  6 
+firedragon   hind_right_leg_foot 0 scale:foot         60   81    7  3  9 
+firedragon   hind_right_leg_foot 1 bone:claw          46  110    2  2  3 
+firedragon   hind_right_leg_foot 2 bone:claw          56  110    2  2  3 
+firedragon   hind_right_leg_foot 3 bone:claw         126  110    2  2  3 
+firedragon   hind_left_leg    0 scale:thigh       172    0    7 13 10 mirror share=hu
+firedragon   hind_left_leg_shin 0 scale:shin2         0   79    5  9  6 mirror share=hs
+firedragon   hind_left_leg_foot 0 scale:foot         60   81    7  3  9 mirror share=hf
+firedragon   hind_left_leg_foot 1 bone:claw          46  110    2  2  3 mirror share=hind_c1
+firedragon   hind_left_leg_foot 2 bone:claw          56  110    2  2  3 mirror share=hind_c2
+firedragon   hind_left_leg_foot 3 bone:claw         126  110    2  2  3 mirror share=hind_c3
+== skygod 256x128 x2
+skygod       hips             0 mech:pelvis       174   31   12  6  8 
+skygod       hips             1 gold:belt           0   43   13  2  9 
+skygod       hips             2 gem:belt_gem      220   64    3  3  1 
+skygod       skirt_fr         0 stone:plate       238   16    5 14  1 
+skygod       skirt_sr         0 stone:plate_side  108    0    1 13  7 
+skygod       skirt_br         0 stone:plate_back  162   16    5 15  1 
+skygod       skirt_fl         0 stone:plate       238   16    5 14  1 mirror share=pf
+skygod       skirt_sl         0 stone:plate_side  108    0    1 13  7 mirror share=ps
+skygod       skirt_bl         0 stone:plate_back  162   16    5 15  1 mirror share=pb
+skygod       skirt_c          0 gold:center       154    0    3 16  1 
+skygod       torso            0 mech:abdomen      214    0   10  8  8 
+skygod       torso            1 gold:rib2         154   45   11  1  9 
+skygod       torso            2 gold:rib2         154   45   11  1  9 share=rib2
+skygod       chest            0 stone:chest         0    0   18 16 12 
+skygod       chest            1 gold:frame        132   45   10 10  1 
+skygod       chest            2 gold:collar        88   35   12  2 10 
+skygod       chest            3 mech:backpack     214   31   10 10  3 
+skygod       chest            4 gold:rib          174   16   19  2 13 
+skygod       core             0 glowcore:core     240   43    6  6  2 
+skygod       head             0 stone:head         24   28    7  7  7 
+skygod       head             1 visor:visor       118   68    6  2  1 
+skygod       head             2 gold:crest        240   31    1  5  7 
+skygod       head             3 gold:fin          194   45    1  4  4 
+skygod       head             4 gold:fin          194   45    1  4  4 mirror share=fin
+skygod       head             5 gold:chin          84   67    7  1  2 
+skygod       head             6 gold:circlet       44   49    8  1  8 
+skygod       halo_0           0 gold:halo_seg     186   68    4  1  1 
+skygod       halo_0           1 gold:halo_seg     186   68    4  1  1 share=hl_s
+skygod       halo_0           2 gem:halo_gem      228   64    2  2  2 
+skygod       halo_0           3 gem:halo_gem      228   64    2  2  2 share=hl_g
+skygod       halo_0           4 gold:halo_spike   252   58    1  4  1 
+skygod       halo_0           5 gold:halo_spike   252   58    1  4  1 share=hl_p
+skygod       halo_1           0 gold:halo_seg     186   68    4  1  1 share=hl_s
+skygod       halo_1           1 gold:halo_seg     186   68    4  1  1 share=hl_s
+skygod       halo_2           0 gold:halo_seg     186   68    4  1  1 share=hl_s
+skygod       halo_2           1 gold:halo_seg     186   68    4  1  1 share=hl_s
+skygod       halo_2           2 gem:halo_gem      228   64    2  2  2 share=hl_g
+skygod       halo_2           3 gem:halo_gem      228   64    2  2  2 share=hl_g
+skygod       halo_3           0 gold:halo_seg     186   68    4  1  1 share=hl_s
+skygod       halo_3           1 gold:halo_seg     186   68    4  1  1 share=hl_s
+skygod       halo_4           0 gold:halo_seg     186   68    4  1  1 share=hl_s
+skygod       halo_4           1 gold:halo_seg     186   68    4  1  1 share=hl_s
+skygod       halo_4           2 gem:halo_gem      228   64    2  2  2 share=hl_g
+skygod       halo_4           3 gem:halo_gem      228   64    2  2  2 share=hl_g
+skygod       halo_4           4 gold:halo_spike   252   58    1  4  1 share=hl_p
+skygod       halo_4           5 gold:halo_spike   252   58    1  4  1 share=hl_p
+skygod       halo_5           0 gold:halo_seg     186   68    4  1  1 share=hl_s
+skygod       halo_5           1 gold:halo_seg     186   68    4  1  1 share=hl_s
+skygod       halo_6           0 gold:halo_seg     186   68    4  1  1 share=hl_s
+skygod       halo_6           1 gold:halo_seg     186   68    4  1  1 share=hl_s
+skygod       halo_6           2 gem:halo_gem      228   64    2  2  2 share=hl_g
+skygod       halo_6           3 gem:halo_gem      228   64    2  2  2 share=hl_g
+skygod       halo_7           0 gold:halo_seg     186   68    4  1  1 share=hl_s
+skygod       halo_7           1 gold:halo_seg     186   68    4  1  1 share=hl_s
+skygod       halo2_0          0 gold:halo2_seg    220   68    4  1  1 
+skygod       halo2_0          1 gold:halo2_seg    220   68    4  1  1 share=h2_s
+skygod       halo2_0          2 gem:halo2_gem     236   64    2  2  2 
+skygod       halo2_0          3 gem:halo2_gem     236   64    2  2  2 share=h2_g
+skygod       halo2_0          4 gold:halo2_spike  252   63    1  4  1 
+skygod       halo2_0          5 gold:halo2_spike  252   63    1  4  1 share=h2_p
+skygod       halo2_1          0 gold:halo2_seg    220   68    4  1  1 share=h2_s
+skygod       halo2_1          1 gold:halo2_seg    220   68    4  1  1 share=h2_s
+skygod       halo2_2          0 gold:halo2_seg    220   68    4  1  1 share=h2_s
+skygod       halo2_2          1 gold:halo2_seg    220   68    4  1  1 share=h2_s
+skygod       halo2_2          2 gem:halo2_gem     236   64    2  2  2 share=h2_g
+skygod       halo2_2          3 gem:halo2_gem     236   64    2  2  2 share=h2_g
+skygod       halo2_3          0 gold:halo2_seg    220   68    4  1  1 share=h2_s
+skygod       halo2_3          1 gold:halo2_seg    220   68    4  1  1 share=h2_s
+skygod       halo2_4          0 gold:halo2_seg    220   68    4  1  1 share=h2_s
+skygod       halo2_4          1 gold:halo2_seg    220   68    4  1  1 share=h2_s
+skygod       halo2_4          2 gem:halo2_gem     236   64    2  2  2 share=h2_g
+skygod       halo2_4          3 gem:halo2_gem     236   64    2  2  2 share=h2_g
+skygod       halo2_4          4 gold:halo2_spike  252   63    1  4  1 share=h2_p
+skygod       halo2_4          5 gold:halo2_spike  252   63    1  4  1 share=h2_p
+skygod       halo2_5          0 gold:halo2_seg    220   68    4  1  1 share=h2_s
+skygod       halo2_5          1 gold:halo2_seg    220   68    4  1  1 share=h2_s
+skygod       halo2_6          0 gold:halo2_seg    220   68    4  1  1 share=h2_s
+skygod       halo2_6          1 gold:halo2_seg    220   68    4  1  1 share=h2_s
+skygod       halo2_6          2 gem:halo2_gem     236   64    2  2  2 share=h2_g
+skygod       halo2_6          3 gem:halo2_gem     236   64    2  2  2 share=h2_g
+skygod       halo2_7          0 gold:halo2_seg    220   68    4  1  1 share=h2_s
+skygod       halo2_7          1 gold:halo2_seg    220   68    4  1  1 share=h2_s
+skygod       right_arm        0 stone:pauldron     60    0   11  9 13 
+skygod       right_arm        1 gold:prim         162    0   12  2 14 
+skygod       right_arm        2 stone:pauldron2   108   20    9  3 12 
+skygod       right_arm        3 mech:uarm           0   28    6  9  6 
+skygod       right_arm        4 gold:elbow         84   47    7  3  7 
+skygod       right_forearm    0 stone:farm        124    0    7 11  8 
+skygod       right_forearm    1 gold:band           0   54    7  1  8 
+skygod       right_forearm    2 gold:band2        154   55    7  1  8 
+skygod       right_hand       0 mech:palm         214   44    6  4  7 
+skygod       right_hand       1 gold:knuckle      132   68    6  2  1 
+skygod       right_f1         0 mech:claw         112   47    2  5  2 
+skygod       right_f1         1 gold:joint        244   64    2  1  2 
+skygod       right_f1b        0 mech:claw_tip     120   47    2  5  2 
+skygod       right_f2         0 mech:claw          76   49    2  5  2 
+skygod       right_f2         1 gold:joint        196   67    2  1  2 
+skygod       right_f2b        0 mech:claw_tip     240   51    2  5  2 
+skygod       right_f3         0 mech:claw         248   51    2  5  2 
+skygod       right_f3         1 gold:joint        244   67    2  1  2 
+skygod       right_f3b        0 mech:claw_tip      30   54    2  5  2 
+skygod       right_f4         0 mech:claw         112   54    2  5  2 
+skygod       right_f4         1 gold:joint        178   68    2  1  2 
+skygod       right_f4b        0 mech:claw_tip     120   54    2  5  2 
+skygod       left_arm         0 stone:pauldron     60    0   11  9 13 mirror share=paul
+skygod       left_arm         1 gold:prim         162    0   12  2 14 mirror share=prim
+skygod       left_arm         2 stone:pauldron2   108   20    9  3 12 mirror share=paul2
+skygod       left_arm         3 mech:uarm           0   28    6  9  6 mirror share=uarm
+skygod       left_arm         4 gold:elbow         84   47    7  3  7 mirror share=elbow
+skygod       left_forearm     0 stone:farm        124    0    7 11  8 mirror share=farm
+skygod       left_forearm     1 gold:band           0   54    7  1  8 mirror share=band
+skygod       left_forearm     2 gold:band2        154   55    7  1  8 mirror share=band2
+skygod       left_hand        0 mech:palm         214   44    6  4  7 mirror share=palm
+skygod       left_hand        1 gold:knuckle      132   68    6  2  1 mirror share=knuckle
+skygod       left_f1          0 mech:claw         112   47    2  5  2 mirror share=cl0
+skygod       left_f1          1 gold:joint        244   64    2  1  2 mirror share=cj0
+skygod       left_f1b         0 mech:claw_tip     120   47    2  5  2 mirror share=ct0
+skygod       left_f2          0 mech:claw          76   49    2  5  2 mirror share=cl1
+skygod       left_f2          1 gold:joint        196   67    2  1  2 mirror share=cj1
+skygod       left_f2b         0 mech:claw_tip     240   51    2  5  2 mirror share=ct1
+skygod       left_f3          0 mech:claw         248   51    2  5  2 mirror share=cl2
+skygod       left_f3          1 gold:joint        244   67    2  1  2 mirror share=cj2
+skygod       left_f3b         0 mech:claw_tip      30   54    2  5  2 mirror share=ct2
+skygod       left_f4          0 mech:claw         112   54    2  5  2 mirror share=cl3
+skygod       left_f4          1 gold:joint        178   68    2  1  2 mirror share=cj3
+skygod       left_f4b         0 mech:claw_tip     120   54    2  5  2 mirror share=ct3
+skygod       feather_r1       0 gold:froot        128   56    3  3  3 
+skygod       feather_r1       1 stone:blade0        0   64   18  4  2 
+skygod       feather_r1       2 gold:ftip         196   62    2  3  2 
+skygod       feather_r2       0 gold:froot        140   56    3  3  3 
+skygod       feather_r2       1 stone:blade1      208   58   20  4  2 
+skygod       feather_r2       2 gold:ftip          76   64    2  3  2 
+skygod       feather_r3       0 gold:froot        126   62    3  3  3 
+skygod       feather_r3       1 stone:blade2       38   58   21  4  2 
+skygod       feather_r3       2 gold:ftip         170   64    2  3  2 
+skygod       feather_r4       0 gold:froot        138   62    3  3  3 
+skygod       feather_r4       1 stone:blade0       84   61   19  4  2 
+skygod       feather_r4       2 gold:ftip         204   64    2  3  2 
+skygod       feather_r5       0 gold:froot        184   62    3  3  3 
+skygod       feather_r5       1 stone:blade1       40   64   16  4  2 
+skygod       feather_r5       2 gold:ftip         212   64    2  3  2 
+skygod       feather_l1       0 gold:froot        128   56    3  3  3 mirror share=fr0
+skygod       feather_l1       1 stone:blade0        0   64   18  4  2 mirror share=fb0
+skygod       feather_l1       2 gold:ftip         196   62    2  3  2 mirror share=ft0
+skygod       feather_l2       0 gold:froot        140   56    3  3  3 mirror share=fr1
+skygod       feather_l2       1 stone:blade1      208   58   20  4  2 mirror share=fb1
+skygod       feather_l2       2 gold:ftip          76   64    2  3  2 mirror share=ft1
+skygod       feather_l3       0 gold:froot        126   62    3  3  3 mirror share=fr2
+skygod       feather_l3       1 stone:blade2       38   58   21  4  2 mirror share=fb2
+skygod       feather_l3       2 gold:ftip         170   64    2  3  2 mirror share=ft2
+skygod       feather_l4       0 gold:froot        138   62    3  3  3 mirror share=fr3
+skygod       feather_l4       1 stone:blade0       84   61   19  4  2 mirror share=fb3
+skygod       feather_l4       2 gold:ftip         204   64    2  3  2 mirror share=ft3
+skygod       feather_l5       0 gold:froot        184   62    3  3  3 mirror share=fr4
+skygod       feather_l5       1 stone:blade1       40   64   16  4  2 mirror share=fb4
+skygod       feather_l5       2 gold:ftip         212   64    2  3  2 mirror share=ft4
+skygod       right_leg        0 stone:thigh        60   22    7  8  7 
+skygod       right_leg        1 gold:knee         150   64    8  3  2 
+skygod       right_shin       0 stone:shin        150   32    6  7  6 
+skygod       right_shin       1 gold:anklet       184   55    6  1  6 
+skygod       right_foot       0 stone:foot         52   37    7  3  9 
+skygod       right_foot       1 gold:toe          102   67    7  2  1 
+skygod       left_leg         0 stone:thigh        60   22    7  8  7 mirror share=thigh
+skygod       left_leg         1 gold:knee         150   64    8  3  2 mirror share=knee
+skygod       left_shin        0 stone:shin        150   32    6  7  6 mirror share=shin
+skygod       left_shin        1 gold:anklet       184   55    6  1  6 mirror share=anklet
+skygod       left_foot        0 stone:foot         52   37    7  3  9 mirror share=foot
+skygod       left_foot        1 gold:toe          102   67    7  2  1 mirror share=toe
+== gatekeeper 256x128 x2
+gatekeeper   hips             0 stone:pelvis      188   58   15  6  9 
+gatekeeper   hips             1 gold:belt         132   73   16  2 10 
+gatekeeper   hips             2 gold:buckle       198   96    4  3  1 
+gatekeeper   hips             3 gem:belt_gem      248   43    2  2  1 
+gatekeeper   banner           0 cloth:banner       92   86    8  9  1 
+gatekeeper   banner2          0 cloth:banner2     110   86    8  8  1 
+gatekeeper   torso            0 stone:waist       136   41   14  8  9 
+gatekeeper   chest            0 stone:chest        20    0   20 16 12 
+gatekeeper   chest            1 stone:gorget      184   73   12  2 10 
+gatekeeper   chest            2 gold:chest_band   120   58   21  2 13 
+gatekeeper   chest            3 stone:core_frame   72   86    9  9  1 
+gatekeeper   core             0 gem:core_v        248   12    3  7  1 
+gatekeeper   core             1 gem:core_h        182   96    7  3  1 
+gatekeeper   core             2 glowcore:core_c   248   46    2  2  1 
+gatekeeper   head             0 stone:helm        208   40    9  9  9 
+gatekeeper   head             1 stone:face         54   96    7  6  1 
+gatekeeper   head             2 gold:circlet       38   75   10  1 10 
+gatekeeper   prong_ri         0 gold:prong        248   20    2  6  2 
+gatekeeper   prong_ri         1 gold:prong_tip    248   40    2  1  2 
+gatekeeper   prong_li         0 gold:prong        248   20    2  6  2 mirror share=pi
+gatekeeper   prong_li         1 gold:prong_tip    248   40    2  1  2 mirror share=pit
+gatekeeper   prong_ro         0 gold:prong2        78   75    3  9  2 
+gatekeeper   prong_ro         1 gold:prong3       248   28    2  4  2 
+gatekeeper   prong_lo         0 gold:prong2        78   75    3  9  2 mirror share=po
+gatekeeper   prong_lo         1 gold:prong3       248   28    2  4  2 mirror share=po3
+gatekeeper   right_arm        0 stone:paul_top     84    0   13  9 17 
+gatekeeper   right_arm        1 stone:paul_mid    144    0   14  6 16 
+gatekeeper   right_arm        2 stone:paul_low     84   26   12  4 14 
+gatekeeper   right_arm        3 gold:paul_rim     144   22   14  1 18 
+gatekeeper   right_arm        4 gold:paul_rim2     20   28   15  1 17 
+gatekeeper   right_arm        5 stone:nub         110   95    4  3  5 
+gatekeeper   right_arm        6 stone:nub2         96   96    3  2  4 
+gatekeeper   right_arm        7 stone:nub3          0   87    3  4  5 
+gatekeeper   right_arm        8 stone:uarm        208   21    8 11  8 
+gatekeeper   right_forearm    0 stone:gauntlet    204    0    9 11 10 
+gatekeeper   right_forearm    1 gold:gband          0   75    9  2 10 
+gatekeeper   right_forearm    2 gold:gband2       172   85    9  1 10 
+gatekeeper   right_forearm    3 stone:nub4         28   96    3  4  4 
+gatekeeper   right_hand       0 stone:fist         84   44    9  7  9 
+gatekeeper   right_hand       1 gold:knuckles     208   96    9  2  1 
+gatekeeper   greatsword       0 leather:grip      244    0    2 10  2 
+gatekeeper   greatsword       1 gold:pommel       160   96    3  2  3 
+gatekeeper   greatsword       2 gold:guard          0   46    3  2 14 
+gatekeeper   greatsword       3 gold:guard_end     84   96    4  5  2 
+gatekeeper   greatsword       4 gold:guard_end     84   96    4  5  2 share=ge
+gatekeeper   greatsword       5 gem:guard_gem     128   96    3  3  3 
+gatekeeper   greatsword       6 stone:blade         0    0    2 30  8 
+gatekeeper   greatsword       7 stone:blade_tip    16   87    2  3  6 
+gatekeeper   greatsword       8 stone:blade_tip2  172   96    2  2  3 
+gatekeeper   left_arm         0 stone:paul_top     84    0   13  9 17 mirror share=pt
+gatekeeper   left_arm         1 stone:paul_mid    144    0   14  6 16 mirror share=pm
+gatekeeper   left_arm         2 stone:paul_low     84   26   12  4 14 mirror share=pl
+gatekeeper   left_arm         3 gold:paul_rim     144   22   14  1 18 mirror share=pr
+gatekeeper   left_arm         4 gold:paul_rim2     20   28   15  1 17 mirror share=pr2
+gatekeeper   left_arm         5 stone:nub         110   95    4  3  5 mirror share=nb1
+gatekeeper   left_arm         6 stone:nub2         96   96    3  2  4 mirror share=nb2
+gatekeeper   left_arm         7 stone:nub3          0   87    3  4  5 mirror share=nb3
+gatekeeper   left_arm         8 stone:uarm        208   21    8 11  8 mirror share=uarm
+gatekeeper   left_forearm     0 stone:gauntlet    204    0    9 11 10 mirror share=gaunt
+gatekeeper   left_forearm     1 gold:gband          0   75    9  2 10 mirror share=gb1
+gatekeeper   left_forearm     2 gold:gband2       172   85    9  1 10 mirror share=gb2
+gatekeeper   left_forearm     3 stone:nub4         28   96    3  4  4 mirror share=nb4
+gatekeeper   left_hand        0 stone:fist         84   44    9  7  9 mirror share=fist
+gatekeeper   left_hand        1 gold:knuckles     208   96    9  2  1 mirror share=knk
+gatekeeper   cape             0 cloth:cape        210   85   18 10  1 
+gatekeeper   cape_mid         0 cloth:cape2       132   85   19 10  1 
+gatekeeper   cape_low         0 cloth:cape3         0   62   20 12  1 
+gatekeeper   shards           0 gem:shard         248   34    2  4  2 
+gatekeeper   shards           1 gem:shard         248   34    2  4  2 share=sd
+gatekeeper   shards           2 gem:shard         248   34    2  4  2 share=sd
+gatekeeper   shards           3 gem:shard         248   34    2  4  2 share=sd
+gatekeeper   shards           4 gem:shard2         42   96    3  5  3 
+gatekeeper   shards           5 gem:shard2         42   96    3  5  3 share=sd2
+gatekeeper   shards           6 gem:shard2         42   96    3  5  3 share=sd2
+gatekeeper   right_leg        0 stone:thigh        34   46    8  8  8 
+gatekeeper   right_leg        1 stone:nub5         70   96    3  3  4 
+gatekeeper   right_shin       0 stone:shin        104   73    7  6  7 
+gatekeeper   right_shin       1 gold:kneeplate    140   96    8  3  2 
+gatekeeper   right_shin       2 gold:kband          0   96    7  1  7 
+gatekeeper   right_foot       0 stone:boot         66   60    8  4 11 
+gatekeeper   right_foot       1 gold:cuff          38   86    8  1  9 
+gatekeeper   left_leg         0 stone:thigh        34   46    8  8  8 mirror share=thigh
+gatekeeper   left_leg         1 stone:nub5         70   96    3  3  4 mirror share=nb5
+gatekeeper   left_shin        0 stone:shin        104   73    7  6  7 mirror share=shin
+gatekeeper   left_shin        1 gold:kneeplate    140   96    8  3  2 mirror share=kp
+gatekeeper   left_shin        2 gold:kband          0   96    7  1  7 mirror share=kb
+gatekeeper   left_foot        0 stone:boot         66   60    8  4 11 mirror share=boot
+gatekeeper   left_foot        1 gold:cuff          38   86    8  1  9 mirror share=cuff
+== endking 256x128 x2
+endking      hips             0 gold:belt          76   87   13  2 10 
+endking      hips             1 gem:belt_gem       54  100    3  3  1 
+endking      robe_core        0 iron:robe_core    144    0   12 12 12 
+endking      robe_core2       0 iron:robe_core2    16    0   17 12 17 
+endking      robe_0           0 cloth:robe_crimson  162   74    5 12  1 
+endking      robe_0b          0 cloth:robe_crimson2  176   62    7 12  1 
+endking      robe_1           0 cloth:robe_violet   40   75    5 12  1 
+endking      robe_1b          0 cloth:robe_violet2  192   62    7 12  1 
+endking      robe_2           0 cloth:robe_iron    52   75    5 12  1 
+endking      robe_2b          0 cloth:robe_iron2  208   62    7 12  1 
+endking      robe_3           0 cloth:robe_back    64   75    5 12  1 
+endking      robe_3b          0 cloth:robe_back2  224   62    7 12  1 
+endking      robe_4           0 cloth:robe_iron   174   75    5 12  1 
+endking      robe_4b          0 cloth:robe_iron2  240   62    7 12  1 
+endking      robe_5           0 cloth:robe_violet  186   75    5 12  1 
+endking      robe_5b          0 cloth:robe_violet2    0   63    7 12  1 
+endking      robe_6           0 cloth:robe_back   198   75    5 12  1 
+endking      robe_6b          0 cloth:robe_back2   16   63    7 12  1 
+endking      robe_7           0 cloth:robe_violet  210   75    5 12  1 
+endking      robe_7b          0 cloth:robe_violet2   82   74    7 12  1 
+endking      robe_8           0 cloth:robe_iron   222   75    5 12  1 
+endking      robe_8b          0 cloth:robe_iron2   98   74    7 12  1 
+endking      robe_9           0 cloth:robe_back   234   75    5 12  1 
+endking      robe_9b          0 cloth:robe_back2  114   74    7 12  1 
+endking      robe_10          0 cloth:robe_iron     0   76    5 12  1 
+endking      robe_10b         0 cloth:robe_iron2  130   74    7 12  1 
+endking      robe_11          0 cloth:robe_violet   12   76    5 12  1 
+endking      robe_11b         0 cloth:robe_violet2  146   74    7 12  1 
+endking      torso            0 iron:waist        140   43   12  8  9 
+endking      chest            0 iron:chest         84    0   18 16 12 
+endking      chest            1 iron:plate        186   88   10 10  1 
+endking      chest            2 gold:gorget       122   87   12  2 10 
+endking      chest            3 gold:rib           82   60   19  1 13 
+endking      core             0 gem:core_v        242   98    3  7  1 
+endking      core             1 gem:core_h         24  100    7  3  1 
+endking      core             2 glowcore:core_c    44  104    2  2  1 
+endking      head             0 iron:helm           0   47    8  8  8 
+endking      head             1 iron:brow          24  104    9  2  1 
+endking      head             2 iron:visor         40  100    6  3  1 
+endking      crown            0 gold:crown_band    24   88   10  2 10 
+endking      crown            1 gem:crown_gem     160  100    3  3  1 
+endking      crown            2 gold:spire0       230   98    2  9  1 
+endking      crown            3 gem:spire_gem      58  104    2  1  1 
+endking      crown            4 gold:spire1        16   99    1  6  1 
+endking      crown            5 gem:spire_gem     160  104    1  1  1 
+endking      crown            6 gold:spire1       124   99    1  6  1 
+endking      crown            7 gem:spire_gem     164  104    1  1  1 
+endking      crown            8 gold:spire1        20   89    1  7  1 
+endking      crown            9 gem:spire_gem     168  104    1  1  1 
+endking      crown            10 gold:spire1        20   97    1  7  1 
+endking      crown            11 gem:spire_gem     172  104    1  1  1 
+endking      crown            12 gold:spire1       128   99    1  6  1 
+endking      crown            13 gem:spire_gem     176  104    1  1  1 
+endking      crown            14 gold:spire1       132   99    1  6  1 
+endking      crown            15 gem:spire_gem     180  104    1  1  1 
+endking      crown            16 gold:spire1       250   98    1  7  1 
+endking      crown            17 gem:spire_gem     184  104    1  1  1 
+endking      crown            18 gold:spire1         0   99    1  7  1 
+endking      crown            19 gem:spire_gem     188  104    1  1  1 
+endking      halo_0           0 iron:halo_blade   236   98    2  9  1 
+endking      halo_1           0 iron:halo_blade   236   98    2  9  1 share=hb
+endking      halo_2           0 iron:halo_blade   236   98    2  9  1 share=hb
+endking      halo_3           0 iron:halo_blade   236   98    2  9  1 share=hb
+endking      halo_4           0 iron:halo_blade   236   98    2  9  1 share=hb
+endking      halo_5           0 iron:halo_blade   236   98    2  9  1 share=hb
+endking      halo_6           0 iron:halo_blade   236   98    2  9  1 share=hb
+endking      halo_7           0 iron:halo_blade   236   98    2  9  1 share=hb
+endking      halo_8           0 iron:halo_blade   236   98    2  9  1 share=hb
+endking      halo_9           0 iron:halo_blade   236   98    2  9  1 share=hb
+endking      right_arm        0 iron:paul1        192    0   13  7 16 
+endking      right_arm        1 iron:paul2         84   28   13  5 15 
+endking      right_arm        2 iron:paul3         16   29   12  4 14 
+endking      right_arm        3 gold:merlon       198   99    2  3  2 
+endking      right_arm        4 gold:merlon       206   99    2  3  2 
+endking      right_arm        5 gold:merlon       214   99    2  3  2 
+endking      right_arm        6 gold:merlon       222   99    2  3  2 
+endking      right_arm        7 iron:uarm         182   45    6 10  7 
+endking      right_forearm    0 iron:gauntlet     144   24    7 11  8 
+endking      right_forearm    1 gold:gband         64   99    7  2  8 
+endking      right_forearm    2 gold:gband2        94   99    7  1  8 
+endking      right_hand       0 iron:hand         208   88    5  5  6 
+endking      greatsword       0 leather:grip       32   62    2 12  2 
+endking      greatsword       1 gold:pommel       186   99    3  2  3 
+endking      greatsword       2 gold:guard        146   60    3  2 12 
+endking      greatsword       3 gold:guard_end    150   99    3  4  2 
+endking      greatsword       4 gold:guard_end    150   99    3  4  2 share=ge
+endking      greatsword       5 gem:guard_gem     136   99    4  3  3 
+endking      greatsword       6 crystal:blade       0    0    2 36  6 
+endking      greatsword       7 crystal:blade_tip    4   99    2  3  4 
+endking      greatsword       8 crystal:blade_tip2  168  100    2  2  2 
+endking      left_arm         0 iron:paul1        192    0   13  7 16 mirror share=p1
+endking      left_arm         1 iron:paul2         84   28   13  5 15 mirror share=p2
+endking      left_arm         2 iron:paul3         16   29   12  4 14 mirror share=p3
+endking      left_arm         3 gold:merlon       198   99    2  3  2 mirror share=m0
+endking      left_arm         4 gold:merlon       206   99    2  3  2 mirror share=m1
+endking      left_arm         5 gold:merlon       214   99    2  3  2 mirror share=m2
+endking      left_arm         6 gold:merlon       222   99    2  3  2 mirror share=m3
+endking      left_arm         7 iron:uarm         182   45    6 10  7 mirror share=uarm
+endking      left_forearm     0 iron:gauntlet     144   24    7 11  8 mirror share=gaunt
+endking      left_forearm     1 gold:gband         64   99    7  2  8 mirror share=gb1
+endking      left_forearm     2 gold:gband2        94   99    7  1  8 mirror share=gb2
+endking      left_hand        0 iron:hand         208   88    5  5  6 mirror share=hand
+endking      orb              0 void:orb            0   89    6  6  4 
+endking      orb              1 void:orb2         166   88    4  6  6 
+endking      orb              2 void:orb3         230   88    6  4  6 
+endking      orb              3 glowcore:orb_core  176  100    2  2  2 
+endking      orb_ring_0       0 gold:ring_seg      50  104    3  1  1 
+endking      orb_ring_1       0 gold:ring_seg      50  104    3  1  1 share=rs
+endking      orb_ring_2       0 gold:ring_seg      50  104    3  1  1 share=rs
+endking      orb_ring_3       0 gold:ring_seg      50  104    3  1  1 share=rs
+endking      orb_ring_4       0 gold:ring_seg      50  104    3  1  1 share=rs
+endking      orb_ring_5       0 gold:ring_seg      50  104    3  1  1 share=rs
+endking      orb_ring_6       0 gold:ring_seg      50  104    3  1  1 share=rs
+endking      orb_ring_7       0 gold:ring_seg      50  104    3  1  1 share=rs
+endking      cape             0 cloth:cape         40   62   20 12  1 
+endking      cape_mid         0 cloth:cape2        32   47   24 14  1 
+endking      cape_low         0 cloth:cape3       192   23   30 21  1 
+endking      cape_wing_r      0 cloth:cape_wing   234   45   10 16  1 
+endking      cape_wing_r2     0 cloth:cape_wing2  208   45   12 16  1 
+endking      cape_wing_l      0 cloth:cape_wing   234   45   10 16  1 mirror share=cw
+endking      cape_wing_l2     0 cloth:cape_wing2  208   45   12 16  1 mirror share=cw2

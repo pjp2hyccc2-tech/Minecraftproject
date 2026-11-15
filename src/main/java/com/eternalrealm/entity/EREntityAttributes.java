@@ -51,11 +51,11 @@ public final class EREntityAttributes {
         // ground speed is about 44 * speed^2 blocks per second: 3.8 (king) .. 2.4 (colossus). Big bodies take long,
         // slow strides (their walk cycles are made to match these speeds without the feet sliding)
         double speed = switch (kind.rig()) {
-            case KING -> 0.294;
-            case DRAGON -> 0.286;
-            case QUEEN -> 0.282;
-            case TREANT -> 0.243;
-            case COLOSSUS -> 0.233;
+            case KING, BANDIT, GATEKEEPER, ENDKING -> 0.294;
+            case DRAGON, FIREDRAGON -> 0.286;
+            case QUEEN, EXECUTIONER, ICEQUEEN -> 0.282;
+            case TREANT, TREEGUARD -> 0.243;
+            case COLOSSUS, SANDTITAN, SKYGOD -> 0.233;
         };
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, BOSS_DEFAULT_HEALTH)

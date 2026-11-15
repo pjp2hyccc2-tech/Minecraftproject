@@ -36,7 +36,9 @@ public class EntityAssetsTest {
     private static final Path I18N = Paths.get("docs", "i18n", "entity.json");
     private static final Path UV_MAP = Paths.get("tools", "art_entities", "uv_map.txt");
     private static final List<String> ENEMY_RIGS = List.of("humanoid", "beast", "golem", "flyer");
-    private static final List<String> BOSS_RIGS = List.of("king", "treant", "colossus", "queen", "dragon");
+    /** The shared boss rigs (field bosses), then one rig per remade dungeon boss. */
+    private static final List<String> BOSS_RIGS = List.of("king", "treant", "colossus", "queen", "dragon", "bandit",
+            "treeguard", "sandtitan", "executioner", "icequeen", "firedragon", "skygod", "gatekeeper", "endking");
 
     private static JsonObject i18n() throws IOException {
         return JsonParser.parseString(Files.readString(I18N, StandardCharsets.UTF_8)).getAsJsonObject();

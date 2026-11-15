@@ -13,15 +13,15 @@ import java.util.Optional;
  * {@code eternalrealm:boss_<id>}, its rig, hitbox (from {@link RigData}), theme particle and sounds.
  */
 public enum BossKind {
-    B1(BossRig.KING),
-    B2(BossRig.TREANT),
-    B3(BossRig.COLOSSUS),
-    B4(BossRig.QUEEN),
-    B5(BossRig.QUEEN),
-    B6(BossRig.DRAGON),
-    B7(BossRig.COLOSSUS),
-    B8(BossRig.KING),
-    FINAL(BossRig.KING),
+    B1(BossRig.BANDIT),
+    B2(BossRig.TREEGUARD),
+    B3(BossRig.SANDTITAN),
+    B4(BossRig.EXECUTIONER),
+    B5(BossRig.ICEQUEEN),
+    B6(BossRig.FIREDRAGON),
+    B7(BossRig.SKYGOD),
+    B8(BossRig.GATEKEEPER),
+    FINAL(BossRig.ENDKING),
     // the field bosses (boss.FieldBosses): calamities, then wanderers
     C_MEADOW(BossRig.QUEEN, Theme.SHADOW),
     C_MOON_FOREST(BossRig.TREANT, Theme.MOON),
