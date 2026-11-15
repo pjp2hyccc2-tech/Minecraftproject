@@ -96,8 +96,9 @@ public final class ArtTrails {
                 continue;
             }
             Optional<CombatAnimations.Anim> anim = CombatAnimations.of(player);
-            if (anim.isEmpty() || anim.get().motion() != CombatAnimations.Motion.ART) {
-                continue;
+            if (anim.isEmpty() || anim.get().motion() != CombatAnimations.Motion.ART
+                    || ArtChoreography.isFinale(anim.get().actionId())) {
+                continue; // a finale draws its own light (SkillFx)
             }
             Optional<ArtPoses.Play> play = ArtPoses.play(anim.get());
             if (play.isEmpty()) {

@@ -260,6 +260,10 @@ final class ArtPoses {
                 }
             }
             if (frames == null) {
+                // a finale (秘奥義): every frame of the job skill, pauses included, has its own strike
+                frames = com.eternalrealm.job.Jobs.skillOfAction(id).map(skill -> skill.action().frames()).orElse(null);
+            }
+            if (frames == null) {
                 return List.of();
             }
             return frames.stream().sorted(java.util.Comparator.comparingInt(HitFrame::offsetTicks)).toList();

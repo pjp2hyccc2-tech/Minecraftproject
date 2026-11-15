@@ -44,6 +44,7 @@ public final class ClientForgeEvents {
         com.eternalrealm.ui.dialogue.ClientDialogue.tick();
         com.eternalrealm.client.telegraph.ClientTelegraphs.tick();
         SkillFx.tick();
+        FinaleClient.tick();
         com.eternalrealm.client.boss.BossBodyEffects.tick();
         com.eternalrealm.client.block.ClientLightShafts.tick();
         com.eternalrealm.client.guide.GuideClient.tick();
@@ -109,6 +110,11 @@ public final class ClientForgeEvents {
     }
 
     @SubscribeEvent
+    public static void onComputeFov(net.minecraftforge.client.event.ViewportEvent.ComputeFov event) {
+        FinaleClient.onComputeFov(event);
+    }
+
+    @SubscribeEvent
     public static void onRenderLevelStage(RenderLevelStageEvent event) {
         com.eternalrealm.client.telegraph.TelegraphRenderer.render(event);
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_PARTICLES) {
@@ -123,12 +129,23 @@ public final class ClientForgeEvents {
 
     @SubscribeEvent
     public static void onRenderHand(net.minecraftforge.client.event.RenderHandEvent event) {
-        DualWield.onRenderHand(event);
+        FinaleClient.onRenderHand(event);
+        if (!event.isCanceled()) {
+            DualWield.onRenderHand(event);
+        }
     }
 
     @SubscribeEvent
     public static void onRenderPlayerPre(net.minecraftforge.client.event.RenderPlayerEvent.Pre event) {
-        DualWield.onRenderPlayerPre(event);
+        FinaleClient.onRenderPlayerPre(event);
+        if (!event.isCanceled()) {
+            DualWield.onRenderPlayerPre(event);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRenderPlayerPost(net.minecraftforge.client.event.RenderPlayerEvent.Post event) {
+        FinaleClient.onRenderPlayerPost(event);
     }
 
     /** A relic's tooltip has the gold frame (金枠) as its border. */
@@ -151,6 +168,7 @@ public final class ClientForgeEvents {
         CombatAnimations.clear();
         CameraShake.clear();
         SkillFx.clear();
+        FinaleClient.clear();
         com.eternalrealm.client.boss.BossBodyEffects.clear();
         com.eternalrealm.ui.dialogue.ClientDialogue.clear();
         com.eternalrealm.ui.gate.ReadyCheckClient.clear();

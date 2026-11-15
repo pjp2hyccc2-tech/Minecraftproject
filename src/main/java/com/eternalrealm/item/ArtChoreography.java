@@ -122,6 +122,8 @@ public final class ArtChoreography {
 
     private static final Map<ArtForge.Form, Choreo> FORMS = new EnumMap<>(ArtForge.Form.class);
     private static final Map<String, Choreo> BOSS = new HashMap<>();
+    /** The finales (秘奥義) of the second classes: one strike per frame of the skill (pauses included). */
+    private static final Map<String, Choreo> FINALES = new HashMap<>();
     private static final Map<WeaponType, ArtForge.Form> BASE = new EnumMap<>(WeaponType.class);
 
     static {
@@ -190,6 +192,43 @@ public final class ArtChoreography {
         boss("art_gate_of_end", Stance.DRAW_BACK, Stance.EXTENDED, true, Strike.LUNGE);
         boss("art_black_sword_rain", Stance.BLADE_UP, Stance.HIGH_RAISE, true, Strike.SPIN);
 
+        // ---------------------------------------------------------------- the finales (秘奥義, level 70)
+        // shinobi: the draw stance, eight flashes (unseen: only after-images show), the sheathing, the burst
+        finale("shinobi_eightfold_flash", Stance.CROUCH, Stance.CROSSED, true, Strike.TWIN_STAB, Strike.TWIN_RIGHT,
+                Strike.TWIN_LEFT, Strike.TWIN_RIGHT, Strike.TWIN_LEFT, Strike.TWIN_RIGHT, Strike.TWIN_LEFT,
+                Strike.TWIN_RIGHT, Strike.TWIN_LEFT, Strike.TWIN_CROSS, Strike.TWIN_SPREAD);
+        // reaper: raising the scythe, the hook, the great turn
+        finale("reaper_scythe_of_the_end", Stance.TWIN_HIGH, Stance.SPREAD_OUT, true, Strike.RISING,
+                Strike.WIDE_SWEEP, Strike.TWIN_SPIN);
+        // sword saint: the sword raised to the sky, brought down
+        finale("sword_saint_heavenfall_blade", Stance.HIGH_RAISE, Stance.LOW_FINISH, true, Strike.RISING,
+                Strike.FALLING);
+        // hexblade: the ritual, two blows and the last
+        finale("hexblade_hour_of_the_ox", Stance.HIGH_RAISE, Stance.LOW_FINISH, true, Strike.RISING, Strike.SLAM,
+                Strike.SLAM, Strike.SLAM);
+        // sage: the circle in the sky, the call, the star brought down
+        finale("sage_azure_starfall", Stance.STAFF_UP, Stance.STAFF_PLANTED, true, Strike.CAST_SKYFALL,
+                Strike.CAST_CIRCLE, Strike.CAST_POINT);
+        // necromancer: gathering the mana, raising the king
+        finale("necromancer_advent_of_the_bone_king", Stance.STAFF_UP, Stance.STAFF_PLANTED, true,
+                Strike.CAST_CIRCLE, Strike.CAST_THRUST);
+        // sniper: the rifle up, three shots, the rifle away
+        finale("sniper_three_magic_bullets", Stance.BOW_STEADY, Stance.BOW_STEADY, true, Strike.LOOSE,
+                Strike.LOOSE_HEAVY, Strike.LOOSE_HEAVY, Strike.LOOSE_HEAVY, Strike.LOOSE);
+        // spirit archer: the spirits called, the great bow drawn, loosed, the wake
+        finale("spirit_archer_bow_of_seven_spirits", Stance.BOW_DRAW, Stance.BOW_STEADY, true, Strike.LOOSE_SKY,
+                Strike.LOOSE, Strike.LOOSE_HEAVY, Strike.LOOSE_SWEEP);
+        // paladin: the sword grown and raised, the blow with everything
+        finale("paladin_earthsunder", Stance.HIGH_RAISE, Stance.LOW_FINISH, true, Strike.RISING, Strike.SLAM);
+        // inquisitor: the scales raised, the verdict, the execution
+        finale("inquisitor_divine_verdict", Stance.STAFF_UP, Stance.STAFF_PLANTED, true, Strike.CAST_SKYFALL,
+                Strike.CAST_POINT, Strike.CAST_SKYFALL);
+        // guardian: the shield planted, the bash
+        finale("guardian_adamant_bulwark", Stance.GUARD_LOW, Stance.EXTENDED, true, Strike.SLAM, Strike.THRUST);
+        // bishop: the cathedral raised, three bells, the window
+        finale("bishop_celestial_cathedral", Stance.STAFF_UP, Stance.STAFF_PLANTED, true, Strike.CAST_CIRCLE,
+                Strike.CAST_POINT, Strike.CAST_POINT, Strike.CAST_POINT, Strike.CAST_SKYFALL);
+
         // ---------------------------------------------------------------- the weapon types' own skills
         BASE.put(WeaponType.ONE_HANDED_SWORD, ArtForge.Form.SWORD_BURST);
         BASE.put(WeaponType.TWO_HANDED_SWORD, ArtForge.Form.GREAT_SLAM);
@@ -210,6 +249,15 @@ public final class ArtChoreography {
         BOSS.put(artId, new Choreo(windup, List.of(strikes), finish, heavy));
     }
 
+    private static void finale(String skillId, Stance windup, Stance finish, boolean heavy, Strike... strikes) {
+        FINALES.put(skillId, new Choreo(windup, List.of(strikes), finish, heavy));
+    }
+
+    /** Whether {@code actionId} is a finale with its own choreography. */
+    public static boolean isFinale(String actionId) {
+        return actionId != null && FINALES.containsKey(actionId);
+    }
+
     /** The choreography of an art form. */
     public static Choreo of(ArtForge.Form form) {
         return FORMS.get(form);
@@ -226,6 +274,10 @@ public final class ArtChoreography {
         Choreo boss = BOSS.get(actionId);
         if (boss != null) {
             return Optional.of(boss);
+        }
+        Choreo finale = FINALES.get(actionId);
+        if (finale != null) {
+            return Optional.of(finale);
         }
         Optional<ArtForge.Form> form = GeneratedArts.form(actionId);
         if (form.isPresent()) {

@@ -139,6 +139,7 @@ public final class ClientModEvents {
                 new com.eternalrealm.client.boss.BossScreenEffects());
         event.registerAbove(VanillaGuiOverlay.VIGNETTE.id(), "waystone_flash",
                 new com.eternalrealm.ui.map.TravelFlashOverlay());
+        event.registerAbove(VanillaGuiOverlay.VIGNETTE.id(), "finale_cinema", new FinaleCinema());
     }
 
     @SubscribeEvent
@@ -155,6 +156,7 @@ public final class ClientModEvents {
         event.register(ClientKeyMappings.JOB_SKILL_4);
         event.register(ClientKeyMappings.JOB_SKILL_5);
         event.register(ClientKeyMappings.JOB_SKILL_6);
+        event.register(ClientKeyMappings.JOB_SKILL_7);
         event.register(ClientKeyMappings.DIALOGUE_NEXT);
     }
 }

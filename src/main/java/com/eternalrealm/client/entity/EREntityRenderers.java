@@ -97,5 +97,6 @@ public final class EREntityRenderers {
         }
         event.registerEntityRenderer(NpcEntities.NPC.get(), NpcRenderer::new);
         event.registerEntityRenderer(NpcEntities.TRAVELLER.get(), HeroRenderer::new);
+        event.registerEntityRenderer(com.eternalrealm.job.forge.JobEntities.BONE_KING.get(), BoneKingRenderer::new);
     }
 }

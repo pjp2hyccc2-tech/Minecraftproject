@@ -38,6 +38,7 @@ public final class SettingsScreen extends Screen {
             new Option("camera_shake", ERClientConfig.CAMERA_SHAKE),
             new Option("weapon_animations", ERClientConfig.WEAPON_ANIMATIONS),
             new Option("skill_effects", ERClientConfig.SKILL_EFFECTS),
+            new Option("finale_cinema", ERClientConfig.FINALE_CINEMA),
             new Option("dialogue_auto_advance", ERClientConfig.DIALOGUE_AUTO_ADVANCE));
 
     private final Screen parent;

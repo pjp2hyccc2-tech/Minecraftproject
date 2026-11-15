@@ -1,10 +1,13 @@
 package com.eternalrealm.client;
 
 import com.eternalrealm.client.block.ShaderCompat;
+import com.eternalrealm.client.entity.BoneKingRenderer;
 import com.eternalrealm.combat.forge.MagicProjectile;
 import com.eternalrealm.combat.forge.SkillArrow;
 import com.eternalrealm.config.ERClientConfig;
 import com.eternalrealm.job.SkillTheme;
+import com.eternalrealm.job.forge.BoneKing;
+import com.eternalrealm.job.fx.BoneKingFigure;
 import com.eternalrealm.job.fx.Brush;
 import com.eternalrealm.job.fx.Fields;
 import com.eternalrealm.job.fx.Light;
@@ -56,7 +59,10 @@ import java.util.Optional;
  *     (faster with attack speed, held during the local hit stop) and fades out after it;</li>
  *     <li>a skill's spells and arrows carry their element's light while they fly ({@link Trails});</li>
  *     <li>a ground area glows for its whole life and an exploding spell bursts where it lands ({@link Fields},
- *     {@link SkillFxPacket}).</li>
+ *     {@link SkillFxPacket}), and each sentence of the inquisitor's 神判 comes down over its foe;</li>
+ *     <li>the finales' (秘奥義) solid props (a rifle, a scythe, a giant sword, a hammer and nail, a star) are drawn
+ *     first, depth-tested and depth-writing, so the light glows in front of them and hides behind them; the bone
+ *     king's glow is added to its body ({@code BoneKingRenderer}).</li>
  * </ul>
  * Big moments shake the caster's view (and, more gently, the view of whoever stands close). Purely visual: the
  * server's particles still draw every skill, and they alone show with a shader pack (where this is skipped) or with
@@ -74,12 +80,14 @@ public final class SkillFx {
     private static final List<Playing> PLAYING = new ArrayList<>();
     private static final Map<Integer, Long> STARTED = new HashMap<>();
     private static final Map<Integer, Wake> WAKES = new HashMap<>();
+    /** The necromancer finale's kings in sight (their glow is drawn with the light). */
+    private static final List<Integer> KINGS = new ArrayList<>();
     private static boolean disabled;
 
     private SkillFx() {
     }
 
-    /** Additive position-colour quads: light. */
+    /** Additive position-colour quads: light. Shaded, see-through or opaque quads: the finales' solid props. */
     private static final class Types extends RenderType {
         static final RenderType LIGHT = RenderType.create("eternalrealm_skill_light", DefaultVertexFormat.POSITION_COLOR,
                 VertexFormat.Mode.QUADS, 1 << 18, false, false, CompositeState.builder()
@@ -88,6 +96,14 @@ public final class SkillFx {
                         .setCullState(NO_CULL)
                         .setDepthTestState(LEQUAL_DEPTH_TEST)
                         .setWriteMaskState(COLOR_WRITE)
+                        .createCompositeState(false));
+        static final RenderType SOLID = RenderType.create("eternalrealm_skill_solid", DefaultVertexFormat.POSITION_COLOR,
+                VertexFormat.Mode.QUADS, 1 << 16, false, true, CompositeState.builder()
+                        .setShaderState(POSITION_COLOR_SHADER)
+                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                        .setCullState(NO_CULL)
+                        .setDepthTestState(LEQUAL_DEPTH_TEST)
+                        .setWriteMaskState(COLOR_DEPTH_WRITE)
                         .createCompositeState(false));
 
         private Types(String name, VertexFormat format, VertexFormat.Mode mode, int size, boolean crumbling,
@@ -110,6 +126,11 @@ public final class SkillFx {
         /** Ticks the local player's hit stop has held the action back. */
         double held;
         final boolean[] shaken;
+        /** Whether any layer holds a solid prop (drawn in the first pass). */
+        final boolean solids;
+        /** This frame: the show's time and whether the camera is the caster's own eyes. */
+        double now;
+        boolean ownEyes;
 
         Playing(SkillShow show, ShowState state, int entityId, String actionId, long start, double pace) {
             this.show = show;
@@ -119,6 +140,7 @@ public final class SkillFx {
             this.start = start;
             this.pace = pace;
             this.shaken = new boolean[show.shakes().size()];
+            this.solids = show.cues().stream().anyMatch(cue -> cue.kind().solid());
         }
     }
 
@@ -143,6 +165,14 @@ public final class SkillFx {
         return !disabled && ERClientConfig.SKILL_EFFECTS.get() && !ShaderCompat.shaderPackInUse();
     }
 
+    /**
+     * Whether the skill light is drawn (on in the settings, no shader pack, no error): only then do the finales hide
+     * a weapon or a body, since only then do their props and after-images stand in.
+     */
+    public static boolean drawing() {
+        return enabled();
+    }
+
     // ------------------------------------------------------------------------------------------------ input
 
     /** An area or a blast landed ({@link SkillFxPacket}). */
@@ -160,6 +190,10 @@ public final class SkillFx {
         if (packet.kind() == SkillFxPacket.ZONE) {
             show = Fields.zone(packet.themeValue(), packet.radius(), packet.delay(), packet.pulses(),
                     packet.interval(), packet.heals(), packet.harms(), packet.seed());
+            feet = new V3(packet.x(), packet.y(), packet.z());
+        } else if (packet.kind() == SkillFxPacket.VERDICT) {
+            // over the foe's head; the radius is its height (the pillar reaches down to its feet)
+            show = Fields.sentence(packet.sentence().ordinal(), packet.radius(), packet.seed());
             feet = new V3(packet.x(), packet.y(), packet.z());
         } else {
             show = Fields.blast(packet.themeValue(), packet.radius(), packet.seed());
@@ -183,6 +217,7 @@ public final class SkillFx {
             PLAYING.clear();
             STARTED.clear();
             WAKES.clear();
+            KINGS.clear();
             return;
         }
         if (!enabled()) {
@@ -271,9 +306,14 @@ public final class SkillFx {
         for (Wake wake : WAKES.values()) {
             wake.goneFor = wake.goneFor < 0 ? 0 : wake.goneFor; // not seen yet this tick
         }
+        KINGS.clear();
         for (Entity entity : minecraft.level.entitiesForRendering()) {
             int theme;
             boolean arrow;
+            if (entity instanceof BoneKing && !entity.isRemoved()) {
+                KINGS.add(entity.getId());
+                continue;
+            }
             if (entity instanceof MagicProjectile spell) {
                 theme = spell.skillTheme();
                 arrow = false;
@@ -313,7 +353,8 @@ public final class SkillFx {
             return;
         }
         Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.level == null || minecraft.player == null || (PLAYING.isEmpty() && WAKES.isEmpty())) {
+        if (minecraft.level == null || minecraft.player == null
+                || (PLAYING.isEmpty() && WAKES.isEmpty() && KINGS.isEmpty())) {
             return;
         }
         try {
@@ -330,9 +371,46 @@ public final class SkillFx {
         float partial = event.getPartialTick();
         long tick = ClientCombatState.tick();
         MultiBufferSource.BufferSource buffers = minecraft.renderBuffers().bufferSource();
-        Sink sink = new Sink(buffers.getBuffer(Types.LIGHT), event.getPoseStack().last().pose(), cam);
+        Matrix4f matrix = event.getPoseStack().last().pose();
+        // where every show stands now (the player's own first, then the nearest), its shakes as they come
+        PLAYING.sort((a, b) -> Double.compare(priority(minecraft, a, camera), priority(minecraft, b, camera)));
+        List<Playing> live = new ArrayList<>(PLAYING.size());
+        boolean solids = false;
+        Iterator<Playing> it = PLAYING.iterator();
+        while (it.hasNext()) {
+            Playing p = it.next();
+            double t = showTime(minecraft, p, tick, partial);
+            if (t > p.show.length() || t < -2.0) {
+                it.remove();
+                continue;
+            }
+            LivingEntity caster = p.entityId >= 0 && minecraft.level.getEntity(p.entityId) instanceof LivingEntity living
+                    ? living : null;
+            if (p.entityId >= 0 && caster != null && caster.isAlive()) {
+                p.state.update(t, pose(caster, partial));
+            }
+            shake(minecraft, p, t, camera);
+            if (caster != null && caster.isInvisible() && caster != minecraft.player) {
+                continue;
+            }
+            p.now = Math.max(0.0, t);
+            p.ownEyes = caster == minecraft.player && minecraft.options.getCameraType().isFirstPerson();
+            live.add(p);
+            solids |= p.solids;
+        }
         int used = 0;
-        // wakes first (cheap), then the shows: the player's own, then the nearest
+        // first the finales' solid props: depth-written, so the light below glows before them and hides behind them
+        if (solids) {
+            Sink solid = new Sink(buffers.getBuffer(Types.SOLID), matrix, cam);
+            for (Playing p : live) {
+                if (p.solids && used < FRAME_BUDGET) {
+                    used += Painter.paintSolids(p.state, p.now, new Brush(Brush.NOWHERE, solid, camera), p.ownEyes);
+                }
+            }
+            buffers.endBatch(Types.SOLID);
+        }
+        Sink sink = new Sink(buffers.getBuffer(Types.LIGHT), matrix, cam);
+        // wakes first (cheap), then the shows
         for (Map.Entry<Integer, Wake> entry : WAKES.entrySet()) {
             Wake wake = entry.getValue();
             if (wake.points.isEmpty()) {
@@ -352,27 +430,20 @@ public final class SkillFx {
             Trails.draw(brush, wake.theme, wake.arrow, path, tick + partial, wake.seed, alpha);
             used += brush.quads();
         }
-        PLAYING.sort((a, b) -> Double.compare(priority(minecraft, a, camera), priority(minecraft, b, camera)));
-        Iterator<Playing> it = PLAYING.iterator();
-        while (it.hasNext()) {
-            Playing p = it.next();
-            double t = showTime(minecraft, p, tick, partial);
-            if (t > p.show.length() || t < -2.0) {
-                it.remove();
-                continue;
+        for (Playing p : live) {
+            if (used >= FRAME_BUDGET) {
+                break;
             }
-            LivingEntity caster = p.entityId >= 0 && minecraft.level.getEntity(p.entityId) instanceof LivingEntity living
-                    ? living : null;
-            if (p.entityId >= 0 && caster != null && caster.isAlive()) {
-                p.state.update(t, pose(caster, partial));
+            used += Painter.paint(p.state, p.now, new Brush(sink, camera), p.ownEyes);
+        }
+        // the bone kings' glow over their bodies
+        for (int id : KINGS) {
+            if (used < FRAME_BUDGET && minecraft.level.getEntity(id) instanceof BoneKing king
+                    && king.distanceToSqr(cam) < RANGE * RANGE) {
+                Brush brush = new Brush(sink, camera);
+                BoneKingFigure.paint(brush, BoneKingRenderer.state(king, partial));
+                used += brush.quads();
             }
-            shake(minecraft, p, t, camera);
-            if (used >= FRAME_BUDGET || (caster != null && caster.isInvisible() && caster != minecraft.player)) {
-                continue;
-            }
-            Brush brush = new Brush(sink, camera);
-            boolean ownEyes = caster == minecraft.player && minecraft.options.getCameraType().isFirstPerson();
-            used += Painter.paint(p.state, Math.max(0.0, t), brush, ownEyes);
         }
         buffers.endBatch(Types.LIGHT);
     }
@@ -430,6 +501,7 @@ public final class SkillFx {
         PLAYING.clear();
         STARTED.clear();
         WAKES.clear();
+        KINGS.clear();
     }
 
     /** Writes the engine's light into the buffer, relative to the camera. */

@@ -19,6 +19,7 @@ public final class ERClientConfig {
     public static final ForgeConfigSpec.BooleanValue CAMERA_SHAKE;
     public static final ForgeConfigSpec.BooleanValue WEAPON_ANIMATIONS;
     public static final ForgeConfigSpec.BooleanValue SKILL_EFFECTS;
+    public static final ForgeConfigSpec.BooleanValue FINALE_CINEMA;
     public static final ForgeConfigSpec.BooleanValue DIALOGUE_AUTO_ADVANCE;
     public static final ForgeConfigSpec.IntValue DIALOGUE_TEXT_SPEED;
     public static final ForgeConfigSpec.BooleanValue FLAG_ANIMATION;
@@ -50,6 +51,9 @@ public final class ERClientConfig {
         SKILL_EFFECTS = builder.comment("Draw the light of job skills and ultimates: cuts, magic circles, blasts, glowing",
                 "ground areas and the trails of skill spells and arrows (false: only the particles; always off with a",
                 "shader pack)").define("skillEffects", true);
+        FINALE_CINEMA = builder.comment("Your finales (秘奥義, level 70) direct the screen: cinema bars, a zoom, a tinted vignette",
+                "and flashes; a finale close by flashes faintly (false: none of it; the light and the shakes stay)")
+                .define("finaleCinema", true);
         builder.pop();
         builder.comment("Dialogue box").push("dialogue");
         DIALOGUE_AUTO_ADVANCE = builder.comment("Lines in the box above the hotbar (areas, bosses, news) advance by themselves "
