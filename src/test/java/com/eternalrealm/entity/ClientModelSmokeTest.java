@@ -148,6 +148,9 @@ public class ClientModelSmokeTest {
             fail(String.join("\n", problems.subList(0, Math.min(40, problems.size()))));
         }
         assertTrue("too few evaluations: " + evaluated, evaluated > 1000);
-        assertEquals("all rigs checked", 11, RIGS.length);
+        // every enemy rig and boss rig (dedicated dungeon-boss rigs included), the NPC body and the hero body
+        int rigs = load("com.eternalrealm.entity.EnemyRig").getEnumConstants().length
+                + load("com.eternalrealm.entity.BossRig").getEnumConstants().length + 2;
+        assertEquals("all rigs checked", rigs, RIGS.length);
     }
 }
