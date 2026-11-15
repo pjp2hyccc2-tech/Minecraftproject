@@ -250,4 +250,21 @@ NODES = [
     ("p", "eternal_spring", 1, 3, 5, '.req("deep_roots", 3).bonus(stats(mods().healing(0.05)), healOnKill(0.01))',
      "flower glow heal LIFE",
      "常春", "Eternal Spring", "回復量が上がり、敵を倒すとHPが回復する。", "Raises healing; defeating a foe heals you."),
+
+    # ------------------------------------------------------------------ the finale (秘奥義, Lv70)
+    ("f", "bow_of_seven_spirits", 0, 0, 6,
+     '.reqAny("arrow_of_the_spirit_king", 1, "world_tree_awakening", 1).weapons(BOW).cd(90).theme(ARCANE)'
+     '.act(76, 72, 45, pause(8), pause(30), shot(52, arrow(4.5).withPierce(16), 14.0, 2.0),'
+     ' hit(58, beam(16.0, 2.5), 4.0, 1.0))'
+     '.fx(self(START, DEFENSE_UP, 0.5, 70), afflict(2, BURN, 120, 0), afflict(2, FREEZE, 60, 0),'
+     ' afflict(2, STUN, 30, 0), afflict(2, BLIND, 60, 0), afflict(2, VULNERABLE, 200, 0.3), afflict(3, LAUNCH, 1, 0.6),'
+     ' afflict(3, WEAKEN, 200, 0.2), vis(START, "fin_spirits_call"), vis(1, "fin_spirits_draw"),'
+     ' vis(2, "fin_spirits_loose"), vis(3, "fin_spirits_wake"))',
+     "bow orbit+beam star ARCANE",
+     "秘奥義・七精霊の神弓", "Hidden Art: Bow of the Seven Spirits",
+     "【秘奥義】炎・氷・雷・風・地・光・闇の七精霊を呼び出す。精霊たちが光の大弓を形づくり、それぞれの力を一本の矢に注ぎ込む。放たれた全属性の矢は一直線上の敵を貫き、燃やし、凍らせ、しびれさせ、目をくらませて守りを砕く。矢の残した精霊の奔流が後を薙ぎ払う。",
+     "[Finale] Call the seven spirits of fire, ice, thunder, wind, earth, light and darkness. They shape a great bow "
+     "of light and pour their power into a single arrow: loosed, it pierces every foe in its line, burning, freezing, "
+     "stunning and blinding them and shattering their guard, and the torrent of spirits it leaves sweeps on behind "
+     "it."),
 ]

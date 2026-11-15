@@ -81,7 +81,8 @@ public class SkillCatalogTest {
                 }
             }
             if (!skill.isInnate() && skill.tier() > 1) {
-                assertFalse(skill.id() + " needs a prerequisite", skill.prerequisites().isEmpty());
+                // a finale needs either of its class's two ultimates instead (FinaleTest)
+                assertFalse(skill.id() + " needs a prerequisite", skill.requirements().isEmpty());
             }
             int[] gates = skill.isClassSkill() ? Tree.CLASS_TIER_LEVELS : Tree.TIER_LEVELS;
             assertEquals(skill.id(), gates[skill.tier() - 1], skill.requiredLevel());
@@ -92,7 +93,10 @@ public class SkillCatalogTest {
     @Test
     public void requiredLevelsUseTheTierGates() {
         assertEquals(List.of(1, 8, 18, 24, 30, 40), java.util.Arrays.stream(Tree.TIER_LEVELS).boxed().toList());
-        assertEquals(List.of(40, 44, 48, 54, 60), java.util.Arrays.stream(Tree.CLASS_TIER_LEVELS).boxed().toList());
+        // the class's five tiers and, below them, the finale (秘奥義) at level 70
+        assertEquals(List.of(40, 44, 48, 54, 60, 70),
+                java.util.Arrays.stream(Tree.CLASS_TIER_LEVELS).boxed().toList());
+        assertEquals(JobClass.FINALE_LEVEL, Tree.CLASS_TIER_LEVELS[SkillDefinition.CLASS_FINALE_TIER - 1]);
         assertEquals(JobClass.LEVEL, Tree.CLASS_TIER_LEVELS[0]);
         for (SkillDefinition skill : Jobs.allSkills().values()) {
             assertTrue(skill.requiredLevel() <= RULES.levelCap());
@@ -166,7 +170,10 @@ public class SkillCatalogTest {
         assertEquals(0, RULES.earnedSkillPoints(1));
     }
 
-    /** Every class tree: 40 nodes in two branches of four columns and five tiers, an ultimate in each branch. */
+    /**
+     * Every class tree: 40 nodes in two branches of four columns and five tiers, an ultimate in each branch, and the
+     * finale below them.
+     */
     @Test
     public void everyClassTreeFillsItsTwoBranchesOfFiveTiers() {
         for (JobClass jobClass : JobClass.values()) {
@@ -180,12 +187,17 @@ public class SkillCatalogTest {
                 assertEquals(skill.id(), jobClass.base(), skill.job());
                 assertTrue(skill.id(), skill.isClassSkill());
                 assertFalse(skill.id() + " is learned with points", skill.isInnate());
+                if (skill.isFinale()) {
+                    assertEquals(skill.id(), 1, skill.maxLevel());
+                    continue;
+                }
                 assertTrue(cells.add(skill.branch() * 100 + skill.column() * 10 + skill.tier()));
                 kinds.merge(skill.kind(), 1, Integer::sum);
                 assertEquals(skill.id(), skill.kind() == SkillKind.ACTIVE ? Jobs.MAX_SKILL_LEVEL : 3, skill.maxLevel());
             }
             assertEquals(SkillDefinition.CLASS_BRANCHES * SkillDefinition.CLASS_COLUMNS * SkillDefinition.CLASS_TIERS,
                     cells.size());
+            assertEquals(jobClass.toString(), 1, skills.stream().filter(SkillDefinition::isFinale).count());
             assertEquals(jobClass + " " + kinds, 2, (int) kinds.getOrDefault(SkillKind.ULTIMATE, 0));
             assertTrue(jobClass + " " + kinds, kinds.getOrDefault(SkillKind.ACTIVE, 0) >= 20);
             assertTrue(jobClass + " " + kinds, kinds.getOrDefault(SkillKind.PASSIVE, 0) >= 14);
@@ -243,7 +255,10 @@ public class SkillCatalogTest {
             boolean any = false;
             for (SkillEffect effect : skill.effects()) {
                 if (effect instanceof SkillEffect.Visual visual) {
-                    assertTrue(skill.id() + ": unknown visual " + visual.kind(), VISUALS.contains(visual.kind()));
+                    // a finale's own moments (FinaleVisuals), the shared kinds (SkillVisuals) for every other skill
+                    assertTrue(skill.id() + ": unknown visual " + visual.kind(), skill.isFinale()
+                            ? com.eternalrealm.job.fx.Finales.VISUALS.contains(visual.kind())
+                            : VISUALS.contains(visual.kind()));
                     any = true;
                 }
             }

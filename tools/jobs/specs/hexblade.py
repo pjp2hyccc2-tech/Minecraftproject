@@ -252,4 +252,19 @@ NODES = [
     ("p", "endless_curse", 1, 3, 5, '.req("demon_pact", 3).bonus(proc(POISON, 0.03, 100, 0.3, false))',
      "snake glow poison VENOM",
      "終わらぬ呪い", "Endless Curse", "攻撃が一定確率で敵を毒に冒す。", "Your attacks may poison the foe."),
+
+    # ------------------------------------------------------------------ the finale (秘奥義, Lv70)
+    ("f", "hour_of_the_ox", 0, 0, 6,
+     '.reqAny("curse_of_the_red_moon", 1, "sword_of_the_netherlord", 1).cd(90).theme(SHADOW)'
+     '.act(70, 66, 45, pause(10), hit(26, ahead(3.0, 4.5), 3.0, 0.2), hit(40, ahead(3.0, 4.5), 3.0, 0.2),'
+     ' hit(56, ahead(3.5, 4.5), 12.0, 1.2))'
+     '.fx(self(START, DEFENSE_UP, 0.4, 60), afflict(1, SLOW, 60, 4), afflict(2, STUN, 20, 0), crit(3),'
+     ' afflict(3, CURSE, 200, 0.03), afflict(3, WEAKEN, 200, 0.3), vis(START, "fin_ox_ritual"), vis(1, "fin_ox_nail"),'
+     ' vis(2, "fin_ox_nail"), vis(3, "fin_ox_strike"))',
+     "hammer crack+burst crit SHADOW",
+     "秘奥義・丑の刻参り", "Hidden Art: Hour of the Ox",
+     "【秘奥義】丑の刻の呪いを呼ぶ。前方の敵に巨大な呪いの釘を突き立て、呪いの金槌で三度打ち込む。最後の一打は必ず会心となって釘を深く沈め、敵は長く呪詛に蝕まれて弱り続ける。",
+     "[Finale] Call down the curse of the hour of the ox: a giant cursed nail is driven against the foe ahead and a "
+     "cursed hammer strikes it three times. The last blow is always critical and sinks the nail deep, and the foe "
+     "withers under the curse for a long while."),
 ]

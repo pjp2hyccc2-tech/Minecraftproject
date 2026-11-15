@@ -114,6 +114,13 @@ final class PaladinSkills {
                         vis(0, "roar"), vis(0, "aura"));
         t.passive("aegis_of_heaven", 1, 3, 5).req("divine_favor", 3).bonus(stats(mods().defense(8).guard(0.02)));
 
+        // ---------------------------------------------------------------- the finale (秘奥義, Lv70)
+        t.finale("earthsunder").reqAny("divine_judgment", 1, "sanctum_of_light", 1).cd(90).theme(HOLY)
+                .act(68, 64, 45, pause(10), hit(36, ahead(5.0, 6.0), 12.0, 2.4))
+                .fx(self(START, DEFENSE_UP, 0.5, 48), afflict(1, STUN, 40, 0), afflict(1, VULNERABLE, 200, 0.3),
+                        field(1, AHEAD, 8.0, 7.0, 6, 10, 10, 0.6, 0.02, SLOW, 40, 2, null),
+                        vis(START, "fin_giant_sword_grow"), vis(1, "fin_giant_sword_strike"));
+
         return t.build();
     }
 }

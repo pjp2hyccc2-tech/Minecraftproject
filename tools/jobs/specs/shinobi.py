@@ -251,4 +251,23 @@ NODES = [
     ("p", "shadowless", 1, 3, 5, '.req("rending_edge", 3).bonus(evasion(0.02))',
      "hood glow - SHADOW",
      "無影", "Shadowless", "攻撃を回避しやすくなる。", "You dodge attacks more often."),
+
+    # ------------------------------------------------------------------ the finale (秘奥義, Lv70)
+    ("f", "eightfold_flash", 0, 0, 6,
+     '.reqAny("all_creation", 1, "shadow_moon_dance", 1).cd(90).theme(STEEL)'
+     '.act(72, 68, 45, pause(12), pause(18), pause(22), pause(26), pause(30), pause(34), pause(38), pause(42),'
+     ' pause(46), pause(54), hit(60, circle(8.0, 24), 18.0, 1.6))'
+     '.fx(self(START, EVASION, 0.6, 64), engrave(1, 7.5, 52), engrave(2, 7.5, 48), engrave(3, 7.5, 44),'
+     ' engrave(4, 7.5, 40), engrave(5, 7.5, 36), engrave(6, 7.5, 32), engrave(7, 7.5, 28), engrave(8, 7.5, 24),'
+     ' reckon(10, 24.0), afflict(10, BLEED, 120, 0.05), vis(START, "fin_eightfold_stance"),'
+     ' vis(1, "fin_eightfold_flash"), vis(2, "fin_eightfold_flash"), vis(3, "fin_eightfold_flash"),'
+     ' vis(4, "fin_eightfold_flash"), vis(5, "fin_eightfold_flash"), vis(6, "fin_eightfold_flash"),'
+     ' vis(7, "fin_eightfold_flash"), vis(8, "fin_eightfold_flash"), vis(9, "fin_eightfold_sheathe"),'
+     ' vis(10, "fin_eightfold_burst"))',
+     "katana x+speed crit STEEL",
+     "秘奥義・八重一閃", "Hidden Art: Eightfold Flash",
+     "【秘奥義】居合の構えから姿を消し、周りの敵を八度の一閃で斬り抜ける。斬られた敵はまだ気づかず、その場に縫い止められる。静かに納刀した瞬間、八つの斬撃が一斉に弾け、刻んだ敵すべてに一気に大ダメージを与える。閃きの間は攻撃をかわしやすい。",
+     "[Finale] From the draw stance you vanish and cut through every foe around you in eight flashes. They do not "
+     "know it yet and stand pinned where they are; the moment you sheathe the blade, all eight cuts burst at once and "
+     "every foe you marked takes the whole blow. Attacks rarely touch you while you flash."),
 ]

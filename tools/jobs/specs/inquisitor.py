@@ -251,4 +251,17 @@ NODES = [
     ("p", "everburning", 1, 3, 5, '.req("from_the_ashes", 3).bonus(cooldown(0.02))',
      "flame halo clock FIRE",
      "不滅の火", "Everburning", "スキルの再使用時間が短くなる。", "Skills recover faster."),
+
+    # ------------------------------------------------------------------ the finale (秘奥義, Lv70)
+    ("f", "divine_verdict", 0, 0, 6,
+     '.reqAny("divine_execution", 1, "heavenly_wildfire", 1).cd(90).theme(HOLY)'
+     '.act(72, 68, 45, pause(10), hit(32, circle(12.0, 24), 9.0, 0.4), hit(54, circle(12.0, 24), 9.0, 1.6))'
+     '.fx(self(START, DEFENSE_UP, 0.5, 60), verdict(1), vis(START, "fin_verdict_scales"), vis(1, "fin_verdict_judge"),'
+     ' vis(2, "fin_verdict_execute"))',
+     "scales smite+ring vuln HOLY",
+     "秘奥義・神判", "Hidden Art: Divine Verdict",
+     "【秘奥義】天に審判の天秤を掲げ、神に代わって周りの敵すべてに神判を下す。一体ずつに裁きの光が落ち、それぞれに異なる刑（鎖縛・烙印・衰弱・業火・盲目・凍獄）が科される。続く刑の執行が、もう一度すべての敵を裁く。",
+     "[Finale] Raise the scales of judgment in the sky and pass heaven's verdict on every foe around you: a pillar of "
+     "judgment falls on each one, and each receives a sentence of its own (chains, the brand, withering, hellfire, "
+     "blindness, the frozen prison). Then the sentence is carried out, and every foe is judged once more."),
 ]

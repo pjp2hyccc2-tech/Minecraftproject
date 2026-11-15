@@ -99,9 +99,9 @@ public final class Jobs {
         return CLASS_SKILLS.getOrDefault(jobClass, List.of());
     }
 
-    /** The skills that list {@code id} as a prerequisite, in its job's tree or its class's. */
+    /** The skills that list {@code id} as a prerequisite (or an alternative), in its job's tree or its class's. */
     public static List<SkillDefinition> unlockedBy(String id) {
-        return SKILLS.values().stream().filter(skill -> skill.prerequisites().stream()
+        return SKILLS.values().stream().filter(skill -> skill.requirements().stream()
                 .anyMatch(prerequisite -> prerequisite.skillId().equals(id))).toList();
     }
 
@@ -132,7 +132,7 @@ public final class Jobs {
 
     /**
      * A second class's tree: {@value JobClass#SKILLS} nodes of the class filling its two branches of four columns and
-     * five tiers, prerequisites inside the tree and without cycles.
+     * five tiers and its finale below them, prerequisites inside the tree and without cycles.
      */
     private static void registerClass(JobClass jobClass, List<SkillDefinition> skills) {
         Map<String, SkillDefinition> byId = new LinkedHashMap<>();
@@ -152,8 +152,12 @@ public final class Jobs {
         if (skills.size() != JobClass.SKILLS) {
             throw new ExceptionInInitializerError(jobClass + " has " + skills.size() + " skills");
         }
+        long finales = skills.stream().filter(SkillDefinition::isFinale).count();
+        if (finales != 1) {
+            throw new ExceptionInInitializerError(jobClass + " has " + finales + " finales");
+        }
         for (SkillDefinition skill : skills) {
-            for (Prerequisite prerequisite : skill.prerequisites()) {
+            for (Prerequisite prerequisite : skill.requirements()) {
                 SkillDefinition required = byId.get(prerequisite.skillId());
                 if (required == null || prerequisite.level() > required.maxLevel()
                         || required.tier() >= skill.tier()) {

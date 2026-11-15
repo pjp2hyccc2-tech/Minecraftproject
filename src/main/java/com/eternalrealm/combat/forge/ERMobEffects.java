@@ -89,10 +89,19 @@ public final class ERMobEffects {
     public static final RegistryObject<MobEffect> THORNS = EFFECTS.register("thorns",
             () -> new MarkerEffect(MobEffectCategory.BENEFICIAL, 0x7A9A3A));
 
+    // ---------------------------------------------------------------- the finales (秘奥義)
+    /** 金剛の加護: no damage of any kind gets through (the guardian's finale; the void and commands aside). */
+    public static final RegistryObject<MobEffect> DIVINE_AEGIS = EFFECTS.register("divine_aegis",
+            () -> new MarkerEffect(MobEffectCategory.BENEFICIAL, 0xFFD24A));
+    /** 呪詛: damage every second from the strength stored on the victim, apart from bleeding and poison. */
+    public static final RegistryObject<MobEffect> HEXED = EFFECTS.register("hexed", HexEffect::new);
+
     static final String BLEED_DPS = "eternalrealm_bleed_dps";
     static final String BLEED_SOURCE = "eternalrealm_bleed_source";
     static final String POISON_DPS = "eternalrealm_poison_dps";
     static final String POISON_SOURCE = "eternalrealm_poison_source";
+    static final String HEX_DPS = "eternalrealm_hex_dps";
+    static final String HEX_SOURCE = "eternalrealm_hex_source";
     private static final double STEP = 0.05;
 
     private ERMobEffects() {
@@ -148,6 +157,25 @@ public final class ERMobEffects {
             data.putUUID(POISON_SOURCE, source.getUUID());
         }
         target.addEffect(new MobEffectInstance(POISONED.get(), ticks, 0, false, true, true), source);
+    }
+
+    /** Keeps the strongest of the running and the new curse. */
+    public static void applyHex(LivingEntity target, ServerPlayer source, float damagePerSecond, int ticks) {
+        if (!(damagePerSecond > 0.0F) || ticks <= 0) {
+            return;
+        }
+        CompoundTag data = target.getPersistentData();
+        boolean hexed = target.hasEffect(HEXED.get());
+        if (!hexed || data.getFloat(HEX_DPS) <= damagePerSecond) {
+            data.putFloat(HEX_DPS, damagePerSecond);
+            data.putUUID(HEX_SOURCE, source.getUUID());
+        }
+        target.addEffect(new MobEffectInstance(HEXED.get(), ticks, 0, false, true, true), source);
+    }
+
+    /** Whether nothing can hurt {@code entity} right now (the guardian's finale). */
+    public static boolean isWarded(LivingEntity entity) {
+        return entity.hasEffect(DIVINE_AEGIS.get());
     }
 
     /** Keeps the strongest of the running and the new bleed. */
@@ -220,6 +248,41 @@ public final class ERMobEffects {
             level.sendParticles(new net.minecraft.core.particles.DustParticleOptions(
                             new org.joml.Vector3f(0.42F, 0.85F, 0.25F), 1.0F),
                     entity.getX(), entity.getY() + entity.getBbHeight() * 0.6, entity.getZ(), 6, 0.3, 0.3, 0.3, 0.0);
+        }
+    }
+
+    /** The curse's damage once per second (a little after bleeding and poison), with dark sparks rising. */
+    static final class HexEffect extends MobEffect {
+        HexEffect() {
+            super(MobEffectCategory.HARMFUL, 0x6A2C9C);
+        }
+
+        @Override
+        public boolean isDurationEffectTick(int duration, int amplifier) {
+            return duration % 20 == 5;
+        }
+
+        @Override
+        public void applyEffectTick(LivingEntity entity, int amplifier) {
+            if (!(entity.level() instanceof ServerLevel level)) {
+                return;
+            }
+            CompoundTag data = entity.getPersistentData();
+            float damage = data.getFloat(HEX_DPS);
+            if (!(damage > 0.0F)) {
+                return;
+            }
+            Entity source = data.hasUUID(HEX_SOURCE) ? level.getEntity(data.getUUID(HEX_SOURCE)) : null;
+            DamageSource damageSource = source != null
+                    ? entity.damageSources().indirectMagic(source, source)
+                    : entity.damageSources().magic();
+            entity.invulnerableTime = 0;
+            entity.hurt(damageSource, damage);
+            level.sendParticles(net.minecraft.core.particles.ParticleTypes.SOUL, entity.getX(),
+                    entity.getY() + entity.getBbHeight() * 0.7, entity.getZ(), 3, 0.25, 0.3, 0.25, 0.02);
+            level.sendParticles(new net.minecraft.core.particles.DustParticleOptions(
+                            new org.joml.Vector3f(0.55F, 0.2F, 0.85F), 1.2F),
+                    entity.getX(), entity.getY() + entity.getBbHeight() * 0.5, entity.getZ(), 8, 0.35, 0.4, 0.35, 0.0);
         }
     }
 

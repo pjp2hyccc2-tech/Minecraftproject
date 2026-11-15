@@ -9,6 +9,9 @@ with two additions:
 * the class's mark on the frame: gems of the class colour on the four rivets and a crest at the top of the frame, so a
   class skill is told from a skill of the job's own tree at a glance, and the two classes of a job from each other.
 
+A class's finale (秘奥義, kind ``f``, level 70) is composed like an ultimate and framed in violet with gold corners and a
+gold crest (the colour of the finale slot in the HUD and the skill screen), with the class gems on the rivets.
+
 The emblems (textures/gui/job/<class>.png) are medallions like the jobs' (tools/art/skills.py emblem) in the class
 colour with the class's glyph.
 
@@ -241,7 +244,18 @@ EXTRA = {
         "WSSSSKKSSSSW",
         "SSSSKKKKSSSS",
     ],
+    # the sniper's finale: a heavy rifle with a long scope, runes glowing on the receiver
+    "rifle": [
+        "...SSSSS....",
+        "....s..s....",
+        "BBBSSSSSSSSW",
+        "BBBBSAs.....",
+        "BB...S......",
+    ],
 }
+
+# the finales' frame
+VIOLET = Ramp("1a0838", "3a1470", "5a24a8", "7a3ce0", "b07aff", "e6d4ff")
 
 
 def install() -> None:
@@ -260,7 +274,7 @@ def check(recipes: dict) -> list[str]:
         for node in nodes:
             sid, kind, obj, fx, badge, theme = node[:6]
             flags = node[6:]
-            if kind not in ("a", "p", "u"):
+            if kind not in ("a", "p", "u", "f"):
                 bad.append(f"{sid}: kind {kind}")
             if obj != "-" and obj not in st.OBJECTS and obj not in st.DRAWN:
                 bad.append(f"{sid}: unknown object {obj}")
@@ -288,11 +302,34 @@ def mark(c: Canvas, ramp: Ramp) -> None:
         c.put(x, 1, mix(c.get(x, 1), ramp[3], 0.85))
 
 
+def finale_mark(c: Canvas, ramp: Ramp) -> None:
+    """A finale's frame: violet, gold corners and a gold crest on top, the class gems on the rivets."""
+    for y in range(16):
+        for x in range(16):
+            edge = min(x, y, 15 - x, 15 - y)
+            if edge == 0:
+                c.put(x, y, VIOLET[1] if (x + y) % 2 else VIOLET[2])
+            elif edge == 1:
+                c.put(x, y, mix(c.get(x, y), VIOLET[4], 0.6))
+    for (x, y) in ((0, 0), (15, 0), (0, 15), (15, 15)):
+        c.put(x, y, P.GOLD[3])
+    for (x, y) in ((1, 1), (14, 1), (1, 14), (14, 14)):
+        c.put(x, y, ramp[5] if (x, y) == (1, 1) else ramp[4])
+    for x in (6, 9):
+        c.put(x, 0, P.GOLD[3])
+    for x in (7, 8):
+        c.put(x, 0, P.GOLD[5])
+        c.put(x, 1, P.GOLD[4])
+
+
 def class_icon(cls: str, node: list) -> Canvas:
     sid, kind, obj, fx, badge, theme = node[:6]
     job, ramp = CLASSES[cls]
-    c = st.compose(sid, job, kind, obj, fx, badge, theme, " ".join(node[6:]))
-    mark(c, ramp)
+    c = st.compose(sid, job, "u" if kind == "f" else kind, obj, fx, badge, theme, " ".join(node[6:]))
+    if kind == "f":
+        finale_mark(c, ramp)
+    else:
+        mark(c, ramp)
     return c
 
 

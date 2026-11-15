@@ -25,6 +25,10 @@ import java.util.List;
  */
 public final class SkillFxPreview {
     private static boolean FIRST_PERSON;
+    /** A third-person view close behind the caster (how the finales' props are seen in the game). */
+    private static boolean CLOSE;
+    /** Moments to draw instead of the usual six (ticks). */
+    private static double[] AT;
     private static int CW = 300;
     private static int CH = 190;
 
@@ -52,6 +56,18 @@ public final class SkillFxPreview {
                 CH = 380;
                 continue;
             }
+            if (a.equals("--close")) {
+                CLOSE = true;
+                continue;
+            }
+            if (a.startsWith("--at=")) {
+                String[] parts = a.substring(5).split(",");
+                AT = new double[parts.length];
+                for (int k = 0; k < parts.length; k++) {
+                    AT[k] = Double.parseDouble(parts[k]);
+                }
+                continue;
+            }
             if (a.equals("fields") || a.equals("blasts") || a.equals("trails")) {
                 sheetOfThemes(out, a, day);
                 continue;
@@ -73,6 +89,13 @@ public final class SkillFxPreview {
                 Jobs.allSkills().values().stream().filter(s -> s.kind() == SkillKind.ULTIMATE)
                         .sorted(Comparator.comparing(SkillDefinition::id)).forEach(skills::add);
                 sheet = "ultimates";
+            } else if (a.equals("finales")) {
+                Jobs.allSkills().values().stream().filter(SkillDefinition::isFinale)
+                        .sorted(Comparator.comparing(SkillDefinition::id)).forEach(skills::add);
+                sheet = "finales";
+            } else if (a.equals("boneking")) {
+                boneKing(out, day);
+                continue;
             } else {
                 Jobs.skill(a).ifPresent(skills::add);
                 sheet = a;
@@ -81,7 +104,7 @@ public final class SkillFxPreview {
         if (skills.isEmpty()) {
             return;
         }
-        int cols = 6;
+        int cols = AT != null ? AT.length : 6;
         int perSheet = 18;
         for (int part = 0; part * perSheet < skills.size(); part++) {
             List<SkillDefinition> slice = skills.subList(part * perSheet, Math.min(skills.size(), (part + 1) * perSheet));
@@ -91,7 +114,7 @@ public final class SkillFxPreview {
             int row = 0;
             for (SkillDefinition skill : slice) {
                 SkillShow show = SkillShows.of(skill);
-                double[] moments = moments(show);
+                double[] moments = AT != null ? AT : moments(show);
                 for (int col = 0; col < cols; col++) {
                     BufferedImage cell = render(skill, show, moments[col], day);
                     gfx.drawImage(cell, col * CW, row * CH, null);
@@ -185,13 +208,17 @@ public final class SkillFxPreview {
         // the usual third-person view: behind the shoulder, a little above
         V3 eye = big ? new V3(-5.0, 7.0, -12.0) : new V3(-1.6, 3.0, -5.2);
         V3 target = big ? new V3(0.0, 4.0, 5.0) : new V3(0.0, 1.3, 3.5);
+        if (CLOSE) {
+            eye = new V3(-2.6, 2.9, -4.4);
+            target = new V3(0.4, 1.8, 3.0);
+        }
         if (FIRST_PERSON) {
             // through the caster's own eyes, carried along by their dashes and leaps
             Pose now = pose(skill, t);
             eye = now.eye();
             target = eye.plus(now.look(), 5.0);
         }
-        FxRaster raster = new FxRaster(CW, CH, eye, target, FIRST_PERSON ? 75.0 : (big ? 72.0 : 66.0));
+        FxRaster raster = new FxRaster(CW, CH, eye, target, FIRST_PERSON ? 75.0 : CLOSE ? 74.0 : (big ? 72.0 : 66.0));
         raster.backdrop(day, pose(skill, t).feet());
         Pose origin = pose(skill, 0.0);
         ShowState state = new ShowState(show, origin, new V3(0.0, 0.0, 10.0));
@@ -199,8 +226,40 @@ public final class SkillFxPreview {
             state.update(k, pose(skill, k));
         }
         state.update(t, pose(skill, t));
+        // solids first (they hide the light behind them), then the light
+        Painter.paintSolids(state, t, new Brush(Brush.NOWHERE, raster.solids(), raster.eye()), FIRST_PERSON);
         Painter.paint(state, t, new Brush(raster, raster.eye()), FIRST_PERSON);
         return raster.image();
+    }
+
+    /** The skeleton knight-king: rising, standing, both swings around their impact, crumbling. */
+    static void boneKing(File out, boolean day) throws IOException {
+        double[][] moments = {{10, -1, 0, -1}, {30, -1, 0, -1}, {60, -1, 0, -1}, {70, 6, 0, -1}, {72, 12, 0, -1},
+                {74, 16, 0, -1}, {90, 6, 1, -1}, {92, 12, 1, -1}, {95, 18, 1, -1}, {120, -1, 0, 8}, {120, -1, 0, 18},
+                {120, -1, 0, 26}};
+        int cols = 6;
+        int rows = (moments.length + cols - 1) / cols;
+        BufferedImage img = new BufferedImage(CW * cols, CH * rows, BufferedImage.TYPE_INT_RGB);
+        Graphics2D gfx = img.createGraphics();
+        gfx.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 11));
+        for (int i = 0; i < moments.length; i++) {
+            double[] m = moments[i];
+            V3 eye = new V3(-4.5, 4.2, -5.5);
+            FxRaster raster = new FxRaster(CW, CH, eye, new V3(0.0, 2.2, 3.0), 66.0);
+            raster.backdrop(day, new V3(-1.8, 0.0, 1.0));
+            BoneKingFigure.State s = new BoneKingFigure.State(new V3(0.0, 0.0, 3.0), 200.0, m[0], m[1], (int) m[2],
+                    m[3], m[0] * 0.3, i == 2 ? 1.0 : 0.0, 11L);
+            BoneKingFigure.paint(new Brush(Brush.NOWHERE, raster.solids(), raster.eye()), s);
+            BoneKingFigure.paint(new Brush(raster, raster.eye()), s);
+            gfx.drawImage(raster.image(), (i % cols) * CW, (i / cols) * CH, null);
+            gfx.setColor(Color.WHITE);
+            gfx.drawString(String.format("age %.0f swing %.0f/%d fade %.0f", m[0], m[1], (int) m[2], m[3]),
+                    (i % cols) * CW + 4, (i / cols) * CH + 13);
+        }
+        gfx.dispose();
+        File file = new File(out, "boneking" + (day ? "_day" : "") + ".png");
+        ImageIO.write(img, "png", file);
+        System.out.println(file);
     }
 
     /** The caster at show time {@code t}: standing at the origin facing +z, carried forward by its dashes. */

@@ -12,7 +12,9 @@ Japanese and English. This script writes from them
 * docs/modules/classes.md                                 (the trees as tables)
 
 and checks the shape: 40 nodes filling two branches of four columns and five tiers, unique names, an ultimate per
-branch, prerequisites on earlier tiers of the same class.
+branch, prerequisites on earlier tiers of the same class, and the finale (秘奥義, owner 2026-11-15: 「各職業のニ次職の最後の
+最後にlv70で＋1800%の必殺技をそれぞれ用意して」): one "f" node on tier 6 (level 70) below both branches, reached from
+either branch's ultimate (.reqAny), one level only, a 90-second cooldown and 1800 % of damage.
 
     python3 tools/jobs/class_trees.py
 """
@@ -42,7 +44,8 @@ CLASSES = {
     "sword_saint": ("SwordSaintSkills", "SWORD_SAINT", "spellblade"),
     "hexblade": ("HexbladeSkills", "HEXBLADE", "spellblade"),
 }
-KINDS = {"a": "active", "p": "passive", "u": "ultimate"}
+KINDS = {"a": "active", "p": "passive", "u": "ultimate", "f": "finale"}
+FINALE_TIER = 6
 WEAPONS = ["ONE_HANDED_SWORD", "TWO_HANDED_SWORD", "SPEAR", "DUAL_BLADES", "BOW", "STAFF"]
 
 
@@ -53,8 +56,11 @@ def load(cls: str):
 def check(cls: str, spec) -> list[str]:
     bad = []
     nodes = spec.NODES
-    if len(nodes) != 40:
+    if len(nodes) != 41:
         bad.append(f"{cls}: {len(nodes)} nodes")
+    finales = [n for n in nodes if n[0] == "f"]
+    if len(finales) != 1:
+        bad.append(f"{cls}: {len(finales)} finales")
     names = set()
     cells = set()
     tiers = {}
@@ -65,7 +71,10 @@ def check(cls: str, spec) -> list[str]:
         if name in names:
             bad.append(f"{cls}_{name}: twice")
         names.add(name)
-        if not (0 <= branch <= 1 and 0 <= col <= 3 and 1 <= tier <= 5):
+        if kind == "f":
+            if (branch, col, tier) != (0, 0, FINALE_TIER):
+                bad.append(f"{cls}_{name}: the finale sits at 0 0 {FINALE_TIER}")
+        elif not (0 <= branch <= 1 and 0 <= col <= 3 and 1 <= tier <= 5):
             bad.append(f"{cls}_{name}: cell {branch} {col} {tier}")
         if (branch, col, tier) in cells:
             bad.append(f"{cls}_{name}: cell taken")
@@ -93,7 +102,20 @@ def check(cls: str, spec) -> list[str]:
             elif tiers[parent] >= n[4]:
                 bad.append(f"{cls}_{n[1]}: prerequisite {parent} not on an earlier tier")
             i = j
-        if n[4] > 1 and '.req("' not in java:
+        if n[0] == "f":
+            ultimates = sorted(u[1] for u in nodes if u[0] == "u")
+            i = java.find('.reqAny("')
+            if i < 0:
+                bad.append(f"{cls}_{n[1]}: the finale needs .reqAny of the two ultimates")
+            else:
+                args = java[i + 8:java.index(")", i)].split(",")
+                parents = sorted(a.strip().strip('"') for a in args[0::2])
+                if parents != ultimates:
+                    bad.append(f"{cls}_{n[1]}: the finale must follow {ultimates}, not {parents}")
+            for need in (".cd(90)", ".act(", ".fx("):
+                if need not in java:
+                    bad.append(f"{cls}_{n[1]}: a finale needs {need}")
+        elif n[4] > 1 and '.req("' not in java:
             bad.append(f"{cls}_{n[1]}: tier {n[4]} without a prerequisite")
         if n[0] == "p" and ".bonus(" not in java:
             bad.append(f"{cls}_{n[1]}: a passive without bonuses")
@@ -140,15 +162,20 @@ def java(cls: str, spec) -> str:
     ]
     lines = [line for line in lines if line is not None]
     branch = -1
-    for n in sorted(spec.NODES, key=lambda n: (n[2], n[4], n[3])):
+    for n in sorted(spec.NODES, key=lambda n: (2 if n[0] == "f" else n[2], n[4], n[3])):
         kind, sname, b, col, tier, chain = n[:6]
-        if b != branch:
-            branch = b
+        if kind == "f":
             lines.append("")
-            lines.append(f"        // ---------------------------------------------------------------- {b}: "
-                         f"{spec.BRANCHES[b][0]}")
-        method = KINDS[kind]
-        head = f'        t.{method}("{sname}", {b}, {col}, {tier})'
+            lines.append("        // ---------------------------------------------------------------- the finale (秘奥義, Lv70)")
+            head = f'        t.finale("{sname}")'
+        else:
+            if b != branch:
+                branch = b
+                lines.append("")
+                lines.append(f"        // ---------------------------------------------------------------- {b}: "
+                             f"{spec.BRANCHES[b][0]}")
+            method = KINDS[kind]
+            head = f'        t.{method}("{sname}", {b}, {col}, {tier})'
         chain = " ".join(chain.split())
         lines.extend(wrap(head + chain + ";"))
     lines += ["", "        return t.build();", "    }", "}", ""]
@@ -236,8 +263,8 @@ BASE_JA = {"knight": "騎士", "assassin": "暗殺者", "mage": "魔導士", "ra
 
 
 def points(n) -> int:
-    """Points to max a node: actives have five levels, a class's passives and ultimates three."""
-    return 5 if n[0] == "a" else 3
+    """Points to max a node: actives have five levels, a class's passives and ultimates three, the finale one."""
+    return 5 if n[0] == "a" else 1 if n[0] == "f" else 3
 
 
 def doc(specs: dict) -> str:
@@ -247,6 +274,7 @@ def doc(specs: dict) -> str:
         "",
         "`python3 tools/jobs/class_trees.py` が `tools/jobs/specs/` から書き出す一覧（手で編集しない）。仕組みは",
         "[skills.md](skills.md) の「二次職」。〔P〕= パッシブ、〔必〕= 必殺技、← = 前提。列は系統ごとに左から。",
+        "表の下の **Lv70 秘奥義** は両系統の下にある最後のノード（どちらかの必殺技を習得すると取れる。[skills.md](skills.md) §12.1）。",
         "",
     ]
     with open(os.path.join(ROOT, "docs/i18n/second_classes.json"), encoding="utf-8") as f:
@@ -254,15 +282,16 @@ def doc(specs: dict) -> str:
     for cls, spec in specs.items():
         _, _, base = CLASSES[cls]
         names = {n[1]: n[7] for n in spec.NODES}
-        kinds = {k: sum(1 for n in spec.NODES if n[0] == k) for k in "apu"}
+        kinds = {k: sum(1 for n in spec.NODES if n[0] == k) for k in "apuf"}
         total = sum(points(n) for n in spec.NODES)
         out += [f"## {spec.TITLE_JA}（{cls}）— {BASE_JA[base]}の二次職", "",
                 classes[f"job.eternalrealm.{cls}.desc"]["ja"], "",
                 f"系統: {spec.BRANCHES[0][0]}（{spec.BRANCHES[0][1]}）／ {spec.BRANCHES[1][0]}（{spec.BRANCHES[1][1]}）"
-                f" ／ アクティブ {kinds['a']}・パッシブ {kinds['p']}・必殺技 {kinds['u']} ／ 全習得 {total} pt", "",
+                f" ／ アクティブ {kinds['a']}・パッシブ {kinds['p']}・必殺技 {kinds['u']}・秘奥義 {kinds['f']}"
+                f" ／ 全習得 {total} pt", "",
                 f"| Lv | {spec.BRANCHES[0][0]} | | | | {spec.BRANCHES[1][0]} | | | |",
                 "|---|---|---|---|---|---|---|---|---|"]
-        cells = {(n[2], n[3], n[4]): n for n in spec.NODES}
+        cells = {(n[2], n[3], n[4]): n for n in spec.NODES if n[0] != "f"}
         for tier, level in enumerate((40, 44, 48, 54, 60), start=1):
             row = [str(level)]
             for b in (0, 1):
@@ -281,6 +310,12 @@ def doc(specs: dict) -> str:
                         i = j
                     row.append(text)
             out.append("| " + " | ".join(row) + " |")
+        finale = next(n for n in spec.NODES if n[0] == "f")
+        chain = finale[5]
+        i = chain.index('.reqAny("')
+        args = [a.strip().strip('"') for a in chain[i + 8:chain.index(")", i)].split(",")]
+        out += ["", f"**Lv70 秘奥義**: {finale[7]}（{finale[8]}）← {names[args[0]]} Lv{args[1]} か "
+                    f"{names[args[2]]} Lv{args[3]} のどちらか。{finale[9]}"]
         out.append("")
     return "\n".join(out)
 

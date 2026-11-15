@@ -247,4 +247,18 @@ NODES = [
     ("p", "eternal_night", 1, 3, 5, '.req("death_ward", 3).bonus(stats(mods().crit(0.02).physical(0.02)))',
      "moon halo star SHADOW",
      "常夜", "Eternal Night", "会心率と物理攻撃力が上がる。", "Raises critical chance and physical power."),
+
+    # ------------------------------------------------------------------ the finale (秘奥義, Lv70)
+    ("f", "scythe_of_the_end", 0, 0, 6,
+     '.reqAny("crimson_harvest", 1, "sending_to_yomi", 1).cd(90).theme(SHADOW)'
+     '.act(64, 60, 45, pause(10), hit(26, circle(9.0, 24), 3.0, 0.0), hit(40, circle(10.0, 24), 15.0, 2.2))'
+     '.fx(self(START, DEFENSE_UP, 0.5, 44), afflict(1, PULL, 1, 0.9), afflict(1, SLOW, 60, 3), execute(2, 0.3, 1.0),'
+     ' siphon(2, 0.08, 0), afflict(2, VULNERABLE, 200, 0.3), vis(START, "fin_scythe_summon"),'
+     ' vis(1, "fin_scythe_hook"), vis(2, "fin_scythe_reap"))',
+     "scythe nova+arc2 skull SHADOW",
+     "秘奥義・終焉の大鎌", "Hidden Art: Scythe of the End",
+     "【秘奥義】冥府から身の丈を超える大鎌を呼び出し、高く振りかぶる。返しの刃で周りの魂を引き寄せ、振り下ろす一閃で辺り一面を刈り取る。弱った敵ほど深く刈られ、刈った命の一部が自分に還る。",
+     "[Finale] Call a scythe taller than yourself up from the underworld and raise it high. The back of the blade drags "
+     "the souls around you in, and one great sweep reaps everything near; the weakened are cut deepest, and part of "
+     "the life you reap comes back to you."),
 ]

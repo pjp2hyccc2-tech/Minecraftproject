@@ -92,6 +92,20 @@ public final class Fields {
     }
 
     /**
+     * The show of one sentence of the inquisitor's 神判 ({@code SkillEffect.Sentence} ordinal {@code sentence}) over a
+     * foe {@code height} blocks tall: drawn on a pose standing at the spot over its head (its feet are that point). The
+     * pillar of judgment comes down at once; 22 ticks later the sentence is carried out.
+     */
+    public static SkillShow sentence(int sentence, double height, long seed) {
+        double h = clamp(height, 0.5, 16.0);
+        List<Cue> cues = List.of(Cue.of(Cue.Kind.SENTENCE, 0, 4, 34).at(Cue.Anchor.ORIGIN).a(0.55 + h * 0.08)
+                .b(h).variant(Math.max(0, sentence)).seed(Brush.mixSeed(seed, 1)).build());
+        List<SkillShow.Shake> shakes = List.of(new SkillShow.Shake(22, 0.5F, 5, 0.2F));
+        return new SkillShow("sentence:" + sentence, null, SkillTheme.HOLY, false, 34, 4, new int[]{0, 22}, cues,
+                shakes);
+    }
+
+    /**
      * The pose a field or a blast is drawn on: standing at {@code ground} (the area's centre on the ground, or one
      * block under the heart of a blast) facing {@code yawDegrees}.
      */

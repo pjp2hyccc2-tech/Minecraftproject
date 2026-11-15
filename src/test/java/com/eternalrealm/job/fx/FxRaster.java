@@ -13,6 +13,8 @@ final class FxRaster implements Light {
     final float[] r;
     final float[] g;
     final float[] b;
+    /** Depth of the nearest solid at each pixel (light behind a solid is hidden, as in the game). */
+    final float[] depth;
     private final V3 eye;
     private final V3 fwd;
     private final V3 right;
@@ -28,6 +30,8 @@ final class FxRaster implements Light {
         this.r = new float[w * h];
         this.g = new float[w * h];
         this.b = new float[w * h];
+        this.depth = new float[w * h];
+        java.util.Arrays.fill(depth, Float.MAX_VALUE);
         this.eye = eye;
         this.fwd = target.sub(eye).unit();
         this.right = fwd.cross(V3.UP).unit();
@@ -132,7 +136,40 @@ final class FxRaster implements Light {
 
     private final double[] sx = new double[3];
     private final double[] sy = new double[3];
+    private final double[] sz = new double[3];
     private final float[][] sc = new float[3][4];
+    private boolean solidPass;
+
+    /** The sink of solid quads: drawn opaque (or blended by their alpha) with the depth test and depth writes. */
+    Light solids() {
+        return new Light() {
+            private final double[][] q = new double[4][3];
+            private final int[] c = new int[4];
+            private int k;
+
+            @Override
+            public void vertex(double x, double y, double z, int argb) {
+                q[k][0] = x;
+                q[k][1] = y;
+                q[k][2] = z;
+                c[k] = argb;
+                k++;
+                if (k == 4) {
+                    k = 0;
+                    for (int i = 0; i < 4; i++) {
+                        quad[i][0] = q[i][0];
+                        quad[i][1] = q[i][1];
+                        quad[i][2] = q[i][2];
+                        colours[i] = c[i];
+                    }
+                    solidPass = true;
+                    tri(0, 1, 2);
+                    tri(0, 2, 3);
+                    solidPass = false;
+                }
+            }
+        };
+    }
 
     private void tri(int i0, int i1, int i2) {
         int[] idx = {i0, i1, i2};
@@ -146,11 +183,14 @@ final class FxRaster implements Light {
             }
             sx[k] = w * 0.5 + (dx * right.x() + dy * right.y() + dz * right.z()) / z * focal;
             sy[k] = h * 0.5 - (dx * up.x() + dy * up.y() + dz * up.z()) / z * focal;
+            sz[k] = z;
             int c = colours[idx[k]];
             float a = ((c >>> 24) & 0xFF) / 255.0F;
-            sc[k][0] = ((c >> 16) & 0xFF) / 255.0F * a;
-            sc[k][1] = ((c >> 8) & 0xFF) / 255.0F * a;
-            sc[k][2] = (c & 0xFF) / 255.0F * a;
+            float m = solidPass ? 1.0F : a;
+            sc[k][0] = ((c >> 16) & 0xFF) / 255.0F * m;
+            sc[k][1] = ((c >> 8) & 0xFF) / 255.0F * m;
+            sc[k][2] = (c & 0xFF) / 255.0F * m;
+            sc[k][3] = a;
         }
         double area = (sx[1] - sx[0]) * (sy[2] - sy[0]) - (sx[2] - sx[0]) * (sy[1] - sy[0]);
         if (Math.abs(area) < 1.0E-9) {
@@ -174,6 +214,20 @@ final class FxRaster implements Light {
                     continue;
                 }
                 int i = y * w + x;
+                float z = (float) (sz[0] * w0 + sz[1] * w1 + sz[2] * w2);
+                if (z > depth[i] + 0.01F) {
+                    continue;
+                }
+                if (solidPass) {
+                    float a = (float) (sc[0][3] * w0 + sc[1][3] * w1 + sc[2][3] * w2);
+                    r[i] = r[i] * (1.0F - a) + (float) (sc[0][0] * w0 + sc[1][0] * w1 + sc[2][0] * w2) * a;
+                    g[i] = g[i] * (1.0F - a) + (float) (sc[0][1] * w0 + sc[1][1] * w1 + sc[2][1] * w2) * a;
+                    b[i] = b[i] * (1.0F - a) + (float) (sc[0][2] * w0 + sc[1][2] * w1 + sc[2][2] * w2) * a;
+                    if (a > 0.5F) {
+                        depth[i] = z;
+                    }
+                    continue;
+                }
                 r[i] += (float) (sc[0][0] * w0 + sc[1][0] * w1 + sc[2][0] * w2);
                 g[i] += (float) (sc[0][1] * w0 + sc[1][1] * w1 + sc[2][1] * w2);
                 b[i] += (float) (sc[0][2] * w0 + sc[1][2] * w1 + sc[2][2] * w2);

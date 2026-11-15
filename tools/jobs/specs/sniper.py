@@ -247,4 +247,20 @@ NODES = [
     ("p", "iron_discipline", 1, 3, 5, '.req("ambusher", 1).bonus(stats(mods().defense(4).healthPercent(0.02)))',
      "helmet halo shield STEEL",
      "鉄の規律", "Iron Discipline", "防御力と最大HPが上がる。", "Raises defense and maximum health."),
+
+    # ------------------------------------------------------------------ the finale (秘奥義, Lv70)
+    ("f", "three_magic_bullets", 0, 0, 6,
+     '.reqAny("one_shot_one_kill", 1, "annihilation_field", 1).weapons(BOW).cd(90).theme(STEEL)'
+     '.act(88, 84, 45, pause(6), shot(30, orb("rifle_round", 6.0, 16).withPierce(16), 6.0, 1.5),'
+     ' shot(50, orb("rifle_round", 6.0, 16).withPierce(16), 6.0, 1.5),'
+     ' shot(70, orb("rifle_round", 6.0, 16).withPierce(16), 6.0, 2.0), pause(80))'
+     '.fx(self(START, DEFENSE_UP, 0.5, 84), afflict(1, STUN, 12, 0), afflict(2, STUN, 12, 0), afflict(3, STUN, 20, 0),'
+     ' afflict(3, VULNERABLE, 200, 0.3), vis(START, "fin_rifle_form"), vis(1, "fin_rifle_shot"),'
+     ' vis(2, "fin_rifle_shot"), vis(3, "fin_rifle_shot"), vis(4, "fin_rifle_unform"))',
+     "rifle beam x3 STEEL",
+     "秘奥義・魔弾三連", "Hidden Art: Three Magic Bullets",
+     "【秘奥義】弓を巨大な魔導狙撃銃へ組み替えて構える。狙った敵へ貫通する魔弾を三発撃ち込み、一直線上の敵をまとめて撃ち抜く。三発目は敵の守りを砕く。撃ち終えると銃は弓へ戻る。構えている間は受けるダメージが減る。",
+     "[Finale] Rebuild your bow into a heavy arcane sniper rifle and take aim. Three piercing rounds go through the foe "
+     "you aim at and everything in its line; the third shatters its guard. Then the rifle turns back into your bow. "
+     "You take less damage while you aim."),
 ]

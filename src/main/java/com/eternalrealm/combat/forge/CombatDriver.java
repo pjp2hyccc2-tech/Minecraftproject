@@ -374,9 +374,27 @@ public final class CombatDriver {
                     // siphons of projectiles heal on impact
                     rest = effects.stream().filter(effect -> !(effect instanceof SkillEffect.Siphon)).toList();
                 } else {
+                    // a finale's last nail is always critical, its reckoning also strikes every enemy it marked
+                    boolean sure = !SkillEffectsExecutor.only(effects, SkillEffect.Critical.class).isEmpty();
                     targets = CombatHits.execute(player, stats, hit, type, player.getRandom()::nextDouble, executes,
-                            theme);
+                            theme, sure);
+                    List<SkillEffect.Reckon> reckons = SkillEffectsExecutor.only(effects, SkillEffect.Reckon.class);
+                    if (skill != null && !reckons.isEmpty()) {
+                        List<net.minecraft.world.entity.LivingEntity> marked = new java.util.ArrayList<>(
+                                com.eternalrealm.job.forge.FinaleMechanics.reckoning(player, skill.id(),
+                                        reckons.get(0).range()));
+                        for (CombatHits.HitTarget already : targets) {
+                            marked.remove(already.entity());
+                        }
+                        List<CombatHits.HitTarget> all = new java.util.ArrayList<>(targets);
+                        all.addAll(CombatHits.strikeAll(player, stats, hit, type, player.getRandom()::nextDouble,
+                                executes, marked, sure));
+                        targets = all;
+                    }
                     Afflictions.apply(player, targets, afflictions, scale, player.position());
+                    if (!SkillEffectsExecutor.only(effects, SkillEffect.Verdict.class).isEmpty()) {
+                        com.eternalrealm.job.forge.FinaleMechanics.verdicts(player, targets, hit.frameIndex(), scale);
+                    }
                 }
             }
             if (skill == null && art == null && WeaponSkillFx.isWeaponSkill(hit.action())) {
@@ -513,6 +531,11 @@ public final class CombatDriver {
             return false;
         }
         syncEquipment(player, combatant);
+        if (ERMobEffects.isWarded(player)) {
+            // the guardian's finale: nothing gets through while the ward holds
+            CombatEffects.warded(player);
+            return true;
+        }
         boolean evadable = source.getEntity() != null || source.getDirectEntity() != null
                 || source.is(DamageTypeTags.IS_EXPLOSION) || source.is(DamageTypeTags.IS_PROJECTILE);
         AvoidOutcome outcome = combatant.checkAvoid(now(), evadable, isGuardable(player, combatant, source));

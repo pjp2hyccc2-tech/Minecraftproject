@@ -42,13 +42,16 @@ import java.util.Set;
  * @param passives          per-level bonuses of a passive (empty for actives)
  * @param jobClass          the second class whose tree holds the node ({@code null}: the job's own tree). A class's
  *                          tree has {@value #CLASS_BRANCHES} branches of {@value #CLASS_COLUMNS} columns and
- *                          {@value #CLASS_TIERS} tiers and no innate skills
+ *                          {@value #CLASS_TIERS} tiers and no innate skills, and below them its finale
+ *                          ({@link #isFinale()}: the one node of tier {@value #CLASS_FINALE_TIER})
+ * @param anyOf             nodes of which at least one must be learned first (empty: no such condition); the class
+ *                          finale asks for either of its tree's two ultimates
  */
 public record SkillDefinition(String id, JobType job, SkillKind kind, SkillTheme theme, int branch, int column,
                               int tier, int requiredLevel, int innateSlot, int maxLevel, ActionDefinition action,
                               int baseCooldownTicks, DamageType damageType, Set<WeaponType> weapons,
                               List<SkillEffect> effects, List<Prerequisite> prerequisites,
-                              List<PassiveEffect> passives, JobClass jobClass) {
+                              List<PassiveEffect> passives, JobClass jobClass, List<Prerequisite> anyOf) {
     public static final double DAMAGE_PER_LEVEL = 0.10;
     public static final double COOLDOWN_PER_LEVEL = 0.05;
     public static final double EFFECT_PER_LEVEL = 0.10;
@@ -61,6 +64,11 @@ public record SkillDefinition(String id, JobType job, SkillKind kind, SkillTheme
     public static final int CLASS_BRANCHES = 2;
     public static final int CLASS_COLUMNS = 4;
     public static final int CLASS_TIERS = 5;
+    /**
+     * The tier below a class's tree holding its finale (秘奥義, owner 2026-11-15: 「各職業のニ次職の最後の最後にlv70で＋1800%の
+     * 必殺技をそれぞれ用意して」): one node in the middle under both branches.
+     */
+    public static final int CLASS_FINALE_TIER = 6;
 
     public SkillDefinition {
         Checks.id("id", id);
@@ -75,7 +83,10 @@ public record SkillDefinition(String id, JobType job, SkillKind kind, SkillTheme
         }
         Checks.range("branch", branch, 0, (jobClass == null ? BRANCHES : CLASS_BRANCHES) - 1);
         Checks.range("column", column, 0, (jobClass == null ? COLUMNS : CLASS_COLUMNS) - 1);
-        Checks.range("tier", tier, 1, jobClass == null ? TIERS : CLASS_TIERS);
+        Checks.range("tier", tier, 1, jobClass == null ? TIERS : CLASS_FINALE_TIER);
+        if (jobClass != null && tier == CLASS_FINALE_TIER && (kind != SkillKind.ULTIMATE || branch != 0 || column != 0)) {
+            throw new IllegalArgumentException(id + ": a class's finale is an ultimate in the middle of its own tier");
+        }
         if (jobClass != null && innateSlot != 0) {
             throw new IllegalArgumentException(id + ": a class's skills are learned with points");
         }
@@ -87,13 +98,22 @@ public record SkillDefinition(String id, JobType job, SkillKind kind, SkillTheme
         effects = List.copyOf(effects);
         prerequisites = List.copyOf(prerequisites);
         passives = List.copyOf(passives);
+        anyOf = anyOf == null ? List.of() : List.copyOf(anyOf);
         Set<String> required = new HashSet<>();
         for (Prerequisite prerequisite : prerequisites) {
             if (prerequisite.skillId().equals(id) || !required.add(prerequisite.skillId())) {
                 throw new IllegalArgumentException(id + ": invalid prerequisite " + prerequisite);
             }
         }
-        if (innateSlot > 0 && !prerequisites.isEmpty()) {
+        for (Prerequisite alternative : anyOf) {
+            if (alternative.skillId().equals(id) || !required.add(alternative.skillId())) {
+                throw new IllegalArgumentException(id + ": invalid alternative prerequisite " + alternative);
+            }
+        }
+        if (anyOf.size() == 1) {
+            throw new IllegalArgumentException(id + ": a single alternative is a plain prerequisite");
+        }
+        if (innateSlot > 0 && (!prerequisites.isEmpty() || !anyOf.isEmpty())) {
             throw new IllegalArgumentException(id + ": innate skills have no prerequisites");
         }
         if ((innateSlot == 4 && kind != SkillKind.ULTIMATE) || (innateSlot > 0 && innateSlot < 4 && kind != SkillKind.ACTIVE)) {
@@ -119,9 +139,16 @@ public record SkillDefinition(String id, JobType job, SkillKind kind, SkillTheme
                             + action.frames().size() + " frame(s)");
                 }
                 boolean needsHit = effect instanceof SkillEffect.Afflict || effect instanceof SkillEffect.Siphon
-                        || effect instanceof SkillEffect.Execute;
+                        || effect instanceof SkillEffect.Execute || effect instanceof SkillEffect.Critical
+                        || effect instanceof SkillEffect.Reckon || effect instanceof SkillEffect.Verdict;
                 if (needsHit && !action.frames().get(effect.frame()).damaging()) {
-                    throw new IllegalArgumentException(id + ": afflictions, siphons and executes need a damaging frame");
+                    throw new IllegalArgumentException(id + ": afflictions, siphons, executes, criticals, reckonings "
+                            + "and verdicts need a damaging frame");
+                }
+                boolean meleeOnly = effect instanceof SkillEffect.Critical || effect instanceof SkillEffect.Reckon
+                        || effect instanceof SkillEffect.Verdict;
+                if (meleeOnly && action.frames().get(effect.frame()).isProjectile()) {
+                    throw new IllegalArgumentException(id + ": criticals, reckonings and verdicts need a melee frame");
                 }
             }
         }
@@ -156,6 +183,21 @@ public record SkillDefinition(String id, JobType job, SkillKind kind, SkillTheme
     /** A node of a second class's tree. */
     public boolean isClassSkill() {
         return jobClass != null;
+    }
+
+    /** A class's finale (秘奥義): the last node of its tree, in its own slot ({@link SkillTree#FINALE_SLOT}). */
+    public boolean isFinale() {
+        return jobClass != null && tier == CLASS_FINALE_TIER;
+    }
+
+    /** Every node this one asks for: the prerequisites, then the alternatives. */
+    public List<Prerequisite> requirements() {
+        if (anyOf.isEmpty()) {
+            return prerequisites;
+        }
+        List<Prerequisite> all = new ArrayList<>(prerequisites);
+        all.addAll(anyOf);
+        return List.copyOf(all);
     }
 
     /**
@@ -202,7 +244,9 @@ public record SkillDefinition(String id, JobType job, SkillKind kind, SkillTheme
         }
         Objects.requireNonNull(passive, "passive");
         double scale = damageScale(level) * (1.0 + passive.skillPower());
-        int cooldown = Math.max(1, (int) Math.round(cooldownTicks(level) * (1.0 - passive.cooldownReduction())));
+        // a finale's 90 seconds (owner, 2026-11-15: 「ctを90秒にして」) are never shortened by passives
+        int cooldown = isFinale() ? cooldownTicks(level)
+                : Math.max(1, (int) Math.round(cooldownTicks(level) * (1.0 - passive.cooldownReduction())));
         double stamina = action.staminaCost() * (1.0 - passive.staminaReduction());
         return new SkillBinding(action, weapons, scale, cooldown, stamina);
     }

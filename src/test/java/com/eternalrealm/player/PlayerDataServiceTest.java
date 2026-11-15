@@ -597,11 +597,11 @@ public class PlayerDataServiceTest {
                 .orElseThrow());
         // the newly learned active went into the first free slot (5)
         assertEquals(java.util.List.of("mage_fireball", "mage_ice_lance", "mage_thunderstorm", "mage_meteor",
-                "mage_explosion", ""), service.snapshot(ALICE).orElseThrow().skillLoadout());
+                "mage_explosion", "", ""), service.snapshot(ALICE).orElseThrow().skillLoadout());
         assertEquals(com.eternalrealm.job.SkillTree.LoadoutResult.OK,
                 service.setSkillSlot(ALICE, 1, "mage_explosion").orElseThrow());
         assertEquals(java.util.List.of("mage_explosion", "mage_ice_lance", "mage_thunderstorm", "mage_meteor",
-                "mage_fireball", ""), service.snapshot(ALICE).orElseThrow().skillLoadout());
+                "mage_fireball", "", ""), service.snapshot(ALICE).orElseThrow().skillLoadout());
         assertEquals(com.eternalrealm.job.SkillTree.LoadoutResult.NOT_LEARNED,
                 service.setSkillSlot(ALICE, 6, "mage_frost_bolt").orElseThrow());
         assertEquals(com.eternalrealm.job.SkillTree.LoadoutResult.NEEDS_ULTIMATE,

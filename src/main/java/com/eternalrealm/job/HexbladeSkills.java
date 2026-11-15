@@ -117,6 +117,14 @@ final class HexbladeSkills {
                         vis(0, "spin"));
         t.passive("endless_curse", 1, 3, 5).req("demon_pact", 3).bonus(proc(POISON, 0.03, 100, 0.3, false));
 
+        // ---------------------------------------------------------------- the finale (秘奥義, Lv70)
+        t.finale("hour_of_the_ox").reqAny("curse_of_the_red_moon", 1, "sword_of_the_netherlord", 1).cd(90).theme(SHADOW)
+                .act(70, 66, 45, pause(10), hit(26, ahead(3.0, 4.5), 3.0, 0.2), hit(40, ahead(3.0, 4.5), 3.0, 0.2),
+                        hit(56, ahead(3.5, 4.5), 12.0, 1.2))
+                .fx(self(START, DEFENSE_UP, 0.4, 60), afflict(1, SLOW, 60, 4), afflict(2, STUN, 20, 0), crit(3),
+                        afflict(3, CURSE, 200, 0.03), afflict(3, WEAKEN, 200, 0.3), vis(START, "fin_ox_ritual"),
+                        vis(1, "fin_ox_nail"), vis(2, "fin_ox_nail"), vis(3, "fin_ox_strike"));
+
         return t.build();
     }
 }

@@ -32,13 +32,14 @@ import java.util.Optional;
 
 /**
  * The skill trees: the job's (three branches side by side, six tiers deep) and, on its own page, its second class's
- * (two branches of four columns, five tiers from level 40). Nodes are connected to their prerequisites; their frame
- * shows the state (locked, learnable, learned x/max, maxed) and the kind (actives square, passives with cut corners,
- * ultimates in gold). Hovering shows the numbers, what the next level adds and what the node opens; the button below
- * learns the selected node. The loadout bar puts learned actives (the job's and the class's) into the six skill slots
- * (drag a node onto a slot, or select it and click the slot; right click empties a slot). A class tree the character
- * has not grown into can be looked at (from the job page) but not learned. Everything is checked again by the server,
- * which answers with a new character snapshot.
+ * (two branches of four columns, five tiers from level 40, and its finale 秘奥義 at level 70 in the middle below both,
+ * reached from either branch's ultimate). Nodes are connected to their prerequisites; their frame shows the state
+ * (locked, learnable, learned x/max, maxed) and the kind (actives square, passives with cut corners, ultimates in gold,
+ * the finale in violet). Hovering shows the numbers, what the next level adds and what the node opens; the button
+ * below learns the selected node. The loadout bar puts learned actives (the job's and the class's) into the skill
+ * slots, the ultimate into its own and the finale into the last (drag a node onto a slot, or select it and click the
+ * slot; right click empties a slot). A class tree the character has not grown into can be looked at (from the job
+ * page) but not learned. Everything is checked again by the server, which answers with a new character snapshot.
  */
 public final class SkillScreen extends JournalScreen {
     private static final int NODE = 22;
@@ -51,7 +52,8 @@ public final class SkillScreen extends JournalScreen {
     private static final int GOLD = 0xFFE8C66A;
     private static final int LINE_MET = 0xFFE8C66A;
     private static final int LINE_UNMET = 0xFF4A4A52;
-    private static final int[] SLOT_ORDER = {1, 2, 3, 5, 6, 4};
+    private static final int[] SLOT_ORDER = {1, 2, 3, 5, 6, 4, SkillTree.FINALE_SLOT};
+    private static final int VIOLET = 0xFFB48CFF;
 
     /** The class tree shown when the screen opens next (null: the job's tree). */
     private static JobClass rememberedPage;
@@ -194,7 +196,7 @@ public final class SkillScreen extends JournalScreen {
     }
 
     private int tiers() {
-        return page != null ? SkillDefinition.CLASS_TIERS : SkillDefinition.TIERS;
+        return page != null ? SkillDefinition.CLASS_FINALE_TIER : SkillDefinition.TIERS;
     }
 
     private int pitch() {
@@ -214,6 +216,10 @@ public final class SkillScreen extends JournalScreen {
     }
 
     private int nodeX(SkillDefinition skill) {
+        if (skill.isFinale()) {
+            // in the middle under both branches
+            return (branchLeft(0) + branchLeft(branches() - 1) + columns() * pitch()) / 2;
+        }
         return left + GUTTER + skill.gridColumn() * pitch() + skill.branch() * BRANCH_GAP + pitch() / 2;
     }
 
@@ -247,6 +253,11 @@ public final class SkillScreen extends JournalScreen {
         return Optional.empty();
     }
 
+    /** The loadout boxes shown: the finale's only for a character of a second class. */
+    private int[] slots() {
+        return path().isAdvanced() ? SLOT_ORDER : java.util.Arrays.copyOf(SLOT_ORDER, SLOT_ORDER.length - 1);
+    }
+
     /** Left edge of the loadout box of {@code slot}. */
     private int slotX(int slot) {
         int x = left + 2;
@@ -267,7 +278,7 @@ public final class SkillScreen extends JournalScreen {
     }
 
     private int slotAt(double mouseX, double mouseY) {
-        for (int slot : SLOT_ORDER) {
+        for (int slot : slots()) {
             int x = slotX(slot);
             if (mouseX >= x && mouseX < x + SLOT && mouseY >= slotY() && mouseY < slotY() + SLOT) {
                 return slot;
@@ -529,18 +540,22 @@ public final class SkillScreen extends JournalScreen {
         return lowest;
     }
 
-    /** Orthogonal lines from each prerequisite's bottom to the node's top, routed around other nodes. */
+    /**
+     * Orthogonal lines from each prerequisite's bottom to the node's top, routed around other nodes; the finale's two
+     * alternatives (either one opens it) in violet.
+     */
     private void drawLines(GuiGraphics graphics, SkillDefinition skill, CharacterSnapshot snapshot) {
         int cx = nodeX(skill);
         int cy = nodeY(skill) - NODE / 2;
         int gapAbove = cy - (ROW - NODE) / 2;
-        for (Prerequisite prerequisite : skill.prerequisites()) {
+        for (Prerequisite prerequisite : skill.requirements()) {
             SkillDefinition parent = Jobs.skill(prerequisite.skillId()).orElse(null);
             if (parent == null) {
                 continue;
             }
             boolean met = level(parent) >= prerequisite.level();
-            int color = met ? LINE_MET : LINE_UNMET;
+            boolean alternative = skill.anyOf().contains(prerequisite);
+            int color = met ? (alternative ? VIOLET : LINE_MET) : LINE_UNMET;
             int px = nodeX(parent);
             int py = nodeY(parent) + NODE / 2;
             int gapBelow = py + (ROW - NODE) / 2;
@@ -594,7 +609,13 @@ public final class SkillScreen extends JournalScreen {
         } else {
             border = 0xFF3A3A40;
         }
-        if (skill.kind() == SkillKind.ULTIMATE) {
+        if (skill.isFinale()) {
+            // the finale: a wider violet frame that breathes once it can be learned or is learned
+            int glow = level > 0 || learnable ? pulse(VIOLET) : 0xFF3A2A5A;
+            graphics.fill(x - 4, y - 4, x + NODE + 4, y + NODE + 4, glow);
+            graphics.fill(x - 3, y - 3, x + NODE + 3, y + NODE + 3, level > 0 ? 0xFF5A3AA0 : 0xFF241838);
+            graphics.fill(x - 2, y - 2, x + NODE + 2, y + NODE + 2, level > 0 ? 0xFFB08A2A : 0xFF4A3A1A);
+        } else if (skill.kind() == SkillKind.ULTIMATE) {
             graphics.fill(x - 2, y - 2, x + NODE + 2, y + NODE + 2, level > 0 ? 0xFFB08A2A : 0xFF4A3A1A);
         }
         graphics.fill(x - 1, y - 1, x + NODE + 1, y + NODE + 1, border);
@@ -648,11 +669,13 @@ public final class SkillScreen extends JournalScreen {
         graphics.fill(left, treeBottom() + 1, left + contentWidth(), treeBottom() + 2, 0x60E8C66A);
         graphics.drawString(font, Component.translatable("screen.eternalrealm.skill.loadout"), left + 2,
                 treeBottom() + 5, 0xFFD8C8A0);
-        for (int slot : SLOT_ORDER) {
+        for (int slot : slots()) {
             int x = slotX(slot);
             int y = slotY();
             boolean ultimate = slot == SkillTree.ULTIMATE_SLOT;
-            graphics.fill(x - 1, y - 1, x + SLOT + 1, y + SLOT + 1, ultimate ? 0xFFB08A2A : 0xFF5A4A2A);
+            boolean finale = slot == SkillTree.FINALE_SLOT;
+            graphics.fill(x - 1, y - 1, x + SLOT + 1, y + SLOT + 1, finale ? 0xFF7A5AC0 : ultimate ? 0xFFB08A2A
+                    : 0xFF5A4A2A);
             graphics.fill(x, y, x + SLOT, y + SLOT, 0xFF101014);
             String id = slot - 1 < loadout.size() ? loadout.get(slot - 1) : "";
             if (!id.isEmpty()) {
@@ -677,7 +700,8 @@ public final class SkillScreen extends JournalScreen {
         }
         SkillDefinition skill = selected == null ? null : Jobs.skill(selected).orElse(null);
         if (skill != null) {
-            int x = slotX(SkillTree.ULTIMATE_SLOT) + SLOT + 8;
+            int[] shown = slots();
+            int x = slotX(shown[shown.length - 1]) + SLOT + 8;
             int maxWidth = left + contentWidth() - 70 - x;
             Component name = Component.translatable(skill.translationKey()).withStyle(ChatFormatting.GOLD);
             graphics.drawString(font, font.plainSubstrByWidth(name.getString(), maxWidth), x, slotY() + 2, 0xFFE8C66A);
@@ -715,9 +739,10 @@ public final class SkillScreen extends JournalScreen {
             List<String> loadout = loadout();
             String id = slot - 1 < loadout.size() ? loadout.get(slot - 1) : "";
             List<Component> lines = new ArrayList<>();
-            lines.add(Component.translatable(slot == SkillTree.ULTIMATE_SLOT ? "screen.eternalrealm.skill.slot_ultimate"
+            lines.add(Component.translatable(slot == SkillTree.FINALE_SLOT ? "screen.eternalrealm.skill.slot_finale"
+                    : slot == SkillTree.ULTIMATE_SLOT ? "screen.eternalrealm.skill.slot_ultimate"
                     : "screen.eternalrealm.skill.slot", ClientKeyMappings.jobSkill(slot).getTranslatedKeyMessage())
-                    .withStyle(ChatFormatting.GOLD));
+                    .withStyle(slot == SkillTree.FINALE_SLOT ? ChatFormatting.LIGHT_PURPLE : ChatFormatting.GOLD));
             if (!id.isEmpty()) {
                 lines.add(Component.translatable(Jobs.skill(id).map(SkillDefinition::translationKey).orElse(id)));
             }
@@ -732,8 +757,10 @@ public final class SkillScreen extends JournalScreen {
         List<Component> lines = new ArrayList<>();
         int level = level(skill);
         MutableComponent title = Component.translatable(skill.translationKey())
-                .withStyle(skill.kind() == SkillKind.ULTIMATE ? ChatFormatting.GOLD : ChatFormatting.YELLOW);
-        title.append(Component.literal("  ").append(Component.translatable(skill.kind().translationKey()))
+                .withStyle(skill.isFinale() ? ChatFormatting.LIGHT_PURPLE
+                        : skill.kind() == SkillKind.ULTIMATE ? ChatFormatting.GOLD : ChatFormatting.YELLOW);
+        title.append(Component.literal("  ").append(Component.translatable(skill.isFinale()
+                        ? "skill_kind.eternalrealm.finale" : skill.kind().translationKey()))
                 .withStyle(ChatFormatting.DARK_GRAY));
         lines.add(title);
         lines.add(level > 0
@@ -775,6 +802,21 @@ public final class SkillScreen extends JournalScreen {
                             Component.translatable(parent.translationKey()), prerequisite.level())
                     .append(met ? " ✔" : " ✘").withStyle(met ? ChatFormatting.GREEN : ChatFormatting.RED));
         }
+        if (skill.anyOf().size() >= 2) {
+            boolean anyMet = false;
+            for (Prerequisite alternative : skill.anyOf()) {
+                anyMet |= Jobs.skill(alternative.skillId()).map(parent -> level(parent) >= alternative.level())
+                        .orElse(false);
+            }
+            Prerequisite first = skill.anyOf().get(0);
+            Prerequisite second = skill.anyOf().get(1);
+            lines.add(Component.translatable("skill_info.eternalrealm.requires_either",
+                            Component.translatable(Jobs.skill(first.skillId()).map(SkillDefinition::translationKey)
+                                    .orElse(first.skillId())), first.level(),
+                            Component.translatable(Jobs.skill(second.skillId()).map(SkillDefinition::translationKey)
+                                    .orElse(second.skillId())), second.level())
+                    .append(anyMet ? " ✔" : " ✘").withStyle(anyMet ? ChatFormatting.GREEN : ChatFormatting.RED));
+        }
         List<SkillDefinition> opens = Jobs.unlockedBy(skill.id());
         if (!opens.isEmpty()) {
             MutableComponent names = Component.empty();
@@ -792,7 +834,11 @@ public final class SkillScreen extends JournalScreen {
             lines.add(Component.translatable("skill_info.eternalrealm.hint_learn", snapshot.unspentSkillPoints())
                     .withStyle(ChatFormatting.DARK_GREEN));
         }
-        if (skill.isUsable()) {
+        if (skill.isFinale()) {
+            lines.add(Component.translatable("skill_info.eternalrealm.hint_finale",
+                    ClientKeyMappings.jobSkill(SkillTree.FINALE_SLOT).getTranslatedKeyMessage())
+                    .withStyle(ChatFormatting.DARK_GRAY));
+        } else if (skill.isUsable()) {
             lines.add(Component.translatable(skill.kind() == SkillKind.ULTIMATE ? "skill_info.eternalrealm.hint_ultimate"
                             : "skill_info.eternalrealm.hint_slot",
                     ClientKeyMappings.jobSkill(SkillTree.ULTIMATE_SLOT).getTranslatedKeyMessage())

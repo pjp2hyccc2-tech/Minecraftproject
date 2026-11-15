@@ -15,7 +15,10 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-/** The skill loadout (six slots, the ultimate slot), passive totals and their effect on the bindings. */
+/**
+ * The skill loadout (seven slots: the ultimate slot 4 and the finale slot 7), passive totals and their effect on the
+ * bindings.
+ */
 public class SkillTreeRulesTest {
     private static List<String> empty() {
         return Collections.nCopies(SkillTree.LOADOUT_SLOTS, SkillTree.EMPTY);
@@ -23,7 +26,7 @@ public class SkillTreeRulesTest {
 
     @Test
     public void theDefaultLoadoutHoldsTheInnateSkillsInTheirOldSlots() {
-        assertEquals(List.of("mage_fireball", "mage_ice_lance", "mage_thunderstorm", "mage_meteor", "", ""),
+        assertEquals(List.of("mage_fireball", "mage_ice_lance", "mage_thunderstorm", "mage_meteor", "", "", ""),
                 SkillTree.defaultLoadout(JobType.MAGE));
         assertEquals(SkillTree.defaultLoadout(JobType.MAGE),
                 SkillTree.effectiveLoadout(JobType.MAGE, 1, Map.of(), List.of()));
@@ -40,7 +43,9 @@ public class SkillTreeRulesTest {
         assertEquals(SkillTree.LoadoutResult.PASSIVE, SkillTree.canAssign(JobType.MAGE, 20, learned, 5, "mage_pyromancy"));
         assertEquals(SkillTree.LoadoutResult.WRONG_JOB, SkillTree.canAssign(JobType.MAGE, 20, learned, 5, "priest_heal"));
         assertEquals(SkillTree.LoadoutResult.UNKNOWN_SKILL, SkillTree.canAssign(JobType.MAGE, 20, learned, 5, "nope"));
-        assertEquals(SkillTree.LoadoutResult.BAD_SLOT, SkillTree.canAssign(JobType.MAGE, 20, learned, 7, "mage_fireball"));
+        assertEquals(SkillTree.LoadoutResult.NEEDS_FINALE,
+                SkillTree.canAssign(JobType.MAGE, 20, learned, SkillTree.FINALE_SLOT, "mage_fireball"));
+        assertEquals(SkillTree.LoadoutResult.BAD_SLOT, SkillTree.canAssign(JobType.MAGE, 20, learned, 8, "mage_fireball"));
         assertEquals(SkillTree.LoadoutResult.BAD_SLOT, SkillTree.canAssign(JobType.MAGE, 20, learned, 0, "mage_fireball"));
         assertEquals(SkillTree.LoadoutResult.NEEDS_ULTIMATE,
                 SkillTree.canAssign(JobType.MAGE, 20, learned, SkillTree.ULTIMATE_SLOT, "mage_explosion"));
@@ -55,12 +60,13 @@ public class SkillTreeRulesTest {
     public void aSkillAlreadyInAnotherSlotSwapsPlaces() {
         List<String> start = SkillTree.defaultLoadout(JobType.MAGE);
         List<String> moved = SkillTree.assign(start, 2, "mage_fireball");
-        assertEquals(List.of("mage_ice_lance", "mage_fireball", "mage_thunderstorm", "mage_meteor", "", ""), moved);
+        assertEquals(List.of("mage_ice_lance", "mage_fireball", "mage_thunderstorm", "mage_meteor", "", "", ""), moved);
         List<String> placed = SkillTree.assign(moved, 6, "mage_explosion");
         assertEquals("mage_explosion", placed.get(5));
         List<String> cleared = SkillTree.assign(placed, 1, "");
         assertEquals("", cleared.get(0));
-        assertEquals(List.of("", "mage_fireball", "mage_thunderstorm", "mage_meteor", "", "mage_explosion"), cleared);
+        assertEquals(List.of("", "mage_fireball", "mage_thunderstorm", "mage_meteor", "", "mage_explosion", ""),
+                cleared);
     }
 
     @Test
@@ -69,9 +75,9 @@ public class SkillTreeRulesTest {
                 "mage_meteor");
         Map<String, Integer> learned = Map.of("mage_fireball", 4, "mage_explosion", 2);
         // priest skill, a duplicate, an unknown id and an ultimate outside its slot are dropped
-        assertEquals(List.of("mage_explosion", "", "mage_fireball", "", "", ""),
+        assertEquals(List.of("mage_explosion", "", "mage_fireball", "", "", "", ""),
                 SkillTree.effectiveLoadout(JobType.MAGE, 40, learned, stored));
-        assertEquals(List.of("mage_explosion", "", "mage_fireball", "", "", ""),
+        assertEquals(List.of("mage_explosion", "", "mage_fireball", "", "", "", ""),
                 SkillTree.sanitize(JobType.MAGE, 40, learned, stored));
         // a forgotten skill (after a reset) leaves its slot empty
         assertEquals("", SkillTree.effectiveLoadout(JobType.MAGE, 40, Map.of(), stored).get(0));

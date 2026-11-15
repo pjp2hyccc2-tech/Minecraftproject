@@ -251,4 +251,18 @@ NODES = [
      "knight halo shield HOLY",
      "永遠の守護者", "Eternal Guardian", "HPが減るほど与えるダメージが増え、受けるダメージが大きく減る。",
      "The lower your health, the harder you hit and the far less you take."),
+
+    # ------------------------------------------------------------------ the finale (秘奥義, Lv70)
+    ("f", "adamant_bulwark", 0, 0, 6,
+     '.reqAny("eternal_fortress", 1, "oath_of_the_wall", 1).cd(90).theme(HOLY)'
+     '.act(60, 56, 40, pause(16), hit(42, arc(7.5, 75), 18.0, 3.2))'
+     '.fx(self(0, INVULNERABLE, 1, 200), allies(0, INVULNERABLE, 1, 200, 16), taunt(0, 16, 200),'
+     ' afflict(1, STUN, 50, 0), afflict(1, WEAKEN, 200, 0.3), vis(START, "fin_aegis_raise"), vis(0, "fin_aegis_ward"),'
+     ' vis(1, "fin_aegis_bash"))',
+     "shield nova+halo shield HOLY",
+     "秘奥義・金剛不壊", "Hidden Art: Adamant Bulwark",
+     "【秘奥義】黄金に輝く巨大な盾を呼び出して大地に据える。盾の加護が自分と周りの仲間を包み、10秒間あらゆるダメージを受けない無敵となる。すべての敵を引きつけたら、巨大な盾を渾身の力で叩きつけ、前方の敵を吹き飛ばして気絶させる。",
+     "[Finale] Call up a colossal golden shield and set it down before you. Its ward wraps you and the allies around "
+     "you: for ten seconds no harm of any kind can touch you. Every foe turns on you, and you slam the giant shield "
+     "into them with all your strength, hurling the foes ahead back stunned."),
 ]

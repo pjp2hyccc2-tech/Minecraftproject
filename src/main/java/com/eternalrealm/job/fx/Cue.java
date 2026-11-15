@@ -134,7 +134,63 @@ public record Cue(Kind kind, double start, double peak, double end, Anchor ancho
         /** Serpents of light rising behind the caster, lunging on each hit frame. n heads, a size. */
         HYDRA,
         /** A flaming rock falling from the sky onto the anchor at its peak. a size. */
-        METEOR
+        METEOR,
+        // ---- the finales (秘奥義, level 70)
+        /**
+         * Cuts through the air around the anchor, one at each of {@code n} hit frames from frame {@code variant} on,
+         * an after-image of the caster where each ends; they hang faint until the peak, then all flare at once. a
+         * radius.
+         */
+        FLASH_CUTS,
+        /**
+         * A scythe taller than the caster (solid, a ghostly edge) held over its head, hooked back at hit frame
+         * {@code variant} and reaping all around at frame {@code variant + 1} (the peak). a length.
+         */
+        SCYTHE,
+        /**
+         * A giant blade raised and brought down ahead at the peak (solid steel and gold with holy light), then lying in
+         * the rift it cut: variant 0 the caster's own sword grown huge, 1 a blade of pure light from the sky. a length.
+         */
+        GREATBLADE,
+        /**
+         * A cursed nail (solid) standing over the spot {@code b} blocks ahead, driven in at {@code n} hit frames from
+         * frame {@code variant} on, the last at the peak. a length.
+         */
+        NAIL,
+        /** The cursed hammer (solid) striking the nail at its hit frames (as {@link #NAIL}). a size. */
+        HAMMER,
+        /** A rock from the sky wreathed in fire (solid core), falling slowly from {@code c} blocks up onto the anchor. a size. */
+        STAR_ROCK,
+        /** Fire burning over the ground (tongues of flame and embers). a radius; n tongues. */
+        FLAMES,
+        /** Streams of mana flowing in from all around to a point {@code b} ahead and {@code c} up. a radius; n streams. */
+        MANA_STREAMS,
+        /** A heavy rifle held along the look (solid), recoiling at its shots: hit frames from {@code variant} on, n shots. a length. */
+        RIFLE,
+        /** A muzzle flash and the tracer of a round along the look of the hit frame's pose. a length. */
+        TRACER,
+        /** Spirits of {@code n} elements around the caster, flying into the bow at the peak. a radius. */
+        SPIRITS,
+        /** A great bow of light drawn along the look, loosed at the peak. a size. */
+        GREAT_BOW,
+        /** A long rift in the ground with light welling up. a length; b width; d distance ahead it begins. */
+        FISSURE,
+        /** The scales of judgment in the sky, tipping at the peak. a size; c height. */
+        SCALES,
+        /** A sentence of the 神判 over a head. variant the {@code SkillEffect.Sentence} ordinal; a size. */
+        SENTENCE,
+        /** A giant shield (solid gold) planted ahead, thrust forward at the peak. a height. */
+        AEGIS,
+        /** A cathedral of light rising around the anchor, its bells ringing at the hit frames. a radius; b height; n pillars. */
+        CATHEDRAL;
+
+        /** Kinds with solid parts (drawn in the solid pass too). */
+        public boolean solid() {
+            return switch (this) {
+                case SCYTHE, GREATBLADE, NAIL, HAMMER, STAR_ROCK, RIFLE, AEGIS -> true;
+                default -> false;
+            };
+        }
     }
 
     public static Builder of(Kind kind, double start, double peak, double end) {

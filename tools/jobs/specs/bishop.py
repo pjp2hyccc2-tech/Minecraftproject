@@ -245,4 +245,22 @@ NODES = [
      "cross nova shield HOLY",
      "聖なる不屈", "Holy Fortitude", "HPが減るほど与えるダメージが増え、受けるダメージが減る。",
      "The lower your health, the harder you strike and the less damage you take."),
+
+    # ------------------------------------------------------------------ the finale (秘奥義, Lv70)
+    ("f", "celestial_cathedral", 0, 0, 6,
+     '.reqAny("grand_benediction", 1, "heavenly_ward", 1).cd(90).theme(HOLY)'
+     '.act(84, 80, 45, pause(10), hit(26, circle(10.0, 24), 4.0, 0.4), hit(42, circle(10.0, 24), 4.0, 0.4),'
+     ' hit(58, circle(10.0, 24), 4.0, 0.4), hit(72, circle(10.0, 24), 6.0, 1.6))'
+     '.fx(cleanse(1, 16), heal(1, 16, 0.08, 2), heal(2, 16, 0.08, 2), heal(3, 16, 0.08, 2), afflict(1, WEAKEN, 200, 0.2),'
+     ' revive(4, 16, 0.5), shieldAllies(4, 0.4, 240, 16), allies(4, DEFENSE_UP, 0.3, 240, 16),'
+     ' self(4, DEFENSE_UP, 0.3, 240), afflict(4, BLIND, 60, 0), vis(START, "fin_cathedral_rise"),'
+     ' vis(1, "fin_cathedral_bell"), vis(2, "fin_cathedral_bell"), vis(3, "fin_cathedral_bell"),'
+     ' vis(4, "fin_cathedral_window"))',
+     "bell pillar+halo heal HOLY",
+     "秘奥義・天上の大聖堂", "Hidden Art: Celestial Cathedral",
+     "【秘奥義】祈りに応えて、光の大聖堂が自分の周りにそびえ立つ。鐘が三度鳴り響くたびに聖なる響きが周りの敵を打ち、仲間を癒やして状態異常を払う。最後に天上のバラ窓から光が降り注ぎ、敵を打って目をくらませ、倒れた仲間を蘇らせ、全員をシールドと守りの加護で包む。",
+     "[Finale] Your prayer is answered: a cathedral of light rises around you. Each of its three bells strikes the "
+     "foes around you with a holy peal and heals and cleanses your allies; then light pours down through the rose "
+     "window above, striking and dazzling the foes, raising the fallen and wrapping everyone in shields and hardened "
+     "armor."),
 ]

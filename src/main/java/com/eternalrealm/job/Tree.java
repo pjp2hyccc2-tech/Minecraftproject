@@ -20,8 +20,11 @@ import java.util.Set;
 final class Tree {
     /** Character level needed for each tier (index tier − 1). The innate skills sit on tiers 1, 2, 3 and 5. */
     static final int[] TIER_LEVELS = {1, 8, 18, 24, 30, 40};
-    /** Character level needed for each tier of a second class's tree (it opens at {@value JobClass#LEVEL}). */
-    static final int[] CLASS_TIER_LEVELS = {40, 44, 48, 54, 60};
+    /**
+     * Character level needed for each tier of a second class's tree (it opens at {@value JobClass#LEVEL}); the last is
+     * the finale's ({@link SkillDefinition#CLASS_FINALE_TIER}).
+     */
+    static final int[] CLASS_TIER_LEVELS = {40, 44, 48, 54, 60, 70};
     /** Most levels of a class's passives and ultimates (its actives have {@link Jobs#MAX_SKILL_LEVEL}). */
     static final int CLASS_SMALL_MAX = 3;
 
@@ -58,6 +61,17 @@ final class Tree {
 
     Node passive(String name, int branch, int column, int tier) {
         return add(new Node(name, SkillKind.PASSIVE, branch, column, tier));
+    }
+
+    /**
+     * A class's finale (秘奥義): the ultimate of the tier below both branches, opening at level 70; one level only, so
+     * its numbers are exactly the ones it is made with.
+     */
+    Node finale(String name) {
+        if (jobClass == null) {
+            throw new IllegalStateException("only a class's tree has a finale");
+        }
+        return add(new Node(name, SkillKind.ULTIMATE, 0, 0, SkillDefinition.CLASS_FINALE_TIER)).max(1);
     }
 
     private Node add(Node node) {
@@ -97,6 +111,7 @@ final class Tree {
         private int cooldownTicks;
         private final List<SkillEffect> effects = new ArrayList<>();
         private final List<Prerequisite> prerequisites = new ArrayList<>();
+        private final List<Prerequisite> anyOf = new ArrayList<>();
         private final List<PassiveEffect> passives = new ArrayList<>();
 
         private Node(String name, SkillKind kind, int branch, int column, int tier) {
@@ -125,6 +140,13 @@ final class Tree {
 
         Node req(String name, int level) {
             prerequisites.add(new Prerequisite(id(name), level));
+            return this;
+        }
+
+        /** Either of two nodes at their levels (at least one must be learned). */
+        Node reqAny(String first, int firstLevel, String second, int secondLevel) {
+            anyOf.add(new Prerequisite(id(first), firstLevel));
+            anyOf.add(new Prerequisite(id(second), secondLevel));
             return this;
         }
 
@@ -179,7 +201,7 @@ final class Tree {
         private SkillDefinition build() {
             return new SkillDefinition(id, job, kind, theme, branch, column, tier, requiredLevel, innateSlot, maxLevel,
                     action, kind == SkillKind.PASSIVE ? 0 : cooldownTicks, type, weapons, effects, prerequisites,
-                    passives, jobClass);
+                    passives, jobClass, anyOf);
         }
     }
 }

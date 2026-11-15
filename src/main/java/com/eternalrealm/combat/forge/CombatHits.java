@@ -75,10 +75,20 @@ public final class CombatHits {
      */
     public static DamageRoll roll(ServerPlayer attacker, CombatStats stats, WeaponProfile weapon, HitFrame frame,
                                   double damageScale, DamageType type, double random) {
+        return roll(attacker, stats, weapon, frame, damageScale, type, random, false);
+    }
+
+    /**
+     * {@link #roll(ServerPlayer, CombatStats, WeaponProfile, HitFrame, double, DamageType, double)}, always critical
+     * when {@code sureCritical} (a {@link SkillEffect.Critical} frame).
+     */
+    public static DamageRoll roll(ServerPlayer attacker, CombatStats stats, WeaponProfile weapon, HitFrame frame,
+                                  double damageScale, DamageType type, double random, boolean sureCritical) {
         double bonusAttack = WeaponBonus.bonusAttack(attacker, attacker.getMainHandItem());
-        double extraCrit = Math.min(1.0, ERMobEffects.magnitude(attacker, ERMobEffects.CRIT_UP.get()));
-        DamageRoll base = DamageCalculator.roll(stats, weapon, frame, damageScale, random, type, bonusAttack,
-                extraCrit);
+        double extraCrit = sureCritical ? 1.0
+                : Math.min(1.0, ERMobEffects.magnitude(attacker, ERMobEffects.CRIT_UP.get()));
+        DamageRoll base = DamageCalculator.roll(stats, weapon, frame, damageScale, sureCritical ? 0.0 : random, type,
+                bonusAttack, extraCrit);
         PassiveTotals passive = passives(attacker);
         double lastStand = attacker.getHealth() < attacker.getMaxHealth() * LAST_STAND_HEALTH
                 ? passive.lastStandDamage() : 0.0;
@@ -117,6 +127,13 @@ public final class CombatHits {
      */
     public static List<HitTarget> execute(ServerPlayer attacker, CombatStats stats, CombatEvent.Hit hit, DamageType type,
                                           DoubleSupplier random, List<SkillEffect.Execute> executes, SkillTheme theme) {
+        return execute(attacker, stats, hit, type, random, executes, theme, false);
+    }
+
+    /** A melee frame of a skill whose hits are all critical when {@code sureCritical}. */
+    public static List<HitTarget> execute(ServerPlayer attacker, CombatStats stats, CombatEvent.Hit hit, DamageType type,
+                                          DoubleSupplier random, List<SkillEffect.Execute> executes, SkillTheme theme,
+                                          boolean sureCritical) {
         List<HitTarget> damaged = new ArrayList<>();
         if (!attacker.isAlive() || attacker.isSpectator()) {
             return damaged;
@@ -148,11 +165,39 @@ public final class CombatHits {
                 break;
             }
             DamageRoll roll = withExecute(roll(attacker, stats, hit.weapon(), hit.frame(), hit.damageScale(), type,
-                    random.getAsDouble()), candidate.entity(), executes);
+                    random.getAsDouble(), sureCritical), candidate.entity(), executes);
             float amount = deal(attacker, candidate.entity(), roll, type, hit.frame().knockback(),
                     hit.action().kind(), true);
             if (amount > 0.0F) {
                 damaged.add(new HitTarget(candidate.entity(), amount));
+            }
+        }
+        return damaged;
+    }
+
+    /**
+     * The frame's blow on {@code entities} wherever they are (no volume, no line of sight: a reckoning of marks the
+     * action made earlier), each still a valid target; nearest first.
+     */
+    public static List<HitTarget> strikeAll(ServerPlayer attacker, CombatStats stats, CombatEvent.Hit hit,
+                                            DamageType type, DoubleSupplier random,
+                                            List<SkillEffect.Execute> executes, List<LivingEntity> entities,
+                                            boolean sureCritical) {
+        List<HitTarget> damaged = new ArrayList<>();
+        if (!attacker.isAlive() || attacker.isSpectator()) {
+            return damaged;
+        }
+        List<LivingEntity> order = new ArrayList<>(entities);
+        order.sort(Comparator.comparingDouble(entity -> entity.distanceToSqr(attacker)));
+        for (LivingEntity entity : order) {
+            if (!isValidTarget(attacker, entity)) {
+                continue;
+            }
+            DamageRoll roll = withExecute(roll(attacker, stats, hit.weapon(), hit.frame(), hit.damageScale(), type,
+                    random.getAsDouble(), sureCritical), entity, executes);
+            float amount = deal(attacker, entity, roll, type, hit.frame().knockback(), hit.action().kind(), true);
+            if (amount > 0.0F) {
+                damaged.add(new HitTarget(entity, amount));
             }
         }
         return damaged;

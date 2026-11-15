@@ -246,4 +246,17 @@ NODES = [
     ("p", "unbroken_soul", 1, 3, 5, '.req("fighting_spirit", 3).bonus(lastStand(0.0, 0.04))',
      "sword halo shield STEEL",
      "折れぬ剣魂", "Unbroken Soul", "HPが減るほど受けるダメージが減る。", "The lower your health, the less damage you take."),
+
+    # ------------------------------------------------------------------ the finale (秘奥義, Lv70)
+    ("f", "heavenfall_blade", 0, 0, 6,
+     '.reqAny("infinite_stroke", 1, "myriad_swords", 1).cd(90).theme(HOLY)'
+     '.act(64, 60, 45, pause(12), hit(40, ahead(5.0, 5.5), 18.0, 2.6))'
+     '.fx(self(START, DEFENSE_UP, 0.5, 44), afflict(1, STUN, 50, 0), afflict(1, VULNERABLE, 200, 0.3),'
+     ' vis(START, "fin_holy_sword_call"), vis(0, "fin_holy_sword_raise"), vis(1, "fin_holy_sword_fall"))',
+     "sword pillar+smite star HOLY",
+     "秘奥義・神剣天墜", "Hidden Art: Heavenfall Blade",
+     "【秘奥義】天に剣を掲げ、雲を割って現れた巨大な聖剣をその手に宿す。渾身の力で振り下ろした聖剣は大地ごと前方を断ち、その一撃に耐えた敵も気絶して守りを失う。",
+     "[Finale] Raise your sword to the sky and take up the colossal holy blade that parts the clouds. Brought down "
+     "with all your strength, it cleaves the ground ahead, and whatever survives the blow is stunned and stripped of "
+     "its guard."),
 ]

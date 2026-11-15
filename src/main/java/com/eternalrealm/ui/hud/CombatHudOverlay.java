@@ -139,12 +139,13 @@ public final class CombatHudOverlay implements IGuiOverlay {
         graphics.drawCenteredString(font, Component.translatable(key), centerX, centerY - 30, (alpha << 24) | color);
     }
 
-    /** Order of the job skill boxes on the HUD: the five active slots, then the ultimate. */
-    private static final int[] HUD_ORDER = {1, 2, 3, 5, 6, 4};
+    /** Order of the job skill boxes on the HUD: the five active slots, then the ultimate and the class's finale. */
+    private static final int[] HUD_ORDER = {1, 2, 3, 5, 6, 4, Combatant.FINALE_SLOT};
 
     /**
-     * Six job skill boxes: icon, key and cooldown; empty slots show just the key. The ultimate (slot 4) comes last,
-     * a little apart and framed in gold.
+     * Seven job skill boxes: icon, key and cooldown; empty slots show just the key. The ultimate (slot 4) comes after
+     * the actives, a little apart and framed in gold; the finale (秘奥義, slot 7) last, framed in shifting violet light,
+     * and only for a character of a second class (the others can never fill it).
      */
     private static void renderJobSkills(GuiGraphics graphics, Font font, Combatant local, long now,
                                         List<Rect> boxes) {
@@ -152,13 +153,19 @@ public final class CombatHudOverlay implements IGuiOverlay {
             int slot = HUD_ORDER[i];
             Rect box = boxes.get(i);
             boolean ultimate = slot == Combatant.ULTIMATE_SLOT;
+            boolean finale = slot == Combatant.FINALE_SLOT;
             SkillBinding binding = local.jobSkill(slot);
+            if (finale && binding == null && !ownsClass()) {
+                continue;
+            }
             Component key = ClientKeyMappings.jobSkill(slot).getTranslatedKeyMessage();
             if (binding == null) {
                 graphics.fill(box.x(), box.y(), box.right(), box.bottom(), 0x50000000);
                 graphics.drawString(font, key, box.x() + 2, box.y() + 2, 0x606060);
                 if (ultimate) {
                     graphics.renderOutline(box.x() - 1, box.y() - 1, box.width() + 2, box.height() + 2, 0x80E8C66A);
+                } else if (finale) {
+                    graphics.renderOutline(box.x() - 1, box.y() - 1, box.width() + 2, box.height() + 2, 0x80B48CFF);
                 }
                 continue;
             }
@@ -167,8 +174,29 @@ public final class CombatHudOverlay implements IGuiOverlay {
             skillBox(graphics, font, box, skillIcon(binding.action().id()), key, remaining, total);
             if (ultimate) {
                 graphics.renderOutline(box.x() - 1, box.y() - 1, box.width() + 2, box.height() + 2, 0xFFE8C66A);
+            } else if (finale) {
+                graphics.renderOutline(box.x() - 1, box.y() - 1, box.width() + 2, box.height() + 2,
+                        finaleFrame(now, remaining <= 0));
             }
         }
+    }
+
+    /** Whether the local character has grown into a second class (only then can the finale slot ever fill). */
+    private static boolean ownsClass() {
+        return com.eternalrealm.client.ClientCharacterState.snapshot()
+                .map(snapshot -> com.eternalrealm.job.JobPath.of(snapshot.jobId()).advanced() != null).orElse(false);
+    }
+
+    /** The finale's frame: violet, breathing through gold and white while it is ready. */
+    static int finaleFrame(long now, boolean ready) {
+        if (!ready) {
+            return 0xFF9C6CF0;
+        }
+        double t = (Math.sin(now * 0.18) + 1.0) * 0.5;
+        int r = (int) Math.round(0xB4 + (0xFF - 0xB4) * t);
+        int g = (int) Math.round(0x7C + (0xE0 - 0x7C) * t);
+        int b = (int) Math.round(0xFF + (0x9C - 0xFF) * t);
+        return 0xFF000000 | (r << 16) | (g << 8) | b;
     }
 
     /** One skill box: icon, key in the corner, the cooldown as a shade with seconds, a green rim when ready. */

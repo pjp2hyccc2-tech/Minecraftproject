@@ -1,5 +1,6 @@
 package com.eternalrealm.network.forge;
 
+import com.eternalrealm.job.SkillEffect;
 import com.eternalrealm.job.SkillTheme;
 import io.netty.handler.codec.DecoderException;
 import net.minecraft.network.FriendlyByteBuf;
@@ -10,7 +11,9 @@ import java.util.function.Supplier;
 /**
  * S2C: light a job skill leaves where it lands, drawn by every client near it (docs/modules/skills.md, "The light of
  * the skills"): a ground area for its whole life ({@link #ZONE}: radius, ticks before the first pulse, pulses and the
- * ticks between them, whether it heals or harms) or the burst of an exploding spell or arrow ({@link #BLAST}).
+ * ticks between them, whether it heals or harms), the burst of an exploding spell or arrow ({@link #BLAST}) or the
+ * sentence the inquisitor's finale hands one enemy ({@link #VERDICT}: {@code theme} is then the
+ * {@link SkillEffect.Sentence} ordinal, the position is over its head and {@code radius} its height).
  * {@code theme} is the skill's {@link SkillTheme} ordinal, {@code yaw} the caster's facing, {@code seed} makes every
  * client draw the same details.
  */
@@ -18,6 +21,8 @@ public record SkillFxPacket(int kind, int theme, float x, float y, float z, floa
                             int pulses, int interval, int flags, int seed) {
     public static final int ZONE = 0;
     public static final int BLAST = 1;
+    /** Protocol 14: a sentence of the 神判 over one enemy's head. */
+    public static final int VERDICT = 2;
     /** {@link #flags}: the area heals the caster's side. */
     public static final int HEALS = 1;
     /** {@link #flags}: the area hurts enemies. */
@@ -49,8 +54,20 @@ public record SkillFxPacket(int kind, int theme, float x, float y, float z, floa
                 (float) Math.min(MAX_RADIUS, Math.max(0.5, radius)), 0, 1, 1, HARMS, seed);
     }
 
+    /** The sentence over an enemy's head. */
+    public static SkillFxPacket verdict(SkillEffect.Sentence sentence, double x, double y, double z, float yaw,
+                                        double height, int seed) {
+        return new SkillFxPacket(VERDICT, sentence.ordinal(), (float) x, (float) y, (float) z, wrap(yaw),
+                (float) Math.min(MAX_RADIUS, Math.max(0.5, height)), 0, 1, 1, HARMS, seed);
+    }
+
     public SkillTheme themeValue() {
-        return SkillTheme.values()[theme];
+        return SkillTheme.values()[kind == VERDICT ? SkillTheme.HOLY.ordinal() : theme];
+    }
+
+    /** The sentence of a {@link #VERDICT}. */
+    public SkillEffect.Sentence sentence() {
+        return SkillEffect.Sentence.values()[kind == VERDICT ? theme : 0];
     }
 
     public boolean heals() {
@@ -98,7 +115,8 @@ public record SkillFxPacket(int kind, int theme, float x, float y, float z, floa
 
     static boolean valid(int kind, int theme, float x, float y, float z, float yaw, float radius, int delay,
                          int pulses, int interval, int flags) {
-        return (kind == ZONE || kind == BLAST) && theme >= 0 && theme < SkillTheme.values().length
+        return (kind == ZONE || kind == BLAST || kind == VERDICT) && theme >= 0
+                && theme < (kind == VERDICT ? SkillEffect.Sentence.values().length : SkillTheme.values().length)
                 && Float.isFinite(x) && Float.isFinite(y) && Float.isFinite(z) && Math.abs(x) < 3.0E7F
                 && Math.abs(y) < 1.0E5F && Math.abs(z) < 3.0E7F && Float.isFinite(yaw) && Math.abs(yaw) <= 360.0F
                 && Float.isFinite(radius) && radius >= 0.5F && radius <= MAX_RADIUS && delay >= 0

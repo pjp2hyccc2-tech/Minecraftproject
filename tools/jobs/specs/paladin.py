@@ -242,4 +242,18 @@ NODES = [
     ("p", "aegis_of_heaven", 1, 3, 5, '.req("divine_favor", 3).bonus(stats(mods().defense(8).guard(0.02)))',
      "shield_cross glow up LIGHT",
      "天の神盾", "Aegis of Heaven", "防御力とガード性能が大きく上がる。", "Greatly raises defense and guard."),
+
+    # ------------------------------------------------------------------ the finale (秘奥義, Lv70)
+    ("f", "earthsunder", 0, 0, 6,
+     '.reqAny("divine_judgment", 1, "sanctum_of_light", 1).cd(90).theme(HOLY)'
+     '.act(68, 64, 45, pause(10), hit(36, ahead(5.0, 6.0), 12.0, 2.4))'
+     '.fx(self(START, DEFENSE_UP, 0.5, 48), afflict(1, STUN, 40, 0), afflict(1, VULNERABLE, 200, 0.3),'
+     ' field(1, AHEAD, 8.0, 7.0, 6, 10, 10, 0.6, 0.02, SLOW, 40, 2, null), vis(START, "fin_giant_sword_grow"),'
+     ' vis(1, "fin_giant_sword_strike"))',
+     "greatsword crack+zone stun HOLY",
+     "秘奥義・天地断つ聖剣", "Hidden Art: Earthsunder",
+     "【秘奥義】聖剣に光を注ぎ、刀身を天を突くほど巨大にする。渾身の力で振り下ろした一撃は前方の大地を深く割り、敵を気絶させて守りを砕く。割れ目からは聖なる光があふれて聖域となり、しばらくの間、中の敵を焼き続けて足を鈍らせ、仲間を癒す。",
+     "[Finale] Pour light into your holy sword until the blade reaches for the sky. Brought down with all your "
+     "strength, it splits the earth ahead, stunning the foes and shattering their guard; holy light wells up from the "
+     "rift as a sanctuary that keeps searing and slowing the foes inside and healing your allies for a while."),
 ]

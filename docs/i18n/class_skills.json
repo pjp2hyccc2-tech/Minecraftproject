@@ -319,6 +319,14 @@
   "ja": "HPが減るほど与えるダメージが増え、受けるダメージが大きく減る。",
   "en": "The lower your health, the harder you hit and the far less you take."
  },
+ "skill.eternalrealm.guardian_adamant_bulwark": {
+  "ja": "秘奥義・金剛不壊",
+  "en": "Hidden Art: Adamant Bulwark"
+ },
+ "skill.eternalrealm.guardian_adamant_bulwark.desc": {
+  "ja": "【秘奥義】黄金に輝く巨大な盾を呼び出して大地に据える。盾の加護が自分と周りの仲間を包み、10秒間あらゆるダメージを受けない無敵となる。すべての敵を引きつけたら、巨大な盾を渾身の力で叩きつけ、前方の敵を吹き飛ばして気絶させる。",
+  "en": "[Finale] Call up a colossal golden shield and set it down before you. Its ward wraps you and the allies around you: for ten seconds no harm of any kind can touch you. Every foe turns on you, and you slam the giant shield into them with all your strength, hurling the foes ahead back stunned."
+ },
  "skill_branch.eternalrealm.guardian.0": {
   "ja": "鉄壁",
   "en": "Bulwark"
@@ -646,6 +654,14 @@
  "skill.eternalrealm.paladin_aegis_of_heaven.desc": {
   "ja": "防御力とガード性能が大きく上がる。",
   "en": "Greatly raises defense and guard."
+ },
+ "skill.eternalrealm.paladin_earthsunder": {
+  "ja": "秘奥義・天地断つ聖剣",
+  "en": "Hidden Art: Earthsunder"
+ },
+ "skill.eternalrealm.paladin_earthsunder.desc": {
+  "ja": "【秘奥義】聖剣に光を注ぎ、刀身を天を突くほど巨大にする。渾身の力で振り下ろした一撃は前方の大地を深く割り、敵を気絶させて守りを砕く。割れ目からは聖なる光があふれて聖域となり、しばらくの間、中の敵を焼き続けて足を鈍らせ、仲間を癒す。",
+  "en": "[Finale] Pour light into your holy sword until the blade reaches for the sky. Brought down with all your strength, it splits the earth ahead, stunning the foes and shattering their guard; holy light wells up from the rift as a sanctuary that keeps searing and slowing the foes inside and healing your allies for a while."
  },
  "skill_branch.eternalrealm.paladin.0": {
   "ja": "光刃",
@@ -975,6 +991,14 @@
   "ja": "攻撃を回避しやすくなる。",
   "en": "You dodge attacks more often."
  },
+ "skill.eternalrealm.shinobi_eightfold_flash": {
+  "ja": "秘奥義・八重一閃",
+  "en": "Hidden Art: Eightfold Flash"
+ },
+ "skill.eternalrealm.shinobi_eightfold_flash.desc": {
+  "ja": "【秘奥義】居合の構えから姿を消し、周りの敵を八度の一閃で斬り抜ける。斬られた敵はまだ気づかず、その場に縫い止められる。静かに納刀した瞬間、八つの斬撃が一斉に弾け、刻んだ敵すべてに一気に大ダメージを与える。閃きの間は攻撃をかわしやすい。",
+  "en": "[Finale] From the draw stance you vanish and cut through every foe around you in eight flashes. They do not know it yet and stand pinned where they are; the moment you sheathe the blade, all eight cuts burst at once and every foe you marked takes the whole blow. Attacks rarely touch you while you flash."
+ },
  "skill_branch.eternalrealm.shinobi.0": {
   "ja": "忍術",
   "en": "Ninjutsu"
@@ -1302,6 +1326,14 @@
  "skill.eternalrealm.reaper_eternal_night.desc": {
   "ja": "会心率と物理攻撃力が上がる。",
   "en": "Raises critical chance and physical power."
+ },
+ "skill.eternalrealm.reaper_scythe_of_the_end": {
+  "ja": "秘奥義・終焉の大鎌",
+  "en": "Hidden Art: Scythe of the End"
+ },
+ "skill.eternalrealm.reaper_scythe_of_the_end.desc": {
+  "ja": "【秘奥義】冥府から身の丈を超える大鎌を呼び出し、高く振りかぶる。返しの刃で周りの魂を引き寄せ、振り下ろす一閃で辺り一面を刈り取る。弱った敵ほど深く刈られ、刈った命の一部が自分に還る。",
+  "en": "[Finale] Call a scythe taller than yourself up from the underworld and raise it high. The back of the blade drags the souls around you in, and one great sweep reaps everything near; the weakened are cut deepest, and part of the life you reap comes back to you."
  },
  "skill_branch.eternalrealm.reaper.0": {
   "ja": "刈取",
@@ -1631,6 +1663,14 @@
   "ja": "最大HPが上がり、HPが減るほど受けるダメージが減る。",
   "en": "Raises maximum health; the lower your health, the less damage you take."
  },
+ "skill.eternalrealm.sage_azure_starfall": {
+  "ja": "秘奥義・蒼焔隕星",
+  "en": "Hidden Art: Azure Starfall"
+ },
+ "skill.eternalrealm.sage_azure_starfall.desc": {
+  "ja": "【秘奥義】天に大魔法陣を描き、蒼白い炎をまとった巨大な隕石を呼び寄せる。狙った地点へゆっくりと落ちてきた隕石は大爆発を起こして辺りを焼き払い、その跡には蒼い炎が燃え続けて敵を焼く。",
+  "en": "[Finale] Draw a great circle across the sky and call down a colossal meteor wreathed in pale blue fire. It falls slowly onto the spot you aim at and bursts in a huge blast, and blue flames keep burning where it fell."
+ },
  "skill_branch.eternalrealm.sage.0": {
   "ja": "融合",
   "en": "Fusion"
@@ -1958,6 +1998,14 @@
  "skill.eternalrealm.necromancer_eternal_unlife.desc": {
   "ja": "HPが減るほど与えるダメージが増え、受けるダメージが減る。",
   "en": "The lower your health, the harder you strike and the less damage you take."
+ },
+ "skill.eternalrealm.necromancer_advent_of_the_bone_king": {
+  "ja": "秘奥義・骸王顕現",
+  "en": "Hidden Art: Advent of the Bone King"
+ },
+ "skill.eternalrealm.necromancer_advent_of_the_bone_king.desc": {
+  "ja": "【秘奥義】周囲から魔素を一点に収束させ、地の底から巨大な骸骨の騎士王を呼び起こす。現れた衝撃で前方の敵を気絶させ、騎士王はしばらくの間そばで戦い、大剣で敵をなぎ倒す。",
+  "en": "[Finale] Draw the mana from all around into one point and raise a giant skeleton knight-king from the depths. Its rising stuns the foes ahead, and for a while the king fights beside you, felling foes with its greatsword."
  },
  "skill_branch.eternalrealm.necromancer.0": {
   "ja": "呪詛",
@@ -2287,6 +2335,14 @@
   "ja": "防御力と最大HPが上がる。",
   "en": "Raises defense and maximum health."
  },
+ "skill.eternalrealm.sniper_three_magic_bullets": {
+  "ja": "秘奥義・魔弾三連",
+  "en": "Hidden Art: Three Magic Bullets"
+ },
+ "skill.eternalrealm.sniper_three_magic_bullets.desc": {
+  "ja": "【秘奥義】弓を巨大な魔導狙撃銃へ組み替えて構える。狙った敵へ貫通する魔弾を三発撃ち込み、一直線上の敵をまとめて撃ち抜く。三発目は敵の守りを砕く。撃ち終えると銃は弓へ戻る。構えている間は受けるダメージが減る。",
+  "en": "[Finale] Rebuild your bow into a heavy arcane sniper rifle and take aim. Three piercing rounds go through the foe you aim at and everything in its line; the third shatters its guard. Then the rifle turns back into your bow. You take less damage while you aim."
+ },
  "skill_branch.eternalrealm.sniper.0": {
   "ja": "狙撃",
   "en": "Marksmanship"
@@ -2614,6 +2670,14 @@
  "skill.eternalrealm.spirit_archer_eternal_spring.desc": {
   "ja": "回復量が上がり、敵を倒すとHPが回復する。",
   "en": "Raises healing; defeating a foe heals you."
+ },
+ "skill.eternalrealm.spirit_archer_bow_of_seven_spirits": {
+  "ja": "秘奥義・七精霊の神弓",
+  "en": "Hidden Art: Bow of the Seven Spirits"
+ },
+ "skill.eternalrealm.spirit_archer_bow_of_seven_spirits.desc": {
+  "ja": "【秘奥義】炎・氷・雷・風・地・光・闇の七精霊を呼び出す。精霊たちが光の大弓を形づくり、それぞれの力を一本の矢に注ぎ込む。放たれた全属性の矢は一直線上の敵を貫き、燃やし、凍らせ、しびれさせ、目をくらませて守りを砕く。矢の残した精霊の奔流が後を薙ぎ払う。",
+  "en": "[Finale] Call the seven spirits of fire, ice, thunder, wind, earth, light and darkness. They shape a great bow of light and pour their power into a single arrow: loosed, it pierces every foe in its line, burning, freezing, stunning and blinding them and shattering their guard, and the torrent of spirits it leaves sweeps on behind it."
  },
  "skill_branch.eternalrealm.spirit_archer.0": {
   "ja": "精霊矢",
@@ -2943,6 +3007,14 @@
   "ja": "HPが減るほど与えるダメージが増え、受けるダメージが減る。",
   "en": "The lower your health, the harder you strike and the less damage you take."
  },
+ "skill.eternalrealm.bishop_celestial_cathedral": {
+  "ja": "秘奥義・天上の大聖堂",
+  "en": "Hidden Art: Celestial Cathedral"
+ },
+ "skill.eternalrealm.bishop_celestial_cathedral.desc": {
+  "ja": "【秘奥義】祈りに応えて、光の大聖堂が自分の周りにそびえ立つ。鐘が三度鳴り響くたびに聖なる響きが周りの敵を打ち、仲間を癒やして状態異常を払う。最後に天上のバラ窓から光が降り注ぎ、敵を打って目をくらませ、倒れた仲間を蘇らせ、全員をシールドと守りの加護で包む。",
+  "en": "[Finale] Your prayer is answered: a cathedral of light rises around you. Each of its three bells strikes the foes around you with a holy peal and heals and cleanses your allies; then light pours down through the rose window above, striking and dazzling the foes, raising the fallen and wrapping everyone in shields and hardened armor."
+ },
  "skill_branch.eternalrealm.bishop.0": {
   "ja": "救済",
   "en": "Salvation"
@@ -3270,6 +3342,14 @@
  "skill.eternalrealm.inquisitor_everburning.desc": {
   "ja": "スキルの再使用時間が短くなる。",
   "en": "Skills recover faster."
+ },
+ "skill.eternalrealm.inquisitor_divine_verdict": {
+  "ja": "秘奥義・神判",
+  "en": "Hidden Art: Divine Verdict"
+ },
+ "skill.eternalrealm.inquisitor_divine_verdict.desc": {
+  "ja": "【秘奥義】天に審判の天秤を掲げ、神に代わって周りの敵すべてに神判を下す。一体ずつに裁きの光が落ち、それぞれに異なる刑（鎖縛・烙印・衰弱・業火・盲目・凍獄）が科される。続く刑の執行が、もう一度すべての敵を裁く。",
+  "en": "[Finale] Raise the scales of judgment in the sky and pass heaven's verdict on every foe around you: a pillar of judgment falls on each one, and each receives a sentence of its own (chains, the brand, withering, hellfire, blindness, the frozen prison). Then the sentence is carried out, and every foe is judged once more."
  },
  "skill_branch.eternalrealm.inquisitor.0": {
   "ja": "断罪",
@@ -3599,6 +3679,14 @@
   "ja": "HPが減るほど受けるダメージが減る。",
   "en": "The lower your health, the less damage you take."
  },
+ "skill.eternalrealm.sword_saint_heavenfall_blade": {
+  "ja": "秘奥義・神剣天墜",
+  "en": "Hidden Art: Heavenfall Blade"
+ },
+ "skill.eternalrealm.sword_saint_heavenfall_blade.desc": {
+  "ja": "【秘奥義】天に剣を掲げ、雲を割って現れた巨大な聖剣をその手に宿す。渾身の力で振り下ろした聖剣は大地ごと前方を断ち、その一撃に耐えた敵も気絶して守りを失う。",
+  "en": "[Finale] Raise your sword to the sky and take up the colossal holy blade that parts the clouds. Brought down with all your strength, it cleaves the ground ahead, and whatever survives the blow is stunned and stripped of its guard."
+ },
  "skill_branch.eternalrealm.sword_saint.0": {
   "ja": "剣技",
   "en": "Swordcraft"
@@ -3926,6 +4014,14 @@
  "skill.eternalrealm.hexblade_endless_curse.desc": {
   "ja": "攻撃が一定確率で敵を毒に冒す。",
   "en": "Your attacks may poison the foe."
+ },
+ "skill.eternalrealm.hexblade_hour_of_the_ox": {
+  "ja": "秘奥義・丑の刻参り",
+  "en": "Hidden Art: Hour of the Ox"
+ },
+ "skill.eternalrealm.hexblade_hour_of_the_ox.desc": {
+  "ja": "【秘奥義】丑の刻の呪いを呼ぶ。前方の敵に巨大な呪いの釘を突き立て、呪いの金槌で三度打ち込む。最後の一打は必ず会心となって釘を深く沈め、敵は長く呪詛に蝕まれて弱り続ける。",
+  "en": "[Finale] Call down the curse of the hour of the ox: a giant cursed nail is driven against the foe ahead and a cursed hammer strikes it three times. The last blow is always critical and sinks the nail deep, and the foe withers under the curse for a long while."
  },
  "skill_branch.eternalrealm.hexblade.0": {
   "ja": "血呪",

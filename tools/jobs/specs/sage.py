@@ -252,4 +252,17 @@ NODES = [
      "heart halo shield ARCANE",
      "賢者の体", "Sage's Body", "最大HPが上がり、HPが減るほど受けるダメージが減る。",
      "Raises maximum health; the lower your health, the less damage you take."),
+
+    # ------------------------------------------------------------------ the finale (秘奥義, Lv70)
+    ("f", "azure_starfall", 0, 0, 6,
+     '.reqAny("genesis", 1, "eternal_wisdom", 1).cd(90).theme(FROST)'
+     '.act(72, 68, 45, pause(8), pause(30), pause(54))'
+     '.fx(self(START, DEFENSE_UP, 0.4, 60), zone(START, LOOK, 22.0, 7.0, 54, 2, 2, 6.0, BURN, 100, 0),'
+     ' zone(START, LOOK, 22.0, 6.5, 64, 6, 10, 1.0, BURN, 60, 0), vis(START, "fin_azure_call"),'
+     ' vis(1, "fin_azure_fall"), vis(2, "fin_azure_impact"))',
+     "meteor glow+nova burn FROST",
+     "秘奥義・蒼焔隕星", "Hidden Art: Azure Starfall",
+     "【秘奥義】天に大魔法陣を描き、蒼白い炎をまとった巨大な隕石を呼び寄せる。狙った地点へゆっくりと落ちてきた隕石は大爆発を起こして辺りを焼き払い、その跡には蒼い炎が燃え続けて敵を焼く。",
+     "[Finale] Draw a great circle across the sky and call down a colossal meteor wreathed in pale blue fire. It "
+     "falls slowly onto the spot you aim at and bursts in a huge blast, and blue flames keep burning where it fell."),
 ]

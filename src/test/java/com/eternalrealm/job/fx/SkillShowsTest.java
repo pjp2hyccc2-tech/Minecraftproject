@@ -65,11 +65,13 @@ public class SkillShowsTest {
                     assertTrue(skill.id() + " " + cue, cue.frame() >= 0 && cue.frame() < show.frameTimes().length);
                 }
             }
-            if (skill.kind() == SkillKind.ULTIMATE) {
+            if (skill.kind() == SkillKind.ULTIMATE && !skill.isFinale()) {
                 ultimates++;
             }
         }
         assertEquals("33 of the six jobs, two of every second class", 33 + 2 * JobClass.values().length, ultimates);
+        assertEquals("a finale for every second class", JobClass.values().length,
+                skills.stream().filter(SkillDefinition::isFinale).count());
         assertTrue(SkillShows.forAction("no_such_skill").isEmpty());
         assertTrue(SkillShows.forAction(null).isEmpty());
     }

@@ -29,9 +29,12 @@ public final class HudLayout {
 
     public static final int SLOT = 22;
     public static final int SLOT_GAP = 2;
-    public static final int JOB_SLOTS = 6;
+    /** The job skill boxes: five actives, then the ultimate and the class's finale (秘奥義). */
+    public static final int JOB_SLOTS = 7;
+    /** The active skills' boxes come first. */
+    public static final int ACTIVE_SLOTS = 5;
     public static final int QUICK_SLOTS = 3;
-    /** Extra space before the ultimate (the last job slot). */
+    /** Extra space before the ultimate and the finale (the last two job slots). */
     public static final int ULTIMATE_GAP = 4;
     /** Between the weapon skill and the job skills, and between the job skills and the quick-use items. */
     public static final int GROUP_GAP = 8;
@@ -200,6 +203,11 @@ public final class HudLayout {
         int barWidth = SLOT + GROUP_GAP + JOB_SLOTS * SLOT + (JOB_SLOTS - 1) * SLOT_GAP + ULTIMATE_GAP + GROUP_GAP
                 + QUICK_SLOTS * SLOT + (QUICK_SLOTS - 1) * SLOT_GAP;
         int barX = Math.max(0, (w - barWidth) / 2);
+        // centred, unless that would run into the bag in the bottom right corner (narrow screens)
+        int bagLeft = w - MARGIN - ICON - GAP;
+        if (barX + barWidth > bagLeft) {
+            barX = Math.max(0, bagLeft - barWidth);
+        }
         int barY = Math.max(0, h - MARGIN - SLOT);
         Rect skillBar = new Rect(barX, barY, Math.min(barWidth, w), SLOT);
         Rect weaponSkill = new Rect(barX, barY, SLOT, SLOT);
@@ -207,7 +215,7 @@ public final class HudLayout {
         List<Rect> jobSlots = new ArrayList<>();
         int x = barX + SLOT + GROUP_GAP;
         for (int i = 0; i < JOB_SLOTS; i++) {
-            if (i == JOB_SLOTS - 1) {
+            if (i == ACTIVE_SLOTS) {
                 x += ULTIMATE_GAP;
             }
             jobSlots.add(new Rect(x, barY, SLOT, SLOT));

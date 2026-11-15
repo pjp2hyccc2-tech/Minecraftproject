@@ -65,8 +65,8 @@ public final class SkillEffectsExecutor {
                              List<CombatHits.HitTarget> targets) {
         double scale = skill == null ? 1.0 : skill.effectScale(Math.max(1, Math.min(level, skill.maxLevel())));
         SkillTheme theme = skill == null ? SkillTheme.STEEL : skill.theme();
-        run(caster, stats, theme, skill == null ? null : skill.damageType(), scale, weapon, damageScale, effects,
-                targets);
+        run(caster, stats, skill == null ? null : skill.id(), theme, skill == null ? null : skill.damageType(), scale,
+                weapon, damageScale, effects, targets);
     }
 
     /**
@@ -85,14 +85,16 @@ public final class SkillEffectsExecutor {
     public static void applyArt(ServerPlayer caster, CombatStats stats, WeaponArt art, WeaponProfile weapon,
                                 double damageScale, double strength, List<SkillEffect> effects,
                                 List<CombatHits.HitTarget> targets) {
-        run(caster, stats, art.theme(), art.type().damageType(), strength, weapon, damageScale, effects, targets);
+        run(caster, stats, null, art.theme(), art.type().damageType(), strength, weapon, damageScale, effects,
+                targets);
     }
 
     /**
-     * @param type damage type of ground areas, or {@code null} without a skill context (areas are skipped)
+     * @param skillId the job skill whose effects these are ({@code null}: a weapon art or no skill context)
+     * @param type    damage type of ground areas, or {@code null} without a skill context (areas are skipped)
      */
-    private static void run(ServerPlayer caster, CombatStats stats, SkillTheme theme, DamageType type, double scale,
-                            WeaponProfile weapon, double damageScale, List<SkillEffect> effects,
+    private static void run(ServerPlayer caster, CombatStats stats, String skillId, SkillTheme theme, DamageType type,
+                            double scale, WeaponProfile weapon, double damageScale, List<SkillEffect> effects,
                             List<CombatHits.HitTarget> targets) {
         for (SkillEffect effect : effects) {
             if (effect instanceof SkillEffect.Heal heal) {
@@ -135,6 +137,14 @@ public final class SkillEffectsExecutor {
                         restore.amount()));
             } else if (effect instanceof SkillEffect.CooldownCut cut) {
                 ServerContext.current().ifPresent(context -> context.combat().cutCooldowns(caster, cut.ticks()));
+            } else if (effect instanceof SkillEffect.Engrave engrave) {
+                if (skillId != null) {
+                    FinaleMechanics.engrave(caster, skillId, engrave);
+                }
+            } else if (effect instanceof SkillEffect.Summon summon) {
+                if (type != null && weapon != null) {
+                    BoneKing.summon(caster, stats, weapon, type, theme, damageScale, summon);
+                }
             } else if (effect instanceof SkillEffect.Visual visual) {
                 visual(caster, theme, visual.kind(), targets);
             }
@@ -279,6 +289,10 @@ public final class SkillEffectsExecutor {
                     effect = ERMobEffects.THORNS.get();
                     amplifier = ERMobEffects.amplifierFor(magnitude);
                 }
+                case INVULNERABLE -> {
+                    effect = ERMobEffects.DIVINE_AEGIS.get();
+                    amplifier = 0;
+                }
                 default -> {
                     continue;
                 }
@@ -351,6 +365,9 @@ public final class SkillEffectsExecutor {
                 extra(level, ParticleTypes.REVERSE_PORTAL, x, y, z, 20, 1.5);
             }
             default -> {
+                if (FinaleVisuals.play(caster, kind, targets)) {
+                    return;
+                }
                 if (com.eternalrealm.item.forge.ArtVisuals.play(caster, kind, targets)) {
                     return;
                 }

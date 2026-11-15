@@ -42,8 +42,10 @@ public enum JobClass {
 
     /** The level a job grows into a class at. */
     public static final int LEVEL = 40;
-    /** Skills of every class's tree. */
-    public static final int SKILLS = 40;
+    /** Skills of every class's tree: forty in its two branches and its finale (秘奥義) below them. */
+    public static final int SKILLS = 41;
+    /** The level a class's finale opens at. */
+    public static final int FINALE_LEVEL = 70;
 
     private final String id;
     private final JobType base;

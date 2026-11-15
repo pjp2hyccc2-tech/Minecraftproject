@@ -120,6 +120,13 @@ final class GuardianSkills {
                 .fx(afflict(2, LAUNCH, 1, 0.9), taunt(2, 12, 160), vis(0, "slash"), vis(1, "slash"), vis(2, "nova"));
         t.passive("eternal_guardian", 1, 3, 5).req("steadfast_pace", 1).bonus(lastStand(0.04, 0.05));
 
+        // ---------------------------------------------------------------- the finale (秘奥義, Lv70)
+        t.finale("adamant_bulwark").reqAny("eternal_fortress", 1, "oath_of_the_wall", 1).cd(90).theme(HOLY)
+                .act(60, 56, 40, pause(16), hit(42, arc(7.5, 75), 18.0, 3.2))
+                .fx(self(0, INVULNERABLE, 1, 200), allies(0, INVULNERABLE, 1, 200, 16), taunt(0, 16, 200),
+                        afflict(1, STUN, 50, 0), afflict(1, WEAKEN, 200, 0.3), vis(START, "fin_aegis_raise"),
+                        vis(0, "fin_aegis_ward"), vis(1, "fin_aegis_bash"));
+
         return t.build();
     }
 }

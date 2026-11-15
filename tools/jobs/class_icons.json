@@ -161,6 +161,14 @@
    "HOLY"
   ],
   [
+   "guardian_adamant_bulwark",
+   "f",
+   "shield",
+   "nova+halo",
+   "shield",
+   "HOLY"
+  ],
+  [
    "guardian_challengers_roar",
    "a",
    "banner",
@@ -480,6 +488,14 @@
    "helmet",
    "halo",
    "thorns",
+   "HOLY"
+  ],
+  [
+   "paladin_earthsunder",
+   "f",
+   "greatsword",
+   "crack+zone",
+   "stun",
    "HOLY"
   ],
   [
@@ -807,6 +823,14 @@
    "EARTH"
   ],
   [
+   "shinobi_eightfold_flash",
+   "f",
+   "katana",
+   "x+speed",
+   "crit",
+   "STEEL"
+  ],
+  [
    "shinobi_shuriken",
    "a",
    "shuriken",
@@ -1127,6 +1151,14 @@
    "halo",
    "heal",
    "BLOOD"
+  ],
+  [
+   "reaper_scythe_of_the_end",
+   "f",
+   "scythe",
+   "nova+arc2",
+   "skull",
+   "SHADOW"
   ],
   [
    "reaper_wraith_bolt",
@@ -1451,6 +1483,14 @@
    "ARCANE"
   ],
   [
+   "sage_azure_starfall",
+   "f",
+   "meteor",
+   "glow+nova",
+   "burn",
+   "FROST"
+  ],
+  [
    "sage_mana_shield",
    "a",
    "crystal",
@@ -1770,6 +1810,14 @@
    "chains",
    "glow",
    "vuln",
+   "SHADOW"
+  ],
+  [
+   "necromancer_advent_of_the_bone_king",
+   "f",
+   "crown",
+   "spiral+glow",
+   "skull",
    "SHADOW"
   ],
   [
@@ -2095,6 +2143,14 @@
    "WIND"
   ],
   [
+   "sniper_three_magic_bullets",
+   "f",
+   "rifle",
+   "beam",
+   "x3",
+   "STEEL"
+  ],
+  [
    "sniper_flashbang_arrow",
    "a",
    "arrow1",
@@ -2414,6 +2470,14 @@
    "quiver",
    "glow",
    "stamina",
+   "ARCANE"
+  ],
+  [
+   "spirit_archer_bow_of_seven_spirits",
+   "f",
+   "bow",
+   "orbit+beam",
+   "star",
    "ARCANE"
   ],
   [
@@ -2739,6 +2803,14 @@
    "HOLY"
   ],
   [
+   "bishop_celestial_cathedral",
+   "f",
+   "bell",
+   "pillar+halo",
+   "heal",
+   "HOLY"
+  ],
+  [
    "bishop_barrier",
    "a",
    "shield_cross",
@@ -3059,6 +3131,14 @@
    "halo",
    "star",
    "LIGHT"
+  ],
+  [
+   "inquisitor_divine_verdict",
+   "f",
+   "scales",
+   "smite+ring",
+   "vuln",
+   "HOLY"
   ],
   [
    "inquisitor_sacred_flame",
@@ -3383,6 +3463,14 @@
    "FROST"
   ],
   [
+   "sword_saint_heavenfall_blade",
+   "f",
+   "sword",
+   "pillar+smite",
+   "star",
+   "HOLY"
+  ],
+  [
    "sword_saint_flying_slash",
    "a",
    "crescent",
@@ -3704,6 +3792,14 @@
    "halo",
    "crit",
    "BLOOD"
+  ],
+  [
+   "hexblade_hour_of_the_ox",
+   "f",
+   "hammer",
+   "crack+burst",
+   "crit",
+   "SHADOW"
   ],
   [
    "hexblade_venom_edge",

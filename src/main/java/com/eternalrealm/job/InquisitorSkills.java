@@ -121,6 +121,12 @@ final class InquisitorSkills {
                         vis(0, "nova"));
         t.passive("everburning", 1, 3, 5).req("from_the_ashes", 3).bonus(cooldown(0.02));
 
+        // ---------------------------------------------------------------- the finale (秘奥義, Lv70)
+        t.finale("divine_verdict").reqAny("divine_execution", 1, "heavenly_wildfire", 1).cd(90).theme(HOLY)
+                .act(72, 68, 45, pause(10), hit(32, circle(12.0, 24), 9.0, 0.4), hit(54, circle(12.0, 24), 9.0, 1.6))
+                .fx(self(START, DEFENSE_UP, 0.5, 60), verdict(1), vis(START, "fin_verdict_scales"),
+                        vis(1, "fin_verdict_judge"), vis(2, "fin_verdict_execute"));
+
         return t.build();
     }
 }

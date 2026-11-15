@@ -80,6 +80,11 @@ public final class Afflictions {
                 }
             }
             case POISON -> ERMobEffects.applyPoison(target, source, (float) (damage * power * scale), ticks);
+            case CURSE -> {
+                ERMobEffects.applyHex(target, source, (float) (damage * power * scale), ticks);
+                source.serverLevel().sendParticles(net.minecraft.core.particles.ParticleTypes.SCULK_SOUL, target.getX(),
+                        target.getY() + target.getBbHeight() * 0.6, target.getZ(), 10, 0.3, 0.4, 0.3, 0.03);
+            }
             case WEAKEN -> target.addEffect(new MobEffectInstance(ERMobEffects.WEAKENED.get(), ticks,
                     ERMobEffects.amplifierFor(Math.min(MAX_DEBUFF, power * scale))), source);
             case VULNERABLE -> target.addEffect(new MobEffectInstance(ERMobEffects.VULNERABLE.get(), ticks,

@@ -12,7 +12,8 @@ import java.util.Objects;
 public sealed interface SkillEffect permits SkillEffect.Heal, SkillEffect.Buff, SkillEffect.Shield, SkillEffect.Dash,
         SkillEffect.Leap, SkillEffect.Taunt, SkillEffect.DropAggro, SkillEffect.Afflict, SkillEffect.Visual,
         SkillEffect.Cleanse, SkillEffect.Siphon, SkillEffect.Zone, SkillEffect.RestoreStamina,
-        SkillEffect.CooldownCut, SkillEffect.Execute, SkillEffect.Mark, SkillEffect.Revive {
+        SkillEffect.CooldownCut, SkillEffect.Execute, SkillEffect.Mark, SkillEffect.Revive, SkillEffect.Critical,
+        SkillEffect.Engrave, SkillEffect.Reckon, SkillEffect.Verdict, SkillEffect.Summon {
     int ON_START = -1;
 
     int frame();
@@ -49,7 +50,9 @@ public sealed interface SkillEffect permits SkillEffect.Heal, SkillEffect.Buff, 
         /** Chance (magnitude) to evade attacks completely. */
         EVASION(true),
         /** Reflects magnitude of the damage taken from attackers. */
-        THORNS(true);
+        THORNS(true),
+        /** Takes no damage at all (the void and commands aside); the magnitude is unused. */
+        INVULNERABLE(false);
 
         private final boolean fractional;
 
@@ -88,7 +91,12 @@ public sealed interface SkillEffect permits SkillEffect.Heal, SkillEffect.Buff, 
         /** Drags the target towards the caster ({@code power} = pull speed); instant. */
         PULL,
         /** Throws the target up ({@code power} = upward speed); instant. */
-        LAUNCH;
+        LAUNCH,
+        /**
+         * A curse (呪詛): damage over time like poison ({@code power} × the hit's damage per second), its own, so it
+         * runs together with bleeding and poison.
+         */
+        CURSE;
 
         /** Instant displacements ignore the duration and do not grow with the skill level. */
         public boolean instant() {
@@ -349,6 +357,115 @@ public sealed interface SkillEffect permits SkillEffect.Heal, SkillEffect.Buff, 
             }
             Checks.range("threshold", threshold, 0.05, 0.9);
             Checks.range("bonus", bonus, 0.05, 5.0);
+        }
+    }
+
+    /** Every hit of the frame (a melee frame) is a critical hit (the hexblade's last nail). */
+    record Critical(int frame) implements SkillEffect {
+        public Critical {
+            if (frame < 0) {
+                throw new IllegalArgumentException("criticals need a hit frame");
+            }
+        }
+    }
+
+    /**
+     * Marks (engraves) every enemy within {@code radius} of the caster for this action without hurting it yet, and
+     * holds it in place for {@code holdTicks} (bosses are only slowed): a later {@link Reckon} frame of the same action
+     * strikes all of them at once, wherever they are (the shinobi's eight flashes).
+     */
+    record Engrave(int frame, double radius, int holdTicks) implements SkillEffect {
+        public Engrave {
+            Checks.frame(frame);
+            Checks.range("radius", radius, 1.0, 16.0);
+            Checks.range("holdTicks", holdTicks, 1, 20 * 6);
+        }
+    }
+
+    /**
+     * The frame also strikes every enemy this action engraved ({@link Engrave}) that it did not reach itself, if it
+     * is still within {@code range} blocks.
+     */
+    record Reckon(int frame, double range) implements SkillEffect {
+        public Reckon {
+            if (frame < 0) {
+                throw new IllegalArgumentException("a reckoning needs a hit frame");
+            }
+            Checks.range("range", range, 1.0, 32.0);
+        }
+    }
+
+    /**
+     * Every enemy the frame damaged receives a sentence of its own (the inquisitor's 神判): the nearest the first of
+     * {@link Sentence}'s strong debuffs, the next the second, and so on round, each marked over its head.
+     */
+    record Verdict(int frame) implements SkillEffect {
+        public Verdict {
+            if (frame < 0) {
+                throw new IllegalArgumentException("verdicts need a hit frame");
+            }
+        }
+    }
+
+    /** The sentences of a {@link Verdict}, in the order they are handed out. */
+    enum Sentence {
+        /** 鎖縛: bound in chains (a long stun) and slowed after it. */
+        CHAINS,
+        /** 烙印: branded, takes much more damage. */
+        BRAND,
+        /** 衰弱: withered, deals much less damage. */
+        WITHER,
+        /** 業火: burns and bleeds. */
+        HELLFIRE,
+        /** 盲目: blinded and weakened. */
+        BLINDNESS,
+        /** 凍獄: frozen solid. */
+        FROST;
+
+        /** The sentence of the {@code index}-th enemy (nearest first). */
+        public static Sentence of(int index) {
+            Sentence[] all = values();
+            return all[Math.floorMod(index, all.length)];
+        }
+
+        /** What the sentence does: afflictions applied together (durations and strengths at level 1). */
+        public java.util.List<Afflict> afflictions(int frame) {
+            return switch (this) {
+                case CHAINS -> java.util.List.of(new Afflict(frame, AfflictionKind.STUN, 70, 0.0),
+                        new Afflict(frame, AfflictionKind.SLOW, 200, 3.0));
+                case BRAND -> java.util.List.of(new Afflict(frame, AfflictionKind.VULNERABLE, 240, 0.5));
+                case WITHER -> java.util.List.of(new Afflict(frame, AfflictionKind.WEAKEN, 240, 0.5));
+                case HELLFIRE -> java.util.List.of(new Afflict(frame, AfflictionKind.BURN, 200, 0.0),
+                        new Afflict(frame, AfflictionKind.BLEED, 200, 0.06));
+                case BLINDNESS -> java.util.List.of(new Afflict(frame, AfflictionKind.BLIND, 200, 0.0),
+                        new Afflict(frame, AfflictionKind.WEAKEN, 200, 0.3));
+                case FROST -> java.util.List.of(new Afflict(frame, AfflictionKind.FREEZE, 160, 0.0),
+                        new Afflict(frame, AfflictionKind.SLOW, 160, 4.0));
+            };
+        }
+
+        public String translationKey() {
+            return "skill_sentence.eternalrealm." + name().toLowerCase(java.util.Locale.ROOT);
+        }
+    }
+
+    /**
+     * Calls an ally to fight beside the caster for {@code ticks}: {@code kind} names it (the necromancer's
+     * {@code bone_king}). It strikes at most {@code strikes} times, each for {@code multiplier} × the skill's damage
+     * (like a hit frame of that multiplier), then fades.
+     */
+    record Summon(int frame, String kind, int ticks, int strikes, double multiplier) implements SkillEffect {
+        public Summon {
+            Checks.frame(frame);
+            Checks.id("kind", kind);
+            Checks.range("ticks", ticks, 20, 20 * 60);
+            Checks.range("strikes", strikes, 1, 30);
+            Checks.range("multiplier", multiplier, 0.1, 10.0);
+        }
+
+        /** Damage of all its strikes together, as a share of the skill's damage. */
+        public double totalMultiplier() {
+            return strikes * multiplier;
         }
     }
 }

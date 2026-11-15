@@ -115,6 +115,12 @@ final class NecromancerSkills {
                 .fx(afflict(0, PULL, 1, 1.0), afflict(0, STUN, 40, 0), vis(0, "chains"), vis(0, "vortex"));
         t.passive("eternal_unlife", 1, 3, 5).req("bone_fortress", 1).bonus(lastStand(0.04, 0.03));
 
+        // ---------------------------------------------------------------- the finale (秘奥義, Lv70)
+        t.finale("advent_of_the_bone_king").reqAny("curse_of_myriad_demons", 1, "march_of_the_dead", 1).cd(90)
+                .theme(SHADOW).act(64, 60, 45, pause(8), hit(46, ahead(4.0, 3.5), 3.0, 1.0))
+                .fx(self(START, DEFENSE_UP, 0.4, 50), summon(1, "bone_king", 400, 6, 2.5), afflict(1, STUN, 30, 0),
+                        afflict(1, WEAKEN, 200, 0.2), vis(START, "fin_boneking_gather"), vis(1, "fin_boneking_rise"));
+
         return t.build();
     }
 }

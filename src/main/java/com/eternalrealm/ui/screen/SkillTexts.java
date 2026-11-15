@@ -61,6 +61,13 @@ final class SkillTexts {
     static List<Component> effects(SkillDefinition skill, int level) {
         List<Component> lines = new ArrayList<>();
         double scale = skill.effectScale(Math.max(1, level));
+        List<SkillEffect.Engrave> engraves = skill.effects().stream().filter(SkillEffect.Engrave.class::isInstance)
+                .map(SkillEffect.Engrave.class::cast).toList();
+        if (!engraves.isEmpty()) {
+            double radius = engraves.stream().mapToDouble(SkillEffect.Engrave::radius).max().orElse(0.0);
+            lines.add(Component.literal("・").append(Component.translatable(P + "effect.engrave", engraves.size(),
+                    number(radius))).withStyle(ChatFormatting.GRAY));
+        }
         for (SkillEffect effect : skill.effects()) {
             Component line = effect(effect, scale);
             if (line != null) {
@@ -93,7 +100,7 @@ final class SkillTexts {
             Component name = Component.translatable(buff.kind().translationKey());
             String value = switch (buff.kind()) {
                 case SPEED, REGENERATION -> " Lv" + ((int) Math.round(buff.magnitude()) + 1);
-                case INVISIBILITY, FLAME_WEAPON, FROST_WEAPON, VENOM_WEAPON, THUNDER_WEAPON -> "";
+                case INVISIBILITY, FLAME_WEAPON, FROST_WEAPON, VENOM_WEAPON, THUNDER_WEAPON, INVULNERABLE -> "";
                 default -> " +" + number(buff.magnitude() * scale * 100.0) + "%";
             };
             return buff.target() == SkillEffect.BuffTarget.SELF
@@ -151,6 +158,23 @@ final class SkillTexts {
             return Component.translatable(P + "effect.execute", number(execute.threshold() * 100.0),
                     number(execute.bonus() * 100.0));
         }
+        if (effect instanceof SkillEffect.Critical) {
+            return Component.translatable(P + "effect.critical");
+        }
+        if (effect instanceof SkillEffect.Engrave) {
+            // one line for the first of a run of flashes, nothing for the others
+            return null;
+        }
+        if (effect instanceof SkillEffect.Reckon reckon) {
+            return Component.translatable(P + "effect.reckon", number(reckon.range()));
+        }
+        if (effect instanceof SkillEffect.Verdict) {
+            return Component.translatable(P + "effect.verdict");
+        }
+        if (effect instanceof SkillEffect.Summon summon) {
+            return Component.translatable(P + "effect.summon." + summon.kind(), seconds(summon.ticks()),
+                    summon.strikes(), number(summon.multiplier() * 100.0));
+        }
         return null; // visuals
     }
 
@@ -158,7 +182,7 @@ final class SkillTexts {
         Component name = Component.translatable(kind.translationKey());
         String duration = seconds((int) Math.round(ticks * scale));
         return switch (kind) {
-            case BLEED, POISON -> Component.translatable(P + "effect.afflict_dot", name, duration,
+            case BLEED, POISON, CURSE -> Component.translatable(P + "effect.afflict_dot", name, duration,
                     number(power * scale * 100.0));
             case WEAKEN, VULNERABLE -> Component.translatable(P + "effect.afflict_power", name, duration,
                     number(Math.min(60.0, power * scale * 100.0)));

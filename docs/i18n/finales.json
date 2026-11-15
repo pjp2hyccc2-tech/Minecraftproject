@@ -1,0 +1,102 @@
+{
+  "key.eternalrealm.job_skill_7": {
+    "ja": "職業スキル7（秘奥義）",
+    "en": "Job skill 7 (finale)"
+  },
+  "skill_kind.eternalrealm.finale": {
+    "ja": "秘奥義",
+    "en": "Finale"
+  },
+  "message.eternalrealm.loadout.needs_finale": {
+    "ja": "秘奥義枠には秘奥義だけをセットできます",
+    "en": "Only a finale fits the finale slot"
+  },
+  "message.eternalrealm.loadout.finale_only": {
+    "ja": "秘奥義は秘奥義枠にセットしてください",
+    "en": "A finale goes in the finale slot"
+  },
+  "screen.eternalrealm.skill.slot_finale": {
+    "ja": "秘奥義枠 [%s]",
+    "en": "Finale slot [%s]"
+  },
+  "skill_info.eternalrealm.requires_either": {
+    "ja": "前提: %s Lv%s か %s Lv%s のどちらか",
+    "en": "Requires %s Lv %s or %s Lv %s"
+  },
+  "skill_info.eternalrealm.hint_finale": {
+    "ja": "秘奥義枠 [%s] へドラッグしてセット",
+    "en": "Drag onto the finale slot [%s] to use it"
+  },
+  "skill_info.eternalrealm.effect.critical": {
+    "ja": "この一撃は必ず会心",
+    "en": "This blow is always a critical hit"
+  },
+  "skill_info.eternalrealm.effect.engrave": {
+    "ja": "%s回の閃きで周囲%sブロックの敵に斬痕を刻み、その場に縫い止める（まだ斬れていない）",
+    "en": "%s flashes engrave every foe within %s blocks and pin it in place (not yet cut)"
+  },
+  "skill_info.eternalrealm.effect.reckon": {
+    "ja": "納刀で、斬痕を刻んだ敵すべてに一気にダメージ（%sブロック以内なら離れていても）",
+    "en": "On the sheathing, every engraved foe takes the blow at once (within %s blocks, wherever it went)"
+  },
+  "skill_info.eternalrealm.effect.verdict": {
+    "ja": "敵ごとに異なる刑を下す（鎖縛・烙印・衰弱・業火・盲目・凍獄の順）",
+    "en": "Each foe receives a sentence of its own (chains, brand, withering, hellfire, blindness, frost, in turn)"
+  },
+  "skill_info.eternalrealm.effect.summon.bone_king": {
+    "ja": "骸骨の騎士王が%s秒共に戦う（%s回の斬撃・各%s%%）",
+    "en": "The skeleton knight-king fights beside you for %s s (%s strikes of %s%% each)"
+  },
+  "skill_buff.eternalrealm.invulnerable": {
+    "ja": "無敵",
+    "en": "Invulnerable"
+  },
+  "skill_affliction.eternalrealm.curse": {
+    "ja": "呪詛",
+    "en": "Curse"
+  },
+  "skill_sentence.eternalrealm.chains": {
+    "ja": "鎖縛の刑",
+    "en": "Sentence of Chains"
+  },
+  "skill_sentence.eternalrealm.brand": {
+    "ja": "烙印の刑",
+    "en": "Sentence of the Brand"
+  },
+  "skill_sentence.eternalrealm.wither": {
+    "ja": "衰弱の刑",
+    "en": "Sentence of Withering"
+  },
+  "skill_sentence.eternalrealm.hellfire": {
+    "ja": "業火の刑",
+    "en": "Sentence of Hellfire"
+  },
+  "skill_sentence.eternalrealm.blindness": {
+    "ja": "盲目の刑",
+    "en": "Sentence of Blindness"
+  },
+  "skill_sentence.eternalrealm.frost": {
+    "ja": "凍獄の刑",
+    "en": "Sentence of the Frozen Prison"
+  },
+  "screen.eternalrealm.settings.finale_cinema": {
+    "ja": "秘奥義の演出",
+    "en": "Finale cinematics"
+  },
+  "screen.eternalrealm.settings.finale_cinema.tooltip": {
+    "ja": "秘奥義（Lv70）の画面演出：上下の黒帯・ズーム・周辺の色・閃光。近くの秘奥義はかすかに光る。オフにすると画面演出だけ消える（光と揺れは残る）。",
+    "en": "The screen of your finales (level 70): cinema bars, a zoom, a tinted vignette and flashes; a finale close by flashes faintly. Off: none of it (the light and the shakes stay)."
+  },
+  "effect.eternalrealm.divine_aegis": {
+    "ja": "金剛の加護",
+    "en": "Adamant Aegis"
+  },
+  "effect.eternalrealm.hexed": {
+    "ja": "呪詛",
+    "en": "Hexed"
+  },
+  "entity.eternalrealm.bone_king": {
+    "ja": "骸骨の騎士王",
+    "en": "Bone Knight-King"
+  }
+}

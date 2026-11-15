@@ -137,9 +137,10 @@ public class SecondClassTest {
                 SkillTree.canAssign(guardian, 45, learned, 3, "paladin_radiant_edge"));
         assertEquals(SkillTree.LoadoutResult.WRONG_JOB,
                 SkillTree.canAssign(JobType.KNIGHT, 45, learned, 1, "guardian_titan_stance"));
-        List<String> stored = List.of("guardian_titan_stance", "knight_provoke", "paladin_radiant_edge", "", "", "");
+        List<String> stored = List.of("guardian_titan_stance", "knight_provoke", "paladin_radiant_edge", "", "", "",
+                "");
         List<String> effective = SkillTree.effectiveLoadout(guardian, 45, learned, stored);
-        assertEquals(List.of("guardian_titan_stance", "knight_provoke", "", "", "", ""), effective);
+        assertEquals(List.of("guardian_titan_stance", "knight_provoke", "", "", "", "", ""), effective);
         assertEquals(effective, SkillTree.sanitize(guardian, 45, learned, stored));
         SkillBinding[] bindings = SkillTree.bindings(guardian, 45, learned, stored);
         assertNotNull(bindings[1]);
@@ -162,8 +163,8 @@ public class SecondClassTest {
         for (JobClass jobClass : JobClass.values()) {
             double best = 0.0;
             for (SkillDefinition skill : Jobs.classSkills(jobClass)) {
-                if (!skill.isUsable()) {
-                    continue;
+                if (!skill.isUsable() || skill.isFinale()) {
+                    continue; // the finales (1800 %): FinaleTest
                 }
                 double hits = skill.totalMultiplier();
                 double zones = 0.0;

@@ -138,7 +138,10 @@ public class JobsTest {
                     total += frame.multiplier() * projectiles;
                 }
             }
-            if (damaging) {
+            if (damaging && skill.isFinale()) {
+                // a finale's 1800 % is partly in its zones and its summon: FinaleTest checks the whole
+                assertTrue(skill.id() + " total " + total, total > 0.0 && total <= 18.0 + 1e-9);
+            } else if (damaging) {
                 // the second classes hit far harder (owner, 2026-11-15: 450 % at least, up to 1600 %)
                 double low = skill.isClassSkill() ? 4.5 : 1.0;
                 double high = skill.isClassSkill() ? 16.05 : 10.0;
@@ -146,7 +149,8 @@ public class JobsTest {
             } else {
                 assertFalse(skill.id() + " needs an effect", skill.effects().isEmpty());
             }
-            assertTrue(skill.id(), skill.action().staminaCost() <= 40.0);
+            // a finale asks a little more of the body than anything else
+            assertTrue(skill.id(), skill.action().staminaCost() <= (skill.isFinale() ? 45.0 : 40.0));
         }
     }
 

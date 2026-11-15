@@ -121,6 +121,16 @@ final class SpiritArcherSkills {
                         vis(0, "vortex"));
         t.passive("eternal_spring", 1, 3, 5).req("deep_roots", 3).bonus(stats(mods().healing(0.05)), healOnKill(0.01));
 
+        // ---------------------------------------------------------------- the finale (秘奥義, Lv70)
+        t.finale("bow_of_seven_spirits").reqAny("arrow_of_the_spirit_king", 1, "world_tree_awakening", 1).weapons(BOW)
+                .cd(90).theme(ARCANE)
+                .act(76, 72, 45, pause(8), pause(30), shot(52, arrow(4.5).withPierce(16), 14.0, 2.0),
+                        hit(58, beam(16.0, 2.5), 4.0, 1.0))
+                .fx(self(START, DEFENSE_UP, 0.5, 70), afflict(2, BURN, 120, 0), afflict(2, FREEZE, 60, 0),
+                        afflict(2, STUN, 30, 0), afflict(2, BLIND, 60, 0), afflict(2, VULNERABLE, 200, 0.3),
+                        afflict(3, LAUNCH, 1, 0.6), afflict(3, WEAKEN, 200, 0.2), vis(START, "fin_spirits_call"),
+                        vis(1, "fin_spirits_draw"), vis(2, "fin_spirits_loose"), vis(3, "fin_spirits_wake"));
+
         return t.build();
     }
 }

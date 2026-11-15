@@ -112,6 +112,13 @@ final class ReaperSkills {
                         vis(0, "judgment"));
         t.passive("eternal_night", 1, 3, 5).req("death_ward", 3).bonus(stats(mods().crit(0.02).physical(0.02)));
 
+        // ---------------------------------------------------------------- the finale (秘奥義, Lv70)
+        t.finale("scythe_of_the_end").reqAny("crimson_harvest", 1, "sending_to_yomi", 1).cd(90).theme(SHADOW)
+                .act(64, 60, 45, pause(10), hit(26, circle(9.0, 24), 3.0, 0.0), hit(40, circle(10.0, 24), 15.0, 2.2))
+                .fx(self(START, DEFENSE_UP, 0.5, 44), afflict(1, PULL, 1, 0.9), afflict(1, SLOW, 60, 3),
+                        execute(2, 0.3, 1.0), siphon(2, 0.08, 0), afflict(2, VULNERABLE, 200, 0.3),
+                        vis(START, "fin_scythe_summon"), vis(1, "fin_scythe_hook"), vis(2, "fin_scythe_reap"));
+
         return t.build();
     }
 }

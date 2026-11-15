@@ -19,13 +19,14 @@ public class WireIdsTest {
         assertEquals(8, CombatRequest.JOB_SKILL_4.networkId());
         assertEquals(9, CombatRequest.JOB_SKILL_5.networkId());
         assertEquals(10, CombatRequest.JOB_SKILL_6.networkId());
+        assertEquals(11, CombatRequest.JOB_SKILL_7.networkId()); // the finale slot (protocol 14)
         for (CombatRequest request : CombatRequest.values()) {
             assertEquals(request, CombatRequest.byNetworkId(request.networkId()).orElseThrow());
         }
         assertFalse(CombatRequest.byNetworkId(-1).isPresent());
-        assertFalse(CombatRequest.byNetworkId(11).isPresent());
+        assertFalse(CombatRequest.byNetworkId(12).isPresent());
         assertEquals(0, CombatRequest.SKILL.skillSlot());
-        for (int slot = 1; slot <= 6; slot++) {
+        for (int slot = 1; slot <= 7; slot++) {
             assertEquals(slot, CombatRequest.jobSkill(slot).skillSlot());
         }
         assertEquals(-1, CombatRequest.DODGE.skillSlot());

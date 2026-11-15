@@ -121,6 +121,13 @@ final class SageSkills {
         t.passive("sages_body", 1, 3, 5).req("arcane_aegis", 3)
                 .bonus(stats(mods().healthPercent(0.03)), lastStand(0.0, 0.03));
 
+        // ---------------------------------------------------------------- the finale (秘奥義, Lv70)
+        t.finale("azure_starfall").reqAny("genesis", 1, "eternal_wisdom", 1).cd(90).theme(FROST)
+                .act(72, 68, 45, pause(8), pause(30), pause(54))
+                .fx(self(START, DEFENSE_UP, 0.4, 60), zone(START, LOOK, 22.0, 7.0, 54, 2, 2, 6.0, BURN, 100, 0),
+                        zone(START, LOOK, 22.0, 6.5, 64, 6, 10, 1.0, BURN, 60, 0), vis(START, "fin_azure_call"),
+                        vis(1, "fin_azure_fall"), vis(2, "fin_azure_impact"));
+
         return t.build();
     }
 }

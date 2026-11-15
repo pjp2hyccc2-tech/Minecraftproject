@@ -112,6 +112,16 @@ final class BishopSkills {
                 .fx(afflict(0, BLIND, 80, 0), cleanse(0, 10), vis(START, "cast"), vis(0, "nova"), vis(0, "judgment"));
         t.passive("holy_fortitude", 1, 3, 5).req("bastion_of_faith", 3).bonus(lastStand(0.03, 0.03));
 
+        // ---------------------------------------------------------------- the finale (秘奥義, Lv70)
+        t.finale("celestial_cathedral").reqAny("grand_benediction", 1, "heavenly_ward", 1).cd(90).theme(HOLY)
+                .act(84, 80, 45, pause(10), hit(26, circle(10.0, 24), 4.0, 0.4), hit(42, circle(10.0, 24), 4.0, 0.4),
+                        hit(58, circle(10.0, 24), 4.0, 0.4), hit(72, circle(10.0, 24), 6.0, 1.6))
+                .fx(cleanse(1, 16), heal(1, 16, 0.08, 2), heal(2, 16, 0.08, 2), heal(3, 16, 0.08, 2),
+                        afflict(1, WEAKEN, 200, 0.2), revive(4, 16, 0.5), shieldAllies(4, 0.4, 240, 16),
+                        allies(4, DEFENSE_UP, 0.3, 240, 16), self(4, DEFENSE_UP, 0.3, 240), afflict(4, BLIND, 60, 0),
+                        vis(START, "fin_cathedral_rise"), vis(1, "fin_cathedral_bell"), vis(2, "fin_cathedral_bell"),
+                        vis(3, "fin_cathedral_bell"), vis(4, "fin_cathedral_window"));
+
         return t.build();
     }
 }

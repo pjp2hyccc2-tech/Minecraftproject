@@ -24,10 +24,23 @@ public final class Painter {
      * of covering the screen.
      */
     public static int paint(ShowState state, double t, Brush brush, boolean ownEyes) {
+        return paint(state, t, brush, ownEyes, false);
+    }
+
+    /**
+     * Draws only the layers with solid parts ({@link Cue.Kind#solid()}): the first pass of a frame, before the light,
+     * with a brush whose light goes {@link Brush#NOWHERE}.
+     */
+    public static int paintSolids(ShowState state, double t, Brush brush, boolean ownEyes) {
+        return paint(state, t, brush, ownEyes, true);
+    }
+
+    private static int paint(ShowState state, double t, Brush brush, boolean ownEyes, boolean solidsOnly) {
         int before = brush.quads();
         SkillShow show = state.show();
+        brush.firstPerson(ownEyes);
         for (Cue cue : show.cues()) {
-            if (t < cue.start() || t > cue.end()) {
+            if (t < cue.start() || t > cue.end() || (solidsOnly && !cue.kind().solid())) {
                 continue;
             }
             Pose pose = switch (cue.anchor()) {
@@ -116,6 +129,23 @@ public final class Painter {
             case ECLIPSE -> Grand.eclipse(x);
             case HYDRA -> Grand.hydra(x);
             case METEOR -> Grand.meteor(x);
+            case FLASH_CUTS -> Scenes.flashCuts(x);
+            case SCYTHE -> Props.scythe(x);
+            case GREATBLADE -> Props.greatblade(x);
+            case NAIL -> Props.nail(x);
+            case HAMMER -> Props.hammer(x);
+            case STAR_ROCK -> Props.starRock(x);
+            case FLAMES -> Scenes.flames(x);
+            case MANA_STREAMS -> Scenes.manaStreams(x);
+            case RIFLE -> Props.rifle(x);
+            case TRACER -> Scenes.tracer(x);
+            case SPIRITS -> Scenes.spirits(x);
+            case GREAT_BOW -> Scenes.greatBow(x);
+            case FISSURE -> Scenes.fissure(x);
+            case SCALES -> Scenes.scales(x);
+            case SENTENCE -> Scenes.sentence(x);
+            case AEGIS -> Props.aegis(x);
+            case CATHEDRAL -> Scenes.cathedral(x);
         }
     }
 

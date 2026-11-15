@@ -245,4 +245,16 @@ NODES = [
      "skull nova shield SHADOW",
      "永遠なる死生", "Eternal Unlife", "HPが減るほど与えるダメージが増え、受けるダメージが減る。",
      "The lower your health, the harder you strike and the less damage you take."),
+
+    # ------------------------------------------------------------------ the finale (秘奥義, Lv70)
+    ("f", "advent_of_the_bone_king", 0, 0, 6,
+     '.reqAny("curse_of_myriad_demons", 1, "march_of_the_dead", 1).cd(90).theme(SHADOW)'
+     '.act(64, 60, 45, pause(8), hit(46, ahead(4.0, 3.5), 3.0, 1.0))'
+     '.fx(self(START, DEFENSE_UP, 0.4, 50), summon(1, "bone_king", 400, 6, 2.5), afflict(1, STUN, 30, 0),'
+     ' afflict(1, WEAKEN, 200, 0.2), vis(START, "fin_boneking_gather"), vis(1, "fin_boneking_rise"))',
+     "crown spiral+glow skull SHADOW",
+     "秘奥義・骸王顕現", "Hidden Art: Advent of the Bone King",
+     "【秘奥義】周囲から魔素を一点に収束させ、地の底から巨大な骸骨の騎士王を呼び起こす。現れた衝撃で前方の敵を気絶させ、騎士王はしばらくの間そばで戦い、大剣で敵をなぎ倒す。",
+     "[Finale] Draw the mana from all around into one point and raise a giant skeleton knight-king from the depths. "
+     "Its rising stuns the foes ahead, and for a while the king fights beside you, felling foes with its greatsword."),
 ]

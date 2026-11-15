@@ -72,7 +72,7 @@ public record JobDefinition(JobType type, JobRole role, StatBlock growthPerLevel
             }
         }
         for (SkillDefinition skill : skills) {
-            for (Prerequisite prerequisite : skill.prerequisites()) {
+            for (Prerequisite prerequisite : skill.requirements()) {
                 SkillDefinition required = byId.get(prerequisite.skillId());
                 if (required == null || prerequisite.level() > required.maxLevel()) {
                     throw new IllegalArgumentException(skill.id() + ": prerequisite " + prerequisite
@@ -100,7 +100,7 @@ public record JobDefinition(JobType type, JobRole role, StatBlock growthPerLevel
             return;
         }
         state.put(id, 1);
-        for (Prerequisite prerequisite : byId.get(id).prerequisites()) {
+        for (Prerequisite prerequisite : byId.get(id).requirements()) {
             visit(type, prerequisite.skillId(), byId, state);
         }
         state.put(id, 2);
@@ -144,9 +144,9 @@ public record JobDefinition(JobType type, JobRole role, StatBlock growthPerLevel
         return Optional.empty();
     }
 
-    /** The skills that list {@code id} as a prerequisite (what learning it opens up). */
+    /** The skills that list {@code id} as a prerequisite or an alternative (what learning it opens up). */
     public List<SkillDefinition> unlockedBy(String id) {
-        return skills.stream().filter(skill -> skill.prerequisites().stream()
+        return skills.stream().filter(skill -> skill.requirements().stream()
                 .anyMatch(prerequisite -> prerequisite.skillId().equals(id))).toList();
     }
 

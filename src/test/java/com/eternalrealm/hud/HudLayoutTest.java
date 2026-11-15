@@ -99,10 +99,23 @@ public class HudLayoutTest {
         Rect fifth = layout.jobSlots().get(4);
         Rect ultimate = layout.jobSlots().get(5);
         assertEquals(HudLayout.SLOT_GAP + HudLayout.ULTIMATE_GAP, ultimate.x() - fifth.right());
+        // the finale (秘奥義, key X) right after the ultimate
+        Rect finale = layout.jobSlots().get(6);
+        assertEquals(HudLayout.SLOT_GAP, finale.x() - ultimate.right());
         // the weapon skill's name sits right above it, below the chat
         assertEquals(layout.weaponSkill().x(), layout.weaponLabel().x());
         assertTrue(layout.weaponLabel().bottom() <= layout.skillBar().y());
         assertTrue(layout.weaponLabel().y() >= layout.chat().bottom());
+    }
+
+    /** Seven job slots make the bar wide: on narrow screens it moves left rather than under the bag. */
+    @Test
+    public void theSkillBarNeverRunsIntoTheBag() {
+        for (int[] screen : SCREENS) {
+            HudLayout.Layout layout = HudLayout.compute(HudLayout.Input.of(screen[0], screen[1]));
+            assertTrue(screen[0] + "x" + screen[1], layout.skillBar().right() <= layout.bag().x() - HudLayout.GAP);
+            assertTrue(screen[0] + "x" + screen[1], layout.skillBar().x() >= 0);
+        }
     }
 
     @Test

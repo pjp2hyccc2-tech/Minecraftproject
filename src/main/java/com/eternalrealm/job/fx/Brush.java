@@ -5,24 +5,73 @@ package com.eternalrealm.job.fx;
  * ribbons, flares and sparkles, crystal spikes, columns, walls and lightning. Every shape is drawn as quads of
  * additive light; soft shapes fade to zero at their edges, so overlapping layers (a wide dim glow, the theme colour, a
  * thin white core) read as one glowing stroke.
+ *
+ * <p>The finales (秘奥義) also hold things that are not light: a rifle, a scythe, a hammer and its nail, a rock from the
+ * sky. Those are {@linkplain #solid solid} quads ({@link Solid} shades them), drawn into a second sink before the light
+ * so the light can glow in front of them and be hidden behind them. A brush without a solid sink skips them.</p>
  */
 public final class Brush {
     /** Hard cap of quads per frame (a safety net; real shows stay far below). */
     public static final int MAX_QUADS = 60_000;
+    /** A sink that keeps nothing (a pass that draws only the solids, or only the light). */
+    public static final Light NOWHERE = (x, y, z, argb) -> {
+    };
 
     /** Light this close to the camera (blocks) is gone; from here to {@link #NEAR_CLEAR} it fades in. */
     public static final double NEAR_GONE = 0.3;
     public static final double NEAR_CLEAR = 1.4;
 
     private final Light out;
+    private final Light solids;
     private final V3 camera;
     private int quads;
+    private boolean firstPerson;
     private double nearGone = NEAR_GONE;
     private double nearClear = NEAR_CLEAR;
 
     public Brush(Light out, V3 camera) {
+        this(out, null, camera);
+    }
+
+    /** A brush that also draws solid quads into {@code solids} ({@code null}: they are skipped). */
+    public Brush(Light out, Light solids, V3 camera) {
         this.out = out;
+        this.solids = solids;
         this.camera = camera;
+    }
+
+    /** Whether solid quads are drawn (a pass for them, or a preview). */
+    public boolean drawsSolids() {
+        return solids != null;
+    }
+
+    /** Whether light is kept (not a solids-only pass). */
+    public boolean drawsLight() {
+        return out != NOWHERE;
+    }
+
+    /** The camera is the caster's own eyes (first person): things held in hand are drawn in front of them. */
+    public boolean firstPerson() {
+        return firstPerson;
+    }
+
+    public void firstPerson(boolean value) {
+        this.firstPerson = value;
+    }
+
+    /**
+     * An opaque (or, with alpha below 1, see-through) quad of a solid thing, one colour per corner (ARGB, already
+     * shaded); skipped by a brush without a solid sink.
+     */
+    public void solidQuad(V3 p0, int c0, V3 p1, int c1, V3 p2, int c2, V3 p3, int c3) {
+        if (solids == null || quads >= MAX_QUADS || ((c0 | c1 | c2 | c3) >>> 24) == 0) {
+            return;
+        }
+        quads++;
+        solids.vertex(p0.x(), p0.y(), p0.z(), c0);
+        solids.vertex(p1.x(), p1.y(), p1.z(), c1);
+        solids.vertex(p2.x(), p2.y(), p2.z(), c2);
+        solids.vertex(p3.x(), p3.y(), p3.z(), c3);
     }
 
     public V3 camera() {

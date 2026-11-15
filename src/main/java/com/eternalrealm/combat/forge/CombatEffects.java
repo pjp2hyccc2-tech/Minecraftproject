@@ -153,6 +153,21 @@ final class CombatEffects {
                 com.eternalrealm.sound.ERSounds.COMBAT_GUARD.get(), SoundSource.PLAYERS, 0.9F, 1.0F);
     }
 
+    /**
+     * The guardian's ward turned a blow away: a golden ring flashes where it struck (sound at most every few ticks, so
+     * a swarm hitting a warded player does not drown everything else).
+     */
+    static void warded(ServerPlayer player) {
+        player.serverLevel().sendParticles(ParticleTypes.WAX_ON, player.getX(), player.getY() + 1.0, player.getZ(),
+                6, 0.45, 0.6, 0.45, 0.02);
+        player.serverLevel().sendParticles(ParticleTypes.END_ROD, player.getX(), player.getY() + 1.1, player.getZ(),
+                3, 0.5, 0.6, 0.5, 0.01);
+        if (player.tickCount % 6 == 0) {
+            player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.AMETHYST_BLOCK_CHIME,
+                    SoundSource.PLAYERS, 0.7F, 1.6F);
+        }
+    }
+
     static void guardBroken(ServerPlayer player) {
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SHIELD_BREAK,
                 SoundSource.PLAYERS, 1.0F, 1.0F);

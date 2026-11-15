@@ -27,11 +27,13 @@ public final class Combatant {
         STAGGERED
     }
 
-    /** Skill slots: 0 = the weapon's skill, 1..6 = job skills (4 = the ultimate). */
-    public static final int SKILL_SLOTS = 7;
+    /** Skill slots: 0 = the weapon's skill, 1..7 = job skills (4 = the ultimate, 7 = the class's finale). */
+    public static final int SKILL_SLOTS = 8;
     public static final int WEAPON_SKILL_SLOT = 0;
     /** The job skill slot reserved for ultimates. */
     public static final int ULTIMATE_SLOT = 4;
+    /** The job skill slot reserved for a class's finale (秘奥義, level 70). */
+    public static final int FINALE_SLOT = 7;
 
     /** "Long ago": far from the counter range, yet safe to subtract from. */
     private static final long NEVER = Long.MIN_VALUE / 4;
@@ -149,7 +151,7 @@ public final class Combatant {
                 }
                 yield stamina < dodgeCost() ? RequestOutcome.REJECTED_STAMINA : null;
             }
-            case SKILL, JOB_SKILL_1, JOB_SKILL_2, JOB_SKILL_3, JOB_SKILL_4, JOB_SKILL_5, JOB_SKILL_6 ->
+            case SKILL, JOB_SKILL_1, JOB_SKILL_2, JOB_SKILL_3, JOB_SKILL_4, JOB_SKILL_5, JOB_SKILL_6, JOB_SKILL_7 ->
                     validateSkill(request.skillSlot(), now);
             case HEAVY_RELEASE -> null;
         };
@@ -211,7 +213,7 @@ public final class Combatant {
             }
             case SKILL -> begin(weapon.skill(), -1, now, 1.0, WEAPON_SKILL_SLOT, weapon.skill().cooldownTicks(),
                     weapon.skill().staminaCost());
-            case JOB_SKILL_1, JOB_SKILL_2, JOB_SKILL_3, JOB_SKILL_4, JOB_SKILL_5, JOB_SKILL_6 -> {
+            case JOB_SKILL_1, JOB_SKILL_2, JOB_SKILL_3, JOB_SKILL_4, JOB_SKILL_5, JOB_SKILL_6, JOB_SKILL_7 -> {
                 SkillBinding binding = jobSkills[request.skillSlot()];
                 begin(binding.action(), -1, now, binding.damageScale(), request.skillSlot(), binding.cooldownTicks(),
                         binding.staminaCost());
@@ -577,20 +579,20 @@ public final class Combatant {
 
     /**
      * Shortens the running cooldowns of the job skill slots by {@code ticks} (a skill effect; the server sends the
-     * result to the client).
+     * result to the client). The finale slot is left alone.
      */
     public void reduceJobSkillCooldowns(long now, int ticks) {
         if (ticks <= 0) {
             return;
         }
         for (int slot = 1; slot < SKILL_SLOTS; slot++) {
-            if (skillReadyAt[slot] > now) {
+            if (slot != FINALE_SLOT && skillReadyAt[slot] > now) { // a finale waits its 90 seconds whatever happens
                 skillReadyAt[slot] = Math.max(now, skillReadyAt[slot] - ticks);
             }
         }
     }
 
-    /** The job skill in slot {@code 1..6}, or {@code null}. */
+    /** The job skill in slot {@code 1..7}, or {@code null}. */
     public SkillBinding jobSkill(int slot) {
         checkSlot(slot);
         return jobSkills[slot];

@@ -115,6 +115,13 @@ final class SwordSaintSkills {
                 .fx(vis(START, "cast"), vis(0, "arcane_slash"), vis(0, "ray"));
         t.passive("unbroken_soul", 1, 3, 5).req("fighting_spirit", 3).bonus(lastStand(0.0, 0.04));
 
+        // ---------------------------------------------------------------- the finale (秘奥義, Lv70)
+        t.finale("heavenfall_blade").reqAny("infinite_stroke", 1, "myriad_swords", 1).cd(90).theme(HOLY)
+                .act(64, 60, 45, pause(12), hit(40, ahead(5.0, 5.5), 18.0, 2.6))
+                .fx(self(START, DEFENSE_UP, 0.5, 44), afflict(1, STUN, 50, 0), afflict(1, VULNERABLE, 200, 0.3),
+                        vis(START, "fin_holy_sword_call"), vis(0, "fin_holy_sword_raise"),
+                        vis(1, "fin_holy_sword_fall"));
+
         return t.build();
     }
 }

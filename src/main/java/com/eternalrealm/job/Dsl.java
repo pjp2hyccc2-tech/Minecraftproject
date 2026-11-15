@@ -185,6 +185,43 @@ final class Dsl {
         return new SkillEffect.Execute(frame, threshold, bonus);
     }
 
+    /** Every hit of the (melee) frame is critical. */
+    static SkillEffect crit(int frame) {
+        return new SkillEffect.Critical(frame);
+    }
+
+    /** Marks the enemies within {@code radius} for a later {@link #reckon} of the action, holding them in place. */
+    static SkillEffect engrave(int frame, double radius, int holdTicks) {
+        return new SkillEffect.Engrave(frame, radius, holdTicks);
+    }
+
+    /** The frame also strikes everything the action engraved, within {@code range} blocks. */
+    static SkillEffect reckon(int frame, double range) {
+        return new SkillEffect.Reckon(frame, range);
+    }
+
+    /** Each enemy the frame damaged gets a sentence of its own. */
+    static SkillEffect verdict(int frame) {
+        return new SkillEffect.Verdict(frame);
+    }
+
+    /** An ally that fights for {@code ticks}, striking {@code strikes} times for {@code multiplier} each. */
+    static SkillEffect summon(int frame, String kind, int ticks, int strikes, double multiplier) {
+        return new SkillEffect.Summon(frame, kind, ticks, strikes, multiplier);
+    }
+
+    /**
+     * A ground area with everything: placed like {@link #zone}, its first pulse after {@code delay}, damaging enemies
+     * ({@code damage} each pulse, afflicting them with {@code kind}) and healing allies ({@code heal} of their max
+     * health) at once; {@code look} names its own pulse effect ({@code null}: the theme's).
+     */
+    static SkillEffect field(int frame, Placement placement, double distance, double radius, int delay, int pulses,
+                             int interval, double damage, double heal, AfflictionKind kind, int ticks, double power,
+                             String look) {
+        return new SkillEffect.Zone(frame, placement, distance, radius, delay, pulses, interval, damage, heal, kind,
+                kind == null ? 0 : ticks, kind == null ? 0.0 : power, look);
+    }
+
     /** Raises fallen party members within {@code radius} with {@code fraction} of their health. */
     static SkillEffect revive(int frame, double radius, double fraction) {
         return new SkillEffect.Revive(frame, radius, fraction);

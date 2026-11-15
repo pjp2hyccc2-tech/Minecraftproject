@@ -79,7 +79,7 @@ public final class MagicProjectile extends ThrowableItemProjectile {
             case "meteor", "magma" -> Items.MAGMA_BLOCK;
             case "magic_orb", "spark", "thunder", "thunder_orb" -> Items.HEART_OF_THE_SEA;
             case "poison_dart", "poison_flask" -> Items.SLIME_BALL;
-            case "knife" -> Items.IRON_NUGGET;
+            case "knife", "rifle_round" -> Items.IRON_NUGGET; // the sniper's finale: a bullet, not a spell
             case "bone" -> Items.BONE;
             case "crescent" -> Items.AMETHYST_CLUSTER;
             case com.eternalrealm.combat.WeaponProfiles.STAR_SIGIL -> Items.END_CRYSTAL;

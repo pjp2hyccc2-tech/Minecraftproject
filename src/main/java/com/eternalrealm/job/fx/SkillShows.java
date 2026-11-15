@@ -73,6 +73,11 @@ public final class SkillShows {
 
     static SkillShow build(SkillDefinition skill) {
         Gen g = new Gen(skill);
+        if (skill.isFinale()) {
+            // a finale is directed from start to end by its own script
+            Finales.add(g);
+            return g.show();
+        }
         g.windup();
         g.strikes();
         g.effects();
@@ -95,6 +100,8 @@ public final class SkillShows {
         final SkillTheme theme;
         final List<Cue> cues = new ArrayList<>();
         final List<SkillShow.Shake> shakes = new ArrayList<>();
+        final List<SkillShow.Screen> screens = new ArrayList<>();
+        final List<SkillShow.Window> hidden = new ArrayList<>();
         /** The index (in {@link #cues}) of the strike drawn for each hit frame. */
         final Map<Integer, Integer> strikeOf = new HashMap<>();
         int count;
@@ -124,6 +131,15 @@ public final class SkillShows {
 
         void shake(double time, float intensity, int ticks, float kick) {
             shakes.add(new SkillShow.Shake(time, intensity, ticks, kick));
+        }
+
+        void screen(double time, SkillShow.Screen.Kind kind, int ticks, double strength, int rgb) {
+            screens.add(new SkillShow.Screen(time, kind, ticks, (float) strength, rgb));
+        }
+
+        /** The caster's weapon is not drawn from {@code start} to {@code end} ({@code body}: nor the caster). */
+        void hide(double start, double end, boolean body) {
+            hidden.add(new SkillShow.Window(start, end, body));
         }
 
         int first() {
@@ -716,7 +732,7 @@ public final class SkillShows {
             }
             int tail = (int) Math.ceil(last - duration) + 1;
             return new SkillShow(skill.id(), skill.job(), theme, ultimate, duration, Math.max(4, tail), times, cues,
-                    shakes);
+                    shakes, screens, hidden);
         }
     }
 }

@@ -17,15 +17,17 @@ import java.util.Set;
  * stored loadout, used by the server (validation) and the client (tree screen, predicted skill bindings), so both
  * always compute the same skills in the same slots.
  *
- * <p><b>Loadout.</b> Six job skill slots (keys V, G, B, H, N, J by default): slots 1, 2, 3, 5, 6 take actives, slot
- * {@value #ULTIMATE_SLOT} takes ultimates. A character that never changed the loadout uses the {@link #defaultLoadout
- * default} (the four innate skills in their original slots). Stored entries that are no longer valid (another job,
- * forgotten after a reset) count as empty.</p>
+ * <p><b>Loadout.</b> Seven job skill slots (keys V, G, B, H, N, J, X by default): slots 1, 2, 3, 5, 6 take actives,
+ * slot {@value #ULTIMATE_SLOT} takes ultimates and slot {@value #FINALE_SLOT} the class's finale (秘奥義). A character
+ * that never changed the loadout uses the {@link #defaultLoadout default} (the four innate skills in their original
+ * slots). Stored entries that are no longer valid (another job, forgotten after a reset) count as empty.</p>
  */
 public final class SkillTree {
-    /** Job skill slots of the loadout (slot numbers 1..6). */
+    /** Job skill slots of the loadout (slot numbers 1..7). */
     public static final int LOADOUT_SLOTS = Combatant.SKILL_SLOTS - 1;
     public static final int ULTIMATE_SLOT = Combatant.ULTIMATE_SLOT;
+    /** The slot of a class's finale (秘奥義); nothing else goes there. */
+    public static final int FINALE_SLOT = Combatant.FINALE_SLOT;
     /** Empty loadout entry. */
     public static final String EMPTY = "";
 
@@ -57,7 +59,11 @@ public final class SkillTree {
         /** Only ultimates go into the ultimate slot. */
         NEEDS_ULTIMATE,
         /** Ultimates only go into the ultimate slot. */
-        ULTIMATE_ONLY;
+        ULTIMATE_ONLY,
+        /** Only a finale goes into the finale slot. */
+        NEEDS_FINALE,
+        /** A finale only goes into the finale slot. */
+        FINALE_ONLY;
 
         public String translationKey() {
             return "message.eternalrealm.loadout." + name().toLowerCase(Locale.ROOT);
@@ -74,15 +80,31 @@ public final class SkillTree {
         return skill.level(characterLevel, investments.getOrDefault(skill.id(), 0));
     }
 
-    /** Whether every prerequisite of {@code skill} has its required level. */
+    /**
+     * Whether every prerequisite of {@code skill} has its required level, and at least one of its alternatives
+     * ({@link SkillDefinition#anyOf()}, if it has any).
+     */
     public static boolean prerequisitesMet(SkillDefinition skill, int characterLevel, Map<String, Integer> investments) {
         for (Prerequisite prerequisite : skill.prerequisites()) {
-            SkillDefinition required = Jobs.skill(prerequisite.skillId()).orElse(null);
-            if (required == null || levelOf(required, characterLevel, investments) < prerequisite.level()) {
+            if (!met(prerequisite, characterLevel, investments)) {
                 return false;
             }
         }
-        return true;
+        if (skill.anyOf().isEmpty()) {
+            return true;
+        }
+        for (Prerequisite alternative : skill.anyOf()) {
+            if (met(alternative, characterLevel, investments)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Whether one prerequisite has its required level. */
+    public static boolean met(Prerequisite prerequisite, int characterLevel, Map<String, Integer> investments) {
+        SkillDefinition required = Jobs.skill(prerequisite.skillId()).orElse(null);
+        return required != null && levelOf(required, characterLevel, investments) >= prerequisite.level();
     }
 
     /** Whether one more point may go into {@code skillId} (a job without its class). */
@@ -212,6 +234,9 @@ public final class SkillTree {
         if (!skill.isUsable()) {
             return false;
         }
+        if (skill.isFinale() || slot == FINALE_SLOT) {
+            return skill.isFinale() && slot == FINALE_SLOT;
+        }
         return (slot == ULTIMATE_SLOT) == (skill.kind() == SkillKind.ULTIMATE);
     }
 
@@ -306,10 +331,16 @@ public final class SkillTree {
         if (!skill.isInnate() && levelOf(skill, characterLevel, investments) == 0) {
             return LoadoutResult.NOT_LEARNED;
         }
+        if (slot == FINALE_SLOT && !skill.isFinale()) {
+            return LoadoutResult.NEEDS_FINALE;
+        }
+        if (slot != FINALE_SLOT && skill.isFinale()) {
+            return LoadoutResult.FINALE_ONLY;
+        }
         if (slot == ULTIMATE_SLOT && skill.kind() != SkillKind.ULTIMATE) {
             return LoadoutResult.NEEDS_ULTIMATE;
         }
-        if (slot != ULTIMATE_SLOT && skill.kind() == SkillKind.ULTIMATE) {
+        if (slot != ULTIMATE_SLOT && skill.kind() == SkillKind.ULTIMATE && !skill.isFinale()) {
             return LoadoutResult.ULTIMATE_ONLY;
         }
         return LoadoutResult.OK;
@@ -343,7 +374,7 @@ public final class SkillTree {
         if (!skill.isUsable() || effective.contains(skill.id())) {
             return -1;
         }
-        int[] order = {1, 2, 3, 5, 6, 4};
+        int[] order = {1, 2, 3, 5, 6, 4, FINALE_SLOT};
         for (int slot : order) {
             if (fitsSlot(skill, slot) && effective.get(slot - 1).isEmpty()) {
                 return slot;
@@ -360,7 +391,7 @@ public final class SkillTree {
     }
 
     /**
-     * The bindings for the combat state machine: index {@code slot} (1..6) holds the skill of that loadout slot at its
+     * The bindings for the combat state machine: index {@code slot} (1..7) holds the skill of that loadout slot at its
      * learned level with the passive bonuses, or {@code null} while the slot is empty or its skill is not learned yet.
      * Index 0 (the weapon skill) is always {@code null}.
      */
