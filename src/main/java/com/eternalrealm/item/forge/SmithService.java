@@ -52,13 +52,17 @@ public final class SmithService {
     }
 
     public static void register() {
-        UiActions.register(ENHANCE, (player, context, args) -> enhance(player, context, slot(args), UiArgs.uuid(args, "id")));
-        UiActions.register(REROLL, (player, context, args) -> reroll(player, context, slot(args), UiArgs.uuid(args, "id")));
+        // "id" is absent for a piece that has none yet (piece() gives it one)
+        UiActions.register(ENHANCE, (player, context, args) ->
+                enhance(player, context, slot(args), UiArgs.optionalUuid(args, "id")));
+        UiActions.register(REROLL, (player, context, args) ->
+                reroll(player, context, slot(args), UiArgs.optionalUuid(args, "id")));
         UiActions.register(CRAFT, (player, context, args) -> craft(player, context, UiArgs.id(args, "recipe")));
     }
 
-    /** Opens the smithy screen on the player's client. */
+    /** Opens the smithy screen on the player's client (every piece the player carries has its unique id first). */
     public static void open(ServerPlayer player, String npcId) {
+        stampUnmarked(player);
         JsonObject data = new JsonObject();
         data.addProperty("npc", npcId);
         data.addProperty("t", System.nanoTime());
@@ -107,11 +111,43 @@ public final class SmithService {
         }
     }
 
-    /** The equipment in {@code slot}, if it is still the piece the screen showed. */
+    /**
+     * The equipment in {@code slot}, if it is still the piece the screen showed: the same unique id, or none on both
+     * sides (a piece that never got one: the creative menu, a command, an old world). Such a piece gets its id here,
+     * before the smith works on it (2026-11-16: 「鍛冶屋でしょりおちした」, a piece without an id crashed the smithy).
+     */
     private static ItemStack piece(ServerPlayer player, int slot, UUID id) {
         ItemStack stack = stackAt(player, slot);
         Optional<EquipmentData> data = EquipmentStacks.read(stack);
-        return data.isPresent() && data.get().uniqueId().equals(id) ? stack : ItemStack.EMPTY;
+        if (data.isEmpty() || !java.util.Objects.equals(data.get().uniqueId(), id)) {
+            return ItemStack.EMPTY;
+        }
+        if (id == null && !EquipmentStacks.stamp(stack)) {
+            return ItemStack.EMPTY; // its stored data cannot be read: never overwrite it
+        }
+        return stack;
+    }
+
+    /**
+     * Gives every piece the player carries (bag, armour, off hand, worn trinkets) that has no unique id one, so the
+     * smithy (and trades and the market) can tell the pieces apart. Pieces enter the world with an id
+     * ({@link EquipmentStacks#create}); only the creative menu, commands and old worlds hand out pieces without.
+     */
+    static void stampUnmarked(ServerPlayer player) {
+        net.minecraft.world.entity.player.Inventory inventory = player.getInventory();
+        boolean changed = false;
+        for (int slot = 0; slot <= 40; slot++) {
+            changed |= EquipmentStacks.stamp(stackAt(inventory, slot));
+        }
+        if (changed) {
+            inventory.setChanged();
+        }
+        for (TrinketSlots.Slot trinket : TrinketSlots.Slot.values()) {
+            ItemStack stack = TrinketSlots.get(player, trinket);
+            if (EquipmentStacks.stamp(stack)) {
+                TrinketSlots.set(player, trinket, stack);
+            }
+        }
     }
 
     private static void result(ServerPlayer player, String kind, String outcome, int plus, Component name) {

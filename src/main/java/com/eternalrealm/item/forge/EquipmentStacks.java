@@ -104,6 +104,42 @@ public final class EquipmentStacks {
         return EquipmentData.of(base, ItemRarity.COMMON, List.of());
     }
 
+    /**
+     * Gives the piece in {@code stack} a unique id if it has none (a piece from the creative menu, a command or an old
+     * world: pieces entering the world get one in {@link #create}). A stack whose stored data cannot be read is left
+     * as it is (it may come from a newer version).
+     *
+     * @return whether the stack was changed
+     */
+    public static boolean stamp(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return false;
+        }
+        EquipmentBase base = bases().get(stack.getItem());
+        if (base == null) {
+            return false;
+        }
+        CompoundTag tag = stack.getTag();
+        EquipmentData data;
+        if (tag != null && tag.contains(TAG, Tag.TAG_STRING)) {
+            try {
+                data = EquipmentCodec.decode(tag.getString(TAG));
+            } catch (CorruptDataException | IncompatibleDataException | RuntimeException e) {
+                return false;
+            }
+            if (!data.base().equals(base)) {
+                return false;
+            }
+        } else {
+            data = plain(base);
+        }
+        if (data.uniqueId() != null) {
+            return false;
+        }
+        write(stack, data.ensureUniqueId(UUID::randomUUID));
+        return true;
+    }
+
     public static void write(ItemStack stack, EquipmentData data) {
         CompoundTag tag = stack.getOrCreateTag();
         tag.putString(TAG, EquipmentCodec.encode(data));

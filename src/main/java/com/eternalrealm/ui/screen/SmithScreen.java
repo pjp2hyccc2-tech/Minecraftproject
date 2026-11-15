@@ -267,11 +267,25 @@ public final class SmithScreen extends Screen {
 
     private Optional<Piece> selectedPiece() {
         for (Piece piece : pieces()) {
-            if (piece.slot() == selectedSlot && piece.data().uniqueId().equals(selectedId)) {
+            if (isSelected(piece)) {
+                if (selectedId == null) {
+                    // a piece without an id (creative menu, an old world) gets one from the smithy: follow it
+                    selectedId = piece.data().uniqueId();
+                }
                 return Optional.of(piece);
             }
         }
         return Optional.empty();
+    }
+
+    /**
+     * Whether {@code piece} is the one the player picked: the same slot and the same piece (its unique id), or, picked
+     * while it had no id yet, whatever lies in that slot until the smithy has given it one (2026-11-16: a piece
+     * without an id crashed the screen).
+     */
+    private boolean isSelected(Piece piece) {
+        return piece.slot() == selectedSlot
+                && (selectedId == null || selectedId.equals(piece.data().uniqueId()));
     }
 
     private static List<Line> recipeLines() {
@@ -407,7 +421,9 @@ public final class SmithScreen extends Screen {
                     return;
                 }
                 args.addProperty("slot", piece.slot());
-                args.addProperty("id", piece.data().uniqueId().toString());
+                if (piece.data().uniqueId() != null) {
+                    args.addProperty("id", piece.data().uniqueId().toString()); // none: the smithy gives it one
+                }
                 ERNetwork.sendToServer(new UiActionPacket(tab == Tab.ENHANCE ? SmithService.ENHANCE : SmithService.REROLL,
                         args));
             }
@@ -548,7 +564,7 @@ public final class SmithScreen extends Screen {
         for (int i = scroll; i < pieces.size() && i - scroll < listRows(); i++) {
             Piece piece = pieces.get(i);
             int rowTop = y + (i - scroll) * ROW;
-            boolean selected = piece.slot() == selectedSlot && piece.data().uniqueId().equals(selectedId);
+            boolean selected = isSelected(piece);
             boolean hovered = mouseX >= x0 && mouseX < x1 && mouseY >= rowTop && mouseY < rowTop + ROW;
             if (selected) {
                 graphics.fill(x0 + 1, rowTop, x1 - 1, rowTop + ROW - 1, ROW_SELECTED);

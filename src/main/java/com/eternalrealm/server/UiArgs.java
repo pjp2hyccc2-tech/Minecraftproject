@@ -77,4 +77,9 @@ public final class UiArgs {
             throw new InvalidArgumentException(key + " is not a UUID");
         }
     }
+
+    /** {@link #uuid}, or {@code null} when the key is absent (anything else malformed is still refused). */
+    public static UUID optionalUuid(JsonObject args, String key) {
+        return args.has(key) ? uuid(args, key) : null;
+    }
 }
