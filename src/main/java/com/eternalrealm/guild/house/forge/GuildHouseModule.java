@@ -19,6 +19,7 @@ public final class GuildHouseModule {
     public static void register(IEventBus modBus) {
         GuildHouseBlocks.register(modBus);
         EstateGuildEstates.install();
+        GuildLedger.install();
         modBus.addListener((FMLCommonSetupEvent event) -> event.enqueueWork(
                 () -> EstateProtection.allowUse(Blocks.BELL)));
         GuildHouseUi.register();

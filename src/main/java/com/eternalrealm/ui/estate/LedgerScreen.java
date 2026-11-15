@@ -292,7 +292,11 @@ public final class LedgerScreen extends Screen {
         renderBackground(graphics);
         EstateUi.panel(graphics, left, top, WIDTH, HEIGHT);
         String room = EstateUi.str(data, "room");
-        Component heading = room.isEmpty() ? title : Component.translatable("screen.eternalrealm.ledger.title_room",
+        // a guild house's storage desk names the house (its design) instead of an inn room
+        Component heading = room.isEmpty() ? title : "guild".equals(EstateUi.str(data, "estate"))
+                ? Component.translatable("screen.eternalrealm.ledger.title_guild",
+                Component.translatable("guildhouse.eternalrealm.design." + room))
+                : Component.translatable("screen.eternalrealm.ledger.title_room",
                 Component.translatable("estate.eternalrealm.room." + room));
         EstateUi.title(graphics, font, heading, left + WIDTH / 2, top + 6, WIDTH - 40);
         renderTabs(graphics, mouseX, mouseY);

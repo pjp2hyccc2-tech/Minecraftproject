@@ -8755,5 +8755,7 @@
   "map.eternalrealm.guild_gate": "★ %s のギルドハウスの門",
   "map.eternalrealm.guild_gate.hint": "ギルドの頁の「ギルドハウスの門へ案内」で道案内できます",
   "screen.eternalrealm.guild.guide_gate": "ギルドハウスの門へ案内",
-  "screen.eternalrealm.guild.guide_gate.away": "王都のある世界（アストリア）にいるときに使えます"
+  "screen.eternalrealm.guild.guide_gate.away": "王都のある世界（アストリア）にいるときに使えます",
+  "estate.eternalrealm.piece.vault": "金庫 %s",
+  "screen.eternalrealm.ledger.title_guild": "ギルド倉庫の台帳 — %s"
 }

@@ -8755,5 +8755,7 @@
   "map.eternalrealm.guild_gate": "★ %s's guild house gate",
   "map.eternalrealm.guild_gate.hint": "\"Guide me to the guild house gate\" on the guild page lays the way",
   "screen.eternalrealm.guild.guide_gate": "Guide me to our gate",
-  "screen.eternalrealm.guild.guide_gate.away": "Works while you are in Astoria, the capital's world"
+  "screen.eternalrealm.guild.guide_gate.away": "Works while you are in Astoria, the capital's world",
+  "estate.eternalrealm.piece.vault": "Vault %s",
+  "screen.eternalrealm.ledger.title_guild": "Guild Storage Ledger — %s"
 }

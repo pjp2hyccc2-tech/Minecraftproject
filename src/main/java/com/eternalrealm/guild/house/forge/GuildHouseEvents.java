@@ -185,6 +185,42 @@ public final class GuildHouseEvents {
         }
     }
 
+    /**
+     * The storage desk moved things in or out of a container (logged by {@link GuildLedger}): whoever has that
+     * container open must not be credited with them when they close it.
+     */
+    static void movedByDesk(Container container, ItemStack sample, int count, boolean deposit) {
+        if (count <= 0) {
+            return;
+        }
+        String key = kindKey(sample);
+        List<StorageDiff.Change<String>> changes = List.of(new StorageDiff.Change<>(key, deposit ? count : -count));
+        List<UUID> viewers = new ArrayList<>();
+        OPEN.forEach((viewer, session) -> {
+            if (session.container() == container) {
+                viewers.add(viewer);
+            }
+        });
+        for (UUID viewer : viewers) {
+            Session session = OPEN.get(viewer);
+            Map<String, String> ids = new HashMap<>(session.ids());
+            ids.putIfAbsent(key, itemId(sample));
+            OPEN.put(viewer, new Session(session.guild(), session.piece(), session.container(),
+                    StorageDiff.apply(session.snapshot(), changes), ids));
+        }
+    }
+
+    /** The item's id ({@code minecraft:iron_ingot}). */
+    static String itemId(ItemStack stack) {
+        return BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
+    }
+
+    /** A kind of thing in the log: the item, and its data when it has any. */
+    static String kindKey(ItemStack stack) {
+        String id = itemId(stack);
+        return stack.hasTag() ? id + "#" + Integer.toHexString(stack.getTag().hashCode()) : id;
+    }
+
     /** Counts per kind (item and data) of a container; {@code ids} learns each kind's item id. */
     private static Map<String, Integer> snapshot(Container container, Map<String, String> ids) {
         List<Map.Entry<String, Integer>> stacks = new ArrayList<>();
@@ -193,8 +229,8 @@ public final class GuildHouseEvents {
             if (stack.isEmpty()) {
                 continue;
             }
-            String id = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
-            String key = stack.hasTag() ? id + "#" + Integer.toHexString(stack.getTag().hashCode()) : id;
+            String id = itemId(stack);
+            String key = kindKey(stack);
             ids.putIfAbsent(key, id);
             stacks.add(Map.entry(key, stack.getCount()));
         }

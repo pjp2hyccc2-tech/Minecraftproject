@@ -47,6 +47,10 @@ import java.util.UUID;
  * empties the bag into the room by the chests' labels ({@link DepositPlanner}). Everything is decided here; the
  * screen only shows the document ({@value #CHANNEL}) and sends requests. The room is read afresh for every request,
  * so it is always what lies in the chests right now (someone may have opened one meanwhile). Server thread.
+ *
+ * <p>An estate kind may set a {@link Policy}: which of its containers the ledger uses for whom, and what to do with
+ * what moved (a guild house: only its storage, the vaults for the master and the officers, every move in the guild's
+ * storage log; docs/modules/guildhouse.md §storage desk). Without one, every container of the estate is used.</p>
  */
 public final class LedgerService {
     public static final String CHANNEL = "estate.ledger";
@@ -74,7 +78,34 @@ public final class LedgerService {
     public record Deposit(int items, int stacks, int left, int boxes) {
     }
 
+    /** What an estate kind allows of its sorting desk. */
+    public interface Policy {
+        /** Whether the ledger of {@code key} shows and uses the container named {@code box} for {@code player}. */
+        boolean uses(ServerPlayer player, EstateKey key, String box);
+
+        /** What one request moved between the bag and the containers, per container and kind of thing. */
+        void moved(ServerPlayer player, EstateKey key, List<Moved> moves);
+    }
+
+    /**
+     * {@code count} of {@code sample}'s kind went into ({@code deposit}) or out of the container named {@code box}.
+     */
+    public record Moved(String box, net.minecraft.world.Container container, ItemStack sample, int count,
+                        boolean deposit) {
+    }
+
+    private static final Map<String, Policy> POLICIES = new HashMap<>();
+
     private LedgerService() {
+    }
+
+    /** Sets the policy of an estate kind ({@code null}: none, every container is used). */
+    public static void setPolicy(String kind, Policy policy) {
+        if (policy == null) {
+            POLICIES.remove(kind);
+        } else {
+            POLICIES.put(kind, policy);
+        }
     }
 
     static void register() {
@@ -153,7 +184,7 @@ public final class LedgerService {
     }
 
     static void send(ServerPlayer player, EstateKey key, String kind, int offset, boolean open, JsonObject result) {
-        JsonObject data = document(key, kind, offset);
+        JsonObject data = document(player, key, kind, offset);
         data.addProperty("open", open);
         if (result != null) {
             data.add("result", result);
@@ -175,6 +206,32 @@ public final class LedgerService {
         boxes.sort(Comparator.comparingInt((EstateContents.ContainerHolder box) -> kindOrder(box.name()))
                 .thenComparingInt(box -> number(box.name())));
         return boxes;
+    }
+
+    /** The containers {@code player} may use through the ledger of {@code key} (the kind's policy decides). */
+    static List<EstateContents.ContainerHolder> boxes(EstateContents.Found found, ServerPlayer player, EstateKey key) {
+        List<EstateContents.ContainerHolder> boxes = boxes(found);
+        Policy policy = POLICIES.get(key.kind());
+        if (policy != null && player != null) {
+            boxes.removeIf(box -> !policy.uses(player, key, box.name() == null ? "" : box.name()));
+        }
+        return boxes;
+    }
+
+    /** Hands one request's moves to the kind's policy, summed per container and kind of thing. */
+    private static void report(ServerPlayer player, EstateKey key, List<Moved> moves) {
+        Policy policy = POLICIES.get(key.kind());
+        if (policy == null || moves.isEmpty()) {
+            return;
+        }
+        Map<String, Moved> summed = new java.util.LinkedHashMap<>();
+        for (Moved move : moves) {
+            String id = move.box() + "|" + move.deposit() + "|" + EstateItems.key(move.sample());
+            Moved before = summed.get(id);
+            summed.put(id, before == null ? move : new Moved(move.box(), move.container(), move.sample(),
+                    before.count() + move.count(), move.deposit()));
+        }
+        policy.moved(player, key, List.copyOf(summed.values()));
     }
 
     private static int kindOrder(String name) {
@@ -210,17 +267,23 @@ public final class LedgerService {
         return box.blockEntity instanceof ChiseledBookShelfBlockEntity;
     }
 
-    /** The ledger document of {@code key}, showing {@code kind} from line {@code offset} on. */
+    /** The ledger document of {@code key}, showing {@code kind} from line {@code offset} on (every container). */
     public static JsonObject document(EstateKey key, String kind, int offset) {
+        return document(null, key, kind, offset);
+    }
+
+    /** The ledger document of {@code key} as {@code player} may see it ({@code null}: every container). */
+    public static JsonObject document(ServerPlayer player, EstateKey key, String kind, int offset) {
         JsonObject data = new JsonObject();
         data.addProperty("room", key.design());
+        data.addProperty("estate", key.kind());
         data.addProperty("kind", kind);
         Optional<EstateContents.Found> found = EstateService.contents(key);
         if (found.isEmpty()) {
             data.addProperty("unavailable", true);
             return data;
         }
-        List<EstateContents.ContainerHolder> boxes = boxes(found.get());
+        List<EstateContents.ContainerHolder> boxes = boxes(found.get(), player, key);
         JsonArray boxJson = new JsonArray();
         List<Ledger.Stored> stored = new ArrayList<>();
         Map<String, ItemStack> samples = new HashMap<>();
@@ -314,6 +377,13 @@ public final class LedgerService {
      * bag holds. Exactly what reaches the bag leaves the chests. @return the number of items taken
      */
     public static int take(ServerPlayer player, EstateKey key, String itemKey, boolean all) {
+        List<Moved> moves = new ArrayList<>();
+        int taken = take(player, key, itemKey, all, moves);
+        report(player, key, moves);
+        return taken;
+    }
+
+    private static int take(ServerPlayer player, EstateKey key, String itemKey, boolean all, List<Moved> moves) {
         Optional<EstateContents.Found> found = EstateService.contents(key);
         if (found.isEmpty()) {
             return 0;
@@ -322,7 +392,7 @@ public final class LedgerService {
         int taken = 0;
         int budget = -1;
         Set<BlockPos> touched = new LinkedHashSet<>();
-        for (EstateContents.ContainerHolder box : boxes(found.get())) {
+        for (EstateContents.ContainerHolder box : boxes(found.get(), player, key)) {
             for (int i = 0; i < box.size(); i++) {
                 ItemStack stack = box.get(i);
                 if (stack.isEmpty() || !EstateItems.key(stack).equals(itemKey)) {
@@ -337,6 +407,7 @@ public final class LedgerService {
                 if (moving <= 0) {
                     return finishTake(player, taken, touched);
                 }
+                ItemStack sample = stack.copyWithCount(1);
                 ItemStack part = box.container().removeItem(i, moving);
                 int put = insert(inventory, part);
                 if (!part.isEmpty()) {
@@ -349,6 +420,9 @@ public final class LedgerService {
                 box.changed();
                 taken += put;
                 touched.add(box.pos());
+                if (put > 0) {
+                    moves.add(new Moved(box.name() == null ? "" : box.name(), box.container(), sample, put, false));
+                }
                 if (taken >= budget) {
                     return finishTake(player, taken, touched);
                 }
@@ -414,25 +488,28 @@ public final class LedgerService {
      * @return what happened
      */
     public static Deposit deposit(ServerPlayer player, EstateKey key, Optional<StorageLabel> only) {
-        Deposit total = depositFront(player, key, only);
+        List<Moved> moves = new ArrayList<>();
+        Deposit total = depositFront(player, key, only, moves);
         for (int round = 0; round < 4 && total.items() > 0 && com.eternalrealm.item.forge.BagBack.refill(player);
              round++) {
-            Deposit more = depositFront(player, key, only);
+            Deposit more = depositFront(player, key, only, moves);
             total = new Deposit(total.items() + more.items(), total.stacks() + more.stacks(), more.left(),
                     Math.max(total.boxes(), more.boxes()));
             if (more.items() == 0) {
                 break;
             }
         }
+        report(player, key, moves);
         return total;
     }
 
-    private static Deposit depositFront(ServerPlayer player, EstateKey key, Optional<StorageLabel> only) {
+    private static Deposit depositFront(ServerPlayer player, EstateKey key, Optional<StorageLabel> only,
+                                        List<Moved> moves) {
         Optional<EstateContents.Found> found = EstateService.contents(key);
         if (found.isEmpty()) {
             return new Deposit(0, 0, 0, 0);
         }
-        List<EstateContents.ContainerHolder> boxes = boxes(found.get());
+        List<EstateContents.ContainerHolder> boxes = boxes(found.get(), player, key);
         List<DepositPlanner.Box> plannerBoxes = new ArrayList<>();
         for (EstateContents.ContainerHolder box : boxes) {
             boolean shelf = isShelf(box);
@@ -471,6 +548,7 @@ public final class LedgerService {
             if (count <= 0) {
                 continue;
             }
+            ItemStack sample = from.copyWithCount(1);
             if (there.isEmpty()) {
                 ItemStack part = from.copyWithCount(count);
                 if (!box.container().canPlaceItem(move.slot(), part)) {
@@ -491,6 +569,7 @@ public final class LedgerService {
             box.changed();
             items += count;
             touched.add(box.pos());
+            moves.add(new Moved(box.name() == null ? "" : box.name(), box.container(), sample, count, true));
         }
         int left = 0;
         for (DepositPlanner.Stack stack : stacks) {
