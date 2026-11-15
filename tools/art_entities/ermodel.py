@@ -462,23 +462,49 @@ def java_animations(rig, package, cls):
     w('    }')
     for n in names:
         an = rig.anims[n]
-        # a Java method holds at most 64 KiB of bytecode: about 8 bytes per float of the varargs arrays
-        floats = sum(4 * len(ch.keys) for ch in an.channels)
-        size = 8 * floats + 40 * len(an.channels)
-        if size > 56000:
-            raise ValueError('animation %s of rig %s is too dense for one Java method (~%d bytes): fewer keys'
-                             % (n, rig.name, size))
-        w('')
-        w('    private static AnimationDefinition %s() {' % camel(n))
-        w('        return AnimationDefinition.Builder.withLength(%s)%s' % (jf(an.length), '.looping()' if an.loop else ''))
+        # a Java method holds at most 64 KiB of bytecode (about 8 bytes per float of the varargs arrays): a dense
+        # animation adds its channels in several helper methods
+        chunks = [[]]
+        size = 0
         for ch in an.channels:
+            cost = 8 * 4 * len(ch.keys) + 40
+            if chunks[-1] and size + cost > 48000:
+                chunks.append([])
+                size = 0
+            chunks[-1].append(ch)
+            size += cost
+
+        def add_line(ch, lead):
             flat = ', '.join('%s, %s, %s, %s' % (jf(k[0]), jf(k[1]), jf(k[2]), jf(k[3])) for k in ch.keys)
             fn = {'rot': 'rot', 'pos': 'pos', 'scale': 'scale'}[ch.target]
             mode = ch.uniform()
             interp = ('true' if mode == 'l' else 'false') if mode else '"%s"' % ''.join(ch.eases)
-            w('                .addAnimation("%s", %s(%s, %s))' % (ch.bone, fn, interp, flat))
-        w('                .build();')
+            w('%s.addAnimation("%s", %s(%s, %s))' % (lead, ch.bone, fn, interp, flat))
+        w('')
+        if len(chunks) == 1:
+            w('    private static AnimationDefinition %s() {' % camel(n))
+            w('        return AnimationDefinition.Builder.withLength(%s)%s' % (jf(an.length),
+                                                                         '.looping()' if an.loop else ''))
+            for ch in an.channels:
+                add_line(ch, '                ')
+            w('                .build();')
+            w('    }')
+            continue
+        w('    private static AnimationDefinition %s() {' % camel(n))
+        w('        AnimationDefinition.Builder builder = AnimationDefinition.Builder.withLength(%s)%s;'
+          % (jf(an.length), '.looping()' if an.loop else ''))
+        for i in range(len(chunks)):
+            w('        %sPart%d(builder);' % (camel(n), i + 1))
+        w('        return builder.build();')
         w('    }')
+        for i, chunk in enumerate(chunks):
+            w('')
+            w('    private static void %sPart%d(AnimationDefinition.Builder builder) {' % (camel(n), i + 1))
+            w('        builder')
+            for ch in chunk:
+                add_line(ch, '                ')
+            w('                ;')
+            w('    }')
     w('}')
     return '\n'.join(lines) + '\n'
 

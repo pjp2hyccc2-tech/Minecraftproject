@@ -461,12 +461,19 @@ class Chain:
     """
 
     def __init__(self, bones, rest='down', axes='xz', hang=0.9, freq=1.6, damp=0.35, inertia=6.0, falloff=1.18,
-                 limits=None, gain=1.0, drag=None):
+                 limits=None, gain=1.0, drag=None, per_clip=None, key_rate=None, floor=True):
         self.bones = list(bones)
         self.rest, self.axes, self.hang, self.freq, self.damp = rest, axes, hang, freq, damp
         self.inertia, self.falloff, self.gain = inertia, falloff, gain
         self.limits = limits or {}
         self.drag = drag or {}       # clip name -> (x, y, z) constant world offset (wind, running drag)
+        # clip name -> {'gain': g, 'limits': {...}}: a clip that drapes the chain by hand (gain 0 keeps the authored
+        # keys, e.g. a cape laid over a fallen body) or needs other limits
+        self.per_clip = per_clip or {}
+        # keys per second written for the chain (None: the default of key_step); slow vines and locks need fewer
+        self.key_rate = key_rate
+        # False for chains of wide, stiff boxes (gown tiers) that must not be turned away from the floor
+        self.floor = floor
 
 
 def _rest_dir(rest):
@@ -527,6 +534,9 @@ def simulate(clip, rig, variant, chains, rate=60):
         d = _rest_dir(ch.rest)
         parent_off = {ax: angles[:, 'xyz'.index(ax)].copy() for ax in 'xyz'}
         drag = ch.drag.get(clip.name, (0.0, 0.0, 0.0))
+        over = ch.per_clip.get(clip.name, {})
+        gain = over.get('gain', ch.gain)
+        limits = over.get('limits', ch.limits)
         outputs = {}
         for s, bone in enumerate(ch.bones):
             freq = ch.freq * (ch.falloff ** s)
@@ -551,8 +561,8 @@ def simulate(clip, rig, variant, chains, rate=60):
                     v += (w * w * (W[i] - x) - 2.0 * ch.damp * w * v) * dt
                     x += v * dt
                     res[i] = x
-                o = (res - P) * ch.gain + auth * (1.0 - ch.gain)
-                lo, hi = ch.limits.get(ax, (-170.0, 170.0))
+                o = (res - P) * gain + auth * (1.0 - gain)
+                lo, hi = limits.get(ax, (-170.0, 170.0))
                 o = np.clip(o, lo, hi)
                 out[ax] = o
             outputs[bone] = out
@@ -577,13 +587,15 @@ def simulate(clip, rig, variant, chains, rate=60):
                            if bone in authored else 0.0)
                     blend = np.array([smooth((t - (length - tail)) / tail) for t in ts])
                     seg[ax] = seg[ax] * (1.0 - blend) + end * blend
-            step = key_step(length)
+            step = key_step(length) if not ch.key_rate else 1.0 / ch.key_rate
             m = max(2, int(round(length / step)))
             track = {}
             for j in range(m + 1):
                 t = length * j / m
                 i = min(n, int(round(t * rate)))
-                track[round(t, 4)] = (float(seg['x'][i]), float(seg['y'][i]), float(seg['z'][i]), 'c')
+                # a tenth of a degree is far below what shows; fewer distinct values keep the Java classes small
+                track[round(t, 4)] = (round(float(seg['x'][i]), 1), round(float(seg['y'][i]), 1),
+                                      round(float(seg['z'][i]), 1), 'c')
             clip.tracks[(bone, 'rot')] = track
 
 
@@ -606,6 +618,8 @@ def floor_clamp(clip, rig, variant, chains, floor=24.0, clearance=1.0):
     sweeps down lies along the ground instead of through it)."""
     anim = clip.anim()
     for ch in chains:
+        if not ch.floor:
+            continue
         axis = 'z' if ch.rest == 'side' else 'x'
         idx = 'xyz'.index(axis)
         tracks = [clip.tracks.get((b, 'rot')) for b in ch.bones]

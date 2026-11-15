@@ -156,7 +156,9 @@ def extend(rig):
     for vid, (rig_name, base_id, ramp, glow, show, hide, size, poses, forms) in LOOKS.items():
         if rig_name != rig.name:
             continue
-        base = next(v for v in rig.variants if v.id == base_id)
+        # the dungeon boss look it is built on: a look of the rig, or (dungeon bosses with a rig of their own) the
+        # base kept for the field bosses
+        base = next(v for v in list(rig.variants) + list(getattr(rig, 'bases', {}).values()) if v.id == base_id)
         for part in set(show) | set(hide) | set(poses):
             if part not in rig.parts:
                 raise ValueError('%s: unknown part %s of the %s rig' % (vid, part, rig.name))

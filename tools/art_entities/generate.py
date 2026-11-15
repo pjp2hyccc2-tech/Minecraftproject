@@ -33,7 +33,13 @@ GEN_DIR = os.path.join(ROOT, 'src', 'main', 'java', *GEN_PKG.split('.'))
 TIMINGS = os.path.join(ROOT, 'src', 'main', 'java', 'com', 'eternalrealm', 'entity', 'RigData.java')
 BOSS_TIMINGS = os.path.join(ROOT, 'src', 'main', 'java', 'com', 'eternalrealm', 'boss', 'BossRigData.java')
 PREVIEWS = os.path.join(HERE, 'previews')
-BOSS_RIGS = ('king', 'treant', 'colossus', 'queen', 'dragon')
+# The first boss rigs: since the 2026-11 remake they carry the field bosses (FieldBosses) only; the looks of the
+# dungeon bosses they used to draw stay in them as bases of those field bosses (rig.bases), not as looks of their own.
+SHARED_BOSS_RIGS = ('king', 'treant', 'colossus', 'queen', 'dragon')
+# One rig per dungeon boss, built from the concept sheets (rig_<name>.py; a module that is not there yet is skipped)
+DEDICATED_BOSS_RIGS = ('bandit', 'treeguard', 'sandtitan', 'executioner', 'icequeen', 'firedragon', 'skygod',
+                       'gatekeeper', 'endking')
+BOSS_RIGS = SHARED_BOSS_RIGS + DEDICATED_BOSS_RIGS
 BOSS_IDS = ('b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'final') + __import__('field_bosses').IDS
 
 
@@ -41,15 +47,20 @@ def load_rigs(names=None):
     import rig_humanoid
     mods = [rig_humanoid]
     for extra in ('rig_beast', 'rig_golem', 'rig_flyer', 'rig_king', 'rig_treant', 'rig_colossus', 'rig_queen',
-                  'rig_dragon'):
-        try:
+                  'rig_dragon') + tuple('rig_' + n for n in DEDICATED_BOSS_RIGS):
+        if os.path.exists(os.path.join(HERE, extra + '.py')):
             mods.append(__import__(extra))
-        except ImportError:
-            pass
     rigs = [m.rig() for m in mods]
+    # a dungeon boss with a dedicated rig is drawn by that rig only: its looks leave the shared rig, where its first
+    # look stays as the base of the field bosses built on it
+    remade = {v.id.split('_p')[0] for r in rigs if r.name in DEDICATED_BOSS_RIGS for v in r.variants}
+    for r in rigs:
+        if r.name in SHARED_BOSS_RIGS:
+            r.bases = {v.id: v for v in r.variants if v.id in remade}
+            r.variants = [v for v in r.variants if v.id.split('_p')[0] not in remade]
     import field_bosses
     for r in rigs:
-        if r.name in BOSS_RIGS:
+        if r.name in SHARED_BOSS_RIGS:
             field_bosses.extend(r)
     if names:
         rigs = [r for r in rigs if r.name in names]
@@ -86,6 +97,12 @@ def write_textures(rig, painted):
             Image.fromarray(g, 'RGBA').save(glow_path, optimize=True)
         elif os.path.exists(glow_path):
             os.remove(glow_path)
+    if rig.name in BOSS_RIGS:
+        # looks that moved to another rig (a dungeon boss with a rig of its own) leave no stale textures behind
+        wanted = {vid + '.png' for vid in painted} | {vid + '_glow.png' for vid in painted}
+        for f in os.listdir(d):
+            if f.endswith('.png') and f not in wanted:
+                os.remove(os.path.join(d, f))
 
 
 def rig_variant(rig, vid):
