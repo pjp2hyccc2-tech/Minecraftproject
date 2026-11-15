@@ -266,8 +266,11 @@ def arcane_tower(w):
             z = cz + int(round(r * math.sin(math.radians(a))))
             w.set(x, ry + 1, z, B.S("amethyst_cluster", facing="up"))
             w.set(x, ry - 1, z, ame)
-    # the spiral stair through all floors
-    K.spiral_stair(w, cx, cz, R - 1.8, floors[0], floors[-1], wood="dark_oak", start=0)
+    # the spiral stair through all floors, starting on the north side (2026-11-15: it started in the east, where
+    # the board's wall and the board cut its first steps away and left every floor above out of reach)
+    ring = K.ring_path(cx, cz, R - 1.8)
+    north = min(range(len(ring)), key=lambda i: (ring[i][0] - cx) ** 2 + (ring[i][1] - (cz - R)) ** 2)
+    K.spiral_stair(w, cx, cz, R - 1.8, floors[0], floors[-1], wood="dark_oak", start=north)
     # ------------------------------------------------------------------ floor 0: hall, board, armour
     fy = floors[0]
     w.fill(cx + R - 1, 1, -2, cx + R - 1, 4, 2, pur)
@@ -308,7 +311,8 @@ def arcane_tower(w):
     w.set(cx, fy + 2, cz, ame)
     # floor 5: the sanctum with a balcony and the bell
     fy = floors[5]
-    S.cylinder(w, cx, cz, R + 3.4, fy, fy, pur)
+    # the balcony round the tower (a ring outside its floor: the stair's opening in the floor stays open)
+    S.cylinder(w, cx, cz, R + 3.4, fy, fy, pur, hollow=True, thickness=4.2)
     S.cylinder(w, cx, cz, R + 3.4, fy + 1, fy + 1, B.S("iron_bars"), hollow=True,
                thickness=0.6)
     for (dx, dz) in ((R, 0), (0, R), (0, -R), (-R, 0)):
@@ -447,8 +451,9 @@ def sky_temple(w):
     # the treasury under the stylobate (stair down at the east end)
     w.fill(cx0 + 2, -5, cz0 + 1, cx1 - 2, 1, cz1 - 1, cal)
     K.clear(w, cx0 + 3, -4, cz0 + 2, cx1 - 3, -2, cz1 - 2)
-    for k in range(5):
-        x = cx1 - 3 - k
+    for k in range(-1, 6):                   # (2026-11-15) a step in the floor and a sixth one below: the stair
+        x = cx1 - 3 - k                      # ended a full block under the floor and two above the treasury's,
+                                             # under a low ceiling - nobody could step off it or come back up
         w.set(x, 1 - k, cz0 + 2, ST("smooth_quartz", "east"))
         for yy in range(2 - k, 5 - k):
             w.set(x, yy, cz0 + 2, AIR)
@@ -459,7 +464,7 @@ def sky_temple(w):
     h.vault(w, cx0 + 7, -4, cz0 + 2, "south")
     K.lamp(w, 6, -2, 0)
     # the enchanting nook in the pronaos (east porch)
-    h.enchanting_nook(w, cx1 + 2, 2, 0, open_side="west")
+    h.enchanting_nook(w, cx1 + 2, 2, 0, open_side="north")      # (2026-11-15: open west, it faced the statue's wall)
     # ------------------------------------------------------------------ bridges to the other islands
     def bridge(x0, z0, x1, z1):
         n = max(abs(x1 - x0), abs(z1 - z0))

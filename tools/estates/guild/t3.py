@@ -98,7 +98,7 @@ def japanese_mansion(w):
         if z not in (-2, -1, 0):
             w.fill(3, 2, z, 3, 5, z, B.S("white_stained_glass_pane"))
     for x in range(3, hx1):
-        if x not in (7, 8):
+        if x not in (5, 7, 8):                     # 5: into the scroll room's west aisle with the lectern
             w.fill(x, 2, -3, x, 5, -3, B.S("white_stained_glass_pane"))
     w.fill(3, 6, hz0 + 1, 3, 6, hz1 - 1, B.log("dark_oak", "z"))
     w.fill(4, 6, -3, hx1 - 1, 6, -3, B.log("dark_oak", "x"))
@@ -349,7 +349,9 @@ def great_tree(w):
     K.lamp(w, cx, fy + 6, cz)
     # library (floor 2): the enchanting nook in the middle
     fy = floors[2]
-    h.enchanting_nook(w, cx, fy, cz, open_side="west")
+    # open towards the east, where the stair's doorway comes in (the trunk's wall closes the way round the
+    # shelves: open to the west, nobody could reach the table)
+    h.enchanting_nook(w, cx, fy, cz, open_side="east")
     K.lamp(w, cx, fy + 6, cz) if w.is_empty(cx, fy + 6, cz) else None
     # the spiral stair winding up round the outside of the trunk, from beside the entrance (west) by the north to
     # the lounge deck (east), with doorways into each floor

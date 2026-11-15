@@ -554,7 +554,11 @@ def volcanic_fortress(w):
     h.enchanting_nook(w, ttx, 19, ttz, open_side="west")
     for y in range(14, 19):                                            # ladder up the tower
         w.set(ttx - 2, y, ttz + 2, AIR)
-    K.clear(w, ttx - 2, 14, ttz + 1, ttx - 1, 18, ttz + 2)
+    # (2026-11-15) the ladder's well keeps the keep's roof round it (the tower's lower room had no floor there),
+    # and two shelves of the nook's corner make way where the ladder comes up
+    K.clear(w, ttx - 2, 15, ttz + 1, ttx - 1, 18, ttz + 2)
+    for dz in (1, 2):
+        K.clear(w, ttx - 2, 20, ttz + dz, ttx - 2, 21, ttz + dz)
     for y in range(1, 20):
         w.set(ttx - 2, y, ttz + 2, B.S("ladder", facing="east"))
         w.set(ttx - 3, y, ttz + 2, F("polished_blackstone_bricks"))
@@ -720,6 +724,9 @@ def ice_castle(w):
         w.set(tx + 1, y, tz + 3, B.S("ladder", facing="south"))
         w.set(tx + 1, y, tz + 2, pk) if y < 9 else None
     K.clear(w, tx + 1, 1, tz + 4, tx + 1, 2, tz + 4)
+    # (2026-11-15) the ladder came up inside the wall under a shelf: a slot at its top and two shelves less let
+    # the climber into the nook
+    K.clear(w, tx + 1, 10, tz + 2, tx + 1, 11, tz + 3)
     # ------------------------------------------------------------------ the frozen lake: dummies, bell, spruces
     for (x, z) in sorted(cells):
         if 18 <= x <= 25 and abs(z) <= 9:

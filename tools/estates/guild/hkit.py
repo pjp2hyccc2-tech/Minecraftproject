@@ -230,6 +230,7 @@ class House:
 
     def finish(self):
         """Check the house holds what its tier promises; returns the storage (for the exporter's checks)."""
+        fix_supports(self.w)
         self.name_containers()
         need = REQUIRED[self.tier]
         got = self.storage.summary()
@@ -671,3 +672,46 @@ def torii(w, x, y, z, axis="x", width=5, height=6, wood="crimson"):
         w.set(px, y + height - 1, pz, B.full(f"{wood}_planks"))
         w.set(px, y + height + 1, pz, B.full("blackstone") if abs(k) <= hw else B.slab("blackstone", "bottom"))
         w.set(px, y + height, pz, B.full(f"{wood}_planks"))
+
+
+def fix_supports(w, reach=24):
+    """Nothing hangs from thin air (2026-11-15, the survey of the houses): a chain whose top is in the air and a
+    hanging lantern with nothing above are carried on up to the first block above (``reach`` at most); a lantern
+    that finds nothing stands on the block below instead, or goes; vines with nothing to cling to go. (Lanterns
+    without support drop off at the next block update; chandeliers on chains to nowhere looked as if floating.)"""
+    import numpy as np
+    from capital.world import X0, Y0, Z0
+
+    def name(st):
+        return st.split("[")[0].split(":")[-1]
+
+    def empty(x, y, z):
+        return name(w.get(x, y, z)) in ("air", "cave_air", "void")
+
+    pal = w.palette
+    ids = [i for i, st in enumerate(pal) if name(st) in ("chain", "lantern", "soul_lantern", "vine")]
+    if not ids:
+        return
+    xs, zs, ys = np.nonzero(np.isin(w.a, ids))
+    cells = sorted(((int(x) + X0, int(y) + Y0, int(z) + Z0) for x, z, y in zip(xs, zs, ys)), key=lambda c: -c[1])
+    for (x, y, z) in cells:
+        st = w.get(x, y, z)
+        n = name(st)
+        hanging_lantern = n in ("lantern", "soul_lantern") and "hanging=true" in st
+        if n == "chain" or hanging_lantern:
+            if not empty(x, y + 1, z):
+                continue
+            top = next((y + k for k in range(1, reach + 1) if not empty(x, y + k, z)), None)
+            if top is not None:
+                for yy in range(y + 1, top):
+                    w.set(x, yy, z, B.chain())
+            elif hanging_lantern:
+                w.set(x, y, z, B.lantern(hanging=False, soul=n == "soul_lantern") if not empty(x, y - 1, z)
+                      else AIR)
+        elif n == "vine":
+            props = st.split("[", 1)[1].rstrip("]") if "[" in st else ""
+            faces = [kv.split("=")[0] for kv in props.split(",") if kv.endswith("=true")]
+            step = {"north": (0, 0, -1), "south": (0, 0, 1), "east": (1, 0, 0), "west": (-1, 0, 0), "up": (0, 1, 0)}
+            held = any(not empty(x + step[f][0], y + step[f][1], z + step[f][2]) for f in faces if f in step)
+            if not held and name(w.get(x, y + 1, z)) != "vine":
+                w.set(x, y, z, AIR)

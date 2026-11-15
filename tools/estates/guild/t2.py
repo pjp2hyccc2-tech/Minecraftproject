@@ -277,9 +277,9 @@ def dwarven_forge(w):
                         st = F("gilded_trim") if band and not corner else (
                             F("chiseled_deepslate") if corner and y % 4 == 0 else F("polished_deepslate"))
                         w.set(px + dx, y, pz + dz, st)
-            for (dx, dz) in ((-2, 0), (2, 0), (0, -2), (0, 2)):
+            for (dx, dz) in ((-2, 0), (2, 0), (0, -2), (0, 2)):     # lanterns on little brackets (they stood on air)
                 w.set(px + dx, 10, pz + dz, B.lantern(hanging=False))
-                w.set(px + dx, 9, pz + dz, AIR)
+                w.set(px + dx, 9, pz + dz, WL("polished_blackstone"))
     for x in range(hx0, hx1 + 1):                                 # beams between the pillar rows
         for z in (-5, 5):
             if w.is_empty(x, 16, z):
@@ -327,9 +327,10 @@ def dwarven_forge(w):
             w.set(x, 0, z, SL("polished_deepslate", "bottom"))
     K.training_ground(h, w, [(2, -1, ), (5, 1)], -1, 270.0, looks=(1, 1))
     h.target(w, 7, -1, 0)
-    # the gong (rally bell) between the western pillars
-    w.fill(-5, 9, -3, -5, 9, 3, B.log("dark_oak", "z"))
-    h.bell(w, -5, 8, 0, facing="east", attachment="ceiling")
+    # the gong (rally bell) between the western pillars, low enough to be rung from the floor (2026-11-15: it
+    # hung at eight blocks, out of reach)
+    w.fill(-5, 5, -3, -5, 5, 3, B.log("dark_oak", "z"))
+    h.bell(w, -5, 4, 0, facing="east", attachment="ceiling")
     # the board on the west face of the south-west pillar, the throne at the east end
     h.board(w, -7, 2, 5, "west")
     w.fill(12, 1, -2, 14, 1, 2, F("polished_blackstone_bricks"))
@@ -542,6 +543,20 @@ def desert_palace(w):
     for y in (16, 17):
         for (dx, dz) in ((-2, 0), (2, 0), (0, -2), (0, 2)):
             w.set(mx + dx, y, mz + dz, B.lantern(hanging=False) if y == 16 else AIR)
+    # ------------------------------------------------------------------ gates out of the enclosure (2026-11-15)
+    # Nobody could leave the courtyard: the spring and the palms outside were out of reach. A horseshoe gate in
+    # the north wall leads to the storehouse, one in the south wall to the spring; both open from the lanes
+    # between the hall and the walls.
+    for (zw, zin, out) in ((oz0, oz0 + 2, -1), (oz1, oz1 - 2, 1)):
+        for z in (zw, zw - out):
+            K.clear(w, 6, 1, z, 7, 3, z)
+            w.set(6, 4, z, ST("sandstone", "east", "top"))
+            w.set(7, 4, z, ST("sandstone", "west", "top"))
+        for x in (5, 8):
+            w.set(x, 5, zw, F("chiseled_sandstone"))
+        w.set(5, 1, zw + out, B.lantern(hanging=False))
+        w.set(8, 1, zw + out, B.lantern(hanging=False))
+        K.clear(w, 5, 1, zin, 7, 3, zin)
     # ------------------------------------------------------------------ outside: the spring and the palms
     K.pond(w, -4, 15, 3.2, 1.8, 0, border=("sand", "smooth_sandstone"), depth=2, seed=96, lily=0.0)
     for (x, z, lean) in ((-15, -9, (1, 0)), (-15, 9, (1, 0)), (-9, 15, (0, -1)), (1, 16, (0, -1)), (8, 15, (-1, 0)),
