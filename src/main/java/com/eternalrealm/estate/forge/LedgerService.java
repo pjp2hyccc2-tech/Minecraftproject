@@ -83,6 +83,11 @@ public final class LedgerService {
         /** Whether the ledger of {@code key} shows and uses the container named {@code box} for {@code player}. */
         boolean uses(ServerPlayer player, EstateKey key, String box);
 
+        /** Whether "put away" may fill the container named {@code box} (only among those it {@link #uses}). */
+        default boolean fills(ServerPlayer player, EstateKey key, String box) {
+            return uses(player, key, box);
+        }
+
         /** What one request moved between the bag and the containers, per container and kind of thing. */
         void moved(ServerPlayer player, EstateKey key, List<Moved> moves);
     }
@@ -214,6 +219,17 @@ public final class LedgerService {
         Policy policy = POLICIES.get(key.kind());
         if (policy != null && player != null) {
             boxes.removeIf(box -> !policy.uses(player, key, box.name() == null ? "" : box.name()));
+        }
+        return boxes;
+    }
+
+    /** The containers "put away" may fill for {@code player} in {@code key}. */
+    static List<EstateContents.ContainerHolder> fillable(EstateContents.Found found, ServerPlayer player,
+                                                        EstateKey key) {
+        List<EstateContents.ContainerHolder> boxes = boxes(found, player, key);
+        Policy policy = POLICIES.get(key.kind());
+        if (policy != null && player != null) {
+            boxes.removeIf(box -> !policy.fills(player, key, box.name() == null ? "" : box.name()));
         }
         return boxes;
     }
@@ -504,12 +520,12 @@ public final class LedgerService {
     }
 
     private static Deposit depositFront(ServerPlayer player, EstateKey key, Optional<StorageLabel> only,
-                                        List<Moved> moves) {
+                                        List<Moved> moved) {
         Optional<EstateContents.Found> found = EstateService.contents(key);
         if (found.isEmpty()) {
             return new Deposit(0, 0, 0, 0);
         }
-        List<EstateContents.ContainerHolder> boxes = boxes(found.get(), player, key);
+        List<EstateContents.ContainerHolder> boxes = fillable(found.get(), player, key);
         List<DepositPlanner.Box> plannerBoxes = new ArrayList<>();
         for (EstateContents.ContainerHolder box : boxes) {
             boolean shelf = isShelf(box);
@@ -569,7 +585,7 @@ public final class LedgerService {
             box.changed();
             items += count;
             touched.add(box.pos());
-            moves.add(new Moved(box.name() == null ? "" : box.name(), box.container(), sample, count, true));
+            moved.add(new Moved(box.name() == null ? "" : box.name(), box.container(), sample, count, true));
         }
         int left = 0;
         for (DepositPlanner.Stack stack : stacks) {
