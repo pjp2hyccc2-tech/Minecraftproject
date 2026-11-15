@@ -336,6 +336,13 @@ public final class GuildHouseScreen extends Screen {
         graphics.drawString(font, stars, left + 8 + font.width(name) + 8, y + 2, 0xFFFFC840, false);
         Component price = Component.translatable("screen.eternalrealm.guildhouse.price", gold(num(design, "price")));
         graphics.drawString(font, price, left + WIDTH - 8 - font.width(price), y + 2, GOLD, false);
+        if (bool(data, "discounted")) {
+            // the guild level's discount (the buy button shows what is actually paid)
+            Component off = Component.translatable("screen.eternalrealm.guildhouse.discount", num(data, "guildLevel"),
+                    str(data, "discount"));
+            graphics.drawString(font, off, left + WIDTH - 8 - font.width(price) - 6 - font.width(off), y + 2, GOOD,
+                    false);
+        }
         List<FormattedCharSequence> lines = font.split(FormattedText.composite(
                 Component.translatable("guildhouse.eternalrealm.design." + id + ".desc")), WIDTH - 16);
         int ly = y + 14;

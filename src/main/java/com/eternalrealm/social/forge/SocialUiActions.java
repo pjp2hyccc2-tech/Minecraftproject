@@ -88,9 +88,28 @@ public final class SocialUiActions {
             Guild g = guild.get();
             data.addProperty("name", g.name());
             data.addProperty("tag", g.tag());
-            data.addProperty("level", guilds.service().level(g));
+            int level = guilds.service().level(g);
+            com.eternalrealm.guild.GuildRules rules = guilds.service().rules();
+            data.addProperty("level", level);
+            data.addProperty("maxLevel", rules.maxLevel());
             data.addProperty("cap", guilds.service().memberCap(g));
             data.addProperty("contribution", g.totalContribution());
+            // the level's progress and perks (docs/modules/guild_levels.md)
+            data.addProperty("levelFloor", rules.levelThresholds().get(Math.min(level, rules.maxLevel()) - 1));
+            data.addProperty("levelNext", rules.contributionForNextLevel(Math.min(level, rules.maxLevel()))
+                    .orElse(-1L));
+            com.eternalrealm.guild.GuildPerks.Standing standing = com.eternalrealm.guild.GuildPerks.standing(level);
+            data.addProperty("standing", standing.id());
+            data.addProperty("standingColor", standing.color());
+            data.addProperty("exp", com.eternalrealm.guild.GuildPerks.percent(
+                    com.eternalrealm.guild.GuildPerks.experienceBonus(level)));
+            data.addProperty("discount", com.eternalrealm.guild.GuildPerks.percent(
+                    com.eternalrealm.guild.GuildPerks.houseDiscount(level)));
+            if (level < rules.maxLevel()) {
+                data.addProperty("nextExp", com.eternalrealm.guild.GuildPerks.percent(
+                        com.eternalrealm.guild.GuildPerks.experienceBonus(level + 1)));
+                data.addProperty("nextCap", rules.memberCap(level + 1));
+            }
             data.addProperty("myRank", g.rankOf(player.getUUID()).map(r -> r.name().toLowerCase(java.util.Locale.ROOT)).orElse("member"));
             JsonArray members = new JsonArray();
             for (Map.Entry<UUID, com.eternalrealm.guild.GuildMember> entry : g.members().entrySet()) {

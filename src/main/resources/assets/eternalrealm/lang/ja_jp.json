@@ -8656,5 +8656,22 @@
   "skill_info.eternalrealm.other_class": "二次職「%s」のスキル（いまは使えません）",
   "message.eternalrealm.estate.stranded": "遠い海の上に迷い込んでいたので、王都アストリアへお連れしました。",
   "result.eternalrealm.raid_rare": "戦功 %s位 · レアドロップ %s",
-  "result.eternalrealm.raid_rare_none": "戦功なし · レアドロップ %s"
+  "result.eternalrealm.raid_rare_none": "戦功なし · レアドロップ %s",
+  "message.eternalrealm.guild.level_perks": "ギルドの加護: 経験値 +%s ／ ギルドハウスの割引 %s ／ 定員 %s 人",
+  "message.eternalrealm.guild.level_title": "ギルド Lv%s",
+  "message.eternalrealm.guild.standing_broadcast": "ギルド「%s」が Lv%s に達し、「%s」の格を得た！",
+  "guild_standing.eternalrealm.fledgling": "見習い",
+  "guild_standing.eternalrealm.seasoned": "熟練",
+  "guild_standing.eternalrealm.elite": "精鋭",
+  "guild_standing.eternalrealm.renowned": "名門",
+  "guild_standing.eternalrealm.legendary": "伝説",
+  "screen.eternalrealm.guild.header_level": "%s 【%s】 Lv%s",
+  "screen.eternalrealm.guild.members_count": "メンバー %s / %s",
+  "screen.eternalrealm.guild.merit": "ギルド経験値 %s / %s",
+  "screen.eternalrealm.guild.merit_max": "ギルド経験値 %s（最大レベル）",
+  "screen.eternalrealm.guild.perks": "加護: 経験値 +%s ・ ハウス割引 %s",
+  "screen.eternalrealm.guild.next_perks": "次 Lv%s: 経験値 +%s ・ 定員 %s",
+  "screen.eternalrealm.guild.view_battle": "対抗戦 ▶",
+  "screen.eternalrealm.guild.view_members": "◀ メンバー",
+  "screen.eternalrealm.guildhouse.discount": "ギルドLv%s 割引 %s"
 }

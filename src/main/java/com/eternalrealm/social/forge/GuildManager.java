@@ -5,7 +5,9 @@ import com.eternalrealm.core.data.DataAccessException;
 import com.eternalrealm.guild.Guild;
 import com.eternalrealm.guild.GuildEvent;
 import com.eternalrealm.guild.GuildInvite;
+import com.eternalrealm.guild.GuildMerit;
 import com.eternalrealm.guild.GuildMessages;
+import com.eternalrealm.guild.GuildPerks;
 import com.eternalrealm.guild.GuildRepository;
 import com.eternalrealm.guild.GuildResult;
 import com.eternalrealm.guild.GuildRules;
@@ -160,11 +162,33 @@ public final class GuildManager {
         guild.ifPresent(g -> g.members().keySet().forEach(this::refresh));
     }
 
-    /** Season contribution of a member (quests, dungeons, bosses). */
+    /**
+     * Merit earned by a member for their guild (monsters, quests, dungeons, bosses, the fund; {@link GuildMerit}):
+     * counts for the season's guild ranking and, over all seasons, for the guild's level. Nothing for a player
+     * without a guild.
+     */
     public void contribute(UUID member, long points) {
         if (available && points > 0 && service.guildOf(member).isPresent()) {
             deliver(service.addContribution(member, season, points).events());
         }
+    }
+
+    /** Merit earned by the guild as a whole (a guild battle). */
+    public void contributeGuild(UUID guildId, long points) {
+        if (available && points > 0 && service.guild(guildId).isPresent()) {
+            deliver(service.addGuildContribution(guildId, season, points).events());
+        }
+    }
+
+    /** The level of {@code player}'s guild, 0 without one. */
+    public int levelOf(UUID player) {
+        return service.guildOf(player).map(guild -> guild.level(service.rules())).orElse(0);
+    }
+
+    /** The guild blessing of {@code player}: extra experience from play (0 without a guild). */
+    public double experienceBonus(UUID player) {
+        int level = levelOf(player);
+        return level <= 0 ? 0.0 : GuildPerks.experienceBonus(level);
     }
 
     public void chat(ServerPlayer sender, String message) {
@@ -252,13 +276,53 @@ public final class GuildManager {
                 toGuild(transferred.guild().id(),
                         msg(GuildMessages.MASTER_TRANSFERRED, Names.of(server, transferred.newMaster())));
             } else if (event instanceof GuildEvent.LevelUp levelUp) {
-                toGuild(levelUp.guild().id(), msg(GuildMessages.LEVEL_UP, levelUp.newLevel(),
-                        service.memberCap(levelUp.guild())));
+                celebrate(levelUp);
             } else if (event instanceof GuildEvent.Disbanded disbanded) {
                 for (UUID member : disbanded.guild().members().keySet()) {
                     Names.send(server, member, msg(GuildMessages.DISBANDED, disbanded.guild().name()));
                 }
             }
+        }
+    }
+
+    /**
+     * A guild reached a new level: the members hear it (title, the new perks in chat, a fanfare); a new standing
+     * (levels 5, 10, 15, 20) is announced to everyone, and the members' name tags take its colour.
+     */
+    private void celebrate(GuildEvent.LevelUp levelUp) {
+        Guild guild = levelUp.guild();
+        int level = levelUp.newLevel();
+        GuildRules rules = service.rules();
+        toGuild(guild.id(), msg(GuildMessages.LEVEL_UP, level, service.memberCap(guild)));
+        toGuild(guild.id(), Component.translatable("message.eternalrealm.guild.level_perks",
+                GuildPerks.percent(GuildPerks.experienceBonus(level)), GuildPerks.percent(GuildPerks.houseDiscount(level)),
+                rules.memberCap(Math.min(level, rules.maxLevel()))).withStyle(ChatFormatting.AQUA));
+        GuildPerks.Standing standing = GuildPerks.standing(level);
+        boolean newStanding = GuildPerks.standing(levelUp.previousLevel()) != standing;
+        for (UUID member : guild.members().keySet()) {
+            ServerPlayer player = server.getPlayerList().getPlayer(member);
+            if (player == null) {
+                continue;
+            }
+            player.connection.send(new net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket(10, 60,
+                    20));
+            player.connection.send(new net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket(
+                    Component.translatable("message.eternalrealm.guild.level_title", level)
+                            .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)));
+            player.connection.send(new net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket(
+                    Component.literal(guild.name()).withStyle(ChatFormatting.YELLOW)));
+            player.playNotifySound(net.minecraft.sounds.SoundEvents.UI_TOAST_CHALLENGE_COMPLETE,
+                    net.minecraft.sounds.SoundSource.PLAYERS, 0.8F, 1.0F);
+            if (newStanding) {
+                refresh(member);
+            }
+        }
+        if (newStanding) {
+            server.getPlayerList().broadcastSystemMessage(Component.translatable(
+                    "message.eternalrealm.guild.standing_broadcast", guild.name(), level,
+                    Component.translatable(standing.translationKey()).withStyle(
+                            net.minecraft.network.chat.Style.EMPTY.withColor(standing.color())))
+                    .withStyle(ChatFormatting.GOLD), false);
         }
     }
 

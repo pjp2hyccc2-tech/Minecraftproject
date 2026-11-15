@@ -8656,5 +8656,22 @@
   "skill_info.eternalrealm.other_class": "A skill of the %s (not yours to use now)",
   "message.eternalrealm.estate.stranded": "You had drifted far out over the sea, so you were brought back to the capital, Astoria.",
   "result.eternalrealm.raid_rare": "Merit #%s · rare drop %s",
-  "result.eternalrealm.raid_rare_none": "No merit · rare drop %s"
+  "result.eternalrealm.raid_rare_none": "No merit · rare drop %s",
+  "message.eternalrealm.guild.level_perks": "Guild blessing: +%s experience / guild house discount %s / up to %s members",
+  "message.eternalrealm.guild.level_title": "Guild Level %s",
+  "message.eternalrealm.guild.standing_broadcast": "The guild \"%s\" reached level %s and is now %s!",
+  "guild_standing.eternalrealm.fledgling": "Fledgling",
+  "guild_standing.eternalrealm.seasoned": "Seasoned",
+  "guild_standing.eternalrealm.elite": "Elite",
+  "guild_standing.eternalrealm.renowned": "Renowned",
+  "guild_standing.eternalrealm.legendary": "Legendary",
+  "screen.eternalrealm.guild.header_level": "%s [%s] Lv%s",
+  "screen.eternalrealm.guild.members_count": "Members %s / %s",
+  "screen.eternalrealm.guild.merit": "Guild merit %s / %s",
+  "screen.eternalrealm.guild.merit_max": "Guild merit %s (top level)",
+  "screen.eternalrealm.guild.perks": "Blessing: +%s EXP · house discount %s",
+  "screen.eternalrealm.guild.next_perks": "Next Lv%s: +%s EXP · %s members",
+  "screen.eternalrealm.guild.view_battle": "Battles ▶",
+  "screen.eternalrealm.guild.view_members": "◀ Members",
+  "screen.eternalrealm.guildhouse.discount": "Guild Lv%s: %s off"
 }

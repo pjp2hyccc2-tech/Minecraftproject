@@ -761,6 +761,8 @@ public final class DungeonService {
             context.game().quests().event(player, new GameEvent.BossDefeated(bossId));
             context.game().rankings().onDungeonClear(player, instance.run.members().size());
             context.game().rankings().onBossKill(player);
+            context.game().guilds().contribute(member, com.eternalrealm.guild.GuildMerit.dungeon(
+                    instance.difficulty.name(), isRaid(instance)));
         }
         if (!attackers.isEmpty()) {
             BossDifficulty difficulty = BossDifficulty.valueOf(instance.difficulty.name());
@@ -851,8 +853,6 @@ public final class DungeonService {
         return given;
     }
 
-    static ItemTier tierOfArea(int areaId) {
-        ItemTier best = ItemTier.IRON;
     /** Whether the instance is the final raid (its rare drop goes by the merit ranking). */
     static boolean isRaid(DungeonInstance instance) {
         return Dungeons.FINAL_RAID.id().equals(instance.contentId);
@@ -863,6 +863,8 @@ public final class DungeonService {
         return instance.fight().map(fight -> fight.contributions().meritPlace(player)).orElse(0);
     }
 
+    static ItemTier tierOfArea(int areaId) {
+        ItemTier best = ItemTier.IRON;
         for (ItemTier tier : ItemTier.values()) {
             if (tier.area() <= areaId && tier.number() >= best.number()) {
                 best = tier;

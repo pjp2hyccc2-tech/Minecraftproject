@@ -53,13 +53,16 @@ public record GuildRules(Duration inviteExpiry, List<Long> levelThresholds, int 
     }
 
     /**
-     * 30 members at level 1, +5 per level, at most 50 (reached at level 5); ten levels; invites valid for 5 minutes.
-     * The thresholds are a first balance guess, to be tuned once contribution sources (quests, bosses) exist.
+     * Twenty levels (owner, 2026-11-15: 「ギルドレベルっていうのも実装してなんか良さげにシステム作って」): the guild's
+     * merit ({@link GuildMerit}: what its members do, its battles, its fund) adds up over all seasons; 30 members at
+     * level 1, two more per level (68 at level 20); invites valid for 5 minutes. A guild of five that plays two hours
+     * a day reaches level 10 in about a week and level 20 in about two months.
      */
     public static GuildRules defaults() {
         return new GuildRules(Duration.ofMinutes(5),
-                List.of(0L, 1_000L, 3_000L, 7_000L, 15_000L, 30_000L, 60_000L, 100_000L, 160_000L, 250_000L),
-                30, 5, 50);
+                List.of(0L, 500L, 1_500L, 3_000L, 5_000L, 8_000L, 12_000L, 17_000L, 23_000L, 30_000L, 40_000L,
+                        52_000L, 66_000L, 82_000L, 100_000L, 125_000L, 155_000L, 190_000L, 230_000L, 280_000L),
+                30, 2, 68);
     }
 
     public int maxLevel() {

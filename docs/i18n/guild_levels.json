@@ -1,0 +1,19 @@
+{
+  "message.eternalrealm.guild.level_perks": {"ja": "ギルドの加護: 経験値 +%s ／ ギルドハウスの割引 %s ／ 定員 %s 人", "en": "Guild blessing: +%s experience / guild house discount %s / up to %s members"},
+  "message.eternalrealm.guild.level_title": {"ja": "ギルド Lv%s", "en": "Guild Level %s"},
+  "message.eternalrealm.guild.standing_broadcast": {"ja": "ギルド「%s」が Lv%s に達し、「%s」の格を得た！", "en": "The guild \"%s\" reached level %s and is now %s!"},
+  "guild_standing.eternalrealm.fledgling": {"ja": "見習い", "en": "Fledgling"},
+  "guild_standing.eternalrealm.seasoned": {"ja": "熟練", "en": "Seasoned"},
+  "guild_standing.eternalrealm.elite": {"ja": "精鋭", "en": "Elite"},
+  "guild_standing.eternalrealm.renowned": {"ja": "名門", "en": "Renowned"},
+  "guild_standing.eternalrealm.legendary": {"ja": "伝説", "en": "Legendary"},
+  "screen.eternalrealm.guild.header_level": {"ja": "%s 【%s】 Lv%s", "en": "%s [%s] Lv%s"},
+  "screen.eternalrealm.guild.members_count": {"ja": "メンバー %s / %s", "en": "Members %s / %s"},
+  "screen.eternalrealm.guild.merit": {"ja": "ギルド経験値 %s / %s", "en": "Guild merit %s / %s"},
+  "screen.eternalrealm.guild.merit_max": {"ja": "ギルド経験値 %s（最大レベル）", "en": "Guild merit %s (top level)"},
+  "screen.eternalrealm.guild.perks": {"ja": "加護: 経験値 +%s ・ ハウス割引 %s", "en": "Blessing: +%s EXP · house discount %s"},
+  "screen.eternalrealm.guild.next_perks": {"ja": "次 Lv%s: 経験値 +%s ・ 定員 %s", "en": "Next Lv%s: +%s EXP · %s members"},
+  "screen.eternalrealm.guild.view_battle": {"ja": "対抗戦 ▶", "en": "Battles ▶"},
+  "screen.eternalrealm.guild.view_members": {"ja": "◀ メンバー", "en": "◀ Members"},
+  "screen.eternalrealm.guildhouse.discount": {"ja": "ギルドLv%s 割引 %s", "en": "Guild Lv%s: %s off"}
+}

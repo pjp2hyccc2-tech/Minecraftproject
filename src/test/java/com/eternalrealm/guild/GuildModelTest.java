@@ -64,14 +64,14 @@ public class GuildModelTest {
         assertEquals(0, guild.contribution(SeasonId.of("s3")));
         assertEquals(1100, guild.totalContribution());
         assertEquals(2, guild.level(GuildRules.defaults()));
-        assertEquals(35, guild.memberCap(GuildRules.defaults()));
+        assertEquals(32, guild.memberCap(GuildRules.defaults()));
     }
 
     @Test
     public void totalContributionSaturates() {
         Guild guild = guild(members(GuildRank.MASTER), Map.of(S1, Long.MAX_VALUE, S2, 5L));
         assertEquals(Long.MAX_VALUE, guild.totalContribution());
-        assertEquals(10, guild.level(GuildRules.defaults()));
+        assertEquals(20, guild.level(GuildRules.defaults()));
     }
 
     @Test
@@ -96,20 +96,24 @@ public class GuildModelTest {
     @Test
     public void defaultLevelsAndMemberCaps() {
         GuildRules rules = GuildRules.defaults();
-        assertEquals(10, rules.maxLevel());
+        assertEquals(20, rules.maxLevel());
         assertEquals(1, rules.levelFor(0));
-        assertEquals(1, rules.levelFor(999));
-        assertEquals(2, rules.levelFor(1_000));
-        assertEquals(5, rules.levelFor(15_000));
-        assertEquals(10, rules.levelFor(Long.MAX_VALUE));
+        assertEquals(1, rules.levelFor(499));
+        assertEquals(2, rules.levelFor(500));
+        assertEquals(5, rules.levelFor(5_000));
+        assertEquals(10, rules.levelFor(30_000));
+        assertEquals(19, rules.levelFor(279_999));
+        assertEquals(20, rules.levelFor(280_000));
+        assertEquals(20, rules.levelFor(Long.MAX_VALUE));
         assertEquals(30, rules.memberCap(1));
-        assertEquals(35, rules.memberCap(2));
-        assertEquals(50, rules.memberCap(5));
-        assertEquals("never above 50", 50, rules.memberCap(10));
-        assertEquals(OptionalLong.of(1_000), rules.contributionForNextLevel(1));
-        assertEquals(OptionalLong.empty(), rules.contributionForNextLevel(10));
+        assertEquals(32, rules.memberCap(2));
+        assertEquals(38, rules.memberCap(5));
+        assertEquals(48, rules.memberCap(10));
+        assertEquals("68 at the top", 68, rules.memberCap(20));
+        assertEquals(OptionalLong.of(500), rules.contributionForNextLevel(1));
+        assertEquals(OptionalLong.empty(), rules.contributionForNextLevel(20));
         assertThrows(IllegalArgumentException.class, () -> rules.memberCap(0));
-        assertThrows(IllegalArgumentException.class, () -> rules.memberCap(11));
+        assertThrows(IllegalArgumentException.class, () -> rules.memberCap(21));
     }
 
     @Test

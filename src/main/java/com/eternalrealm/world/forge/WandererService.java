@@ -546,6 +546,7 @@ public final class WandererService {
             long exp = stats == null ? 0L : Math.round(stats.exp() * (isHero ? 15.0 : 10.0));
             long gold = stats == null ? 0L : Math.round(stats.goldMax() * (isHero ? 7.5 : 5.0));
             FieldThreatService.give(context, player, items, exp, gold);
+            context.game().guilds().contribute(player.getUUID(), com.eternalrealm.guild.GuildMerit.WANDERER);
             JsonObject data = new JsonObject();
             data.addProperty("kind", "wanderer");
             data.addProperty("dungeon", out.wanderer.translationKey());

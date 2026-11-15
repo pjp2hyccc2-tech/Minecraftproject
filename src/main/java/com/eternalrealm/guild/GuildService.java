@@ -358,6 +358,38 @@ public final class GuildService {
                 : List.of());
     }
 
+    /**
+     * Credits merit earned by the guild as a whole (a guild battle) for {@code season}. Emits
+     * {@link GuildEvent.LevelUp} when the guild reaches a new level.
+     *
+     * @param points server-computed points, {@code > 0}
+     */
+    public GuildResult addGuildContribution(UUID guildId, SeasonId season, long points) {
+        Objects.requireNonNull(guildId, "guildId");
+        Objects.requireNonNull(season, "season");
+        if (points <= 0) {
+            throw new IllegalArgumentException("points must be positive: " + points);
+        }
+        Guild guild = guilds.get(guildId);
+        if (guild == null) {
+            return GuildResult.failure(GuildOutcome.NOT_IN_GUILD);
+        }
+        int previousLevel = guild.level(rules);
+        Guild updated = guild.withContribution(season, Guild.saturatedAdd(guild.contribution(season), points));
+        guilds.put(updated.id(), updated);
+        revision++;
+        int newLevel = updated.level(rules);
+        return GuildResult.ok(updated, newLevel > previousLevel
+                ? List.of(new GuildEvent.LevelUp(updated, previousLevel, newLevel))
+                : List.of());
+    }
+
+    /** The guild's level (1 for a guild that does not exist). */
+    public int levelOf(UUID guildId) {
+        Guild guild = guilds.get(guildId);
+        return guild == null ? 1 : guild.level(rules);
+    }
+
     // ------------------------------------------------------------------------------------------------ queries
 
     public Optional<Guild> guildOf(UUID player) {

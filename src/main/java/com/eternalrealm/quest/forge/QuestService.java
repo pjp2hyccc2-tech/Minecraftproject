@@ -190,6 +190,8 @@ public final class QuestService {
         if (reward.exp() > 0) {
             playerData.grantExperience(player.getUUID(), reward.exp(), ExperienceSource.QUEST);
         }
+        com.eternalrealm.server.ServerContext.current().ifPresent(context ->
+                context.game().guilds().contribute(player.getUUID(), com.eternalrealm.guild.GuildMerit.QUEST));
         if (reward.gold() > 0) {
             playerData.grantGold(player.getUUID(), reward.gold());
         }

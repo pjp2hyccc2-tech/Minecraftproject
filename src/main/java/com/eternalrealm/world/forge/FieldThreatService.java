@@ -764,6 +764,7 @@ public final class FieldThreatService {
             long exp = Math.round(stats.exp() * ThreatPower.LORD_REWARD * expMultiplier(body));
             long gold = Math.round(stats.goldMax() * ThreatPower.LORD_REWARD);
             give(context, player, items, exp, gold);
+            context.game().guilds().contribute(player.getUUID(), com.eternalrealm.guild.GuildMerit.LORD);
             JsonObject data = new JsonObject();
             data.addProperty("kind", "lord");
             data.addProperty("name", Component.Serializer.toJson(Component.translatable(state.lord.translationKey())));
@@ -1299,6 +1300,7 @@ public final class FieldThreatService {
             long exp = stats == null ? 0L : stats.exp() * 25L;
             long gold = stats == null ? 0L : stats.goldMax() * 12L;
             give(context, player, items, exp, gold);
+            context.game().guilds().contribute(player.getUUID(), com.eternalrealm.guild.GuildMerit.CALAMITY);
             JsonObject data = new JsonObject();
             data.addProperty("kind", "calamity");
             data.addProperty("dungeon", state.calamity.translationKey());

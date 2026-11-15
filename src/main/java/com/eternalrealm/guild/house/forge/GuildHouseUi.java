@@ -159,6 +159,11 @@ public final class GuildHouseUi {
             data.addProperty("ready", owned.isPresent() && GuildHouses.estates().ready(guild.get().id()));
             data.addProperty("percent", owned.isPresent() ? GuildHouses.estates().percent(guild.get().id()) : 0);
         }
+        int level = GuildHouses.guildLevel(player);
+        double discount = com.eternalrealm.guild.GuildPerks.houseDiscount(level);
+        data.addProperty("guildLevel", level);
+        data.addProperty("discount", com.eternalrealm.guild.GuildPerks.percent(discount));
+        data.addProperty("discounted", discount > 0.0 && guild.isPresent());
         JsonArray designs = new JsonArray();
         for (GuildHouseDesign design : catalog.designs()) {
             JsonObject json = new JsonObject();
@@ -173,7 +178,8 @@ public final class GuildHouseUi {
             json.addProperty("storage", design.storageSlots());
             json.addProperty("vaults", GuildHouseRules.vaultChests(design.tier()) * 27);
             long cost = owned.map(current -> GuildHouseRules.switchBalance(current, design)).orElse(design.price());
-            json.addProperty("cost", cost);
+            json.addProperty("cost", guild.isPresent() && cost > 0
+                    ? com.eternalrealm.guild.GuildPerks.discounted(cost, level) : cost);
             designs.add(json);
         }
         data.add("designs", designs);

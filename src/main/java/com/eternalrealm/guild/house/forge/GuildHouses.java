@@ -176,7 +176,8 @@ public final class GuildHouses {
             return fail(player, GuildHouseOutcome.NOT_IN_GUILD);
         }
         UUID guildId = guild.get().id();
-        GuildHouseResult check = service.checkBuy(guildId, rank, design, gold(player));
+        int level = guildLevel(player);
+        GuildHouseResult check = service.checkBuy(guildId, rank, design, gold(player), level);
         if (!check.isSuccess()) {
             return fail(player, check.outcome());
         }
@@ -189,7 +190,7 @@ public final class GuildHouses {
             LOG.warn("Claiming the guild house {} of {} failed: {}", design, guildId, claimed);
             return fail(player, GuildHouseOutcome.UNAVAILABLE);
         }
-        GuildHouseResult done = service.buy(guildId, rank, design, check.fromWallet(), Instant.now());
+        GuildHouseResult done = service.buy(guildId, rank, design, check.fromWallet(), Instant.now(), level);
         masters.put(guildId, guild.get().master());
         paid(player, done);
         toGuild(guild.get(), Component.translatable("message.eternalrealm.guildhouse.bought", player.getDisplayName(),
@@ -209,7 +210,8 @@ public final class GuildHouses {
             return fail(player, GuildHouseOutcome.NOT_IN_GUILD);
         }
         UUID guildId = guild.get().id();
-        GuildHouseResult check = service.checkSwitch(guildId, rank, design, gold(player));
+        int level = guildLevel(player);
+        GuildHouseResult check = service.checkSwitch(guildId, rank, design, gold(player), level);
         if (!check.isSuccess()) {
             return fail(player, check.outcome());
         }
@@ -223,7 +225,7 @@ public final class GuildHouses {
             return fail(player, moved == GuildEstates.Result.BUILDING ? GuildHouseOutcome.BUILDING
                     : GuildHouseOutcome.UNAVAILABLE);
         }
-        GuildHouseResult done = service.switchTo(guildId, rank, design, check.fromWallet(), Instant.now());
+        GuildHouseResult done = service.switchTo(guildId, rank, design, check.fromWallet(), Instant.now(), level);
         paid(player, done);
         if (done.toFund() > 0) {
             player.sendSystemMessage(Component.translatable("message.eternalrealm.guildhouse.refund_fund",
@@ -232,6 +234,12 @@ public final class GuildHouses {
         toGuild(guild.get(), Component.translatable("message.eternalrealm.guildhouse.switched",
                 player.getDisplayName(), name(design)).withStyle(ChatFormatting.GOLD));
         return GuildHouseOutcome.OK;
+    }
+
+    /** The level of the player's guild (1 without guilds): its house discount. */
+    static int guildLevel(ServerPlayer player) {
+        return com.eternalrealm.server.ServerContext.current()
+                .map(context -> Math.max(1, context.game().guilds().levelOf(player.getUUID()))).orElse(1);
     }
 
     /** The master gives the house up; half its price goes into the fund. */
@@ -284,6 +292,12 @@ public final class GuildHouses {
             return fail(player, done.outcome());
         }
         masters.put(guildId, guild.get().master());
+        // the fund counts for the guild's merit (1 per 100 G, docs/modules/guild_levels.md)
+        long merit = com.eternalrealm.guild.GuildMerit.donation(amount);
+        if (merit > 0) {
+            com.eternalrealm.server.ServerContext.current().ifPresent(context ->
+                    context.game().guilds().contribute(player.getUUID(), merit));
+        }
         toGuild(guild.get(), Component.translatable("message.eternalrealm.guildhouse.donated", player.getDisplayName(),
                 String.format("%,d", amount), String.format("%,d", done.house().fund())).withStyle(ChatFormatting.GREEN));
         player.playNotifySound(SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.7F, 1.0F);

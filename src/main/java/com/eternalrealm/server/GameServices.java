@@ -69,11 +69,14 @@ public final class GameServices {
                 && com.eternalrealm.world.forge.Realm.isRealm(level)
                 ? com.eternalrealm.world.forge.Realm.areaAt(level, victim.getX(), victim.getZ()).id() : 0;
         com.eternalrealm.quest.GameEvent event = new com.eternalrealm.quest.GameEvent.MonsterKilled(template.id(), areaId);
+        long merit = com.eternalrealm.guild.GuildMerit.monster(
+                template.role() == com.eternalrealm.monster.MonsterRole.ELITE);
         for (java.util.UUID id : credited) {
             net.minecraft.server.level.ServerPlayer player = killer.server.getPlayerList().getPlayer(id);
             if (player != null) {
                 quests.event(player, event);
             }
+            guilds.contribute(id, merit); // the guild's merit (docs/modules/guild_levels.md)
         }
     }
 

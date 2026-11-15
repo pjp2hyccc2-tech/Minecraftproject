@@ -78,6 +78,8 @@ public final class PlayerDataService {
 
     private final PlayerSessionRegistry sessions = new PlayerSessionRegistry();
     private final Map<UUID, PlayerCharacter> active = new HashMap<>();
+    /** Extra experience from play (monsters, quests, bosses), e.g. the blessing of the player's guild. */
+    private volatile ExperienceBonus experienceBonus = (playerId, source) -> 0.0;
     private final Map<UUID, UnsavedRecord> unsaved = new HashMap<>();
     private final Map<UUID, SaveTracker> saveTrackers = new HashMap<>();
     private final List<PendingSave> pendingSaves = new ArrayList<>();
@@ -254,8 +256,27 @@ public final class PlayerDataService {
     // Server-authoritative mutations
     // ------------------------------------------------------------------------------------------------------------
 
+    /** A fraction of extra experience a player gets from a source (0 for none; at most {@value #MAX_BONUS}). */
+    @FunctionalInterface
+    public interface ExperienceBonus {
+        double of(UUID playerId, ExperienceSource source);
+    }
+
+    /** The highest experience bonus applied (a sanity limit). */
+    public static final double MAX_BONUS = 1.0;
+
+    /** Installs the experience bonus of play (the guilds' blessing, docs/modules/guild_levels.md). */
+    public void setExperienceBonus(ExperienceBonus bonus) {
+        this.experienceBonus = Objects.requireNonNull(bonus, "bonus");
+    }
+
+    /** Whether experience from {@code source} counts as play (bonuses apply), not an operator's or the system's. */
+    static boolean fromPlay(ExperienceSource source) {
+        return source == ExperienceSource.MOB_KILL || source == ExperienceSource.QUEST || source == ExperienceSource.BOSS;
+    }
+
     /**
-     * @param amount must be positive
+     * @param amount must be positive; from play ({@link #fromPlay}) the installed {@link ExperienceBonus} is added
      * @return the result, or empty if the player's data is not loaded
      */
     public Optional<ExperienceResult> grantExperience(UUID playerId, long amount, ExperienceSource source) {
@@ -266,6 +287,19 @@ public final class PlayerDataService {
         PlayerCharacter character = active.get(playerId);
         if (character == null) {
             return Optional.empty();
+        }
+        if (fromPlay(source)) {
+            double bonus;
+            try {
+                bonus = experienceBonus.of(playerId, source);
+            } catch (RuntimeException e) {
+                LOG.warn("Experience bonus for {} failed", playerId, e);
+                bonus = 0.0;
+            }
+            if (bonus > 0.0) {
+                long extra = Math.round(amount * Math.min(MAX_BONUS, bonus));
+                amount = extra > Long.MAX_VALUE - amount ? Long.MAX_VALUE : amount + extra;
+            }
         }
         ExperienceResult result = character.addExperience(amount, rules);
         if (result.applied() > 0) {

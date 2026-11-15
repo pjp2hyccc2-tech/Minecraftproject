@@ -132,8 +132,11 @@ public final class ServerBootstrap {
                 playerData, io, new com.eternalrealm.persistence.file.FileWorldProgressRepository(dataDirectory, store),
                 clock, season);
         world.onDiscover((player, area) -> rankings.onAreaDiscovered(player));
+        GuildManager guilds = new GuildManager(server, new FileGuildRepository(dataDirectory, store), io, clock, season);
+        // the guilds' blessing: extra experience from play by the guild's level (docs/modules/guild_levels.md)
+        playerData.setExperienceBonus((playerId, source) -> guilds.experienceBonus(playerId));
         GameServices game = new GameServices(ERServerConfig.jobRules(), new PartyManager(server, playerData),
-                new GuildManager(server, new FileGuildRepository(dataDirectory, store), io, clock, season), rankings,
+                guilds, rankings,
                 world, new com.eternalrealm.quest.forge.QuestService(server, playerData, world, rankings, clock),
                 new com.eternalrealm.monster.forge.MonsterSpawner(server),
                 new com.eternalrealm.dungeon.forge.DungeonService(server),

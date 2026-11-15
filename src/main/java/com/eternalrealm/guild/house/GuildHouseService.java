@@ -86,8 +86,16 @@ public final class GuildHouseService {
 
     // ------------------------------------------------------------------------------------------------ buying
 
-    /** Whether {@link #buy} would succeed (same arguments), without changing anything. */
+    /** Whether {@link #buy} would succeed (same arguments), without changing anything; no guild-level discount. */
     public GuildHouseResult checkBuy(UUID guildId, GuildRank rank, String designId, long wallet) {
+        return checkBuy(guildId, rank, designId, wallet, 1);
+    }
+
+    /**
+     * Whether {@link #buy} would succeed, without changing anything: the price after the discount of the guild's
+     * level ({@link com.eternalrealm.guild.GuildPerks#houseDiscount}).
+     */
+    public GuildHouseResult checkBuy(UUID guildId, GuildRank rank, String designId, long wallet, int guildLevel) {
         GuildHouse house = house(guildId);
         Optional<GuildHouseDesign> design = catalog.design(designId);
         GuildHouseOutcome denied = rank == null ? GuildHouseOutcome.NOT_IN_GUILD
@@ -97,7 +105,7 @@ public final class GuildHouseService {
         if (denied != null) {
             return GuildHouseResult.failure(denied, house);
         }
-        long price = design.get().price();
+        long price = com.eternalrealm.guild.GuildPerks.discounted(design.get().price(), guildLevel);
         GuildHouseRules.Payment payment = GuildHouseRules.pay(price, house.fund(), Math.max(0, wallet));
         if (!payment.affordable()) {
             return GuildHouseResult.failure(GuildHouseOutcome.NOT_ENOUGH_GOLD, house);
@@ -107,8 +115,14 @@ public final class GuildHouseService {
 
     /** The master buys {@code designId}: paid from the fund, the rest from their wallet (charged by the caller). */
     public GuildHouseResult buy(UUID guildId, GuildRank rank, String designId, long wallet, Instant now) {
+        return buy(guildId, rank, designId, wallet, now, 1);
+    }
+
+    /** {@link #buy} at the price after the discount of the guild's level. */
+    public GuildHouseResult buy(UUID guildId, GuildRank rank, String designId, long wallet, Instant now,
+                                int guildLevel) {
         Objects.requireNonNull(now, "now");
-        GuildHouseResult check = checkBuy(guildId, rank, designId, wallet);
+        GuildHouseResult check = checkBuy(guildId, rank, designId, wallet, guildLevel);
         if (!check.isSuccess()) {
             return check;
         }
@@ -119,8 +133,13 @@ public final class GuildHouseService {
 
     // ------------------------------------------------------------------------------------------------ switching
 
-    /** Whether {@link #switchTo} would succeed, without changing anything. */
+    /** Whether {@link #switchTo} would succeed, without changing anything; no guild-level discount. */
     public GuildHouseResult checkSwitch(UUID guildId, GuildRank rank, String designId, long wallet) {
+        return checkSwitch(guildId, rank, designId, wallet, 1);
+    }
+
+    /** Whether {@link #switchTo} would succeed: a balance to pay is discounted by the guild's level. */
+    public GuildHouseResult checkSwitch(UUID guildId, GuildRank rank, String designId, long wallet, int guildLevel) {
         GuildHouse house = house(guildId);
         Optional<GuildHouseDesign> target = catalog.design(designId);
         GuildHouseOutcome denied = rank == null ? GuildHouseOutcome.NOT_IN_GUILD
@@ -137,11 +156,12 @@ public final class GuildHouseService {
             long toFund = Math.min(-balance, GuildHouseRules.MAX_FUND - house.fund());
             return new GuildHouseResult(GuildHouseOutcome.OK, house, 0, 0, 0, toFund);
         }
-        GuildHouseRules.Payment payment = GuildHouseRules.pay(balance, house.fund(), Math.max(0, wallet));
+        long due = com.eternalrealm.guild.GuildPerks.discounted(balance, guildLevel);
+        GuildHouseRules.Payment payment = GuildHouseRules.pay(due, house.fund(), Math.max(0, wallet));
         if (!payment.affordable()) {
             return GuildHouseResult.failure(GuildHouseOutcome.NOT_ENOUGH_GOLD, house);
         }
-        return new GuildHouseResult(GuildHouseOutcome.OK, house, balance, payment.fromFund(), payment.fromWallet(), 0);
+        return new GuildHouseResult(GuildHouseOutcome.OK, house, due, payment.fromFund(), payment.fromWallet(), 0);
     }
 
     /**
@@ -150,8 +170,14 @@ public final class GuildHouseService {
      * goes into the fund.
      */
     public GuildHouseResult switchTo(UUID guildId, GuildRank rank, String designId, long wallet, Instant now) {
+        return switchTo(guildId, rank, designId, wallet, now, 1);
+    }
+
+    /** {@link #switchTo} with a balance to pay discounted by the guild's level. */
+    public GuildHouseResult switchTo(UUID guildId, GuildRank rank, String designId, long wallet, Instant now,
+                                     int guildLevel) {
         Objects.requireNonNull(now, "now");
-        GuildHouseResult check = checkSwitch(guildId, rank, designId, wallet);
+        GuildHouseResult check = checkSwitch(guildId, rank, designId, wallet, guildLevel);
         if (!check.isSuccess()) {
             return check;
         }

@@ -306,11 +306,12 @@ public class GuildServiceTest {
     @Test
     public void contributionIsKeptPerSeasonAndRaisesTheLevel() {
         guild(A, "Alpha", "ALP", B);
-        GuildResult first = service.addContribution(B, S1, 600);
+        GuildResult first = service.addContribution(B, S1, 300);
         assertTrue(first.events().isEmpty());
-        GuildResult second = service.addContribution(A, S1, 500);
+        GuildResult second = service.addContribution(A, S1, 800);
         Guild guild = second.guild().orElseThrow();
-        assertEquals(List.of(new GuildEvent.LevelUp(guild, 1, 2)), second.events());
+        assertEquals("500 makes level 2, 1 500 level 3 (twenty levels since 2026-11-15)",
+                List.of(new GuildEvent.LevelUp(guild, 1, 2)), second.events());
         assertEquals(1100, guild.contribution(S1));
         assertEquals(0, guild.contribution(S2));
 
@@ -319,7 +320,7 @@ public class GuildServiceTest {
         assertEquals(Long.MAX_VALUE, saturated.guild().orElseThrow().contribution(S2));
         assertEquals(Long.MAX_VALUE, saturated.guild().orElseThrow().totalContribution());
         assertTrue("no level up at the maximum level", saturated.events().isEmpty());
-        assertEquals(10, service.level(saturated.guild().orElseThrow()));
+        assertEquals(20, service.level(saturated.guild().orElseThrow()));
 
         assertEquals(GuildOutcome.NOT_IN_GUILD, service.addContribution(C, S1, 1).outcome());
         assertThrows(IllegalArgumentException.class, () -> service.addContribution(A, S1, 0));
@@ -359,7 +360,7 @@ public class GuildServiceTest {
         assertEquals(List.of(alpha, beta), loaded.guilds());
         assertEquals(Optional.of(alpha), loaded.guildOf(A));
         assertEquals(Optional.of(beta), loaded.byTag("bet"));
-        assertEquals(2, loaded.level(alpha));
+        assertEquals("2 000 is level 3 of twenty", 3, loaded.level(alpha));
         assertFalse(loaded.isDirty());
         assertEquals(GuildOutcome.NAME_TAKEN, loaded.create(C, "ALPHA", "XYZ", T0).outcome());
         assertEquals(GuildOutcome.ALREADY_IN_GUILD, loaded.create(A, "Gamma", "GAM", T0).outcome());

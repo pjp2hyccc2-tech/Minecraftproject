@@ -1,10 +1,11 @@
 package com.eternalrealm.social.forge;
 
+import com.eternalrealm.guild.GuildPerks;
 import com.eternalrealm.job.JobType;
 import com.eternalrealm.server.ServerContext;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
@@ -13,8 +14,9 @@ import java.util.Optional;
 
 /**
  * Shows the guild tag and job emblem above every player's head for everyone: vanilla scoreboard teams sync a prefix
- * to all clients, so each (guild tag, job) combination gets a small team {@code er_<hash>}. Players already in a team
- * that does not belong to the mod (set by an operator) are left alone.
+ * to all clients, so each (guild tag, standing, job) combination gets a small team {@code er_<hash>}. The tag takes the
+ * colour of the guild's standing (見習い grey … 伝説 pink: {@link GuildPerks.Standing}), so a guild's rise shows on
+ * every member's name. Players already in a team that does not belong to the mod (set by an operator) are left alone.
  */
 public final class NameplateTeams {
     private static final String PREFIX = "er_";
@@ -35,7 +37,8 @@ public final class NameplateTeams {
         JobType job = context.get().playerData().snapshot(player.getUUID())
                 .map(snapshot -> JobType.fromStored(snapshot.jobId())).orElse(JobType.NONE);
         Optional<String> tag = context.get().game().guilds().tagOf(player.getUUID());
-        String key = tag.orElse("") + "|" + job.id();
+        GuildPerks.Standing standing = GuildPerks.standing(context.get().game().guilds().levelOf(player.getUUID()));
+        String key = tag.orElse("") + "|" + standing.id() + "|" + job.id();
         String name = PREFIX + Integer.toHexString(key.hashCode());
         if (current != null && current.getName().equals(name)) {
             return;
@@ -50,7 +53,8 @@ public final class NameplateTeams {
         if (team == null) {
             team = scoreboard.addPlayerTeam(name);
             MutableComponent prefix = Component.empty();
-            tag.ifPresent(t -> prefix.append(Component.literal("[" + t + "] ").withStyle(ChatFormatting.GREEN)));
+            tag.ifPresent(t -> prefix.append(Component.literal("[" + t + "] ")
+                    .withStyle(Style.EMPTY.withColor(standing.color()))));
             if (job.isChosen()) {
                 prefix.append(Component.literal(JobEmblems.symbol(job)).withStyle(JobEmblems.color(job)));
             }
