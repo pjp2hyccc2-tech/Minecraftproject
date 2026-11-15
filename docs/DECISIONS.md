@@ -878,3 +878,42 @@ The owner: 「ギルドハウスがバグりがち。入ったら入る権限が
 - **The raid's rare drop is the boss weapon of the final raid**, rolled per player by their place in the fight's merit
   ranking (1st 10 %, 2nd 5 %, 3rd 3 %, everyone else 0.5 %); ordinary dungeons keep their weapon odds and relic drops are
   unchanged.
+
+## D-FINALE: a level 70 finale (秘奥義) for every second class (2026-11-15)
+
+The owner: 「各職業のニ次職の最後の最後にlv70で＋1800%の必殺技をそれぞれ用意して」, with what each class's should be (the
+shinobi's eight flashes and one burst, the reaper's great scythe, the sword saint's holy sword, the hexblade's hammer and
+nail with a sure critical and a curse, the sage's pale-flamed meteor, the necromancer's skeleton knight-king raised from
+gathered mana, the sniper's heavy rifle firing three piercing rounds, the spirit archer's spirits and great bow of every
+element, the paladin's giant sword with a fissure and a holy field, the inquisitor's divine verdict of 900 % and a
+weakening of its own on every foe, the guardian's ten seconds of invulnerability and shield bash; the bishop's left to
+us), and 「この必殺技はctを90秒にして、アニメーションとエフェクト、視覚的効果や視線のブレなどを入れて高クオリティで派手な
+ものをつくって」.
+
+- **Below the tree, not in it**: one node per class at tier 6 (level 70, branch 0 column 0), opened by **either** of the
+  class's two ultimates (`SkillDefinition.anyOf`; a new kind of requirement, since a finale belongs to neither branch).
+  Max level 1 (one point): the number the owner gave is exact, so it does not grow with points (+10 % a level would make
+  1800 % a floor).
+- **1800 % in all**, counted like D-CLASSPOWER (hits, damaging zones' pulses) plus a summon's strikes: some finales put
+  part of it where the owner's description does (the paladin's field, the sage's burning ground, the king's six blows).
+  The inquisitor's "900 % to each" is read as two blows of 900 % to every foe around (1800 % in all), the sentence
+  handed out with the first.
+- **CT 90 s, exactly**: neither passives' cooldown reduction nor other skills' cooldown cuts touch it.
+- **A slot of its own** (7, key X; protocol 14): it never competes with the ultimate in slot 4, and a class character
+  can always have both. X was free of the mod's keys; vanilla's "load toolbar" (also X) is unbound once, like the
+  other conflicts.
+- **New effects only where the description needs a mechanic the game did not have**: a sure critical (`Critical`), marks
+  and their reckoning (`Engrave` / `Reckon`: the shinobi's flashes mark and pin, the sheathing settles every mark at
+  once), sentences (`Verdict`: nearest first, six kinds in turn), a summon (`Summon` → the `BoneKing` entity, which
+  strikes with its summoner's stats and target rules), invulnerability (`INVULNERABLE` buff → `DIVINE_AEGIS`: every
+  damage but the void and commands is avoided) and a curse (`CURSE` → `HEXED`, damage over time like bleeding).
+- **Visuals as short films**: solid, shaded props (the rifle, scythe, giant swords, hammer and nail, meteor, shield)
+  drawn before the light with depth, in the place of the weapon (hidden only while a prop or after-images stand in, and
+  only when the skill light is drawn); cinema bars, a zoom, a tinted vignette and flashes for the performer, a faint
+  flash for those near (setting `finaleCinema`); strong shakes; the arms follow a choreography per finale. Everything is
+  generated in code, nothing copied: the bone king is a figure of our own (crowned skull, black iron armour, cape,
+  greatsword) drawn procedurally.
+- **The bishop's** (not described by the owner): 天上の大聖堂, a cathedral of light that rings three bells (damage,
+  healing, a cleanse) and pours its rose window's light down (the last blow, a revival of fallen allies, shields), in
+  keeping with the class's healing and wards.
+

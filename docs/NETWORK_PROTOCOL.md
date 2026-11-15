@@ -5,7 +5,7 @@
 | 項目 | 値 |
 |---|---|
 | チャンネル | `eternalrealm:main`（Forge SimpleChannel） |
-| プロトコル版 | `"12"`（`ERNetwork.PROTOCOL_VERSION`）。Phase 2 で戦闘パケット追加のため 1→2、以後の追加を経て、スキルツリー（職業スキル枠5・6、職業武器の拒否、スナップショットのスキル枠）で 4→5、HUD 刷新（`UseItemPacket`、戦闘値の回復薬補正）で 5→6、カバンの取得表示（`PickupFeedPacket`）で 6→7、スキルのロックオン（`CombatActionPacket` に targetId）で 7→8、伝説の旅人の技の演出（`HeroFxPacket`）で 8→9、スキルの光（`SkillFxPacket`）で 9→10、ステータス％（`CharacterSnapshotPacket` の末尾に装備の％）で 10→11、見切り（`CombatStatsPacket` の末尾に evasion）で 11→12 |
+| プロトコル版 | `"14"`（`ERNetwork.PROTOCOL_VERSION`）。Phase 2 で戦闘パケット追加のため 1→2、以後の追加を経て、スキルツリー（職業スキル枠5・6、職業武器の拒否、スナップショットのスキル枠）で 4→5、HUD 刷新（`UseItemPacket`、戦闘値の回復薬補正）で 5→6、カバンの取得表示（`PickupFeedPacket`）で 6→7、スキルのロックオン（`CombatActionPacket` に targetId）で 7→8、伝説の旅人の技の演出（`HeroFxPacket`）で 8→9、スキルの光（`SkillFxPacket`）で 9→10、ステータス％（`CharacterSnapshotPacket` の末尾に装備の％）で 10→11、見切り（`CombatStatsPacket` の末尾に evasion）で 11→12、魔導スマホ（`PhotoUploadPacket`・`PhotoDataPacket`）で 12→13、二次職の秘奥義（職業スキル枠7 `JOB_SKILL_7`、`SkillFxPacket` に神判の刑、骸骨の騎士王のエンティティ）で 13→14 |
 | 互換性 | クライアント・サーバーとも**完全一致のみ受け入れ**。MOD未導入のクライアントは接続時に拒否 |
 | 版上げ条件 | パケットの追加・削除・順序変更・フィールド変更のいずれか |
 
@@ -17,7 +17,7 @@
 |---|---|---|---|---|---|
 | 0 | `CharacterSnapshotPacket` | S→C | seasonId (UTF, ≤32), level (VarInt), levelCap (VarInt), experience (VarLong), experienceToNext (VarLong, 上限時0), unspentStatPoints (VarInt), allocated×6 (VarInt), total×6 (VarInt) | 512 B | クライアント |
 | 1 | `AllocateStatPacket` | C→S | statNetworkId (VarInt: 0=STR 1=VIT 2=AGI 3=INT 4=DEX 5=LUK), amount (VarInt) | 10 B | サーバー |
-| 2 | `CombatActionPacket` | C→S | requestId (VarInt: 0=通常攻撃 1=溜め開始 2=溜め解放 3=回避 4=武器スキル), sequence (VarInt, クライアント連番), targetId+1 (VarInt: 0=なし。長押しで狙ったスキルのロック先のエンティティID) | 15 B | サーバー |
+| 2 | `CombatActionPacket` | C→S | requestId (VarInt: 0=通常攻撃 1=溜め開始 2=溜め解放 3=回避 4=武器スキル 5〜10=職業スキル枠1〜6 11=職業スキル枠7（秘奥義、版 14）), sequence (VarInt, クライアント連番), targetId+1 (VarInt: 0=なし。長押しで狙ったスキルのロック先のエンティティID) | 15 B | サーバー |
 | 3 | `CombatStatusPacket` | S→C | ackSequence (VarInt), answersRequest (bool), outcome (byte: 0=受理 1=先行入力 2=無視 3〜9=各種拒否), stamina (float), skillCooldown (VarInt tick), skillCooldownTotal (VarInt tick), defenseEvent (byte: 0=なし 1=回避 2=パリィ 3=ガード 4=ガードブレイク) | 32 B | クライアント |
 | 4 | `CombatStatsPacket` | S→C | attackMultiplier, maxHealthBonus, damageReduction, actionSpeedFactor, critChance, critMultiplier, maxStamina, staminaRegenPerTick（すべて double。クライアントの予測が整数tickへ丸める値をサーバーと一致させるため） | 64 B | クライアント |
 | 5 | `DamageNumberPacket` | S→C | entityId (VarInt), x/y/z (float), amount (float), flags (byte: 1=クリティカル 2=強攻撃 4=スキル) | 32 B | クライアント（攻撃した本人だけに送る） |
@@ -25,7 +25,7 @@
 | 10 | `UseItemPacket` | C→S | slot (VarInt: インベントリの 0〜35)。クイック使用（1〜3キー）とカバンの「使う」。サーバーがスロット・アイテム・レベル・クールダウンを確認（`QuickUse.useSlot`）。範囲外のスロットは**違反** | 5 B | サーバー |
 | 11 | `PickupFeedPacket` | S→C | stack (ItemStack: 1個。名前・アイコン・レア度), count (VarInt, 1〜1,000,000), flags (byte: 1=カバンが満杯で足元に落ちた) | 2 KB（ItemStack の NBT 込み） | クライアント（取得した本人だけに送る） |
 | 12 | `HeroFxPacket` | S→C | entityId (VarInt: 伝説の旅人), action (byte: 0〜19 = 技 `Travellers.Move` の序数、100 = 加入の身振り、101 = 起き上がり。127 まで), x/y/z (float: 狙う位置), seed (int: 流れ星や斬撃の配置を全クライアントでそろえる) | 32 B | クライアント（その旅人を見ている全員に送る。体がその技のアニメーションを演じ、光の演出を描く。[travellers.md](modules/travellers.md)） |
-| 13 | `SkillFxPacket` | S→C | kind (byte: 0=地面の領域 1=爆発), theme (byte: `SkillTheme` の序数), x/y/z (float: 領域の中心／爆発の位置), yaw (float: 術者の向き), radius (float: 0.5〜16), delay (short: 最初の脈動までの tick, 0〜600), pulses (byte: 1〜64), interval (short: 脈動の間隔 tick, 1〜600), flags (byte: 1=回復 2=ダメージ), seed (int: 細部の配置を全クライアントでそろえる) | 40 B | クライアント（その位置から 64 ブロック以内の全員。スキルの光 [skills.md §6.1](modules/skills.md)） |
+| 13 | `SkillFxPacket` | S→C | kind (byte: 0=地面の領域 1=爆発 2=神判の刑（版 14）), theme (byte: `SkillTheme` の序数。神判の刑では `SkillEffect.Sentence` の序数), x/y/z (float: 領域の中心／爆発の位置／刑を受ける敵の頭上), yaw (float: 術者の向き), radius (float: 0.5〜16。神判の刑では敵の背丈), delay (short: 最初の脈動までの tick, 0〜600), pulses (byte: 1〜64), interval (short: 脈動の間隔 tick, 1〜600), flags (byte: 1=回復 2=ダメージ), seed (int: 細部の配置を全クライアントでそろえる) | 40 B | クライアント（その位置から 64 ブロック以内の全員。スキルの光 [skills.md §6.1](modules/skills.md)） |
 
 ステータスの並び順は `StatType` の宣言順（ネットワークIDは固定値で、再利用・並べ替え禁止）。
 
@@ -240,3 +240,18 @@
   `{id, text}`、`phone.delete` `{id}`、`phone.uncomment` `{id, comment}`、`phone.photo` `{id}`。知らない画面・操作、UUID でない
   id、16桁の16進でない写真番号、長すぎる本文（上限の4倍を超える生の文字列）は違反。上限内の長さ超え・速さ・権限・相手の都合は
   違反ではなく `phone.toast` で理由。
+
+## 付録: 二次職の秘奥義（版 14）
+
+Lv70 の秘奥義（[skills.md §12.1](modules/skills.md)）。
+
+- C→S `CombatActionPacket` の requestId に `11`（`CombatRequest.JOB_SKILL_7`: 職業スキル枠7＝秘奥義枠、既定キー X）を追加。
+  検証は他の職業スキル枠と同じ（枠にスキルがなければ拒否、CT・スタミナ・職業武器はサーバーが判定）。
+- S→C `SkillFxPacket` に kind `2`（`VERDICT`）を追加: 審問官の「神判」で刑を受けた敵ひとりごと。theme は刑
+  （`SkillEffect.Sentence` の序数 0〜5: 鎖縛・烙印・衰弱・業火・盲目・凍獄）、x/y/z は敵の頭上（足元＋背丈＋0.6）、radius は敵の背丈。
+  その位置から 64 ブロック以内の全員へ。クライアントは頭上に刑の印と裁きの柱を描き、22 tick 後に執行の光を描く
+  （`job.fx.Fields.sentence`）。デコード時に theme が刑の範囲外なら切断。
+- エンティティ `eternalrealm:bone_king`（死霊術師の「骸王顕現」の骸骨の騎士王）を追加。同期データは呼び出された時刻・振りの開始時刻と
+  種類・崩れ始めの時刻（すべてゲーム時刻の int）。保存されない。攻撃・押し出し・選択の対象にならない。
+- 新しいパケットはない。秘奥義の画面演出（黒帯・ズーム・周辺の色・閃光）、武器や体を隠す区間、小道具はすべて
+  `PlayerActionPacket` の行動ID・時間から各クライアントが組み立てる。
