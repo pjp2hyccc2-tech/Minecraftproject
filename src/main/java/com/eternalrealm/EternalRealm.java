@@ -82,6 +82,7 @@ public final class EternalRealm {
         com.eternalrealm.mount.forge.MountService.register();
         com.eternalrealm.estate.forge.EstateBlocks.register(modBus);
         com.eternalrealm.guild.house.forge.GuildHouseModule.register(modBus);
+        com.eternalrealm.guild.battle.forge.GuildBattleModule.register();
         AstoriaWorldgen.register(modBus);
 
         modBus.addListener(ServerBootstrap::onConfigReloading);

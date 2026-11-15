@@ -214,7 +214,11 @@ public final class EstateProtection {
             return;
         }
         if (target instanceof Player) {
-            event.setCanceled(true);
+            // opponents of a guild battle in its arena may fight (docs/modules/guild_battles.md)
+            if (!(player instanceof ServerPlayer attacker && target instanceof ServerPlayer victim
+                    && com.eternalrealm.combat.forge.PvpRules.canHurt(attacker, victim))) {
+                event.setCanceled(true);
+            }
             return;
         }
         if (!(target instanceof HangingEntity) && !(target instanceof ArmorStand)) {
@@ -230,11 +234,18 @@ public final class EstateProtection {
         }
     }
 
-    /** No fighting between players in the estates, whatever the source. */
+    /**
+     * No fighting between players in the estates, whatever the source - except opponents of a guild battle in its
+     * arena ({@link com.eternalrealm.combat.forge.PvpRules}).
+     */
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onLivingAttack(LivingAttackEvent event) {
-        if (event.getEntity() instanceof Player && inEstates(event.getEntity().level())
+        if (event.getEntity() instanceof Player victim && inEstates(event.getEntity().level())
                 && event.getSource().getEntity() instanceof Player attacker && attacker != event.getEntity()) {
+            if (attacker instanceof ServerPlayer a && victim instanceof ServerPlayer v
+                    && com.eternalrealm.combat.forge.PvpRules.canHurt(a, v)) {
+                return;
+            }
             event.setCanceled(true);
         }
     }

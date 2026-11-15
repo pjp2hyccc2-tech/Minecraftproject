@@ -31,6 +31,8 @@ OUT = os.path.join(ROOT, "src", "main", "resources", "data", "eternalrealm", "es
 DESIGNS = dict(rooms.DESIGNS)
 from estates.guild import houses as guild_houses  # noqa: E402  (the guild houses, docs/modules/guildhouse.md)
 DESIGNS.update(guild_houses.DESIGNS)
+from estates import arena  # noqa: E402  (the guild battle arena, docs/modules/guild_battles.md)
+DESIGNS.update(arena.DESIGNS)
 
 
 def build_design(kind, design, log=print):

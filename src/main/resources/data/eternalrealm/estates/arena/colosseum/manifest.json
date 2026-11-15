@@ -1,0 +1,131 @@
+{
+ "format": 1,
+ "build": "569d0478217f6e27",
+ "tileSize": 32,
+ "minY": -32,
+ "maxY": 159,
+ "palette": [
+  "eternalrealm:void",
+  "minecraft:air",
+  "eternalrealm:room_door[facing=south,half=lower,hinge=left,open=false]",
+  "eternalrealm:room_door[facing=south,half=upper,hinge=left,open=false]",
+  "minecraft:andesite",
+  "minecraft:blue_carpet",
+  "minecraft:blue_terracotta",
+  "minecraft:blue_wall_banner[facing=north]",
+  "minecraft:blue_wall_banner[facing=south]",
+  "minecraft:blue_wall_banner[facing=west]",
+  "minecraft:chiseled_quartz_block",
+  "minecraft:chiseled_sandstone",
+  "minecraft:cobblestone",
+  "minecraft:cracked_stone_bricks",
+  "minecraft:hay_block[axis=y]",
+  "minecraft:hay_block[axis=z]",
+  "minecraft:lantern[hanging=false]",
+  "minecraft:lantern[hanging=true]",
+  "minecraft:packed_mud",
+  "minecraft:polished_andesite",
+  "minecraft:quartz_pillar[axis=y]",
+  "minecraft:red_carpet",
+  "minecraft:red_terracotta",
+  "minecraft:red_wall_banner[facing=east]",
+  "minecraft:red_wall_banner[facing=north]",
+  "minecraft:red_wall_banner[facing=south]",
+  "minecraft:sand",
+  "minecraft:smooth_sandstone",
+  "minecraft:smooth_stone",
+  "minecraft:smooth_stone_slab[type=bottom]",
+  "minecraft:smooth_stone_slab[type=top]",
+  "minecraft:stone",
+  "minecraft:stone_brick_stairs[facing=east,half=bottom,shape=straight]",
+  "minecraft:stone_brick_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:stone_brick_stairs[facing=north,half=top,shape=straight]",
+  "minecraft:stone_brick_stairs[facing=south,half=bottom,shape=straight]",
+  "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight]",
+  "minecraft:stone_brick_stairs[facing=west,half=bottom,shape=straight]",
+  "minecraft:stone_bricks",
+  "minecraft:tuff"
+ ],
+ "tiles": [
+  {
+   "x": -2,
+   "z": -1,
+   "file": "tiles/-2_-1.bin"
+  },
+  {
+   "x": -2,
+   "z": 0,
+   "file": "tiles/-2_0.bin"
+  },
+  {
+   "x": -1,
+   "z": -1,
+   "file": "tiles/-1_-1.bin"
+  },
+  {
+   "x": -1,
+   "z": 0,
+   "file": "tiles/-1_0.bin"
+  },
+  {
+   "x": 0,
+   "z": -1,
+   "file": "tiles/0_-1.bin"
+  },
+  {
+   "x": 0,
+   "z": 0,
+   "file": "tiles/0_0.bin"
+  },
+  {
+   "x": 1,
+   "z": -1,
+   "file": "tiles/1_-1.bin"
+  },
+  {
+   "x": 1,
+   "z": 0,
+   "file": "tiles/1_0.bin"
+  }
+ ],
+ "blockEntities": [],
+ "entities": [],
+ "fluidTicks": [],
+ "spots": {
+  "entry": {
+   "pos": [
+    0,
+    1,
+    -21
+   ],
+   "yaw": 0.0
+  },
+  "exit": {
+   "pos": [
+    0,
+    1,
+    -24
+   ],
+   "yaw": 180.0
+  },
+  "spawn.blue": {
+   "pos": [
+    27,
+    1,
+    0
+   ],
+   "yaw": 90.0
+  },
+  "spawn.red": {
+   "pos": [
+    -27,
+    1,
+    0
+   ],
+   "yaw": -90.0
+  }
+ },
+ "blend": {
+  "edgeY": 0
+ }
+}
