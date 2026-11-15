@@ -102,7 +102,9 @@ public class RelicCatalogTest {
     public void relicsAskForTheirSourceLevelPlusFive() {
         for (Relics.Source source : Relics.sources()) {
             int level = switch (source.kind()) {
-                case BOSS -> Bosses.byId(source.target()).orElseThrow().level();
+                // a dungeon boss's relics keep the level of its first balance: the bosses stand five levels higher
+                // since 2026-11-15, the relics players hold did not change
+                case BOSS -> Bosses.byId(source.target()).orElseThrow().level() - Bosses.LEVEL_RAISE;
                 case CALAMITY -> Bosses.byId(FieldThreats.calamities().stream()
                         .filter(c -> c.id().equals(source.target())).findFirst().orElseThrow().boss())
                         .orElseThrow().level();

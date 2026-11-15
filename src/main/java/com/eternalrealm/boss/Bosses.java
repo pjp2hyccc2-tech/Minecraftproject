@@ -26,6 +26,15 @@ public final class Bosses {
     private static final double PARTY_SCALING = 0.7;
     /** Health and damage of every dungeon and raid boss over the numbers below (2026-11-14). */
     public static final double STRENGTH = 1.5;
+    /**
+     * Levels every dungeon boss and the raid stand above their first balance (owner, 2026-11-15: 「ダンジョンボスの
+     * レベルを5ずつ上げて」): b1 6 -> 11 ... final 50 -> 55. Health and damage grew with the level
+     * ({@link #levelGrowth}), so a party of the new level meets the fight the old level used to; the minions and the
+     * clear rewards (both by the boss's level) grew too.
+     */
+    public static final int LEVEL_RAISE = 5;
+    /** Share of the health growth the damage follows when a boss is raised (as for the calamities). */
+    static final double DAMAGE_SHARE_OF_GROWTH = 0.7;
     /** Soft enrage of the dungeon bosses: 10 minutes (5 before the bosses grew by half). */
     private static final int ENRAGE_TICKS = 20 * 60 * 10;
     /** The raid's soft enrage: 17 minutes, grown with its health (×1.5 on 2026-11-11 and again on 2026-11-14). */
@@ -500,12 +509,36 @@ public final class Bosses {
         return new BossPhase(startsAt, List.of(abilityIds), globalCooldown, speed, openers, transition, enrages);
     }
 
+    /**
+     * The numbers above are those of the first balance; every boss stands {@link #LEVEL_RAISE} levels higher, its
+     * health grown by {@link #levelGrowth} and its damage by {@link #damageGrowth}.
+     */
     private static BossDefinition boss(String id, String entityType, int level, double health, double damage,
                                        double armor, int minPlayers, int maxPlayers, List<BossPhase> phases,
                                        List<BossAbility> abilities, int enrageTicks, List<String> summons,
                                        String exAbility) {
-        return new BossDefinition(id, entityType, level, health * STRENGTH, damage * STRENGTH, armor, PARTY_SCALING,
-                minPlayers, maxPlayers, phases, abilities, enrageTicks, summons, DifficultyTuning.NORMAL,
-                DifficultyTuning.hard(), DifficultyTuning.ex(exAbility));
+        int raised = level + LEVEL_RAISE;
+        return new BossDefinition(id, entityType, raised, health * STRENGTH * levelGrowth(level, raised),
+                damage * STRENGTH * damageGrowth(level, raised), armor, PARTY_SCALING, minPlayers, maxPlayers, phases,
+                abilities, enrageTicks, summons, DifficultyTuning.NORMAL, DifficultyTuning.hard(),
+                DifficultyTuning.ex(exAbility));
+    }
+
+    /** The light hit of a level-matched player in the balance model above (8 at level 1, 45 at level 50). */
+    static double balanceHit(int level) {
+        return 8.0 + 37.0 * (level - 1) / 49.0;
+    }
+
+    /**
+     * Health factor of a boss raised from {@code from} to {@code to}: a party matched to the new level needs as long
+     * as one matched to the old level did (the calamities grow the same way, {@code world.field.CalamityGrowth}).
+     */
+    static double levelGrowth(int from, int to) {
+        return balanceHit(to) / balanceHit(from);
+    }
+
+    /** Damage factor: 70 % of the health growth (players of a higher level also wear better armour). */
+    static double damageGrowth(int from, int to) {
+        return 1.0 + DAMAGE_SHARE_OF_GROWTH * (levelGrowth(from, to) - 1.0);
     }
 }

@@ -38,7 +38,8 @@ public class DungeonDefinitionTest {
             assertTrue(dungeon.roomCount() >= 3 && dungeon.roomCount() <= 6);
             assertTrue(dungeon.timeLimitTicks() >= 20L * 60 * 20);
             BossDefinition boss = Bosses.byId(dungeon.bossId()).orElseThrow();
-            assertEquals("the boss is balanced for the dungeon's level", dungeon.recommendedLevel(), boss.level());
+            assertEquals("the boss stands five levels above its dungeon (2026-11-15)",
+                    dungeon.recommendedLevel() + Bosses.LEVEL_RAISE, boss.level());
             assertEquals(dungeon, Dungeons.byId(dungeon.id()).orElseThrow());
         }
         assertEquals(List.of(Dungeons.D4, Dungeons.D5), Dungeons.inArea(4));
@@ -80,7 +81,7 @@ public class DungeonDefinitionTest {
         assertEquals("final", raid.bossId());
         assertEquals(7, raid.areaId());
         assertEquals(20, raid.maxPartySize());
-        assertEquals(Bosses.FINAL.level(), raid.recommendedLevel());
+        assertEquals(Bosses.FINAL.level(), raid.recommendedLevel() + Bosses.LEVEL_RAISE);
         assertEquals(DungeonTheme.END_THRONE, raid.theme());
         assertEquals("raid.eternalrealm.final", raid.translationKey());
         assertTrue(raid.allowsPartySize(20));

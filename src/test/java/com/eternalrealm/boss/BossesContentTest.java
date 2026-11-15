@@ -13,8 +13,9 @@ import static org.junit.Assert.assertTrue;
 
 /** Rules for the shipped bosses: ids that other modules rely on, fairness rules and the balance target. */
 public class BossesContentTest {
-    private static final Map<String, Integer> LEVELS = Map.of("b1", 6, "b2", 13, "b3", 20, "b4", 26, "b5", 29,
-            "b6", 35, "b7", 42, "b8", 47, "final", 50);
+    /** Five levels above the first balance since 2026-11-15 (6, 13, 20, 26, 29, 35, 42, 47, 50 before). */
+    private static final Map<String, Integer> LEVELS = Map.of("b1", 11, "b2", 18, "b3", 25, "b4", 31, "b5", 34,
+            "b6", 40, "b7", 47, "b8", 52, "final", 55);
     private static final Set<String> VANILLA_BASES = Set.of("minecraft:ravager", "minecraft:iron_golem",
             "minecraft:wither_skeleton", "minecraft:evoker", "minecraft:warden", "minecraft:piglin_brute",
             "minecraft:elder_guardian", "minecraft:blaze", "minecraft:vindicator");
@@ -42,6 +43,19 @@ public class BossesContentTest {
                 assertTrue(ability.id(), ability.id().startsWith(boss.id() + "_"));
                 assertTrue("duplicate " + ability.id(), seen.add(ability.id()));
             }
+        }
+    }
+
+    /** Raised five levels: health by the level-matched hit's growth, damage by 70 % of it (2026-11-15). */
+    @Test
+    public void bossesStandFiveLevelsAboveTheirFirstBalance() {
+        assertEquals(5, Bosses.LEVEL_RAISE);
+        assertEquals(playerHit(55) / playerHit(50), Bosses.levelGrowth(50, 55), 1.0e-12);
+        assertEquals(1.0 + 0.7 * (Bosses.levelGrowth(6, 11) - 1.0), Bosses.damageGrowth(6, 11), 1.0e-12);
+        assertTrue(Bosses.levelGrowth(6, 11) > Bosses.levelGrowth(47, 52));
+        for (BossDefinition boss : Bosses.all()) {
+            int first = LEVELS.get(boss.id()) - 5;
+            assertTrue(boss.id(), Bosses.levelGrowth(first, boss.level()) > 1.0);
         }
     }
 
@@ -332,8 +346,8 @@ public class BossesContentTest {
 
     @Test
     public void raidAndFieldBossesHaveHalfAgainTheirEarlierHealth() {
-        assertEquals("27 600 since 2026-11-11, half again since 2026-11-14", 41_400.0, Bosses.FINAL.baseHealth(),
-                1.0e-9);
+        assertEquals("27 600 since 2026-11-11, half again since 2026-11-14, grown with its level since 2026-11-15",
+                41_400.0 * Bosses.levelGrowth(50, 55), Bosses.FINAL.baseHealth(), 1.0e-6);
         for (BossDefinition boss : FieldBosses.all()) {
             double seconds = fightSeconds(boss, boss.minPlayers());
             assertTrue(boss.id() + ": " + seconds + " s for its smallest group", seconds >= 180.0 && seconds <= 450.0);
