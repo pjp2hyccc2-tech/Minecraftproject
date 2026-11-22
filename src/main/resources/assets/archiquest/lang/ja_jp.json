@@ -1,0 +1,12 @@
+{
+  "itemGroup.archiquest": "ArchiQuest 一級建築士への道",
+  "item.archiquest.textbook": "一級建築士の教科書",
+  "item.archiquest.textbook.tooltip": "右クリック（またはKキー）で教科書を開く",
+  "item.archiquest.inspector": "建築診断スケール",
+  "item.archiquest.inspector.tooltip1": "右クリック: 建物を診断（天井高・採光・換気・建ぺい率など）",
+  "item.archiquest.inspector.tooltip2": "スニーク＋右クリック: 敷地の角を指定（2か所）",
+  "item.archiquest.certificate": "一級建築士 模試合格証書",
+  "item.archiquest.certificate.tooltip": "ゲーム内の記念品です（本物の資格ではありません）",
+  "key.archiquest.textbook": "一級建築士の教科書を開く",
+  "key.categories.archiquest": "ArchiQuest"
+}

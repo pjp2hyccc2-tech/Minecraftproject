@@ -1,0 +1,12 @@
+{
+  "itemGroup.archiquest": "ArchiQuest",
+  "item.archiquest.textbook": "Architect Exam Textbook",
+  "item.archiquest.textbook.tooltip": "Right-click (or press K) to open the textbook",
+  "item.archiquest.inspector": "Building Inspector Scale",
+  "item.archiquest.inspector.tooltip1": "Right-click: inspect a building (ceiling height, daylight, ventilation, coverage...)",
+  "item.archiquest.inspector.tooltip2": "Sneak + right-click: set site corners (2 points)",
+  "item.archiquest.certificate": "Mock Exam Certificate",
+  "item.archiquest.certificate.tooltip": "An in-game keepsake (not a real qualification)",
+  "key.archiquest.textbook": "Open Architect Textbook",
+  "key.categories.archiquest": "ArchiQuest"
+}

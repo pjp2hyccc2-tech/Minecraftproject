@@ -1,0 +1,71 @@
+name: ArchiQuest build
+
+on:
+  push:
+    branches: [archiquest]
+    paths-ignore:
+      - 'dist/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: archiquest-build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.8'
+
+      - name: Build mod
+        id: build
+        run: |
+          set -o pipefail
+          gradle build --no-daemon --stacktrace --console=plain 2>&1 | tee build-log.txt
+
+      - name: Upload jar artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: archiquest-jar
+          path: |
+            build/libs/archiquest-*.jar
+            !build/libs/*-sources.jar
+
+      - name: Save jar and log to the branch
+        if: always()
+        env:
+          BUILD_OUTCOME: ${{ steps.build.outcome }}
+        run: |
+          mkdir -p dist
+          rm -f dist/*.jar dist/errors.txt
+          cp build-log.txt dist/build-log.txt 2>/dev/null || echo "no log" > dist/build-log.txt
+          if [ "$BUILD_OUTCOME" = "success" ]; then
+            JAR=$(ls build/libs/archiquest-*.jar | grep -v -E 'sources|javadoc|slim' | head -n 1)
+            cp "$JAR" dist/
+            echo "SUCCESS $GITHUB_SHA $(basename "$JAR")" > dist/status.txt
+          else
+            grep -n -A 4 -E 'error:|FAILURE|What went wrong|Could not' dist/build-log.txt > dist/errors.txt || true
+            echo "FAILED $GITHUB_SHA" > dist/status.txt
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A dist
+          git commit -m "ArchiQuest build output for ${GITHUB_SHA::7} [skip ci]" || exit 0
+          for i in 1 2 3; do
+            git pull --rebase origin archiquest && git push origin HEAD:archiquest && break
+            sleep 5
+          done

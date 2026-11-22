@@ -1,0 +1,390 @@
+{
+  "_comment": "用語集。オフライン先生（/archi ask）の検索に使われる。",
+  "glossary": [
+    {
+      "term": "建ぺい率",
+      "reading": "けんぺいりつ",
+      "subject": "law",
+      "lesson": "law_zoning",
+      "desc": "建築面積÷敷地面積。敷地に建物がどれだけ広がっているかの割合で、用途地域ごとに上限がある（法53条）。角地や防火地域の耐火建築物などは緩和あり。"
+    },
+    {
+      "term": "容積率",
+      "reading": "ようせきりつ",
+      "subject": "law",
+      "lesson": "law_zoning",
+      "desc": "延べ面積÷敷地面積。建物のボリュームの割合。前面道路の幅が12m未満なら、道路幅×4/10（住居系）などでも制限される（法52条）。"
+    },
+    {
+      "term": "建築面積",
+      "reading": "けんちくめんせき",
+      "subject": "law",
+      "lesson": "law_basic",
+      "desc": "建物を真上から見た面積（水平投影面積）。原則として外壁や柱の中心線で囲まれた部分。はね出しが1m以下の軒やひさしは含めない（1mを超えると、先端から1m引っ込めた線までを含める）。"
+    },
+    {
+      "term": "延べ面積",
+      "reading": "のべめんせき",
+      "subject": "law",
+      "lesson": "law_basic",
+      "desc": "各階の床面積の合計。容積率の計算に使う（車庫などには算入しない緩和もある）。"
+    },
+    {
+      "term": "居室",
+      "reading": "きょしつ",
+      "subject": "law",
+      "lesson": "law_basic",
+      "desc": "居住・執務・作業・集会・娯楽などのために継続的に使う部屋。トイレ・廊下・玄関・納戸は居室ではない。採光・換気・天井高の基準がかかる。"
+    },
+    {
+      "term": "採光",
+      "reading": "さいこう",
+      "subject": "law",
+      "lesson": "law_lighting",
+      "desc": "窓などから自然の光を取り入れること。住宅の居室は採光に有効な面積を床面積の1/7以上（照明設備を設ければ1/10まで緩和可、2023年4月〜）。"
+    },
+    {
+      "term": "天井高",
+      "reading": "てんじょうだか",
+      "subject": "law",
+      "lesson": "law_lighting",
+      "desc": "居室の天井の高さは2.1m以上（施行令21条）。高さが場所によって違う場合は平均の高さで判断する。"
+    },
+    {
+      "term": "接道義務",
+      "reading": "せつどうぎむ",
+      "subject": "law",
+      "lesson": "law_height",
+      "desc": "敷地は幅4m以上の道路に2m以上接しなければならないというルール（法43条）。"
+    },
+    {
+      "term": "2項道路",
+      "reading": "にこうどうろ",
+      "subject": "law",
+      "lesson": "law_height",
+      "desc": "幅4m未満でも道路とみなされる道。原則として中心線から2m後退した線が道路の境界になる（セットバック）。"
+    },
+    {
+      "term": "セットバック",
+      "reading": "せっとばっく",
+      "subject": "law",
+      "lesson": "law_height",
+      "desc": "2項道路などで、道路の境界線を後退させること。後退した部分には建物や塀を建てられない。"
+    },
+    {
+      "term": "北側斜線",
+      "reading": "きたがわしゃせん",
+      "subject": "law",
+      "lesson": "law_height",
+      "desc": "北側の敷地の日当たりを守るための高さ制限。低層住居専用地域・田園住居地域では5m＋水平距離×1.25。"
+    },
+    {
+      "term": "日影規制",
+      "reading": "にちえいきせい",
+      "subject": "law",
+      "lesson": "law_height",
+      "desc": "冬至日の8時〜16時に、まわりに一定時間以上の日影を落とさないようにする規制。商業・工業・工業専用地域は対象外。"
+    },
+    {
+      "term": "用途地域",
+      "reading": "ようとちいき",
+      "subject": "law",
+      "lesson": "law_zoning",
+      "desc": "建てられる建物の種類や大きさを決める地域区分。住居系8・商業系2・工業系3の13種類。"
+    },
+    {
+      "term": "防火地域",
+      "reading": "ぼうかちいき",
+      "subject": "law",
+      "lesson": "law_fire",
+      "desc": "火災の燃え広がりを特に防ぎたい地域。階数3以上または延べ100m²超の建物は耐火建築物等にする。"
+    },
+    {
+      "term": "4号特例",
+      "reading": "よんごうとくれい",
+      "subject": "law",
+      "lesson": "law_basic",
+      "desc": "小規模な建物の建築確認で、構造などの審査を省略できた制度。2025年4月に縮小され、対象は延べ200m²以下の平屋（新3号建築物）になった。"
+    },
+    {
+      "term": "新2号建築物",
+      "reading": "しんにごうけんちくぶつ",
+      "subject": "law",
+      "lesson": "law_basic",
+      "desc": "2025年4月からの区分。木造2階建てや延べ200m²を超える平屋など。建築確認で構造・省エネの審査が省略されない。"
+    },
+    {
+      "term": "避雷針",
+      "reading": "ひらいしん",
+      "subject": "law",
+      "lesson": "law_stairs",
+      "desc": "雷の電流を安全に地面へ流すための設備（避雷設備）の一部。高さ20mを超える建築物には避雷設備が必要（法33条）。マイクラの避雷針ブロックも、雷を引き寄せて周りを守ってくれるよ。"
+    },
+    {
+      "term": "曲げモーメント",
+      "reading": "まげもーめんと",
+      "subject": "structure",
+      "lesson": "str_force",
+      "desc": "部材を曲げようとする力の大きさ。単純梁の中央集中荷重でPL/4、等分布荷重でwL²/8。"
+    },
+    {
+      "term": "座屈",
+      "reading": "ざくつ",
+      "subject": "structure",
+      "lesson": "str_section",
+      "desc": "細長い部材が、押されて横にはらみ出す現象。座屈荷重 Pk＝π²EI／lk²。座屈長さが長いほど起きやすい。"
+    },
+    {
+      "term": "断面二次モーメント",
+      "reading": "だんめんにじもーめんと",
+      "subject": "structure",
+      "lesson": "str_section",
+      "desc": "断面の曲がりにくさ。長方形断面で I＝bh³/12。せいhが効くので、梁は縦長に使う。"
+    },
+    {
+      "term": "ヤング係数",
+      "reading": "やんぐけいすう",
+      "subject": "structure",
+      "lesson": "str_steel_wood",
+      "desc": "材料の伸び縮みのしにくさ（硬さ）。鋼は約2.05×10⁵N/mm²で、コンクリートの約10倍。"
+    },
+    {
+      "term": "かぶり厚さ",
+      "reading": "かぶりあつさ",
+      "subject": "structure",
+      "lesson": "str_rc",
+      "desc": "鉄筋の表面からコンクリートの表面までの厚さ。鉄筋をさびや火から守る。柱・梁・耐力壁は3cm以上（施行令79条）。"
+    },
+    {
+      "term": "中性化",
+      "reading": "ちゅうせいか",
+      "subject": "structure",
+      "lesson": "str_rc",
+      "desc": "コンクリートが空気中のCO₂でアルカリ性を失っていく現象。鉄筋まで届くと、さびの原因になる。"
+    },
+    {
+      "term": "耐力壁",
+      "reading": "たいりょくへき",
+      "subject": "structure",
+      "lesson": "str_seismic",
+      "desc": "地震や風の横からの力に抵抗する壁。木造では筋かいや構造用合板などで作る。"
+    },
+    {
+      "term": "偏心率",
+      "reading": "へんしんりつ",
+      "subject": "structure",
+      "lesson": "str_seismic",
+      "desc": "建物の重さの中心と硬さの中心のずれの度合い。大きいと地震でねじれて揺れる。0.15以下が目安。"
+    },
+    {
+      "term": "剛性率",
+      "reading": "ごうせいりつ",
+      "subject": "structure",
+      "lesson": "str_seismic",
+      "desc": "各階の硬さが建物全体の平均と比べてどうかを表す値。極端にやわらかい階があると壊れやすい。0.6以上が目安。"
+    },
+    {
+      "term": "層間変形角",
+      "reading": "そうかんへんけいかく",
+      "subject": "structure",
+      "lesson": "str_seismic",
+      "desc": "地震のとき、ある階の上下の床の横ずれを、その階の高さで割った値。原則1/200以内。"
+    },
+    {
+      "term": "免震",
+      "reading": "めんしん",
+      "subject": "structure",
+      "lesson": "str_seismic",
+      "desc": "建物と地面の間に積層ゴムなどを入れ、地震の揺れを建物に伝えにくくする構造。"
+    },
+    {
+      "term": "液状化",
+      "reading": "えきじょうか",
+      "subject": "structure",
+      "lesson": "str_ground",
+      "desc": "地震のとき、地下水位の高いゆるい砂地盤が液体のようになる現象。"
+    },
+    {
+      "term": "N値",
+      "reading": "えぬち",
+      "subject": "structure",
+      "lesson": "str_ground",
+      "desc": "標準貫入試験で、63.5kgのハンマーを76cmから落とし、30cm打ち込むのに要した回数。地盤の硬さの目安。"
+    },
+    {
+      "term": "熱貫流率",
+      "reading": "ねつかんりゅうりつ",
+      "subject": "environment",
+      "lesson": "env_heat",
+      "desc": "壁や窓などを通して熱がどれだけ伝わるかを表す値（U値、W/(m²・K)）。小さいほど断熱性能が高い。"
+    },
+    {
+      "term": "UA値",
+      "reading": "ゆーえーち",
+      "subject": "environment",
+      "lesson": "env_heat",
+      "desc": "外皮平均熱貫流率。住宅全体からの熱の逃げやすさ。6地域の省エネ基準は0.87以下、ZEH水準は0.60以下。"
+    },
+    {
+      "term": "結露",
+      "reading": "けつろ",
+      "subject": "environment",
+      "lesson": "env_heat",
+      "desc": "空気が露点温度以下に冷やされ、水蒸気が水滴になる現象。表面結露と内部結露がある。防湿層は断熱材の室内側に。"
+    },
+    {
+      "term": "露点温度",
+      "reading": "ろてんおんど",
+      "subject": "environment",
+      "lesson": "env_heat",
+      "desc": "空気を冷やしていったとき、水蒸気が水滴になり始める温度。"
+    },
+    {
+      "term": "照度",
+      "reading": "しょうど",
+      "subject": "environment",
+      "lesson": "env_light",
+      "desc": "ある面に届く光の量。単位はlx（ルクス）。点光源からの照度は距離の2乗に反比例する。"
+    },
+    {
+      "term": "昼光率",
+      "reading": "ちゅうこうりつ",
+      "subject": "environment",
+      "lesson": "env_light",
+      "desc": "室内のある点の照度を、全天空照度（直射日光を除く）で割った割合。天気が変わってもほぼ一定。"
+    },
+    {
+      "term": "色温度",
+      "reading": "いろおんど",
+      "subject": "environment",
+      "lesson": "env_light",
+      "desc": "光の色を温度（K）で表したもの。低いと赤っぽく暖かい感じ、高いと青白い感じ。"
+    },
+    {
+      "term": "残響時間",
+      "reading": "ざんきょうじかん",
+      "subject": "environment",
+      "lesson": "env_sound",
+      "desc": "音が止まってから60dB下がるまでの時間。セイビンの式 T＝0.161V/A。"
+    },
+    {
+      "term": "透過損失",
+      "reading": "とうかそんしつ",
+      "subject": "environment",
+      "lesson": "env_sound",
+      "desc": "壁などを音が通り抜けるときに小さくなる量（dB）。大きいほど遮音性能が高い。重い壁ほど大きい（質量則）。"
+    },
+    {
+      "term": "第3種換気",
+      "reading": "だいさんしゅかんき",
+      "subject": "environment",
+      "lesson": "env_air",
+      "desc": "排気だけを機械で行う換気方式。室内が負圧になり、においや湿気を外に漏らさない。トイレ・台所向き。"
+    },
+    {
+      "term": "排水トラップ",
+      "reading": "はいすいとらっぷ",
+      "subject": "environment",
+      "lesson": "env_water_energy",
+      "desc": "排水管の途中に水（封水）をためて、下水のにおいや虫が上がってくるのを防ぐしくみ。封水深は5〜10cm。"
+    },
+    {
+      "term": "ZEH",
+      "reading": "ぜっち",
+      "subject": "environment",
+      "lesson": "env_heat",
+      "desc": "ネット・ゼロ・エネルギー・ハウス。断熱と省エネ設備でエネルギー消費を減らし、太陽光発電などでつくるエネルギーと差し引きゼロを目指す住宅。"
+    },
+    {
+      "term": "コールドジョイント",
+      "reading": "こーるどじょいんと",
+      "subject": "construction",
+      "lesson": "con_concrete",
+      "desc": "先に打ったコンクリートと後から打ったコンクリートが一体にならずにできる継ぎ目。打重ね時間の管理で防ぐ。"
+    },
+    {
+      "term": "スランプ",
+      "reading": "すらんぷ",
+      "subject": "construction",
+      "lesson": "con_concrete",
+      "desc": "固まる前のコンクリートのやわらかさ。スランプコーンを抜いたとき、コンクリートの頂部が下がった高さ（cm）。"
+    },
+    {
+      "term": "養生",
+      "reading": "ようじょう",
+      "subject": "construction",
+      "lesson": "con_concrete",
+      "desc": "打ち込んだコンクリートが十分に固まるよう、乾燥・低温・振動などから守ること。"
+    },
+    {
+      "term": "高力ボルト",
+      "reading": "こうりょくぼると",
+      "subject": "construction",
+      "lesson": "con_rebar_steel",
+      "desc": "鉄骨の接合に使う強いボルト。強く締めて、板どうしの摩擦で力を伝える。一次締め→マーキング→本締めの順。"
+    },
+    {
+      "term": "クリティカルパス",
+      "reading": "くりてぃかるぱす",
+      "subject": "construction",
+      "lesson": "con_management",
+      "desc": "ネットワーク工程表で、開始から終了までの最も長い経路。ここが遅れると工事全体が遅れる。"
+    },
+    {
+      "term": "エスキス",
+      "reading": "えすきす",
+      "subject": "design",
+      "lesson": "des_esquisse",
+      "desc": "設計の初期段階で、条件を整理しながら全体の構成をラフに検討する作業。"
+    },
+    {
+      "term": "ゾーニング",
+      "reading": "ぞーにんぐ",
+      "subject": "design",
+      "lesson": "des_esquisse",
+      "desc": "部屋や機能をグループに分け、敷地や建物の中に大まかに配置すること。"
+    },
+    {
+      "term": "動線",
+      "reading": "どうせん",
+      "subject": "planning",
+      "lesson": "des_esquisse",
+      "desc": "人や物が建物の中を移動する経路。短く、わかりやすく、交差させないのが基本。"
+    },
+    {
+      "term": "ピロティ",
+      "reading": "ぴろてぃ",
+      "subject": "planning",
+      "lesson": "plan_history_world",
+      "desc": "1階部分を柱だけにして、建物を持ち上げた空間。ル・コルビュジエの近代建築の五原則の1つ。"
+    },
+    {
+      "term": "神明造",
+      "reading": "しんめいづくり",
+      "subject": "planning",
+      "lesson": "plan_history_jp",
+      "desc": "伊勢神宮に代表される神社建築の様式。高床・切妻屋根・平入り。"
+    },
+    {
+      "term": "書院造",
+      "reading": "しょいんづくり",
+      "subject": "planning",
+      "lesson": "plan_history_jp",
+      "desc": "室町〜江戸時代の武家住宅の様式。床の間・違い棚・付書院・畳敷きが特徴。"
+    },
+    {
+      "term": "バリアフリー",
+      "reading": "ばりあふりー",
+      "subject": "planning",
+      "lesson": "plan_dimension",
+      "desc": "高齢者や障害のある人などが使いやすいよう、段差などの障壁を取り除くこと。出入口80cm以上・傾斜路1/12以下などの基準がある。"
+    },
+    {
+      "term": "レンタブル比",
+      "reading": "れんたぶるひ",
+      "subject": "planning",
+      "lesson": "plan_buildings",
+      "desc": "延べ面積に対する、貸すことのできる面積（収益部分）の割合。オフィスビルの事業性の目安。"
+    }
+  ]
+}
